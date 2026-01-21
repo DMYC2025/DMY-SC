@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - DMYSC</title>
+    <!-- Path updated -->
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { 
+            darkMode: 'class', 
+            theme: { 
+                extend: { 
+                    colors: { brand: { green: '#16a34a', dark: '#0b1121' } }, 
+                    fontFamily: { poppins: ['Poppins', 'sans-serif'] } 
+                } 
+            } 
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-brand-dark dark:text-slate-100 min-h-screen font-poppins transition-colors duration-300">
+
+    <main class="max-w-7xl mx-auto px-4 py-12">
+        <!-- Back Link -->
+        <a href="index.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-brand-green mb-6 font-bold text-sm transition">
+            <i class="ph-bold ph-arrow-left"></i> Back to Dashboard
+        </a>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-1">
+                <h3 class="text-gray-500 font-bold uppercase tracking-widest text-xs mb-4">Your Member Card Preview</h3>
+                
+                <div class="bg-[#151b2b] rounded-[24px] overflow-hidden relative shadow-2xl transform hover:scale-105 transition duration-500">
+                    <div class="h-[120px] bg-[#0f7638] w-full"></div>
+                    <div class="w-[100px] h-[100px] bg-white rounded-[20px] p-1 absolute top-[70px] left-1/2 -translate-x-1/2 shadow-lg">
+                        <img id="cardAvatar" src="https://via.placeholder.com/150" class="w-full h-full rounded-[16px] object-cover bg-gray-200">
+                    </div>
+                    <div class="pt-16 pb-6 px-4 text-center">
+                         <h3 class="text-xl font-bold text-white mb-2 flex justify-center items-center gap-1" id="cardName">
+                             Loading... </h3>
+                         <span class="bg-blue-900/30 text-blue-400 border border-blue-900 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-wider inline-block mb-6">Active Member</span>
+                         
+                         <div class="bg-[#222b40] rounded-2xl p-4 text-left space-y-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-[#2d3748] flex items-center justify-center text-green-500"><i class="ph-fill ph-identification-card"></i></div>
+                                <div><p class="text-[9px] text-gray-500 font-bold uppercase">Member ID</p><p class="text-[11px] text-white font-bold" id="cardId">...</p></div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-[#2d3748] flex items-center justify-center text-green-500"><i class="ph-fill ph-whatsapp-logo"></i></div>
+                                <div><p class="text-[9px] text-gray-500 font-bold uppercase">Contact</p><p class="text-[11px] text-white font-bold font-mono" id="cardPhone">...</p></div>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 bg-slate-800/50 rounded-2xl p-6 border border-white/5 shadow-lg">
+                    <label class="block text-sm font-bold text-slate-400 mb-3">Update Profile Picture</label>
+                    <div class="flex gap-2 mb-3">
+                         <label for="avatarUpload" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl text-center cursor-pointer font-bold text-sm transition shadow-lg shadow-green-900/50 flex items-center justify-center gap-2">
+                             <i class="ph-bold ph-upload-simple"></i> Upload Image
+                         </label>
+                         <input type="file" id="avatarUpload" accept="image/*" class="hidden">
+                    </div>
+                    <div class="relative">
+                        <div class="flex gap-2">
+                            <input type="text" id="avatarLink" placeholder="Or paste image link here..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white outline-none focus:border-green-500 transition">
+                            <button onclick="saveAvatarLink()" class="bg-slate-700 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-slate-600 border border-slate-600">Save</button>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-gray-500 mt-2 italic">* Recommended: Square image (1:1 ratio)</p>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2">
+                <div class="bg-slate-800/40 backdrop-blur-md rounded-[2.5rem] p-8 border border-white/5 shadow-2xl h-full">
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <h2 class="text-2xl font-black text-white uppercase tracking-wide">Edit Details</h2>
+                            <p class="text-sm text-gray-400">Update your personal information</p>
+                        </div>
+                        <div class="w-12 h-12 bg-slate-700/50 rounded-full flex items-center justify-center text-gray-400">
+                            <i class="ph-duotone ph-pencil-simple text-2xl"></i>
+                        </div>
+                    </div>
+
+                    <form id="profileForm" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-slate-900/50 rounded-2xl border border-white/5">
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase ml-1 tracking-wider"><i class="ph-bold ph-lock-key"></i> Full Name</label>
+                                <input type="text" id="fullName" disabled class="w-full bg-transparent border-b border-gray-700 py-2 text-gray-300 font-bold text-sm">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase ml-1 tracking-wider"><i class="ph-bold ph-lock-key"></i> Email</label>
+                                <input type="text" id="email" disabled class="w-full bg-transparent border-b border-gray-700 py-2 text-gray-300 font-bold text-sm">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase ml-1 tracking-wider"><i class="ph-bold ph-lock-key"></i> NIC Number</label>
+                                <input type="text" id="nic" disabled class="w-full bg-transparent border-b border-gray-700 py-2 text-gray-300 font-bold text-sm">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase ml-1 tracking-wider"><i class="ph-bold ph-lock-key"></i> Date of Birth</label>
+                                <input type="text" id="dob" disabled class="w-full bg-transparent border-b border-gray-700 py-2 text-gray-300 font-bold text-sm">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="md:col-span-2">
+                                <label class="text-xs font-bold text-green-500 uppercase ml-1 mb-1 block">WhatsApp Number</label>
+                                <input type="text" id="whatsapp" class="w-full bg-slate-900 border border-slate-600 focus:border-green-500 rounded-xl p-4 text-white font-bold outline-none transition shadow-inner" placeholder="07x xxxxxxx">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="text-xs font-bold text-green-500 uppercase ml-1 mb-1 block">Job / Profession</label>
+                                <input type="text" id="job" class="w-full bg-slate-900 border border-slate-600 focus:border-green-500 rounded-xl p-4 text-white font-bold outline-none transition shadow-inner" placeholder="Student / Engineer / etc.">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="text-xs font-bold text-green-500 uppercase ml-1 mb-1 block">Sports Skills</label>
+                                <textarea id="sports" rows="3" class="w-full bg-slate-900 border border-slate-600 focus:border-green-500 rounded-xl p-4 text-white font-bold outline-none transition shadow-inner" placeholder="Cricket, Volleyball, etc."></textarea>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="text-xs font-bold text-green-500 uppercase ml-1 mb-1 block">Aesthetic Skills</label>
+                                <textarea id="aesthetic" rows="3" class="w-full bg-slate-900 border border-slate-600 focus:border-green-500 rounded-xl p-4 text-white font-bold outline-none transition shadow-inner" placeholder="Dancing, Singing, Art, etc."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="text-right pt-4 border-t border-white/10">
+                            <button type="submit" id="saveBtn" class="bg-gradient-to-r from-green-600 to-emerald-600 hover:to-emerald-500 text-white font-bold py-4 px-10 rounded-xl shadow-lg hover:shadow-green-500/30 transform hover:-translate-y-1 transition flex items-center gap-2 ml-auto">
+                                <i class="ph-bold ph-floppy-disk"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts with updated relative paths -->
+    <script src="../js/supabase.js"></script>
+    <script src="../js/ui.js"></script>
+    
+    <script>
+        let userId = null;
+
+        async function init() {
+            if (typeof _supabase === 'undefined') {
+                console.error("Supabase not loaded.");
+                return;
+            }
+
+            // Check Session
+            const { data: { session } } = await _supabase.auth.getSession();
+            // Path updated to login.html (up one folder)
+            if (!session) return window.location.href = '../login.html';
+            userId = session.user.id;
+
+            // Fetch Profile
+            const { data: profile } = await _supabase.from('profiles').select('*').eq('id', userId).single();
+            
+            if (profile) {
+                // 1. Populate Member Card Preview
+                const avatar = profile.avatar_url || 'https://via.placeholder.com/150';
+                // getVerifyIcon should be in ui.js
+                const verifyIcon = (typeof getVerifyIcon === 'function') ? getVerifyIcon() : '';
+                
+                document.getElementById('cardName').innerHTML = profile.full_name + verifyIcon; 
+                document.getElementById('cardId').innerText = profile.member_id || 'PENDING';
+                document.getElementById('cardPhone').innerText = profile.whatsapp || 'N/A';
+                document.getElementById('cardAvatar').src = avatar;
+
+                // 2. Populate Form Fields
+                document.getElementById('fullName').value = profile.full_name;
+                document.getElementById('nic').value = profile.nic;
+                document.getElementById('email').value = profile.email;
+                document.getElementById('dob').value = profile.dob || 'N/A';
+                
+                document.getElementById('whatsapp').value = profile.whatsapp || '';
+                document.getElementById('job').value = profile.job || '';
+                document.getElementById('sports').value = profile.sports_skills || '';
+                document.getElementById('aesthetic').value = profile.aesthetic_skills || '';
+            }
+        }
+
+        // --- Avatar Upload Logic ---
+        document.getElementById('avatarUpload').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const btnLabel = e.target.parentElement;
+            btnLabel.innerHTML = '<i class="ph-bold ph-spinner animate-spin"></i> Uploading...';
+
+            try {
+                const fileName = `${userId}-${Date.now()}`;
+                const { error: uploadError } = await _supabase.storage.from('avatars').upload(fileName, file);
+
+                if (uploadError) throw uploadError;
+
+                const { data: { publicUrl } } = _supabase.storage.from('avatars').getPublicUrl(fileName);
+                await updateAvatarUrl(publicUrl);
+
+            } catch (error) {
+                alert('Upload Error: ' + error.message);
+            } finally {
+                btnLabel.innerHTML = '<i class="ph-bold ph-upload-simple"></i> Upload Image';
+            }
+        });
+
+        // --- Link Save Logic ---
+        async function saveAvatarLink() {
+            const url = document.getElementById('avatarLink').value;
+            if(url) await updateAvatarUrl(url);
+        }
+
+        // --- Common Update Avatar Function ---
+        async function updateAvatarUrl(url) {
+            const { error } = await _supabase.from('profiles').update({ avatar_url: url }).eq('id', userId);
+            if (!error) {
+                document.getElementById('cardAvatar').src = url;
+                // Save to local storage to update header immediately if refreshed
+                localStorage.setItem('userAvatar', url);
+                alert('Profile picture updated successfully!');
+            } else {
+                alert('Error updating profile picture.');
+            }
+        }
+
+        // --- Form Submit Logic ---
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('saveBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="ph-bold ph-spinner animate-spin"></i> Saving...';
+            btn.disabled = true;
+
+            const updates = {
+                whatsapp: document.getElementById('whatsapp').value,
+                job: document.getElementById('job').value,
+                sports_skills: document.getElementById('sports').value,
+                aesthetic_skills: document.getElementById('aesthetic').value
+            };
+
+            const { error } = await _supabase.from('profiles').update(updates).eq('id', userId);
+            
+            if (!error) {
+                alert('Profile details saved!');
+                // Refresh card preview data
+                document.getElementById('cardPhone').innerText = updates.whatsapp || 'N/A';
+            } else {
+                alert('Error saving details: ' + error.message);
+            }
+
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
+
+        // Run Init
+        init();
+    </script>
+    <div id="global-footer-placeholder"></div>
+    <script src="../js/footer-loader.js"></script>
+    
+    <script>
+        document.getElementById('year').innerText = new Date().getFullYear();
+    </script>
+</body>
+</html>

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - DMYSC</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: { green: '#16a34a', dark: '#0b1121' } }, fontFamily: { poppins: ['Poppins', 'sans-serif'] }, animation: { 'swing': 'swing 1s infinite' }, keyframes: { swing: { '0%, 100%': { transform: 'rotate(0deg)' }, '20%': { transform: 'rotate(15deg)' }, '40%': { transform: 'rotate(-10deg)' }, '60%': { transform: 'rotate(5deg)' }, '80%': { transform: 'rotate(-5deg)' } } } } } }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        /* Print Styles for ID Card - FIXED */
+        @media print {
+            @page {
+                margin: 0;
+                size: auto;
+            }
+            body, html {
+                background-color: white !important;
+                background-image: none !important;
+                height: 100%;
+                width: 100%;
+                overflow: hidden;
+            }
+            /* Hide everything generally */
+            body * {
+                visibility: hidden;
+            }
+            /* Show the Modal wrapper */
+            #cardModal {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: white !important;
+                visibility: visible !important;
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+            }
+            /* Show the Card Container inside modal */
+            #modalCardContainer, #modalCardContainer * {
+                visibility: visible !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            /* Center the card specifically */
+            #modalCardContainer {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%) !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+            }
+            /* Hide Buttons in Print Mode */
+            #cardModal button {
+                display: none !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-brand-dark min-h-screen font-poppins text-slate-100 selection:bg-brand-green selection:text-white">
+
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none no-print">
+        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-green/10 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px]"></div>
+    </div>
+
+    <!-- Navigation Bar (Header Buttons) -->
+    <nav class="max-w-7xl mx-auto px-4 pt-6 flex justify-end gap-4 relative z-50 no-print">
+        <!-- Notification Button -->
+        <a href="../notifycation.html" class="flex items-center gap-2 bg-slate-800/80 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full shadow-lg hover:bg-brand-green hover:text-white transition-all duration-300 group">
+            <div class="relative">
+                <i class="ph-fill ph-bell-ringing text-xl animate-swing"></i>
+                <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-ping"></span>
+                <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border border-slate-800"></span>
+            </div>
+            <span class="text-sm font-bold">Notifications</span>
+        </a>
+
+        <!-- Logout Button -->
+        <button onclick="logout()" class="flex items-center gap-2 bg-red-500/10 border border-red-500/30 text-red-500 px-4 py-2 rounded-full shadow-lg hover:bg-red-500 hover:text-white transition-all duration-300 font-bold text-sm">
+            <i class="ph-bold ph-sign-out"></i> Logout
+        </button>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 no-print">
+        
+        <!-- Header Section -->
+        <div class="bg-gradient-to-br from-slate-900 to-slate-800 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-8 mb-10 relative overflow-hidden group shadow-2xl" data-aos="fade-down">
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+            <div class="absolute right-0 top-0 w-64 h-64 bg-brand-green/20 blur-[80px] rounded-full"></div>
+            
+            <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                <div>
+                    <!-- Date and Time Display -->
+                    <div class="inline-flex items-center gap-3 bg-white/5 px-4 py-1.5 rounded-full border border-white/5 backdrop-blur-sm mb-4">
+                        <span id="dateDisplay" class="text-brand-green font-bold text-xs uppercase tracking-widest">Loading...</span>
+                        <span class="w-1 h-1 bg-slate-500 rounded-full"></span>
+                        <span id="clockDisplay" class="font-mono text-slate-300 text-xs font-bold">00:00:00</span>
+                    </div>
+
+                    <h1 class="text-3xl md:text-5xl font-black text-white leading-tight drop-shadow-lg">
+                        <span id="greeting">Hello</span>, <span id="dashName" class="text-transparent bg-clip-text bg-gradient-to-r from-brand-green to-emerald-300">Member</span>
+                    </h1>
+                    <p class="text-slate-400 mt-3 text-sm md:text-base max-w-lg leading-relaxed">Welcome to your personal club dashboard. Stay updated with upcoming matches, events, and announcements.</p>
+                </div>
+                <div class="text-right">
+                   <div class="w-20 h-20 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 backdrop-blur-sm shadow-inner">
+                       <i id="timeIcon" class="ph-duotone ph-sun-dim text-5xl text-brand-green drop-shadow-[0_0_15px_rgba(22,163,74,0.5)]"></i>
+                   </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8 items-start">
+            
+            <!-- Main Grid -->
+            <div class="flex-1 w-full grid grid-cols-1 md:grid-cols-2 gap-5 order-2 lg:order-1">
+                
+                <!-- Quick Links Card (Moved to TOP) -->
+                <a href="../quicklink.html" class="group relative bg-slate-900 hover:bg-slate-800 border border-white/5 hover:border-pink-500/30 rounded-[2rem] p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl overflow-hidden md:col-span-2" data-aos="fade-up" data-aos-delay="50">
+                    <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
+                        <i class="ph-fill ph-link text-8xl text-pink-500"></i>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-pink-500/20 rounded-xl flex items-center justify-center text-pink-500 group-hover:bg-pink-500 group-hover:text-white transition-colors duration-300 shrink-0">
+                            <i class="ph-bold ph-link text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-1">Quick Links</h3>
+                            <p class="text-xs text-slate-400 leading-relaxed">Access important external resources.</p>
+                        </div>
+                        <div class="ml-auto">
+                             <span class="text-pink-500 text-xs font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
+                                Open <i class="ph-bold ph-arrow-right"></i>
+                            </span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Events Card -->
+                <a href="../event.html" class="group relative bg-slate-900 hover:bg-slate-800 border border-white/5 hover:border-brand-green/30 rounded-[2rem] p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                    <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
+                        <i class="ph-fill ph-calendar-check text-8xl text-brand-green"></i>
+                    </div>
+                    <div class="w-12 h-12 bg-brand-green/20 rounded-xl flex items-center justify-center text-brand-green mb-4 group-hover:bg-brand-green group-hover:text-white transition-colors duration-300">
+                        <i class="ph-bold ph-calendar-check text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-1">Events</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed mb-4">Match schedules & club programs.</p>
+                    <span class="text-brand-green text-xs font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
+                        View Calendar <i class="ph-bold ph-arrow-right"></i>
+                    </span>
+                </a>
+
+                <!-- Sports Card -->
+                <a href="../sport.html" class="group relative bg-slate-900 hover:bg-slate-800 border border-white/5 hover:border-blue-500/30 rounded-[2rem] p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                    <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
+                        <i class="ph-fill ph-trophy text-8xl text-blue-500"></i>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center text-blue-500 mb-4 group-hover:bg-blue-500 group-hover:text-white transition-colors duration-300">
+                        <i class="ph-bold ph-trophy text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-1">Sports Zone</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed mb-4">Teams, stats & captains.</p>
+                    <span class="text-blue-500 text-xs font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Explore Teams <i class="ph-bold ph-arrow-right"></i>
+                    </span>
+                </a>
+
+                <!-- Members Card -->
+                <a href="../about.html" class="group relative bg-slate-900 hover:bg-slate-800 border border-white/5 hover:border-orange-500/30 rounded-[2rem] p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                    <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
+                        <i class="ph-fill ph-users-three text-8xl text-orange-500"></i>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center text-orange-500 mb-4 group-hover:bg-orange-500 group-hover:text-white transition-colors duration-300">
+                        <i class="ph-bold ph-users-three text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-1">Members</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed mb-4">Executive committee & directory.</p>
+                    <span class="text-orange-500 text-xs font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Meet Everyone <i class="ph-bold ph-arrow-right"></i>
+                    </span>
+                </a>
+
+                <!-- Profile Card -->
+                <a href="profile.html" class="group relative bg-slate-900 hover:bg-slate-800 border border-white/5 hover:border-purple-500/30 rounded-[2rem] p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl overflow-hidden" data-aos="fade-up" data-aos-delay="400">
+                    <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
+                        <i class="ph-fill ph-user-circle text-8xl text-purple-500"></i>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center text-purple-500 mb-4 group-hover:bg-purple-500 group-hover:text-white transition-colors duration-300">
+                        <i class="ph-bold ph-user-circle text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-1">My Profile</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed mb-4">Update skills & personal info.</p>
+                    <span class="text-purple-500 text-xs font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Edit Profile <i class="ph-bold ph-arrow-right"></i>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Enhanced Member Card Sidebar -->
+            <div class="w-full lg:w-80 shrink-0 order-1 lg:order-2 lg:sticky lg:top-8" data-aos="fade-left">
+                <!-- Card Wrapper to be Cloned for Print/Modal -->
+                <div id="memberCardContainer">
+                    <div id="printableCard" class="relative bg-gradient-to-b from-slate-800 to-slate-900 rounded-[20px] overflow-hidden shadow-2xl border border-white/10 group hover:shadow-brand-green/20 transition-shadow duration-500">
+                        
+                        <!-- Decorative Background -->
+                        <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-brand-green to-emerald-800"></div>
+                        <div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 mix-blend-overlay"></div>
+                        
+                        <!-- Card Header (Logo & Name) -->
+                        <div class="absolute top-4 left-0 w-full px-4 flex items-center gap-3 z-20">
+                            <img src="../assets/logo.png" class="h-10 w-10 object-contain drop-shadow-md">
+                            <div>
+                                <h4 class="text-white font-bold text-sm leading-tight">Dream Makers</h4>
+                                <p class="text-[9px] text-green-200 uppercase font-bold tracking-wider">Youth & Sports Club</p>
+                            </div>
+                        </div>
+
+                        <!-- Chip Icon (Moved down slightly) -->
+                        <div class="absolute top-16 left-4 w-10 h-8 rounded-md bg-yellow-500/80 border border-yellow-300 shadow-sm opacity-90 flex items-center justify-center z-10">
+                            <div class="w-full h-[1px] bg-yellow-900/30 mb-1"></div>
+                            <div class="absolute w-[1px] h-full bg-yellow-900/30"></div>
+                        </div>
+
+                        <!-- Logo Watermark -->
+                        <img src="../assets/logo.png" class="absolute bottom-[-20px] right-[-20px] w-32 h-32 opacity-10 rotate-12 grayscale">
+
+                        <div class="relative z-10 flex flex-col items-center pt-20 px-6 pb-6">
+                            <!-- Avatar with Border -->
+                            <div class="w-28 h-28 p-1.5 bg-white rounded-2xl shadow-xl mb-4 transform group-hover:scale-105 transition duration-500">
+                                <img id="sidebarAvatar" src="https://via.placeholder.com/150" class="w-full h-full rounded-xl object-cover bg-slate-200">
+                            </div>
+                            
+                            <h3 id="sidebarName" class="text-xl font-black text-white text-center leading-tight mb-1 uppercase tracking-wide">...</h3>
+                            <div class="text-[10px] text-brand-green font-bold uppercase tracking-[0.2em] mb-6">Club Member</div>
+
+                            <!-- Info Grid -->
+                            <div class="w-full space-y-3 mb-6">
+                                <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                                    <span class="text-[10px] text-slate-500 font-bold uppercase">ID Number</span>
+                                    <span id="sidebarId" class="text-sm text-white font-mono font-bold tracking-wider">...</span>
+                                </div>
+                                <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                                    <span class="text-[10px] text-slate-500 font-bold uppercase">Status</span>
+                                    <span class="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded border border-green-500/30 font-bold">ACTIVE</span>
+                                </div>
+                            </div>
+
+                            <!-- QR Code Area -->
+                            <div class="bg-white p-2 rounded-xl shadow-lg transform group-hover:rotate-1 transition duration-300">
+                                <img id="sidebarQRCode" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=PENDING" class="w-24 h-24 mix-blend-multiply opacity-90">
+                            </div>
+                            <p class="text-[9px] text-slate-500 mt-2 font-mono uppercase tracking-widest">Scan for Details</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Save ID Card Button -->
+                <button onclick="openCardModal()" class="w-full mt-4 bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs font-bold py-3 rounded-xl border border-slate-700 transition flex items-center justify-center gap-2">
+                    <i class="ph-bold ph-download-simple"></i> Save ID Card
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Card Modal -->
+    <div id="cardModal" class="fixed inset-0 z-[100] hidden no-print">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md transition-opacity" onclick="closeCardModal()"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm p-4 flex flex-col items-center gap-6">
+            
+            <div id="modalCardContainer" class="w-full transform transition-all duration-300 scale-100">
+                <!-- Card Content will be cloned here -->
+            </div>
+
+            <div class="flex gap-4 w-full">
+                <button onclick="printCard()" class="flex-1 bg-brand-green hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-green-500/30 transition flex items-center justify-center gap-2">
+                    <i class="ph-bold ph-printer"></i> Print / Save PDF
+                </button>
+                <button onclick="closeCardModal()" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Scripts updated to relative paths -->
+    <script src="../js/supabase.js"></script>
+    <script src="../js/ui.js"></script>
+    
+    <script>
+        AOS.init();
+        
+        // --- Admin Access Check Start ---
+        async function checkAccess() {
+            if (typeof _supabase === 'undefined') {
+                console.error("Supabase not loaded.");
+                return;
+            }
+            const { data: { session } } = await _supabase.auth.getSession();
+
+            // Login check - Path updated
+            if (!session) {
+                window.location.href = '../login.html';
+                return;
+            }
+
+            const { data: profile, error } = await _supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', session.user.id)
+                .single();
+
+            if (profile) {
+                // Admin redirect - Path updated
+                if (profile.role === 'admin') {
+                    window.location.href = '../admin/index.html';
+                }
+            }
+        }
+
+        // Run immediately
+        checkAccess();
+        // --- Admin Access Check End ---
+
+        // --- Logout Logic ---
+        async function logout() {
+            if(confirm("Are you sure you want to logout?")) {
+                const { error } = await _supabase.auth.signOut();
+                if(!error) {
+                    window.location.href = '../login.html';
+                } else {
+                    alert("Error logging out. Please try again.");
+                }
+            }
+        }
+
+        // 1. Greeting Logic
+        const hour = new Date().getHours();
+        const greetingSpan = document.getElementById('greeting');
+        const icon = document.getElementById('timeIcon');
+        
+        if (hour < 12) {
+            greetingSpan.innerText = "Good Morning";
+            icon.className = "ph-duotone ph-sun text-5xl text-yellow-400 drop-shadow-[0_0_20px_rgba(250,204,21,0.6)] animate-pulse";
+        } else if (hour < 18) {
+            greetingSpan.innerText = "Good Afternoon";
+            icon.className = "ph-duotone ph-sun-dim text-5xl text-orange-400 drop-shadow-[0_0_20px_rgba(251,146,60,0.6)] animate-pulse";
+        } else {
+            greetingSpan.innerText = (hour < 21) ? "Good Evening" : "Good Night";
+            icon.className = "ph-duotone ph-moon-stars text-5xl text-blue-400 drop-shadow-[0_0_20px_rgba(96,165,250,0.6)] animate-pulse";
+        }
+
+        // 2. Date & Clock Logic
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('dateDisplay').innerText = new Date().toLocaleDateString('en-US', options);
+
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('clockDisplay').innerText = timeString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock(); // Initial call
+
+        // 3. User Data Logic (Short Name & Card)
+        async function loadUserData() {
+            if (typeof _supabase === 'undefined') return;
+            
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (session) {
+                const { data: profile } = await _supabase
+                    .from('profiles')
+                    .select('full_name, member_id, avatar_url')
+                    .eq('id', session.user.id)
+                    .single();
+                
+                if (profile) {
+                    const shortName = profile.full_name.split(' ')[0];
+                    const verifyIcon = (typeof getVerifyIcon === 'function') ? getVerifyIcon() : '';
+                    
+                    // Update Dashboard Header
+                    document.getElementById('dashName').innerHTML = shortName + verifyIcon;
+                    
+                    // Update Sidebar Card
+                    document.getElementById('sidebarName').innerText = profile.full_name;
+                    document.getElementById('sidebarId').innerText = profile.member_id || 'PENDING';
+                    if (profile.avatar_url) {
+                        document.getElementById('sidebarAvatar').src = profile.avatar_url;
+                    }
+
+                    // Generate QR Code dynamically based on Club ID (Member ID)
+                    const qrData = profile.member_id || 'PENDING';
+                    document.getElementById('sidebarQRCode').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}`;
+                }
+            }
+        }
+        loadUserData();
+
+        // --- ID Card Modal & Print Logic ---
+        function openCardModal() {
+            const modal = document.getElementById('cardModal');
+            const container = document.getElementById('modalCardContainer');
+            const originalCard = document.getElementById('printableCard');
+            
+            // Clone the card to show in modal
+            container.innerHTML = '';
+            const clonedCard = originalCard.cloneNode(true);
+            clonedCard.classList.remove('shadow-2xl'); // Remove large shadow for modal
+            clonedCard.classList.add('shadow-xl', 'scale-110'); // Add modal specific styles
+            container.appendChild(clonedCard);
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeCardModal() {
+            document.getElementById('cardModal').classList.add('hidden');
+        }
+
+        function printCard() {
+            window.print();
+        }
+    </script>
+    
+    <div id="global-footer-placeholder"></div>
+    <!-- Path updated -->
+    <script src="../js/footer-loader.js"></script>
+    
+    <script>
+        document.getElementById('year').innerText = new Date().getFullYear();
+    </script>
+</body>
+</html>
