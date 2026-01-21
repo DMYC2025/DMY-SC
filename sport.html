@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>Sports - DMYSC</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: { green: '#16a34a', dark: '#0b1121' } }, fontFamily: { poppins: ['Poppins', 'sans-serif'] } } } }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-brand-dark dark:text-slate-100 min-h-screen font-poppins transition-colors duration-300">
+
+    <div class="relative h-[60vh] w-full overflow-hidden flex items-center justify-center">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=2070')] bg-cover bg-center bg-fixed"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/80 to-slate-900/50"></div>
+        
+        <div class="relative z-10 text-center px-4" data-aos="zoom-in">
+            <h1 class="text-5xl md:text-8xl font-black text-white mb-2 tracking-tighter drop-shadow-2xl">
+                UNLEASH <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-green to-emerald-400">GREATNESS</span>
+            </h1>
+            <p class="text-slate-300 text-lg md:text-xl font-medium tracking-wide">Join a team. Build a legacy. Be the champion.</p>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-6 py-20 -mt-24 relative z-20">
+        <div id="sportsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="col-span-full text-center py-20">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-green mx-auto mb-4"></div>
+                <p class="text-slate-500">Loading Sports Teams...</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/ui.js"></script>
+    
+    <script>
+        AOS.init();
+
+        async function load() {
+            // Note: This query relies on 'captain_id' being a foreign key to 'profiles.id'
+            // If the relationship is named differently in Supabase, this might fail.
+            const { data, error } = await _supabase
+                .from('sports')
+                .select('*, captain:captain_id(full_name)');
+            
+            const grid = document.getElementById('sportsGrid');
+            grid.innerHTML = ''; // Clear loading
+            
+            if (error) {
+                console.error("Error loading sports:", error);
+                grid.innerHTML = '<div class="col-span-full text-center text-red-500">Failed to load sports data. Check console for details.</div>';
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                 grid.innerHTML = '<div class="col-span-full text-center text-slate-500">No sports teams found.</div>';
+                 return;
+            }
+
+            data.forEach((s, i) => {
+                // If captain is null (not joined or no captain), handle gracefully
+                const captainName = s.captain ? s.captain.full_name : 'TBA';
+                const captainInitial = captainName !== 'TBA' ? captainName.charAt(0) : '?';
+
+                grid.innerHTML += `
+                    <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-[2.5rem] overflow-hidden group hover:transform hover:-translate-y-3 transition duration-500 shadow-2xl hover:shadow-[0_20px_50px_-12px_rgba(22,163,74,0.3)]" data-aos="fade-up" data-aos-delay="${i*100}">
+                        <div class="h-64 relative overflow-hidden">
+                            <img src="${s.image_url || 'https://via.placeholder.com/600'}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 grayscale group-hover:grayscale-0">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-90"></div>
+                            
+                            <div class="absolute bottom-6 left-8">
+                                <h2 class="text-4xl font-black text-white mb-1 uppercase italic tracking-tighter">${s.name}</h2>
+                                <div class="h-1.5 w-16 bg-brand-green rounded-full shadow-[0_0_10px_#16a34a]"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-8">
+                            <p class="text-slate-400 text-sm leading-relaxed mb-8 line-clamp-3">${s.description || 'Join our team today and show your skills!'}</p>
+                            
+                            <div class="flex items-center gap-4 bg-slate-900/50 p-4 rounded-2xl border border-white/5">
+                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-green to-emerald-700 text-white flex items-center justify-center font-bold text-xl shadow-lg">
+                                    ${captainInitial}
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-brand-green uppercase font-bold tracking-widest">Team Captain</p>
+                                    <h4 class="text-white font-bold text-base flex items-center">${captainName} ${getVerifyIcon()}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        load();
+    </script>
+    <div id="global-footer-placeholder"></div>
+    <script src="js/footer-loader.js"></script>
+    
+    <script>
+        document.getElementById('year').innerText = new Date().getFullYear();
+    </script>
+</body>
+</html>

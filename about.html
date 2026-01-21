@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>About Us - DMYSC</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { 
+            darkMode: 'class',
+            theme: { 
+                extend: { 
+                    colors: { 
+                        brand: { green: '#16a34a', dark: '#0b1121' },
+                        card: { bg: '#151b2b', header: '#0f7638', inner: '#222b40' }
+                    },
+                    fontFamily: { poppins: ['Poppins', 'sans-serif'] } 
+                } 
+            } 
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        .exec-card {
+            background-color: #151b2b;
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .exec-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 20px 40px rgba(22, 163, 74, 0.15); 
+            border-color: rgba(22, 163, 74, 0.3);
+        }
+        .card-header-bg { background-color: #15803d; height: 100px; width: 100%; }
+        .avatar-container {
+            width: 90px; height: 90px; background-color: #151b2b; border-radius: 20px; padding: 4px;
+            position: absolute; top: 50px; left: 50%; transform: translateX(-50%);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .mem-table-row { transition: background-color 0.2s; border-bottom: 1px solid #1f2937; }
+        .mem-table-row:hover { background-color: #1e293b; }
+        .mem-table-row:last-child { border-bottom: none; }
+    </style>
+</head>
+<body class="bg-brand-dark min-h-screen font-poppins text-slate-100 selection:bg-brand-green selection:text-white">
+
+    <div class="relative h-[50vh] w-full overflow-hidden flex items-center justify-center">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070')] bg-cover bg-center"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/80 to-blue-900/20"></div>
+        <div class="relative z-10 text-center px-4" data-aos="zoom-in">
+            <h1 class="text-5xl md:text-7xl font-black text-white mb-3 uppercase tracking-tighter drop-shadow-2xl">
+                Who <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-green to-emerald-400">We Are</span>
+            </h1>
+            <p class="text-slate-300 text-lg md:text-xl font-medium tracking-wide max-w-2xl mx-auto">
+                United by passion, driven by purpose. Building a stronger community together.
+            </p>
+        </div>
+    </div>
+
+    <section class="relative z-20 -mt-20 px-4 mb-16">
+        <div class="max-w-5xl mx-auto bg-slate-800/60 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 md:p-12 text-center shadow-2xl" data-aos="fade-up">
+            <div class="w-16 h-16 bg-brand-green/10 rounded-full flex items-center justify-center mx-auto mb-6 text-brand-green">
+                <i class="ph-duotone ph-target text-3xl"></i>
+            </div>
+            <h2 class="text-3xl font-black text-white mb-6 uppercase tracking-tight">Our Vision & Mission</h2>
+            <p class="text-slate-300 text-sm md:text-base leading-relaxed max-w-3xl mx-auto font-light" id="visionMission">
+                Loading club details...
+            </p>
+            <button onclick="showConst()" class="mt-8 group relative inline-flex items-center gap-2 px-6 py-3 bg-slate-900/50 hover:bg-brand-green/10 border border-slate-700 hover:border-brand-green text-slate-300 hover:text-brand-green rounded-full transition-all duration-300 text-xs font-bold uppercase tracking-widest">
+                <i class="ph-bold ph-book-open"></i> View Constitution
+            </button>
+        </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto px-6 mb-20">
+        <div class="flex items-end gap-4 mb-10 border-b border-white/10 pb-4" data-aos="fade-right">
+            <h2 class="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter">
+                Executive <span class="text-brand-green">Committee</span>
+            </h2>
+            <p class="text-slate-500 text-sm font-bold uppercase tracking-widest mb-1.5 hidden md:block">The Leaders</p>
+        </div>
+        <div id="exGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+             <div class="col-span-full text-center text-slate-500 py-10">
+                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-green mx-auto mb-2"></div>
+                 Loading Committee...
+             </div>
+        </div>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-6 pb-20">
+        <div class="flex items-center justify-between mb-8" data-aos="fade-up">
+            <div>
+                <h2 class="text-2xl font-black text-white uppercase tracking-wide">Our Members</h2>
+                <p class="text-slate-500 text-sm">The heart of our club</p>
+            </div>
+            <span id="memCount" class="bg-brand-green/10 text-brand-green border border-brand-green/20 px-4 py-2 rounded-xl text-lg font-black shadow-[0_0_15px_rgba(22,163,74,0.2)]">0</span>
+        </div>
+        <div class="bg-slate-800/40 backdrop-blur-md rounded-[2rem] border border-white/5 overflow-hidden shadow-2xl" data-aos="fade-up" data-aos-delay="100">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-900/50 text-slate-400 text-[10px] uppercase tracking-widest border-b border-white/5">
+                            <th class="p-6 font-bold">Member Name</th>
+                            <th class="p-6 font-bold text-center">Age</th>
+                            <th class="p-6 font-bold text-right">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="memTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <div id="constModal" class="fixed inset-0 z-[150] hidden bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-[#151b2b] w-full max-w-3xl rounded-3xl border border-white/10 p-8 max-h-[85vh] overflow-y-auto shadow-2xl relative animate-[swing_0.5s_ease-out]">
+            <button onclick="closeConst()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-500 transition flex items-center justify-center">
+                <i class="ph-bold ph-x text-xl"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-brand-green/10 rounded-xl flex items-center justify-center mx-auto mb-3 text-brand-green">
+                    <i class="ph-duotone ph-scroll text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-black text-white uppercase tracking-wide">Club Constitution</h3>
+            </div>
+            <div class="prose prose-invert prose-sm max-w-none">
+                <p class="text-slate-300 whitespace-pre-wrap leading-relaxed font-light text-justify" id="constText">Loading content...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/ui.js"></script>
+
+    <script>
+        AOS.init();
+
+        function createCommCard(data) {
+            // Note: Data structure depends on the query. If joining, profile info is in 'profiles' object.
+            // If data is just a profile (for members list), data is the profile object.
+            
+            // Handle joined data (executive_committee table joined with profiles)
+            const profile = data.profiles || {}; 
+            const name = profile.full_name || 'Unknown Member';
+            const avatar = profile.avatar_url || 'https://via.placeholder.com/150';
+            const email = profile.email || '';
+            const whatsapp = profile.whatsapp || '';
+            const role = data.term_period || 'Committee Member'; 
+
+            return `
+            <div class="exec-card group" data-aos="fade-up">
+                <div class="card-header-bg relative overflow-hidden">
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
+                </div>
+                <div class="avatar-container group-hover:scale-110 transition duration-500">
+                    <img src="${avatar}" class="w-full h-full rounded-[16px] object-cover bg-slate-800">
+                </div>
+                <div class="pt-14 pb-8 px-6 text-center">
+                    <h3 class="text-lg font-bold text-white mb-2 leading-tight">${name} ${getVerifyIcon()}</h3>
+                    <span class="bg-brand-green/10 text-brand-green border border-brand-green/20 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider inline-block mb-6">
+                        ${role}
+                    </span>
+                    <div class="flex justify-center gap-3 text-slate-400">
+                        ${whatsapp ? `<a href="https://wa.me/${whatsapp}" target="_blank" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-green-600 hover:text-white transition shadow-lg"><i class="ph-fill ph-whatsapp-logo text-xl"></i></a>` : ''}
+                        ${email ? `<a href="mailto:${email}" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition shadow-lg"><i class="ph-fill ph-envelope-simple text-xl"></i></a>` : ''}
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        function createMemRow(data) {
+            const name = data.full_name;
+            const avatar = data.avatar_url || 'https://via.placeholder.com/40';
+            let age = "N/A";
+            if(data.dob) {
+                const birthDate = new Date(data.dob);
+                const today = new Date();
+                let a = today.getFullYear() - birthDate.getFullYear();
+                const m = today.getMonth() - birthDate.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { a--; }
+                age = a;
+            }
+
+            return `
+            <tr class="mem-table-row group">
+                <td class="p-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl overflow-hidden border border-white/10 group-hover:border-brand-green/50 transition">
+                            <img src="${avatar}" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-white leading-tight group-hover:text-brand-green transition">${name} ${getVerifyIcon()}</p>
+                            <p class="text-[10px] text-slate-500 uppercase tracking-wider mt-0.5">DMYSC Member</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="p-6 text-center">
+                    <span class="text-sm font-bold text-slate-300 font-mono">${age}</span>
+                </td>
+                <td class="p-6 text-right">
+                    <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(59,130,246,0.2)]">
+                        Active
+                    </span>
+                </td>
+            </tr>`;
+        }
+
+        async function loadData() {
+            // A. About Info
+            const { data: about, error: aboutError } = await _supabase.from('about_info').select('*').single();
+            if(about) {
+                document.getElementById('visionMission').innerText = `${about.vision} • ${about.mission}`;
+                document.getElementById('constText').innerText = about.constitution_text || 'Not available.';
+            } else if (aboutError) {
+                console.error("About Info Error:", aboutError);
+            }
+
+            // B. Executive Committee
+            // Important: This join syntax requires a foreign key relationship between executive_committee.profile_id and profiles.id
+            const { data: ex, error: exError } = await _supabase
+                .from('executive_committee')
+                .select('term_period, profiles(full_name, avatar_url, email, whatsapp)')
+                .order('id');
+            
+            const exGrid = document.getElementById('exGrid');
+            exGrid.innerHTML = '';
+            
+            if (exError) {
+                console.error("Committee Error:", exError);
+                exGrid.innerHTML = '<p class="col-span-full text-center text-red-400">Error loading committee details. Ensure RLS policies allow public read access.</p>';
+            } else if (ex && ex.length > 0) {
+                ex.forEach(e => {
+                    exGrid.innerHTML += createCommCard(e);
+                });
+            } else {
+                exGrid.innerHTML = '<p class="col-span-full text-center text-slate-500 italic">No committee members found.</p>';
+            }
+
+            // C. Members Table
+            const { data: mems, error: memError } = await _supabase
+                .from('profiles')
+                .select('*')
+                .eq('role', 'member')
+                .eq('is_approved', true)
+                .order('full_name');
+
+            const memTable = document.getElementById('memTableBody');
+            memTable.innerHTML = '';
+            
+            if (memError) {
+                console.error("Member Error:", memError);
+                memTable.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-red-400">Error loading members. Ensure RLS policies allow public read access.</td></tr>';
+            } else if(mems && mems.length > 0) {
+                document.getElementById('memCount').innerText = mems.length;
+                mems.forEach(m => {
+                    memTable.innerHTML += createMemRow(m);
+                });
+            } else {
+                memTable.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-slate-500">No active members yet.</td></tr>';
+            }
+        }
+
+        function showConst() { document.getElementById('constModal').classList.remove('hidden'); }
+        function closeConst() { document.getElementById('constModal').classList.add('hidden'); }
+
+        loadData();
+    </script>
+    <div id="global-footer-placeholder"></div>
+    <script src="js/footer-loader.js"></script>
+    <script>
+        document.getElementById('year').innerText = new Date().getFullYear();
+    </script>
+</body>
+</html>

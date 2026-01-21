@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Links - DMYSC</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { 
+            darkMode: 'class', 
+            theme: { 
+                extend: { 
+                    colors: { brand: { green: '#16a34a', dark: '#0b1121' } },
+                    fontFamily: { poppins: ['Poppins', 'sans-serif'] } 
+                } 
+            } 
+        }
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-brand-dark dark:text-slate-100 min-h-screen font-poppins transition-colors duration-300">
+
+    <div class="relative h-[40vh] w-full overflow-hidden flex items-center justify-center">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072')] bg-cover bg-center"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/90 to-blue-900/20"></div>
+        
+        <div class="relative z-10 text-center px-4" data-aos="zoom-in">
+            <h1 class="text-4xl md:text-6xl font-black text-white mb-2 uppercase tracking-tighter drop-shadow-lg">
+                Quick <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-brand-green">Access</span>
+            </h1>
+            <p class="text-slate-300 text-lg font-medium">External resources and important links.</p>
+        </div>
+    </div>
+
+    <main class="max-w-6xl mx-auto px-6 -mt-20 relative z-20 pb-20">
+        <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="col-span-full text-center py-20">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-green mx-auto mb-4"></div>
+                <p class="text-slate-500">Loading Links...</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/ui.js"></script>
+    <script>
+        AOS.init();
+
+        async function load() {
+            const now = new Date().toISOString();
+            const { data } = await _supabase.from('quick_links').select('*');
+            
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+
+            const validLinks = data ? data.filter(l => {
+                if(l.display_type === 'always') return true;
+                return l.start_date <= now && l.end_date >= now;
+            }) : [];
+
+            if(validLinks.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center text-slate-500 italic">No active links available right now.</div>`;
+                return;
+            }
+
+            validLinks.forEach((l, i) => {
+                const hasImage = l.image_url && l.image_url.length > 0;
+                
+                grid.innerHTML += `
+                    <a href="${l.url}" target="_blank" class="group relative bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] overflow-hidden hover:transform hover:-translate-y-2 transition duration-300 shadow-xl hover:shadow-brand-green/20" data-aos="fade-up" data-aos-delay="${i*50}">
+                        
+                        <div class="h-40 w-full relative overflow-hidden bg-slate-900">
+                            ${hasImage 
+                                ? `<img src="${l.image_url}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 opacity-80 group-hover:opacity-100">` 
+                                : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900"><i class="ph-duotone ph-link text-6xl text-slate-700 group-hover:text-brand-green transition"></i></div>`
+                            }
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                            
+                            ${l.display_type === 'scheduled' ? `<div class="absolute top-4 right-4 bg-red-600/90 backdrop-blur text-white text-[10px] font-black uppercase px-3 py-1 rounded-full flex items-center gap-1 shadow-lg"><i class="ph-bold ph-timer"></i> Limited</div>` : ''}
+                        </div>
+
+                        <div class="p-6 relative">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-slate-700/50 flex items-center justify-center shrink-0 group-hover:bg-brand-green transition-colors duration-300 shadow-inner">
+                                    <i class="ph-bold ph-arrow-square-out text-xl text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-white text-lg leading-tight group-hover:text-brand-green transition">${l.title}</h3>
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">Tap to Open</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>`;
+            });
+        }
+        load();
+    </script>
+   <div id="global-footer-placeholder"></div>
+    <script src="js/footer-loader.js"></script>
+    <script>
+        document.getElementById('year').innerText = new Date().getFullYear();
+    </script>
+</body>
+</html>
