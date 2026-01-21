@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMYSC - Event Manager</title>
+    <!-- Path updated -->
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: { green: '#16a34a', dark: '#020617' } }, fontFamily: { poppins: ['Poppins', 'sans-serif'] } } } }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .glass-panel { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
+        .input-glass { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; }
+        
+        #sidebar { transition: transform 0.3s ease-in-out; }
+        .sidebar-open { transform: translateX(0) !important; }
+        .sidebar-closed { transform: translateX(-100%); }
+        @media (min-width: 768px) { .sidebar-closed { transform: translateX(0); } }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-[#0b1121] text-slate-100 min-h-screen font-poppins overflow-hidden">
+
+    <div class="flex h-screen relative">
+        <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/80 z-40 hidden md:hidden backdrop-blur-sm"></div>
+
+        <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-slate-900 border-r border-slate-800 flex flex-col z-50 sidebar-closed md:relative md:translate-x-0 shadow-2xl md:shadow-none">
+             <div class="p-6 flex items-center justify-between border-b border-slate-800 h-24">
+                <div class="flex items-center gap-3">
+                    <!-- Path updated -->
+                    <img src="../assets/logo.png" class="h-10 w-10 object-contain">
+                    <div><h2 class="font-black text-lg text-white">ADMIN</h2><p class="text-[10px] text-brand-green font-bold">Control Panel</p></div>
+                </div>
+                <button onclick="toggleSidebar()" class="md:hidden text-slate-400"><i class="ph-bold ph-x text-xl"></i></button>
+            </div>
+            <nav class="flex-1 p-4 space-y-2 mt-4 overflow-y-auto">
+                <!-- Links updated for admin folder structure -->
+                <a href="index.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-squares-four text-xl"></i> Dashboard</a>
+                <a href="members.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-users text-xl"></i> Member Manage</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 bg-brand-green text-white shadow-lg shadow-brand-green/20 rounded-xl font-bold"><i class="ph-bold ph-calendar-plus text-xl"></i> Event Manage</a>
+                <a href="sports.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-trophy text-xl"></i> Sport Manage</a>
+                <a href="notifications.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-bell-ringing text-xl"></i> Notifications</a>
+                <a href="quick_links.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-link text-xl"></i> Quick Links</a>
+                <a href="committee.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-users-three text-xl"></i> Committee</a>
+                <a href="about.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-info text-xl"></i> About Info</a>
+                <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-gear text-xl"></i> Page Settings</a>
+            </nav>
+            <div class="p-4 border-t border-slate-800 bg-slate-900/50">
+                <button onclick="logout()" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl transition duration-300 border border-red-500/20 font-bold shadow-sm"><i class="ph-bold ph-sign-out"></i> Logout</button>
+            </div>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto relative bg-[#0b1121] custom-scrollbar">
+            
+            <button onclick="toggleSidebar()" class="md:hidden absolute top-6 right-6 z-40 bg-slate-800 backdrop-blur-md p-2 rounded-lg text-white border border-white/10 shadow-lg"><i class="ph-bold ph-list text-2xl"></i></button>
+
+            <div class="relative h-80 shrink-0 overflow-hidden bg-slate-900">
+                <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2000')] bg-cover bg-center opacity-30"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-[#0b1121] via-slate-900/90 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0b1121] via-transparent to-transparent"></div>
+                
+                <div class="absolute bottom-24 left-6 md:left-12 z-10" data-aos="fade-right">
+                    <h1 class="text-3xl md:text-5xl font-black text-white flex items-center gap-3 drop-shadow-lg">
+                        <i class="ph-duotone ph-calendar-plus"></i> Event Manager
+                    </h1>
+                    <p class="text-purple-200 text-sm font-bold mt-2 opacity-90 tracking-wide uppercase">Schedule & Manage Activities</p>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-6 md:px-12 -mt-20 relative z-10 pb-12">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <div class="lg:col-span-1">
+                        <div class="glass-panel p-6 rounded-[2rem] shadow-xl sticky top-8" data-aos="fade-up">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                                    <span class="bg-purple-500/10 text-purple-500 p-2 rounded-lg"><i class="ph-bold ph-pencil-simple"></i></span>
+                                    <span id="formTitle">Add Event</span>
+                                </h3>
+                                <button onclick="resetForm()" id="cancelBtn" class="hidden text-xs font-bold text-red-500 hover:bg-red-900/20 px-3 py-1 rounded-lg transition">Cancel</button>
+                            </div>
+                            
+                            <form id="eventForm" class="space-y-4">
+                                <input type="hidden" id="eventId">
+                                <div><label class="text-xs font-bold uppercase text-slate-500">Title</label><input type="text" id="title" required class="w-full input-glass rounded-xl p-3"></div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div><label class="text-xs font-bold uppercase text-slate-500">Date</label><input type="date" id="date" required class="w-full input-glass rounded-xl p-3 text-slate-300"></div>
+                                    <div><label class="text-xs font-bold uppercase text-slate-500">Time</label><input type="time" id="time" required class="w-full input-glass rounded-xl p-3 text-slate-300"></div>
+                                </div>
+                                <div><label class="text-xs font-bold uppercase text-slate-500">Location</label><input type="text" id="location" required class="w-full input-glass rounded-xl p-3"></div>
+                                <div><label class="text-xs font-bold uppercase text-slate-500">Image URL</label><input type="url" id="image_url" class="w-full input-glass rounded-xl p-3" placeholder="https://..."></div>
+                                <div><label class="text-xs font-bold uppercase text-slate-500">Description</label><textarea id="description" rows="3" class="w-full input-glass rounded-xl p-3"></textarea></div>
+
+                                <button type="submit" id="submitBtn" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3.5 rounded-xl shadow-lg transition transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                                    <i class="ph-bold ph-plus"></i> Save Event
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2">
+                        <div class="bg-slate-900 rounded-[2rem] p-6 shadow-xl border border-slate-800" data-aos="fade-up" data-aos-delay="100">
+                            <h3 class="text-sm font-bold text-slate-400 uppercase mb-6 tracking-widest flex justify-between">
+                                Upcoming Events <button onclick="fetchEvents()" class="text-purple-500"><i class="ph-bold ph-arrows-clockwise"></i></button>
+                            </h3>
+                            <div id="eventsList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="text-center py-10 col-span-full"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500 mx-auto"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Path updated -->
+    <script src="../js/supabase.js"></script>
+    <script>
+        AOS.init();
+        
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('sidebar-closed');
+            sidebar.classList.toggle('sidebar-open');
+            overlay.classList.toggle('hidden');
+        }
+
+        async function logout() {
+            if(confirm("Logout?")) {
+                if (typeof _supabase !== 'undefined') {
+                    await _supabase.auth.signOut();
+                }
+                // Path updated
+                window.location.href = '../login.html';
+            }
+        }
+
+        let isEditing = false;
+
+        async function init() {
+            if (typeof _supabase === 'undefined') {
+                console.error("Supabase not loaded.");
+                alert("System Error: Check database connection.");
+                return;
+            }
+            const { data: { session } } = await _supabase.auth.getSession();
+            // Path updated
+            if (!session) return window.location.href = '../login.html';
+            fetchEvents();
+        }
+
+        async function fetchEvents() {
+            const { data } = await _supabase.from('events').select('*').order('event_date', { ascending: true });
+            const list = document.getElementById('eventsList');
+            list.innerHTML = '';
+            
+            if (data && data.length > 0) {
+                data.forEach((ev, i) => {
+                    const date = new Date(ev.event_date).toLocaleString('default', { month: 'short', day: 'numeric' });
+                    list.innerHTML += `
+                        <div class="bg-slate-800 rounded-2xl overflow-hidden border border-slate-700 group hover:shadow-lg transition relative">
+                            <div class="h-32 bg-slate-700 relative overflow-hidden">
+                                <img src="${ev.image_url || 'https://via.placeholder.com/400'}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                                <div class="absolute top-3 right-3 bg-slate-900/90 backdrop-blur px-2 py-1 rounded-lg text-center shadow-sm">
+                                    <span class="block text-lg font-black text-purple-600 leading-none">${date}</span>
+                                </div>
+                            </div>
+                            <div class="p-5">
+                                <h4 class="font-bold text-white mb-1 truncate">${ev.title}</h4>
+                                <div class="text-xs text-slate-400 flex gap-3 mb-3">
+                                    <span><i class="ph-bold ph-clock"></i> ${ev.event_time}</span>
+                                    <span><i class="ph-bold ph-map-pin"></i> ${ev.location}</span>
+                                </div>
+                                <div class="flex gap-2 pt-3 border-t border-slate-700">
+                                    <button onclick='editEvent(${JSON.stringify(ev).replace(/'/g, "&#39;")})' class="flex-1 py-2 rounded-lg bg-blue-900/20 text-blue-400 text-xs font-bold hover:bg-blue-900/30">Edit</button>
+                                    <button onclick="deleteEvent('${ev.id}')" class="flex-1 py-2 rounded-lg bg-red-900/20 text-red-400 text-xs font-bold hover:bg-red-900/30">Delete</button>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+            } else { list.innerHTML = `<div class="col-span-full text-center py-10 text-slate-400">No events found.</div>`; }
+        }
+
+        function editEvent(ev) {
+            isEditing = true;
+            document.getElementById('eventId').value = ev.id;
+            document.getElementById('title').value = ev.title;
+            document.getElementById('date').value = ev.event_date;
+            document.getElementById('time').value = ev.event_time;
+            document.getElementById('location').value = ev.location;
+            document.getElementById('image_url').value = ev.image_url;
+            document.getElementById('description').value = ev.description;
+            
+            document.getElementById('formTitle').innerText = "Edit Event";
+            document.getElementById('submitBtn').innerHTML = "Update Event";
+            document.getElementById('cancelBtn').classList.remove('hidden');
+        }
+
+        function resetForm() {
+            isEditing = false;
+            document.getElementById('eventForm').reset();
+            document.getElementById('formTitle').innerText = "Add Event";
+            document.getElementById('submitBtn').innerHTML = "Save Event";
+            document.getElementById('cancelBtn').classList.add('hidden');
+        }
+
+        document.getElementById('eventForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                title: document.getElementById('title').value,
+                event_date: document.getElementById('date').value,
+                event_time: document.getElementById('time').value,
+                location: document.getElementById('location').value,
+                image_url: document.getElementById('image_url').value,
+                description: document.getElementById('description').value
+            };
+            
+            if(isEditing) await _supabase.from('events').update(data).eq('id', document.getElementById('eventId').value);
+            else await _supabase.from('events').insert([data]);
+            
+            resetForm(); fetchEvents();
+        });
+
+        async function deleteEvent(id) {
+            if(confirm("Delete Event?")) { await _supabase.from('events').delete().eq('id', id); fetchEvents(); }
+        }
+
+        init();
+    </script>
+</body>
+</html>

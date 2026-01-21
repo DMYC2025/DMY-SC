@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMYSC - Sport Manager</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: { green: '#16a34a', dark: '#020617' } }, fontFamily: { poppins: ['Poppins', 'sans-serif'] } } } }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .glass-panel { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
+        .input-glass { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; }
+        
+        #sidebar { transition: transform 0.3s ease-in-out; }
+        .sidebar-open { transform: translateX(0) !important; }
+        .sidebar-closed { transform: translateX(-100%); }
+        @media (min-width: 768px) { .sidebar-closed { transform: translateX(0); } }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-[#0b1121] text-slate-100 min-h-screen font-poppins overflow-hidden">
+
+    <div class="flex h-screen relative">
+        <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/80 z-40 hidden md:hidden backdrop-blur-sm"></div>
+
+        <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-slate-900 border-r border-slate-800 flex flex-col z-50 sidebar-closed md:relative md:translate-x-0 shadow-2xl md:shadow-none">
+             <div class="p-6 flex items-center justify-between border-b border-slate-800 h-24">
+                <div class="flex items-center gap-3">
+                    <img src="../assets/logo.png" class="h-10 w-10 object-contain">
+                    <div><h2 class="font-black text-lg text-white">ADMIN</h2><p class="text-[10px] text-brand-green font-bold">Control Panel</p></div>
+                </div>
+                <button onclick="toggleSidebar()" class="md:hidden text-slate-400"><i class="ph-bold ph-x text-xl"></i></button>
+            </div>
+            <nav class="flex-1 p-4 space-y-2 mt-4 overflow-y-auto">
+                <a href="index.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-squares-four text-xl"></i> Dashboard</a>
+                <a href="members.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-users text-xl"></i> Member Manage</a>
+                <a href="events.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-calendar-plus text-xl"></i> Event Manage</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 bg-brand-green text-white shadow-lg shadow-brand-green/20 rounded-xl font-bold"><i class="ph-bold ph-trophy text-xl"></i> Sport Manage</a>
+                <a href="notifications.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-bell-ringing text-xl"></i> Notifications</a>
+                <a href="quick_links.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-link text-xl"></i> Quick Links</a>
+                <a href="committee.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-users-three text-xl"></i> Committee</a>
+                <a href="about.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-info text-xl"></i> About Info</a>
+                <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-gear text-xl"></i> Page Settings</a>
+            </nav>
+            <div class="p-4 border-t border-slate-800 bg-slate-900/50">
+                <button onclick="logout()" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl transition duration-300 border border-red-500/20 font-bold shadow-sm"><i class="ph-bold ph-sign-out"></i> Logout</button>
+            </div>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto relative bg-[#0b1121] custom-scrollbar">
+            
+            <button onclick="toggleSidebar()" class="md:hidden absolute top-6 right-6 z-40 bg-slate-800 backdrop-blur-md p-2 rounded-lg text-white border border-white/10 shadow-lg"><i class="ph-bold ph-list text-2xl"></i></button>
+
+            <div class="relative h-80 shrink-0 overflow-hidden bg-slate-900">
+                <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=2070')] bg-cover bg-center opacity-30"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-[#0b1121] via-slate-900/90 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0b1121] via-transparent to-transparent"></div>
+                
+                <div class="absolute bottom-24 left-6 md:left-12 z-10" data-aos="fade-right">
+                    <h1 class="text-3xl md:text-5xl font-black text-white flex items-center gap-3 drop-shadow-lg">
+                        <i class="ph-duotone ph-trophy"></i> Sport Manager
+                    </h1>
+                    <p class="text-blue-200 text-sm font-bold mt-2 opacity-90 tracking-wide uppercase">Manage Teams & Captains</p>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-6 md:px-12 -mt-20 relative z-10 pb-12">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <div class="lg:col-span-1">
+                        <div class="glass-panel p-6 rounded-[2rem] shadow-xl sticky top-8" data-aos="fade-up">
+                            <h3 class="text-xl font-bold mb-6 flex items-center gap-2 text-white">
+                                <span class="bg-blue-500/10 text-blue-500 p-2 rounded-lg"><i id="formIcon" class="ph-bold ph-plus"></i></span> 
+                                <span id="formTitle">Add Sport</span>
+                            </h3>
+                            <button onclick="resetForm()" id="cancelBtn" class="hidden text-xs text-red-400 font-bold mb-4">Cancel Edit</button>
+                            
+                            <form id="sportForm" class="space-y-4">
+                                <input type="hidden" id="sportId">
+                                <div><label class="text-xs font-bold uppercase text-slate-500">Sport Name</label><input type="text" id="name" class="w-full input-glass rounded-xl p-3" required></div>
+                                <div><label class="text-xs font-bold uppercase text-slate-500">Description</label><textarea id="desc" rows="3" class="w-full input-glass rounded-xl p-3"></textarea></div>
+                                <div><label class="text-xs font-bold uppercase text-slate-500">Image URL</label><input type="text" id="imgLink" class="w-full input-glass rounded-xl p-3"></div>
+                                <div><label class="text-xs font-bold uppercase text-slate-500">Captain</label><select id="captain" class="w-full input-glass rounded-xl p-3 bg-slate-900"></select></div>
+
+                                <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl shadow-lg transition transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                                    <i class="ph-bold ph-floppy-disk"></i> Save Team
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2">
+                        <div class="glass-panel p-6 rounded-[2rem] shadow-xl" data-aos="fade-up" data-aos-delay="100">
+                            <h3 class="text-sm font-bold text-slate-400 uppercase mb-4 tracking-widest">Active Sports Teams</h3>
+                            <div id="sportsList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="col-span-full text-center py-10"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="../js/supabase.js"></script>
+    <script>
+        AOS.init();
+        
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('sidebar-closed');
+            sidebar.classList.toggle('sidebar-open');
+            overlay.classList.toggle('hidden');
+        }
+        
+        async function logout() {
+            if(confirm("Logout?")) {
+                if (typeof _supabase !== 'undefined') {
+                    await _supabase.auth.signOut();
+                }
+                window.location.href = '../login.html';
+            }
+        }
+
+        let isEditing = false;
+
+        async function init() {
+            if (typeof _supabase === 'undefined') return;
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) return window.location.href = '../login.html';
+            loadMembers(); loadSports();
+        }
+
+        async function loadMembers() {
+            const { data } = await _supabase.from('profiles').select('id, full_name').order('full_name');
+            const select = document.getElementById('captain');
+            select.innerHTML = '<option value="">Select Captain</option>' + data.map(m => `<option value="${m.id}">${m.full_name}</option>`).join('');
+        }
+
+        async function loadSports() {
+            const { data } = await _supabase.from('sports').select('*, captain:captain_id(full_name)');
+            const list = document.getElementById('sportsList');
+            list.innerHTML = '';
+            
+            if (data && data.length > 0) {
+                data.forEach((s, i) => {
+                    // Safe handling of single quotes for onclick handler
+                    const safeSport = JSON.stringify(s).replace(/'/g, "&#39;");
+                    
+                    list.innerHTML += `
+                        <div class="bg-slate-800 rounded-2xl overflow-hidden border border-slate-700 group hover:border-blue-500/50 transition relative">
+                            <div class="h-32 relative">
+                                <img src="${s.image_url || 'https://via.placeholder.com/300'}" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+                                <h4 class="absolute bottom-3 left-4 font-bold text-lg text-white">${s.name}</h4>
+                            </div>
+                            <div class="p-4 flex justify-between items-center">
+                                <div>
+                                    <p class="text-[10px] text-slate-400 uppercase font-bold">Captain</p>
+                                    <p class="text-sm font-bold text-blue-500">${s.captain?.full_name || 'Not Assigned'}</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick='editSport(${safeSport})' class="bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white p-2 rounded-lg transition"><i class="ph-bold ph-pencil-simple text-lg"></i></button>
+                                    <button onclick="deleteSport('${s.id}')" class="bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white p-2 rounded-lg transition"><i class="ph-bold ph-trash text-lg"></i></button>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+            } else {
+                 list.innerHTML = `<div class="col-span-full text-center py-10 text-slate-400">No sports teams found.</div>`;
+            }
+        }
+
+        // Edit Functionality
+        function editSport(sport) {
+            isEditing = true;
+            document.getElementById('sportId').value = sport.id;
+            document.getElementById('name').value = sport.name;
+            document.getElementById('desc').value = sport.description || '';
+            document.getElementById('imgLink').value = sport.image_url || '';
+            document.getElementById('captain').value = sport.captain_id || '';
+
+            // Update UI
+            document.getElementById('formTitle').innerText = "Edit Team";
+            document.getElementById('formIcon').className = "ph-bold ph-pencil-simple";
+            document.getElementById('submitBtn').innerHTML = '<i class="ph-bold ph-check-circle"></i> Update Team';
+            document.getElementById('submitBtn').classList.replace('bg-blue-600', 'bg-green-600');
+            document.getElementById('submitBtn').classList.replace('hover:bg-blue-500', 'hover:bg-green-500');
+            document.getElementById('cancelBtn').classList.remove('hidden');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            isEditing = false;
+            document.getElementById('sportForm').reset();
+            document.getElementById('sportId').value = '';
+            
+            // Reset UI
+            document.getElementById('formTitle').innerText = "Add Sport";
+            document.getElementById('formIcon').className = "ph-bold ph-plus";
+            document.getElementById('submitBtn').innerHTML = '<i class="ph-bold ph-floppy-disk"></i> Save Team';
+            document.getElementById('submitBtn').classList.replace('bg-green-600', 'bg-blue-600');
+            document.getElementById('submitBtn').classList.replace('hover:bg-green-500', 'hover:bg-blue-500');
+            document.getElementById('cancelBtn').classList.add('hidden');
+        }
+
+        document.getElementById('sportForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('name').value,
+                description: document.getElementById('desc').value,
+                image_url: document.getElementById('imgLink').value,
+                captain_id: document.getElementById('captain').value || null
+            };
+
+            let error;
+            if (isEditing) {
+                const id = document.getElementById('sportId').value;
+                const res = await _supabase.from('sports').update(data).eq('id', id);
+                error = res.error;
+            } else {
+                const res = await _supabase.from('sports').insert(data);
+                error = res.error;
+            }
+            
+            if(error) alert("Error: " + error.message);
+            else { 
+                resetForm(); 
+                loadSports(); 
+            }
+        });
+
+        async function deleteSport(id) { 
+            if(confirm("Delete?")) { 
+                await _supabase.from('sports').delete().eq('id', id); 
+                loadSports(); 
+            } 
+        }
+        init();
+    </script>
+</body>
+</html>
