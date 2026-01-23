@@ -176,6 +176,12 @@
                 </div>
 
                 <div class="flex items-center gap-4">
+                    <!-- Notification Button Added -->
+                    <button onclick="openModal('notificationModal'); fetchNotifications();" class="relative group w-10 h-10 flex items-center justify-center rounded-full bg-slate-800/50 border border-white/10 hover:border-brand-green hover:bg-brand-green/10 transition-all duration-300 hover:shadow-[0_0_15px_rgba(22,163,74,0.3)]">
+                        <i class="ph-bold ph-bell text-white group-hover:text-brand-green text-xl transition-colors"></i>
+                        <span id="notify-badge" class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse hidden"></span>
+                    </button>
+
                     <a href="login.html" class="hidden md:flex items-center gap-2 px-6 py-2 rounded-full bg-slate-800/50 border border-white/10 hover:border-brand-green hover:bg-brand-green/10 text-sm font-bold transition-all duration-300 group hover:shadow-[0_0_15px_rgba(22,163,74,0.3)] active:scale-95">
                         <i class="ph-bold ph-sign-in text-brand-green group-hover:text-white transition"></i>
                         <span>Member Login</span>
@@ -350,6 +356,7 @@
         </div>
         
         <!-- MODALS -->
+        <!-- PRIVACY MODAL -->
         <div id="privacyModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
             <div class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity opacity-0 modal-backdrop"></div>
             
@@ -388,6 +395,7 @@
             </div>
         </div>
 
+        <!-- TERMS MODAL -->
         <div id="termsModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
             <div class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity opacity-0 modal-backdrop"></div>
 
@@ -425,6 +433,44 @@
                 </div>
             </div>
         </div>
+        
+        <!-- NOTIFICATIONS MODAL (NEW) -->
+        <div id="notificationModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity opacity-0 modal-backdrop"></div>
+            
+            <div class="fixed inset-0 z-10 overflow-y-auto">
+                <div class="flex min-h-full items-center justify-center p-4 text-center">
+                    <div class="relative transform overflow-hidden rounded-2xl bg-[#0f1522] border border-white/10 text-left shadow-2xl transition-all w-full max-w-xl scale-95 opacity-0 modal-panel flex flex-col max-h-[80vh]">
+                        
+                        <div class="bg-[#050914] px-6 py-4 border-b border-white/5 flex justify-between items-center shrink-0">
+                            <div class="flex items-center gap-2">
+                                <i class="ph-fill ph-bell text-brand-green text-xl"></i>
+                                <h3 class="text-lg font-bold text-white">Club Alerts</h3>
+                            </div>
+                            <button onclick="closeModal('notificationModal')" class="text-slate-400 hover:text-white transition">
+                                <i class="ph-bold ph-x text-xl"></i>
+                            </button>
+                        </div>
+
+                        <div class="px-4 py-4 overflow-y-auto custom-scrollbar flex-grow" id="notificationFeedModal">
+                            <!-- Loading State -->
+                            <div class="text-center py-10">
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-green mx-auto mb-4"></div>
+                                <p class="text-xs text-slate-500 uppercase tracking-widest">Loading Alerts...</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#050914] px-6 py-3 flex justify-between items-center border-t border-white/5 shrink-0 text-xs text-slate-500">
+                             <span>Stay updated with latest news</span>
+                            <button onclick="closeModal('notificationModal')" class="rounded-lg bg-slate-800 px-4 py-2 text-xs font-bold text-white hover:bg-slate-700 transition">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </footer>
     <!-- FOOTER END -->
 
@@ -464,7 +510,7 @@
             }, intervalTime);
         });
 
-        // --- FOOTER MODAL LOGIC ---
+        // --- MODAL LOGIC (Combined) ---
         function openModal(modalId) {
             const modal = document.getElementById(modalId);
             const backdrop = modal.querySelector('.modal-backdrop');
@@ -502,6 +548,92 @@
         const supabaseUrl = 'https://tnrqasiiywcvtwkwytqe.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRucnFhc2lpeXdjdnR3a3d5dHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNDIxMTEsImV4cCI6MjA4MjkxODExMX0.rd9aKmLa687zMxg8FV5AllgnYkz7wpdXBRi3a5NyXc4';
         const _supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // --- Notifications Logic (Added) ---
+        async function fetchNotifications() {
+            const feed = document.getElementById('notificationFeedModal');
+            
+            // Show loading if empty
+            if(!feed.innerHTML.trim()) {
+                 feed.innerHTML = `
+                    <div class="text-center py-10">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-green mx-auto mb-4"></div>
+                        <p class="text-xs text-slate-500 uppercase tracking-widest">Loading Alerts...</p>
+                    </div>
+                `;
+            }
+
+            try {
+                const { data, error } = await _supabase
+                    .from('notifications')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                feed.innerHTML = '';
+
+                if (!data || data.length === 0) {
+                    feed.innerHTML = `
+                        <div class="flex flex-col items-center justify-center h-48 text-center opacity-60">
+                            <i class="ph-duotone ph-bell-slash text-4xl text-slate-500 mb-2"></i>
+                            <h3 class="text-sm font-bold text-white">No New Alerts</h3>
+                            <p class="text-xs text-slate-400">You are all caught up!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                data.forEach((n, index) => {
+                    const isUrgent = n.priority === 'urgent';
+                    
+                    const cardBg = isUrgent ? 'bg-red-900/10 border-red-500/30' : 'bg-slate-800/40 border-white/5';
+                    const iconBg = isUrgent ? 'bg-red-500 text-white' : 'bg-brand-green text-white';
+                    const icon = isUrgent ? 'ph-warning-circle' : 'ph-info';
+                    const date = new Date(n.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+                    const item = `
+                        <div class="${cardBg} p-4 rounded-xl border mb-3 relative overflow-hidden group hover:bg-slate-800/60 transition-colors">
+                            <div class="flex gap-4 items-start relative z-10">
+                                <div class="shrink-0">
+                                    <div class="w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center shadow-lg">
+                                        <i class="ph-fill ${icon} text-lg"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-start">
+                                        <h3 class="text-sm font-bold text-white mb-1 leading-snug pr-2">${n.title}</h3>
+                                        ${isUrgent ? '<span class="text-[10px] bg-red-600 text-white px-1.5 py-0.5 rounded uppercase font-black tracking-wider">Urgent</span>' : ''}
+                                    </div>
+                                    <p class="text-slate-400 text-xs leading-relaxed mb-2 font-light">${n.message}</p>
+                                    <div class="flex items-center gap-1 text-[10px] font-bold text-slate-600 uppercase tracking-wider">
+                                        <i class="ph-bold ph-clock"></i> ${date}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    feed.insertAdjacentHTML('beforeend', item);
+                });
+                
+                // Show badge if there are notifications
+                const badge = document.getElementById('notify-badge');
+                if(badge) {
+                    badge.classList.remove('hidden');
+                }
+
+            } catch (err) {
+                console.error("Notification Error:", err);
+                feed.innerHTML = `<div class="text-center text-red-400 text-xs py-10">Failed to load notifications.</div>`;
+            }
+        }
+        
+        // Check for notifications on load just to show badge
+        async function checkBadge() {
+             const { count } = await _supabase.from('notifications').select('*', { count: 'exact', head: true });
+             if(count > 0) {
+                 const badge = document.getElementById('notify-badge');
+                 if(badge) badge.classList.remove('hidden');
+             }
+        }
 
         // --- Slideshow Logic ---
         let slideInterval;
@@ -598,6 +730,7 @@
         initSlideshow();
         loadStats();
         loadFooterData();
+        checkBadge(); // Check for badge on load
     </script>
 </body>
 </html>
