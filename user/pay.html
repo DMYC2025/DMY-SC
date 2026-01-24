@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Payments - DMYSC</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { 
+            darkMode: 'class', 
+            theme: { 
+                extend: { 
+                    colors: { brand: { green: '#16a34a', dark: '#0b1121' } }, 
+                    fontFamily: { poppins: ['Poppins', 'sans-serif'] } 
+                } 
+            } 
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .glass-panel { 
+            background: rgba(30, 41, 59, 0.4); 
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 2rem; 
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-brand-dark min-h-screen font-poppins text-slate-100 selection:bg-brand-green selection:text-white">
+
+    <div class="relative h-[40vh] w-full overflow-hidden flex items-center justify-center">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/90 to-brand-dark/40"></div>
+        
+        <nav class="absolute top-0 left-0 w-full p-6 z-50 flex justify-between items-center max-w-7xl mx-auto">
+            <a href="index.html" class="flex items-center gap-2 text-slate-400 hover:text-white transition group">
+                <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-brand-green group-hover:text-white transition">
+                    <i class="ph-bold ph-arrow-left text-xl"></i>
+                </div>
+                <span class="font-bold text-sm uppercase tracking-widest hidden md:block">Dashboard</span>
+            </a>
+        </nav>
+
+        <div class="relative z-10 text-center px-4" data-aos="fade-down">
+            <h1 class="text-4xl md:text-6xl font-black text-white mb-2 uppercase tracking-tighter drop-shadow-2xl">
+                Payment <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-green to-emerald-400">History</span>
+            </h1>
+            <p class="text-slate-400 text-lg font-medium">Track your membership fees & contributions.</p>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 md:px-6 -mt-20 relative z-20 pb-20 flex flex-col lg:flex-row gap-8">
+        
+        <div class="flex-1 space-y-8">
+            
+            <div class="glass-panel p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group" data-aos="fade-up">
+                <div class="absolute right-0 top-0 p-10 opacity-5 group-hover:opacity-10 transition duration-500">
+                    <i class="ph-fill ph-coins text-9xl text-brand-green"></i>
+                </div>
+                <div>
+                    <p class="text-slate-400 font-bold uppercase tracking-widest text-xs mb-2">Total Contribution</p>
+                    <h2 class="text-5xl md:text-6xl font-black text-white flex items-baseline gap-2">
+                        <span id="totalPaidDisplay">0</span> <span class="text-lg text-brand-green font-bold">LKR</span>
+                    </h2>
+                </div>
+                <div class="text-right hidden md:block">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20">
+                        <i class="ph-bold ph-check-circle"></i> <span class="text-xs font-bold uppercase">Verified Member</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="ph-bold ph-chart-bar text-brand-green"></i> Payment Overview
+                    </h3>
+                    <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider">
+                        <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Paid</span>
+                        <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-red-500/50"></span> Unpaid</span>
+                    </div>
+                </div>
+                <div id="paymentChart" class="w-full min-h-[300px]"></div>
+            </div>
+
+            <div class="space-y-4" id="historyFeed">
+                <div class="text-center py-10">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-green mx-auto mb-2"></div>
+                    <p class="text-slate-500 text-sm">Loading records...</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="w-full lg:w-80 shrink-0 space-y-6">
+            
+            <div class="glass-panel p-6 relative overflow-hidden" data-aos="fade-left">
+                <h3 class="text-xs font-bold text-slate-400 uppercase mb-4 tracking-widest flex items-center gap-2">
+                    <i class="ph-fill ph-info"></i> Membership Status
+                </h3>
+                
+                <div id="statusIndicator" class="flex flex-col items-center justify-center p-6 bg-slate-800/50 rounded-2xl border border-white/5 mb-4">
+                    <div class="w-16 h-16 rounded-full bg-slate-700 flex items-center justify-center text-2xl mb-3 animate-pulse">
+                        <i class="ph-duotone ph-circle-notch"></i>
+                    </div>
+                    <span class="font-bold text-white">Checking...</span>
+                </div>
+                
+                <p class="text-xs text-slate-400 text-center leading-relaxed">
+                    Monthly Fee: <strong class="text-white">100 LKR</strong>. <br>Please settle any arrears to maintain active status.
+                </p>
+            </div>
+
+            <div id="arrearsPanel" class="glass-panel p-6 hidden border-red-500/30" data-aos="fade-left" data-aos-delay="100">
+                <h3 class="text-xs font-bold text-red-400 uppercase mb-4 tracking-widest flex items-center gap-2">
+                    <i class="ph-fill ph-warning-circle"></i> Action Required
+                </h3>
+                <div id="arrearsList" class="space-y-2 max-h-60 overflow-y-auto custom-scrollbar pr-1">
+                    </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="../js/supabase.js"></script>
+    
+    <script>
+        AOS.init();
+        let currentUserProfile = null;
+
+        async function initPage() {
+            const { data: { user } } = await _supabase.auth.getUser();
+            if(!user) return window.location.href = '../login.html';
+
+            // 1. Get User Profile (for Join Date & Name)
+            const { data: profile } = await _supabase.from('profiles').select('full_name, member_id, created_at').eq('id', user.id).single();
+            currentUserProfile = profile;
+
+            // 2. Get All Payments
+            const { data: payments } = await _supabase
+                .from('payments')
+                .select('*')
+                .eq('member_id', user.id)
+                .order('month_year', { ascending: false });
+
+            // 3. Process Data
+            renderTotal(payments);
+            renderHistory(payments);
+            renderChartAndStatus(profile.created_at, payments);
+        }
+
+        function renderTotal(payments) {
+            const total = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+            document.getElementById('totalPaidDisplay').innerText = total.toLocaleString();
+        }
+
+        function renderHistory(payments) {
+            const feed = document.getElementById('historyFeed');
+            feed.innerHTML = '<h3 class="text-lg font-bold text-white mb-4 px-2">Recent Receipts</h3>';
+
+            if(!payments || payments.length === 0) {
+                feed.innerHTML += `<div class="p-6 text-center text-slate-500 border border-white/5 rounded-2xl">No payment history found.</div>`;
+                return;
+            }
+
+            payments.forEach((p, i) => {
+                const date = new Date(p.paid_at).toLocaleDateString();
+                feed.innerHTML += `
+                <div class="glass-panel p-4 flex items-center justify-between group hover:bg-slate-800/60 transition" data-aos="fade-up" data-aos-delay="${i * 50}">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-brand-green/10 text-brand-green flex items-center justify-center border border-brand-green/20">
+                            <i class="ph-bold ph-receipt text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-lg">${p.month_year}</h4>
+                            <p class="text-xs text-slate-400 font-mono">Paid on ${date}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-bold text-white mb-1">${p.amount}/=</div>
+                        <button onclick="generateReceipt('${p.id}', '${p.month_year}', '${p.amount}', '${p.paid_at}')" class="text-[10px] bg-slate-700 hover:bg-white hover:text-slate-900 text-white px-3 py-1.5 rounded-lg transition font-bold flex items-center gap-1 ml-auto">
+                            <i class="ph-bold ph-download-simple"></i> Save
+                        </button>
+                    </div>
+                </div>`;
+            });
+        }
+
+        function renderChartAndStatus(joinDateStr, payments) {
+            const paidMonthsMap = new Set(payments.map(p => p.month_year));
+            const chartCategories = [];
+            const chartData = [];
+            const arrears = [];
+
+            // Calculate months from Join Date (or Jan 2024 if null) to Now
+            let start = joinDateStr ? new Date(joinDateStr) : new Date('2024-01-01');
+            const now = new Date();
+            // Start from the 1st of the join month
+            start.setDate(1);
+
+            while (start <= now) {
+                const mStr = `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}`;
+                chartCategories.push(mStr);
+
+                if (paidMonthsMap.has(mStr)) {
+                    // Paid
+                    chartData.push({ x: mStr, y: 100, fillColor: '#16a34a' }); // Green
+                } else {
+                    // Unpaid
+                    chartData.push({ x: mStr, y: 100, fillColor: '#334155' }); // Dark Gray (Unpaid visual)
+                    arrears.push(mStr);
+                }
+                start.setMonth(start.getMonth() + 1);
+            }
+
+            // --- Render Chart ---
+            const options = {
+                series: [{ name: 'Status', data: chartData }],
+                chart: { 
+                    type: 'bar', 
+                    height: 300, 
+                    toolbar: { show: false }, 
+                    fontFamily: 'Poppins, sans-serif',
+                    background: 'transparent'
+                },
+                plotOptions: { 
+                    bar: { 
+                        borderRadius: 6, 
+                        columnWidth: '60%', 
+                        distributed: true 
+                    } 
+                },
+                dataLabels: { enabled: false },
+                xaxis: { 
+                    categories: chartCategories, 
+                    labels: { style: { colors: '#64748b', fontSize: '10px' }, rotate: -45 },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: { 
+                    show: false, 
+                    max: 100 
+                },
+                grid: { show: false },
+                tooltip: {
+                    theme: 'dark',
+                    custom: function({ series, seriesIndex, dataPointIndex, w }) {
+                        const data = w.config.series[seriesIndex].data[dataPointIndex];
+                        const status = data.fillColor === '#16a34a' ? 'PAID' : 'NOT PAID';
+                        return `<div class="px-3 py-2 bg-slate-800 text-xs font-bold border border-white/10 rounded-lg">
+                                    ${data.x}: <span class="${status === 'PAID' ? 'text-green-400' : 'text-red-400'}">${status}</span>
+                                </div>`;
+                    }
+                }
+            };
+
+            const chartEl = document.querySelector("#paymentChart");
+            chartEl.innerHTML = ""; // Clear loader
+            new ApexCharts(chartEl, options).render();
+
+            // --- Update Sidebar Status ---
+            const statusEl = document.getElementById('statusIndicator');
+            const arrearsPanel = document.getElementById('arrearsPanel');
+            const arrearsList = document.getElementById('arrearsList');
+
+            if (arrears.length > 0) {
+                statusEl.innerHTML = `
+                    <div class="w-16 h-16 rounded-full bg-red-500/10 text-red-500 border border-red-500/20 flex items-center justify-center text-3xl mb-3 shadow-[0_0_20px_rgba(239,68,68,0.2)]">
+                        <i class="ph-duotone ph-warning-circle"></i>
+                    </div>
+                    <span class="font-bold text-red-400 uppercase tracking-widest text-xs">Arrears Found</span>
+                `;
+                arrearsPanel.classList.remove('hidden');
+                arrearsList.innerHTML = '';
+                arrears.reverse().forEach(month => {
+                    arrearsList.innerHTML += `
+                        <div class="flex justify-between items-center bg-slate-800/50 p-3 rounded-xl border border-red-500/20 hover:bg-red-900/10 transition">
+                            <span class="font-bold text-slate-300 text-sm">${month}</span>
+                            <span class="text-[10px] bg-red-500 text-white px-2 py-0.5 rounded font-bold">DUE</span>
+                        </div>
+                    `;
+                });
+            } else {
+                statusEl.innerHTML = `
+                    <div class="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 flex items-center justify-center text-3xl mb-3 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                        <i class="ph-duotone ph-check-circle"></i>
+                    </div>
+                    <span class="font-bold text-emerald-400 uppercase tracking-widest text-xs">Up to Date</span>
+                `;
+                arrearsPanel.classList.add('hidden');
+            }
+        }
+
+        // --- Receipt Gen (Same as before) ---
+        function getBase64ImageFromURL(url) {
+            return new Promise((resolve) => {
+                var img = new Image(); img.setAttribute("crossOrigin", "anonymous");
+                img.onload = () => {
+                    var canvas = document.createElement("canvas"); canvas.width = img.width; canvas.height = img.height;
+                    var ctx = canvas.getContext("2d"); ctx.drawImage(img, 0, 0); resolve(canvas.toDataURL("image/png"));
+                };
+                img.onerror = () => resolve(null); img.src = url;
+            });
+        }
+
+        async function generateReceipt(payId, month, amount, paidAt) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [100, 150] });
+            const logoData = await getBase64ImageFromURL('../assets/logo.png');
+
+            doc.setFillColor(11, 17, 33); doc.rect(0, 0, 100, 30, 'F');
+            if (logoData) doc.addImage(logoData, 'PNG', 5, 5, 20, 20);
+
+            doc.setTextColor(255, 255, 255); doc.setFontSize(10); doc.setFont("helvetica", "bold");
+            doc.text("Dream Makers", 30, 12); doc.text("Youth & Sports Club", 30, 17);
+            doc.setFontSize(8); doc.setTextColor(22, 163, 74); doc.text("Official Payment Receipt", 30, 23);
+
+            doc.setTextColor(0, 0, 0); doc.setFont("helvetica", "normal");
+            const dateStr = new Date(paidAt).toLocaleString();
+            doc.setFontSize(8); doc.setTextColor(100); doc.text("Date: " + dateStr, 50, 38, { align: 'center' });
+            doc.setDrawColor(200); doc.line(10, 40, 90, 40);
+
+            let y = 48;
+            function addRow(l, v, b=false) {
+                doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(80); doc.text(l, 10, y);
+                doc.setFont("helvetica", b?"bold":"normal"); doc.setTextColor(0); doc.text(v, 90, y, { align: 'right' });
+                y += 8;
+            }
+
+            addRow("Receipt ID", payId.split('-')[0].toUpperCase());
+            addRow("Member Name", currentUserProfile ? currentUserProfile.full_name : "Unknown");
+            addRow("Payment For", month, true);
+
+            y += 5;
+            doc.setFillColor(240, 253, 244); doc.roundedRect(10, y-5, 80, 15, 2, 2, 'F');
+            doc.setTextColor(22, 163, 74); doc.setFontSize(12); doc.setFont("helvetica", "bold");
+            doc.text("AMOUNT PAID", 15, y+2); doc.text(amount + " LKR", 85, y+2, { align: 'right' });
+
+            y += 20; doc.setFontSize(7); doc.setTextColor(150);
+            doc.text("Thank you for your contribution!", 50, y, { align: 'center' });
+            
+            doc.save(`Receipt_${month}.pdf`);
+        }
+
+        initPage();
+    </script>
+</body>
+</html>
