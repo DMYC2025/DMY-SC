@@ -2,17 +2,12 @@
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DMYC Official Launch</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DMYC Official Launch 2026</title>
     <link rel="icon" type="image/png" href="assets/logo_1.png">
     
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     
-    <!-- Icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { 
@@ -31,400 +26,675 @@
                         orbitron: ['Orbitron', 'sans-serif'],
                         rajdhani: ['Rajdhani', 'sans-serif']
                     },
-                    backgroundImage: {
-                        'grid-pattern': "linear-gradient(to right, #16a34a1a 1px, transparent 1px), linear-gradient(to bottom, #16a34a1a 1px, transparent 1px)"
+                    animation: {
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        'pulse-glow': {
+                            '0%, 100%': { 'box-shadow': '0 0 20px rgba(22, 163, 74, 0.5)' },
+                            '50%': { 'box-shadow': '0 0 40px rgba(22, 163, 74, 0.8), 0 0 60px rgba(0, 255, 65, 0.4)' }
+                        },
+                        'float': {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-15px)' }
+                        }
                     }
                 } 
             } 
         }
     </script>
 
-    <!-- GSAP for Cinematic Timeline -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
-    <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        body {
-            background-color: #050914;
-            overflow: hidden;
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body { 
+            background-color: #050914; 
+            overflow: hidden; 
             font-family: 'Rajdhani', sans-serif;
+            touch-action: manipulation;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            height: 100vh;
+            width: 100vw;
+        }
+        
+        /* Prevent text selection */
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* Starfield Background */
+        #warpCanvas { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: 0; 
+            opacity: 0.5;
+            pointer-events: none;
         }
 
-        /* 3D Perspective Container */
-        .scene {
-            perspective: 1000px;
-            transform-style: preserve-3d;
+        /* Responsive Text Sizes */
+        .responsive-heading {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+        }
+        
+        .responsive-subheading {
+            font-size: clamp(1rem, 4vw, 1.5rem);
+        }
+        
+        .responsive-countdown {
+            font-size: clamp(8rem, 40vw, 25rem);
+        }
+        
+        .responsive-button {
+            font-size: clamp(0.875rem, 3vw, 1.125rem);
+            padding: clamp(12px, 3vw, 16px) clamp(24px, 6vw, 40px);
         }
 
-        /* Glitch Text Effect */
-        .glitch-wrapper {
-            position: relative;
-        }
-        .glitch-wrapper::before, .glitch-wrapper::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        .glitch-wrapper::before {
-            left: 2px;
-            text-shadow: -1px 0 #ff00c1;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim-1 5s infinite linear alternate-reverse;
-        }
-        .glitch-wrapper::after {
-            left: -2px;
-            text-shadow: -1px 0 #00fff9;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim-2 5s infinite linear alternate-reverse;
+        /* Cinematic Text Styles */
+        .cinematic-text {
+            text-shadow: 0 0 20px rgba(22, 163, 74, 0.8),
+                         0 0 40px rgba(22, 163, 74, 0.4);
+            opacity: 0;
+            transform: scale(0.8);
+            letter-spacing: 1px;
         }
 
-        @keyframes glitch-anim-1 {
-            0% { clip: rect(20px, 9999px, 80px, 0); }
-            20% { clip: rect(60px, 9999px, 10px, 0); }
-            40% { clip: rect(40px, 9999px, 90px, 0); }
-            60% { clip: rect(80px, 9999px, 20px, 0); }
-            80% { clip: rect(10px, 9999px, 60px, 0); }
-            100% { clip: rect(50px, 9999px, 30px, 0); }
-        }
-        @keyframes glitch-anim-2 {
-            0% { clip: rect(60px, 9999px, 10px, 0); }
-            20% { clip: rect(30px, 9999px, 70px, 0); }
-            40% { clip: rect(90px, 9999px, 40px, 0); }
-            60% { clip: rect(10px, 9999px, 80px, 0); }
-            80% { clip: rect(50px, 9999px, 20px, 0); }
-            100% { clip: rect(70px, 9999px, 30px, 0); }
-        }
-
-        /* Button Hover Scan */
-        .btn-scan {
+        /* Button Styles */
+        .launch-button {
             position: relative;
             overflow: hidden;
+            background: rgba(22, 163, 74, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(22, 163, 74, 0.7);
+            transition: all 0.3s ease;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            cursor: pointer;
+            outline: none;
+            border-radius: 8px;
         }
-        .btn-scan::after {
+        
+        .launch-button:hover, .launch-button:focus {
+            background: rgba(22, 163, 74, 0.2);
+            box-shadow: 0 0 40px rgba(22, 163, 74, 0.8);
+            border-color: #16a34a;
+            transform: translateY(-2px);
+        }
+        
+        .launch-button:active {
+            transform: translateY(0);
+        }
+        
+        .launch-button::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
             transition: 0.5s;
         }
-        .btn-scan:hover::after {
+        
+        .launch-button:hover::before {
             left: 100%;
-            transition: 0.5s;
         }
 
-        /* Loader Bar */
-        .loader-bar {
-            width: 0%;
-            height: 2px;
-            background: #16a34a;
-            box-shadow: 0 0 10px #16a34a;
+        /* Glow Effects */
+        .glow-text {
+            text-shadow: 0 0 10px currentColor,
+                         0 0 20px currentColor,
+                         0 0 40px currentColor;
         }
-
-        /* Countdown Number Style */
-        .countdown-text {
-            text-shadow: 0 0 40px rgba(22, 163, 74, 0.8);
+        
+        /* Loading Animation */
+        .loading-dots {
+            display: inline-block;
+        }
+        
+        .loading-dots::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
         }
     </style>
 </head>
-<body class="h-screen w-screen text-white select-none">
+<body class="text-white no-select">
 
-    <!-- CANVAS STARFIELD BACKGROUND (Vanilla JS) -->
-    <canvas id="warpCanvas" class="fixed inset-0 z-0 opacity-40"></canvas>
+    <audio id="audio-bgm" loop>
+        <source src="assets/bgm.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-sfx">
+        <source src="assets/sfx.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-clock">
+        <source src="assets/clock.mp3" type="audio/mpeg">
+    </audio>
 
-    <!-- UI LAYER -->
-    <div class="relative z-10 w-full h-full flex flex-col items-center justify-center p-6">
+    <canvas id="warpCanvas"></canvas>
+
+    <!-- Main Container -->
+    <div class="w-full h-full flex flex-col items-center justify-center p-4 md:p-6 relative z-10">
         
-        <!-- INTRO LOADER (Sequence 1) -->
-        <div id="intro-sequence" class="absolute inset-0 z-50 bg-brand-dark flex flex-col items-center justify-center">
-            <div class="font-mono text-brand-neon text-xs mb-2 tracking-widest" id="loader-text">INITIALIZING CORE SYSTEMS...</div>
-            <div class="w-64 h-1 bg-gray-800 rounded-full overflow-hidden">
-                <div id="progress-bar" class="loader-bar"></div>
+        <!-- Start Screen -->
+        <div id="start-screen" class="flex flex-col items-center justify-center space-y-6 md:space-y-8 w-full max-w-4xl mx-auto opacity-0 scale-90">
+            <!-- Logo -->
+            <div class="relative group animate-float">
+                <div class="absolute inset-0 bg-brand-green/20 blur-2xl md:blur-3xl rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-1000"></div>
+                <img src="assets/logo_2.png" alt="DMYC Logo" 
+                     class="relative z-10 w-32 h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 object-contain drop-shadow-[0_0_30px_rgba(22,163,74,0.7)]">
             </div>
-            <div class="mt-4 font-orbitron text-4xl font-bold tracking-tighter" id="percent-text">0%</div>
-        </div>
-
-        <!-- MAIN CONTENT (Sequence 2) -->
-        <div id="main-content" class="text-center opacity-0 scale-95 transform transition-all duration-700 scene">
             
-            <!-- Floating Elements -->
-            <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[500px] h-[500px] border border-brand-green/10 rounded-full animate-[spin_10s_linear_infinite] pointer-events-none"></div>
-            <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[400px] h-[400px] border border-dashed border-brand-green/20 rounded-full animate-[spin_15s_linear_infinite_reverse] pointer-events-none"></div>
-
-            <!-- Logo with 3D Pop -->
-            <div class="relative group perspective-1000 mb-8">
-                <div class="absolute inset-0 bg-brand-green/20 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition duration-1000"></div>
-                <img src="assets/logo_2.png" alt="DMYSC" class="w-32 md:w-48 mx-auto relative z-10 drop-shadow-[0_0_15px_rgba(22,163,74,0.5)]">
+            <!-- Title Section -->
+            <div class="text-center space-y-2 md:space-y-4 w-full">
+                <h2 class="text-brand-neon tracking-[0.3em] md:tracking-[0.5em] text-sm md:text-base uppercase font-rajdhani font-light">
+                    Welcome to
+                </h2>
+                <div class="relative">
+                    <h1 class="responsive-heading font-black font-orbitron tracking-wider md:tracking-widest">
+                        DMYC <span class="text-brand-neon glow-text">2026</span>
+                    </h1>
+                    <div class="absolute inset-0 bg-brand-green/5 blur-xl -z-10"></div>
+                </div>
             </div>
-
-            <!-- Glitch Title -->
-            <div class="space-y-2 mb-10">
-                <h2 class="text-brand-green tracking-[0.5em] text-sm md:text-base font-bold uppercase opacity-80">Official Launch</h2>
-                <h1 class="text-5xl md:text-8xl font-black font-orbitron text-white glitch-wrapper" data-text="DMYSC 2025">
-                    DMYSC
-                </h1>
-                <p class="text-slate-400 text-lg md:text-2xl font-light tracking-wide max-w-2xl mx-auto mt-4" id="typing-text">
-                    <!-- Typing effect here -->
+            
+            <!-- Launch Button -->
+            <div class="mt-4 md:mt-8 w-full max-w-md mx-auto">
+                <button id="launchBtn" 
+                        class="launch-button responsive-button font-orbitron text-brand-green hover:text-white w-full py-3 md:py-4"
+                        aria-label="Initiate Launch Sequence">
+                    <span class="flex items-center justify-center gap-2 md:gap-3">
+                        <svg class="w-4 h-4 md:w-5 md:h-5 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        INITIATE LAUNCH
+                    </span>
+                </button>
+                
+                <!-- Hint Text -->
+                <p class="text-brand-green/60 text-xs md:text-sm mt-3 md:mt-4 text-center tracking-wider font-rajdhani">
+                    Press ENTER or click button to start
                 </p>
             </div>
-
-            <!-- Interactive Launch Button -->
-            <button id="launchBtn" class="btn-scan group relative inline-flex items-center gap-4 px-10 py-5 bg-brand-dark border border-brand-green/50 text-brand-green font-orbitron font-bold text-xl tracking-widest uppercase rounded-sm hover:bg-brand-green hover:text-white transition-all duration-300 shadow-[0_0_20px_rgba(22,163,74,0.2)] hover:shadow-[0_0_40px_rgba(22,163,74,0.6)]">
-                <i class="ph-bold ph-power text-2xl"></i>
-                <span>Initialize Site</span>
-                <div class="absolute inset-0 border border-white/10 scale-105 opacity-0 group-hover:opacity-100 group-hover:scale-100 transition duration-500"></div>
-            </button>
             
-            <div class="mt-8 grid grid-cols-3 gap-8 text-[10px] md:text-xs text-slate-600 font-mono tracking-widest uppercase">
-                <div>
-                    <span class="block text-brand-green mb-1">Status</span>
-                    <span class="animate-pulse">Online</span>
-                </div>
-                <div>
-                    <span class="block text-brand-green mb-1">Version</span>
-                    <span>v2.5.0</span>
-                </div>
-                <div>
-                    <span class="block text-brand-green mb-1">Security</span>
-                    <span>Encrypted</span>
-                </div>
+            <!-- Mobile Hint -->
+            <div class="md:hidden text-brand-green/40 text-xs text-center mt-2 font-rajdhani tracking-wider">
+                Touch anywhere to begin experience
             </div>
         </div>
 
-        <!-- COUNTDOWN OVERLAY (Hidden by default) -->
-        <div id="countdown-overlay" class="fixed inset-0 z-40 flex items-center justify-center pointer-events-none hidden">
-            <div id="countdown-number" class="text-[12rem] md:text-[25rem] font-black font-orbitron text-white glitch-wrapper countdown-text" data-text=""></div>
+        <!-- Intro Container -->
+        <div id="intro-container" 
+             class="hidden absolute inset-0 flex flex-col items-center justify-center z-40 w-full h-full p-4">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-brand-dark/20 to-brand-dark"></div>
+            
+            <div class="relative z-10 w-full max-w-4xl mx-auto text-center">
+                <h1 id="movie-text" 
+                    class="cinematic-text font-orbitron font-black text-white responsive-heading leading-tight px-2 md:px-4"></h1>
+                <p id="movie-subtext" 
+                   class="mt-3 md:mt-6 text-brand-green font-rajdhani tracking-[0.2em] md:tracking-[0.3em] uppercase opacity-0 responsive-subheading"></p>
+            </div>
+        </div>
+
+        <!-- Countdown Overlay -->
+        <div id="countdown-overlay" 
+             class="hidden absolute inset-0 flex items-center justify-center z-50 w-full h-full">
+            <div class="absolute inset-0 bg-gradient-radial from-brand-green/5 via-transparent to-transparent"></div>
+            <div id="countdown-number" 
+                 class="responsive-countdown font-orbitron font-black text-white drop-shadow-[0_0_40px_rgba(22,163,74,0.8)]"></div>
         </div>
 
     </div>
 
-    <!-- White Flash Overlay for Transition -->
-    <div id="flash-overlay" class="fixed inset-0 bg-white z-[100] pointer-events-none opacity-0"></div>
+    <!-- Flash Overlay -->
+    <div id="flash-overlay" 
+         class="fixed inset-0 bg-gradient-to-br from-white via-brand-green/20 to-brand-dark z-[100] pointer-events-none opacity-0"></div>
+
+    <!-- Status Indicator -->
+    <div id="status-indicator" 
+         class="fixed bottom-3 md:bottom-6 left-1/2 transform -translate-x-1/2 text-brand-green/70 text-xs md:text-sm font-rajdhani tracking-wider z-50 opacity-0 transition-opacity duration-300 whitespace-nowrap">
+        Loading<span class="loading-dots"></span>
+    </div>
 
     <script>
-        // --- 1. VANILLA JS: STARFIELD / WARP DRIVE EFFECT ---
+        // --- STARFIELD EFFECT (Optimized) ---
         const canvas = document.getElementById('warpCanvas');
         const ctx = canvas.getContext('2d');
-        let width, height;
+        let width = window.innerWidth;
+        let height = window.innerHeight;
         let stars = [];
-        let speed = 2; // Normal speed
+        let speed = 0.5;
         let warpActive = false;
+        let animationId = null;
 
-        function resize() {
+        // Optimized resize function
+        function resizeCanvas() {
             width = window.innerWidth;
             height = window.innerHeight;
             canvas.width = width;
             canvas.height = height;
         }
-        window.addEventListener('resize', resize);
-        resize();
 
         class Star {
             constructor() {
-                this.x = (Math.random() - 0.5) * width * 2; // Spread wider
+                this.reset();
+                this.size = Math.random() * 1.2 + 0.3;
+            }
+            
+            reset() {
+                this.x = (Math.random() - 0.5) * width * 2;
                 this.y = (Math.random() - 0.5) * height * 2;
                 this.z = Math.random() * width;
-                this.pz = this.z; // Previous z for streak effect
+                this.pz = this.z;
             }
-
+            
             update() {
-                this.z = this.z - speed;
+                this.z -= speed;
                 if (this.z <= 0) {
-                    this.z = width;
-                    this.x = (Math.random() - 0.5) * width * 2;
-                    this.y = (Math.random() - 0.5) * height * 2;
-                    this.pz = this.z;
+                    this.reset();
                 }
             }
-
+            
             draw() {
-                let x = (this.x / this.z) * width + width / 2;
-                let y = (this.y / this.z) * height + height / 2;
-
-                // Scale based on depth
-                let radius = (1 - this.z / width) * (warpActive ? 4 : 2);
-
-                // Previous position for streak
-                let px = (this.x / this.pz) * width + width / 2;
-                let py = (this.y / this.pz) * height + height / 2;
-
+                const sx = (this.x / this.z) * width + width / 2;
+                const sy = (this.y / this.z) * height + height / 2;
+                const px = (this.x / this.pz) * width + width / 2;
+                const py = (this.y / this.pz) * height + height / 2;
+                
                 this.pz = this.z;
 
                 ctx.beginPath();
                 ctx.moveTo(px, py);
-                ctx.lineTo(x, y);
-                
-                if (warpActive) {
-                    // Streak style
-                    ctx.strokeStyle = `rgba(22, 163, 74, ${1 - this.z/width})`;
-                    ctx.lineWidth = radius;
-                    ctx.stroke();
-                } else {
-                    // Dot style
-                    ctx.fillStyle = `rgba(255, 255, 255, ${1 - this.z/width})`;
-                    ctx.arc(x, y, radius, 0, Math.PI * 2);
-                    ctx.fill();
-                }
+                ctx.lineTo(sx, sy);
+                ctx.strokeStyle = warpActive ? 
+                    `rgba(0, 255, 65, ${0.8 - this.z/width})` : 
+                    `rgba(255, 255, 255, ${0.6 - this.z/width})`;
+                ctx.lineWidth = warpActive ? this.size * 2 : this.size;
+                ctx.stroke();
             }
         }
 
-        // Initialize Stars
-        for (let i = 0; i < 800; i++) {
-            stars.push(new Star());
+        // Initialize stars
+        function initStars() {
+            stars = [];
+            const starCount = Math.min(800, Math.floor((width * height) / 1500));
+            for (let i = 0; i < starCount; i++) {
+                stars.push(new Star());
+            }
         }
 
         function animateStars() {
-            // Clear with trail effect
-            ctx.fillStyle = warpActive ? 'rgba(5, 9, 20, 0.3)' : 'rgba(5, 9, 20, 1)';
+            ctx.fillStyle = warpActive ? 'rgba(5, 9, 20, 0.1)' : 'rgba(5, 9, 20, 0.95)';
             ctx.fillRect(0, 0, width, height);
-
-            for (let star of stars) {
+            
+            stars.forEach(star => {
                 star.update();
                 star.draw();
-            }
-            requestAnimationFrame(animateStars);
+            });
+            
+            animationId = requestAnimationFrame(animateStars);
         }
-        animateStars();
 
-        // --- 2. GSAP: CINEMATIC TIMELINE ---
+        // --- EVENT LISTENERS & INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             gsap.registerPlugin(TextPlugin);
             
-            const tl = gsap.timeline();
-
-            // Sequence 1: Loader
-            const progressBar = document.getElementById('progress-bar');
-            const percentText = document.getElementById('percent-text');
-            const loaderText = document.getElementById('loader-text');
-            const introDiv = document.getElementById('intro-sequence');
-            const mainContent = document.getElementById('main-content');
-
-            // Simulate Loading
-            let progress = { value: 0 };
-            tl.to(progress, {
-                value: 100,
-                duration: 2.5,
-                ease: "power2.inOut",
-                onUpdate: () => {
-                    progressBar.style.width = `${progress.value}%`;
-                    percentText.innerText = `${Math.round(progress.value)}%`;
-                    
-                    if(progress.value > 30) loaderText.innerText = "LOADING ASSETS...";
-                    if(progress.value > 60) loaderText.innerText = "ESTABLISHING UPLINK...";
-                    if(progress.value > 90) loaderText.innerText = "SYSTEM READY.";
-                }
-            })
-            .to(introDiv, {
-                duration: 0.5,
-                opacity: 0,
-                display: "none",
-                ease: "power2.in"
-            })
-            // Sequence 2: Main Reveal
-            .to(mainContent, {
-                duration: 1,
-                opacity: 1,
-                scale: 1,
-                ease: "back.out(1.2)"
-            })
-            .to("#typing-text", {
-                duration: 2,
-                text: "Dream Makers Youth & Sports Club",
-                ease: "none"
+            // Initialize canvas
+            resizeCanvas();
+            initStars();
+            animateStars();
+            
+            // Handle resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    resizeCanvas();
+                    initStars();
+                }, 250);
             });
 
-            // --- 3. COUNTDOWN & LAUNCH LOGIC ---
-            const btn = document.getElementById('launchBtn');
-            const flash = document.getElementById('flash-overlay');
+            // Get DOM elements
+            const launchBtn = document.getElementById('launchBtn');
+            const startScreen = document.getElementById('start-screen');
+            const introContainer = document.getElementById('intro-container');
+            const movieText = document.getElementById('movie-text');
+            const movieSubtext = document.getElementById('movie-subtext');
             const countdownOverlay = document.getElementById('countdown-overlay');
             const countdownNumber = document.getElementById('countdown-number');
+            const flash = document.getElementById('flash-overlay');
+            const statusIndicator = document.getElementById('status-indicator');
 
-            btn.addEventListener('click', () => {
-                // A. Prevent double clicks
-                btn.style.pointerEvents = 'none';
+            // Audio elements
+            const bgm = document.getElementById('audio-bgm');
+            const sfx = document.getElementById('audio-sfx');
+            const clock = document.getElementById('audio-clock');
 
-                // B. Disintegrate Main UI
-                gsap.to(mainContent, {
-                    duration: 0.8,
-                    scale: 1.5,
-                    opacity: 0,
-                    filter: "blur(20px)",
-                    ease: "power2.in"
+            // Audio functions
+            function playSFX() {
+                try {
+                    sfx.currentTime = 0;
+                    sfx.volume = 0.7;
+                    sfx.play().catch(() => {});
+                } catch(e) {
+                    console.log("SFX error");
+                }
+            }
+            
+            function playClock() {
+                try {
+                    clock.currentTime = 0;
+                    clock.volume = 0.5;
+                    clock.play().catch(() => {});
+                } catch(e) {
+                    console.log("Clock sound error");
+                }
+            }
+
+            // --- STARTUP SEQUENCE ---
+            function startInitialFireworks() {
+                // Show initial status
+                gsap.to(statusIndicator, {
+                    opacity: 1,
+                    duration: 0.5,
+                    onComplete: () => {
+                        statusIndicator.textContent = "System Initializing";
+                    }
                 });
 
-                // C. Start Countdown Sequence
+                // Fireworks effect
+                const duration = 2000;
+                const animationEnd = Date.now() + duration;
+                const defaults = { 
+                    startVelocity: 25, 
+                    spread: 360, 
+                    ticks: 60, 
+                    zIndex: 60 
+                };
+
+                const interval = setInterval(() => {
+                    const timeLeft = animationEnd - Date.now();
+
+                    if (timeLeft <= 0) {
+                        clearInterval(interval);
+                        // Show start screen
+                        gsap.to(startScreen, {
+                            duration: 1.5,
+                            opacity: 1,
+                            scale: 1,
+                            ease: "power2.out",
+                            onComplete: () => {
+                                gsap.to(statusIndicator, {
+                                    opacity: 0,
+                                    duration: 0.5
+                                });
+                                // Enable interactions
+                                launchBtn.disabled = false;
+                            }
+                        });
+                        return;
+                    }
+
+                    const particleCount = 40 * (timeLeft / duration);
+                    
+                    // Left explosion
+                    confetti({
+                        ...defaults,
+                        particleCount,
+                        origin: { x: Math.random() * 0.2 + 0.1, y: Math.random() * 0.4 + 0.2 },
+                        colors: ['#16a34a', '#00ff41']
+                    });
+                    
+                    // Right explosion
+                    confetti({
+                        ...defaults,
+                        particleCount,
+                        origin: { x: Math.random() * 0.2 + 0.7, y: Math.random() * 0.4 + 0.2 },
+                        colors: ['#16a34a', '#00ff41']
+                    });
+                }, 200);
+            }
+
+            // Start fireworks after a short delay
+            setTimeout(startInitialFireworks, 500);
+
+            // --- LAUNCH FUNCTION ---
+            function startLaunchSequence() {
+                // Prevent multiple clicks
+                if (launchBtn.disabled) return;
+                launchBtn.disabled = true;
+                
+                // Update status
+                statusIndicator.textContent = "Launch Sequence Started";
+                gsap.to(statusIndicator, { opacity: 1, duration: 0.3 });
+                
+                // Start background music
+                try {
+                    bgm.volume = 0.6;
+                    bgm.play().catch(e => console.log("BGM autoplay prevented"));
+                } catch(e) {
+                    console.log("BGM error");
+                }
+
+                // Hide start screen with animation
+                gsap.to(startScreen, {
+                    duration: 1,
+                    opacity: 0,
+                    scale: 1.1,
+                    filter: "blur(10px)",
+                    display: 'none',
+                    ease: "power2.in",
+                    onComplete: startCinematicIntro
+                });
+            }
+
+            // --- EVENT LISTENERS ---
+            // Button click
+            launchBtn.addEventListener('click', startLaunchSequence);
+            
+            // Enter key press
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    startLaunchSequence();
+                }
+            });
+            
+            // Touch anywhere on mobile (except on inputs/buttons)
+            document.addEventListener('touchstart', (e) => {
+                if (e.target === launchBtn || e.target.closest('button') || e.target.closest('input')) {
+                    return;
+                }
+                startLaunchSequence();
+            }, { passive: true });
+
+            // --- CINEMATIC INTRO ---
+            function startCinematicIntro() {
+                introContainer.classList.remove('hidden');
+                speed = 2;
+                warpActive = true;
+
+                const tl = gsap.timeline({
+                    onComplete: startFinalCountdown
+                });
+
+                // 1. PROUDLY PRESENTS
+                tl.call(playSFX)
+                  .set(movieText, { text: "PROUDLY PRESENTS", scale: 0.5, opacity: 0, color: "white" })
+                  .to(movieText, { duration: 1.5, opacity: 1, scale: 1, ease: "power2.out" })
+                  .to(movieText, { duration: 3, scale: 1.1, ease: "none" })
+                  .to(movieText, { duration: 0.8, opacity: 0, scale: 1.5, filter: "blur(20px)", ease: "power2.in" });
+
+                // 2. CLUB NAME
+                tl.call(playSFX)
+                  .set(movieText, { text: "DREAM MAKERS", scale: 0.9, opacity: 0, filter: "blur(0px)" })
+                  .set(movieSubtext, { text: "YOUTH & SPORTS CLUB", opacity: 0, y: 20 })
+                  .to(movieText, { duration: 1, opacity: 1, scale: 1, ease: "back.out(1.2)" })
+                  .to(movieSubtext, { duration: 1, opacity: 1, y: 0, ease: "power2.out" }, "-=0.5")
+                  .to([movieText, movieSubtext], { duration: 3.5, z: 50, ease: "none" })
+                  .to([movieText, movieSubtext], { duration: 0.8, opacity: 0, x: -100, ease: "power2.in" });
+
+                // 3. MOTTO
+                tl.call(playSFX)
+                  .set(movieText, { text: "EMPOWERING", scale: 1, opacity: 0, x: 0 })
+                  .set(movieSubtext, { text: "THE NEXT GENERATION", opacity: 0, y: 0 })
+                  .to(movieText, { duration: 0.8, opacity: 1, text: "EMPOWERING", ease: "power2.out" })
+                  .to(movieText, { duration: 0.8, text: "INSPIRES", ease: "none" })
+                  .to(movieText, { duration: 0.8, text: "REVOLUTIONIZING", color: "#16a34a", ease: "none" })
+                  .to(movieSubtext, { duration: 1.5, opacity: 1, scale: 1.2, ease: "elastic.out(1, 0.3)" })
+                  .to([movieText, movieSubtext], { duration: 0.8, opacity: 0, scale: 0.1, ease: "back.in(1.7)" });
+
+                // 4. DEVELOPER CREDIT
+                tl.call(playSFX)
+                  .set(movieText, { text: "DIGITAL EXPERIENCE BY", scale: 0.8, opacity: 0, color: "white" })
+                  .set(movieSubtext, { text: "ISARA DILNUKA", opacity: 0, scale: 1.5, y: 0, color: "#16a34a" })
+                  .to(movieText, { duration: 1, opacity: 1, scale: 1, ease: "power2.out" })
+                  .to(movieSubtext, { duration: 1, opacity: 1, scale: 1, ease: "expo.out" }, "-=0.5")
+                  .to([movieText, movieSubtext], { duration: 0.8, opacity: 0, y: 50, ease: "power2.in" });
+
+                // 5. OFFICIAL LAUNCH
+                tl.call(playSFX)
+                  .set(movieText, { text: "OFFICIAL DIGITAL LAUNCH", scale: 2, opacity: 0, color: "white" })
+                  .set(movieSubtext, { text: "2026", scale: 0.5, opacity: 0, color: "#00ff41" })
+                  .to(movieText, { duration: 0.8, opacity: 1, scale: 1, ease: "circ.out" })
+                  .to(movieSubtext, { duration: 0.8, opacity: 1, scale: 1, ease: "back.out(2)" })
+                  .to([movieText, movieSubtext], { duration: 0.3, x: 5, repeat: 8, yoyo: true })
+                  .to([movieText, movieSubtext], { duration: 0.8, opacity: 0, filter: "blur(10px)" });
+            }
+
+            // --- FINAL COUNTDOWN ---
+            function startFinalCountdown() {
+                statusIndicator.textContent = "Final Countdown";
+                gsap.to(statusIndicator, { opacity: 1, duration: 0.3 });
+                
+                introContainer.classList.add('hidden');
                 countdownOverlay.classList.remove('hidden');
                 
+                // Extreme warp speed
+                gsap.to(window, { 
+                    duration: 1, 
+                    onUpdate: () => { speed = 40; } 
+                });
+
+                // Fade out music
+                gsap.to(bgm, { 
+                    volume: 0, 
+                    duration: 5, 
+                    ease: "power1.in" 
+                });
+
                 const countTl = gsap.timeline({
                     onComplete: triggerFinalLaunch
                 });
 
-                // Define Countdown Numbers
-                const numbers = ['3', '2', '1'];
-
-                numbers.forEach((num, index) => {
+                // 5-4-3-2-1 Countdown
+                ['5', '4', '3', '2', '1'].forEach(num => {
                     countTl.add(() => {
-                        // Update text
                         countdownNumber.innerText = num;
-                        countdownNumber.setAttribute('data-text', num);
-                        // Increase Warp Speed progressively
-                        warpActive = true;
-                        gsap.to(window, { duration: 0.5, onUpdate: () => { speed = (index + 1) * 15; } });
-                        
-                        // Confetti per number for hype
+                        playClock();
+                        // Mini confetti for each number
                         confetti({
                             particleCount: 30,
-                            spread: 50,
-                            origin: { y: 0.7 },
-                            colors: ['#16a34a']
+                            spread: 60,
+                            origin: { y: 0.6 },
+                            colors: ['#16a34a', '#00ff41'],
+                            zIndex: 60
                         });
                     })
-                    // Animate In (Zoom & Rotate)
-                    .fromTo(countdownNumber, 
-                        { scale: 0.2, opacity: 0, rotation: -15 },
-                        { scale: 1, opacity: 1, rotation: 0, duration: 0.4, ease: "back.out(2)" }
+                    .fromTo(countdownNumber,
+                        { scale: 0.2, opacity: 0 },
+                        { scale: 1, opacity: 1, duration: 0.5, ease: "elastic.out(1, 0.3)" }
                     )
-                    // Shake/Glitch
                     .to(countdownNumber, { 
-                        x: 10, duration: 0.05, repeat: 3, yoyo: true 
-                    })
-                    // Animate Out (Zoom into camera)
-                    .to(countdownNumber, {
-                        scale: 3, opacity: 0, duration: 0.3, ease: "power2.in"
+                        scale: 3, 
+                        opacity: 0, 
+                        duration: 0.5, 
+                        ease: "power2.in" 
                     });
                 });
-            });
+            }
 
+            // --- FINAL LAUNCH ---
             function triggerFinalLaunch() {
-                // Max Speed
-                speed = 50;
+                statusIndicator.textContent = "Launch Successful!";
+                
+                // Final sound effect
+                playSFX();
+                
+                // Massive confetti explosion
+                const duration = 2000;
+                const animationEnd = Date.now() + duration;
+                
+                const interval = setInterval(() => {
+                    const timeLeft = animationEnd - Date.now();
+                    if (timeLeft <= 0) {
+                        clearInterval(interval);
+                        return;
+                    }
+                    
+                    const particleCount = 60 * (timeLeft / duration);
+                    
+                    // Multiple explosions
+                    confetti({
+                        particleCount: particleCount * 0.5,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 },
+                        colors: ['#16a34a', '#00ff41']
+                    });
+                    
+                    confetti({
+                        particleCount: particleCount * 0.5,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 },
+                        colors: ['#16a34a', '#00ff41']
+                    });
+                }, 200);
 
-                // Final Big Confetti
-                confetti({
-                    particleCount: 200,
-                    spread: 160,
-                    origin: { y: 0.6 },
-                    colors: ['#16a34a', '#00ff41', '#ffffff']
-                });
-
-                // White Flash & Redirect
+                // Final flash and redirect
                 gsap.to(flash, {
-                    duration: 0.5, // slightly longer flash for dramatic effect
+                    duration: 0.2,
                     opacity: 1,
-                    delay: 0.2,
-                    ease: "power2.in",
                     onComplete: () => {
                         window.location.href = "index.html";
                     }
                 });
             }
+
+            // Cleanup on page unload
+            window.addEventListener('beforeunload', () => {
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                }
+            });
         });
     </script>
 </body>
