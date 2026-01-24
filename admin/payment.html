@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMYSC - Payment Manager</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { 
+            darkMode: 'class', 
+            theme: { 
+                extend: { 
+                    colors: { brand: { green: '#16a34a', dark: '#020617' } },
+                    fontFamily: { poppins: ['Poppins', 'sans-serif'] } 
+                } 
+            } 
+        }
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .glass-panel { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
+        #sidebar { transition: transform 0.3s ease-in-out; }
+        .sidebar-open { transform: translateX(0) !important; }
+        .sidebar-closed { transform: translateX(-100%); }
+        @media (min-width: 768px) { .sidebar-closed { transform: translateX(0); } }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="bg-[#0b1121] text-slate-100 min-h-screen font-poppins overflow-hidden">
+
+    <div class="flex h-screen relative">
+        
+        <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/80 z-40 hidden md:hidden backdrop-blur-sm"></div>
+
+        <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-slate-900 border-r border-slate-800 flex flex-col z-50 sidebar-closed md:relative md:translate-x-0 shadow-2xl md:shadow-none">
+            <div class="p-6 flex items-center justify-between border-b border-slate-800 h-24">
+                <div class="flex items-center gap-3">
+                    <img src="../assets/logo.png" class="h-10 w-10 object-contain">
+                    <div>
+                        <h2 class="font-black text-lg text-white tracking-wide">ADMIN</h2>
+                        <p class="text-[10px] text-brand-green font-bold uppercase">Control Panel</p>
+                    </div>
+                </div>
+                <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-red-500"><i class="ph-bold ph-x text-xl"></i></button>
+            </div>
+            
+            <nav class="flex-1 p-4 space-y-2 mt-4 overflow-y-auto">
+                <a href="index.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
+                    <i class="ph-bold ph-squares-four text-xl"></i> Dashboard
+                </a>
+                <a href="members.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
+                    <i class="ph-bold ph-users text-xl"></i> Member Manage
+                </a>
+                <a href="events.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
+                    <i class="ph-bold ph-calendar-plus text-xl"></i> Event Manage
+                </a>
+                <a href="sports.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
+                    <i class="ph-bold ph-trophy text-xl"></i> Sport Manage
+                </a>
+                <a href="notifications.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
+                    <i class="ph-bold ph-bell-ringing text-xl"></i> Notifications
+                </a>
+                 <a href="quick_links.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
+                    <i class="ph-bold ph-link text-xl"></i> Quick Links
+                </a>
+                <a href="committee.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
+                    <i class="ph-bold ph-users-three text-xl"></i> Committee
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 bg-brand-green text-white shadow-lg shadow-brand-green/20 rounded-xl font-bold">
+                    <i class="ph-bold ph-coins text-xl"></i> Payments
+                </a>
+                <a href="about.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
+                    <i class="ph-bold ph-info text-xl"></i> About Info
+                </a>
+                <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
+                    <i class="ph-bold ph-gear text-xl"></i> Page Settings
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-slate-800 bg-slate-900/50">
+                <button onclick="logout()" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl transition duration-300 border border-red-500/20 font-bold shadow-sm">
+                    <i class="ph-bold ph-sign-out"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto relative bg-[#0b1121] scroll-smooth">
+            
+            <button onclick="toggleSidebar()" class="md:hidden absolute top-6 right-6 z-40 bg-slate-800 backdrop-blur-md p-2 rounded-lg text-white border border-white/10 shadow-lg hover:bg-brand-green transition">
+                <i class="ph-bold ph-list text-2xl"></i>
+            </button>
+
+            <div class="p-6 md:p-12 pb-0">
+                 <div class="glass-panel p-6 rounded-[2rem] shadow-2xl relative overflow-hidden" data-aos="fade-down">
+                    <div class="flex justify-between items-center mb-4 px-2">
+                        <div>
+                            <h2 class="text-2xl font-black text-white">Monthly Revenue</h2>
+                            <p class="text-xs text-slate-400">Click on a column to view payment status detail.</p>
+                        </div>
+                        <div class="text-right">
+                             <h3 class="text-3xl font-black text-brand-green" id="totalRevenueDisplay">0 LKR</h3>
+                             <p class="text-[10px] font-bold uppercase text-slate-500">Total Collected</p>
+                        </div>
+                    </div>
+                    <div id="revenueChart" class="w-full h-64"></div>
+                 </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-6 md:px-12 py-8 relative z-10">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <div class="lg:col-span-1 space-y-8">
+                        
+                        <div class="glass-panel p-8 rounded-[2.5rem] shadow-2xl" data-aos="fade-up">
+                            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                                <span class="bg-brand-green/20 text-brand-green p-2 rounded-xl"><i class="ph-bold ph-users-three"></i></span>
+                                Bulk Payment
+                            </h3>
+                            
+                            <div class="space-y-5">
+                                <div>
+                                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Payment Month</label>
+                                    <div class="relative mt-2">
+                                        <i class="ph-bold ph-calendar absolute left-4 top-3.5 text-slate-500"></i>
+                                        <input type="month" id="payMonth" class="w-full bg-slate-900/50 border border-slate-700 text-white rounded-2xl py-3 pl-12 pr-4 focus:border-brand-green focus:ring-1 outline-none transition font-medium">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Fee (LKR)</label>
+                                    <input type="number" id="payAmount" class="w-full bg-slate-900/50 border border-slate-700 text-white rounded-2xl py-3 px-4 mt-2 font-mono font-bold text-brand-green text-lg focus:border-brand-green outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Select Members</label>
+                                    <input type="text" id="memberSearch" placeholder="Search name..." onkeyup="filterMembers()" class="w-full bg-slate-800 border-b border-slate-700 text-xs text-white p-2 mt-2 mb-2 outline-none">
+                                    
+                                    <div class="bg-slate-900/50 border border-slate-700 rounded-xl max-h-60 overflow-y-auto p-2 space-y-1 custom-scrollbar" id="memberCheckList">
+                                        <div class="text-center text-xs text-slate-500 py-2">Loading...</div>
+                                    </div>
+                                    <div class="flex justify-between items-center mt-2 px-1">
+                                        <button onclick="toggleAllMembers(true)" class="text-[10px] text-brand-green hover:underline">Select All</button>
+                                        <button onclick="toggleAllMembers(false)" class="text-[10px] text-slate-400 hover:text-red-400 hover:underline">Clear</button>
+                                    </div>
+                                </div>
+
+                                <button onclick="recordBulkPayment()" class="w-full py-4 bg-brand-green hover:bg-green-500 text-white font-bold rounded-2xl shadow-lg shadow-green-900/20 transition transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2">
+                                    <i class="ph-bold ph-check-circle text-lg"></i> Record Payments
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2" data-aos="fade-up" data-aos-delay="200">
+                        <div class="glass-panel p-8 rounded-[2.5rem] shadow-2xl h-full flex flex-col">
+                            <div class="flex justify-between items-center mb-6">
+                                <div>
+                                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                                        <i class="ph-duotone ph-receipt text-blue-400"></i> Recent History
+                                    </h3>
+                                    <p class="text-xs text-slate-400 mt-1">Latest transactions</p>
+                                </div>
+                                <button onclick="loadPayments()" class="p-2 bg-slate-800 hover:bg-slate-700 text-brand-green rounded-xl transition border border-slate-700">
+                                    <i class="ph-bold ph-arrows-clockwise text-xl"></i>
+                                </button>
+                            </div>
+
+                            <div class="flex-1 overflow-hidden rounded-2xl border border-slate-700 bg-slate-900/50">
+                                <div class="overflow-x-auto h-full">
+                                    <table class="w-full text-left text-sm text-slate-400">
+                                        <thead class="bg-slate-800 text-xs uppercase font-bold text-slate-200 sticky top-0 z-10">
+                                            <tr>
+                                                <th class="p-4 whitespace-nowrap">Date</th>
+                                                <th class="p-4 whitespace-nowrap">Member Name</th>
+                                                <th class="p-4 whitespace-nowrap">Month</th>
+                                                <th class="p-4 text-right whitespace-nowrap">Amount</th>
+                                                <th class="p-4 text-center whitespace-nowrap">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="paymentTableBody" class="divide-y divide-slate-700">
+                                            <tr><td colspan="5" class="p-8 text-center">Loading...</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="statusModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
+        <div class="bg-slate-900 border border-slate-700 p-6 rounded-[2rem] shadow-2xl max-w-2xl w-full relative transform transition-all scale-100 flex flex-col max-h-[85vh]">
+            
+            <div class="flex justify-between items-center mb-6 shrink-0">
+                <div>
+                    <h3 class="text-2xl font-bold text-white flex items-center gap-2" id="modalTitle">
+                        Payment Status
+                    </h3>
+                    <p class="text-xs text-slate-400 font-mono mt-1" id="modalSubtitle">Select a month to view details</p>
+                </div>
+                <button onclick="closeStatusModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:bg-red-500 hover:text-white transition">
+                    <i class="ph-bold ph-x text-lg"></i>
+                </button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto custom-scrollbar pr-2">
+                <div id="statusList" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between items-center shrink-0">
+                <div class="flex gap-4 text-xs font-bold">
+                    <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-green-500/20 border border-green-500"></span> Paid</span>
+                    <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-red-500/20 border border-red-500"></span> Unpaid</span>
+                </div>
+                <button onclick="closeStatusModal()" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-2 rounded-xl font-bold text-sm transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="../js/supabase.js"></script>
+    
+    <script>
+        AOS.init();
+
+        // State
+        let membersCache = [];
+        let paymentsCache = [];
+        
+        // Settings
+        const savedFee = localStorage.getItem('dmysc_fee') || 100;
+        document.getElementById('payAmount').value = savedFee;
+        
+        // Date Setup
+        const now = new Date();
+        const currentMonthVal = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        document.getElementById('payMonth').value = currentMonthVal;
+
+        // Toggle Sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('sidebar-closed');
+            document.getElementById('sidebar').classList.toggle('sidebar-open');
+            document.getElementById('overlay').classList.toggle('hidden');
+        }
+
+        // Init Function
+        async function initAdmin() {
+            if (typeof _supabase === 'undefined') return alert("Database Connection Error");
+
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) return window.location.href = '../login.html';
+
+            const { data: profile } = await _supabase.from('profiles').select('role').eq('id', session.user.id).single();
+            if (profile?.role !== 'admin') return window.location.href = '../user/index.html';
+
+            await loadMembers();
+            await loadPayments(); // History Table
+            await loadRevenueChart(); // Chart
+        }
+
+        // 1. Load Members & Render Checkbox List
+        async function loadMembers() {
+            const { data } = await _supabase.from('profiles').select('id, full_name, member_id').eq('role', 'member').order('full_name');
+            if(data) {
+                membersCache = data;
+                renderMemberChecklist(data);
+            }
+        }
+
+        function renderMemberChecklist(list) {
+            const container = document.getElementById('memberCheckList');
+            container.innerHTML = '';
+            list.forEach(m => {
+                container.innerHTML += `
+                    <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-800 cursor-pointer transition group">
+                        <input type="checkbox" value="${m.id}" class="member-checkbox w-4 h-4 rounded border-slate-600 bg-slate-700 text-brand-green focus:ring-offset-slate-900">
+                        <div>
+                            <div class="text-xs font-bold text-slate-200 group-hover:text-white">${m.full_name}</div>
+                            <div class="text-[10px] text-slate-500 font-mono">${m.member_id || 'No ID'}</div>
+                        </div>
+                    </label>
+                `;
+            });
+        }
+
+        function filterMembers() {
+            const query = document.getElementById('memberSearch').value.toLowerCase();
+            const filtered = membersCache.filter(m => m.full_name.toLowerCase().includes(query) || (m.member_id && m.member_id.toLowerCase().includes(query)));
+            renderMemberChecklist(filtered);
+        }
+
+        function toggleAllMembers(check) {
+            document.querySelectorAll('.member-checkbox').forEach(cb => cb.checked = check);
+        }
+
+        // 2. Load History Table
+        async function loadPayments() {
+            const { data } = await _supabase.from('payments').select('*, profiles:member_id(full_name)').order('paid_at', { ascending: false }).limit(50);
+            paymentsCache = data || [];
+            
+            const tbody = document.getElementById('paymentTableBody');
+            tbody.innerHTML = '';
+
+            if(!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-slate-500">No records found.</td></tr>';
+                return;
+            }
+
+            data.forEach(p => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-800/50 transition">
+                        <td class="p-4 font-mono text-xs text-slate-400">${new Date(p.paid_at).toLocaleDateString()}</td>
+                        <td class="p-4 font-bold text-white">${p.profiles?.full_name || 'Unknown'}</td>
+                        <td class="p-4"><span class="bg-brand-green/10 text-brand-green px-2 py-1 rounded text-[10px] font-bold border border-brand-green/20">${p.month_year}</span></td>
+                        <td class="p-4 text-right font-mono text-emerald-400 font-bold">${p.amount}/=</td>
+                        <td class="p-4 text-center">
+                            <button onclick="deletePayment('${p.id}')" class="text-slate-500 hover:text-red-500 transition"><i class="ph-bold ph-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // 3. Bulk Payment Record
+        async function recordBulkPayment() {
+            const month = document.getElementById('payMonth').value;
+            const amount = document.getElementById('payAmount').value;
+            const checkboxes = document.querySelectorAll('.member-checkbox:checked');
+            const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+
+            if(!month || !amount || selectedIds.length === 0) return alert("Please select Month, Amount and at least one Member.");
+
+            const { data: { user } } = await _supabase.auth.getUser();
+            
+            // Loop Insert (To handle duplicate errors gracefully per user)
+            let successCount = 0;
+            let errors = 0;
+
+            for (const memberId of selectedIds) {
+                const { error } = await _supabase.from('payments').insert({
+                    member_id: memberId,
+                    month_year: month,
+                    amount: amount,
+                    recorded_by: user.id
+                });
+                if(!error) successCount++;
+                else errors++;
+            }
+
+            alert(`Processed.\nSuccess: ${successCount}\nFailed/Already Paid: ${errors}`);
+            loadPayments();
+            loadRevenueChart(); // Update Chart
+            
+            // Clear selections
+            toggleAllMembers(false);
+        }
+
+        async function deletePayment(id) {
+            if(confirm("Remove this record?")) {
+                await _supabase.from('payments').delete().eq('id', id);
+                loadPayments();
+                loadRevenueChart();
+            }
+        }
+
+        // 4. Chart & Modal Logic
+        async function loadRevenueChart() {
+            // Fetch all payments to aggregate
+            const { data } = await _supabase.from('payments').select('amount, month_year');
+            
+            if(!data) return;
+
+            // Group By Month
+            const monthlyData = {};
+            let totalRevenue = 0;
+
+            data.forEach(p => {
+                const m = p.month_year;
+                monthlyData[m] = (monthlyData[m] || 0) + Number(p.amount);
+                totalRevenue += Number(p.amount);
+            });
+
+            document.getElementById('totalRevenueDisplay').innerText = totalRevenue.toLocaleString() + " LKR";
+
+            // Sort Months
+            const sortedMonths = Object.keys(monthlyData).sort();
+            const values = sortedMonths.map(m => monthlyData[m]);
+
+            // Render Chart
+            const options = {
+                series: [{ name: 'Revenue', data: values }],
+                chart: {
+                    type: 'bar',
+                    height: 250,
+                    toolbar: { show: false },
+                    background: 'transparent',
+                    fontFamily: 'Poppins, sans-serif',
+                    events: {
+                        dataPointSelection: function(event, chartContext, config) {
+                            const selectedMonth = sortedMonths[config.dataPointIndex];
+                            openStatusModal(selectedMonth);
+                        }
+                    }
+                },
+                colors: ['#16a34a'],
+                plotOptions: { bar: { borderRadius: 4, columnWidth: '40%' } },
+                dataLabels: { enabled: false },
+                xaxis: { categories: sortedMonths, labels: { style: { colors: '#94a3b8' } }, axisBorder: { show: false }, axisTicks: { show: false } },
+                yaxis: { labels: { style: { colors: '#94a3b8' } } },
+                grid: { borderColor: '#334155', strokeDashArray: 4 },
+                theme: { mode: 'dark' },
+                tooltip: { theme: 'dark', y: { formatter: function (val) { return val + " LKR" } } }
+            };
+
+            const chartEl = document.querySelector("#revenueChart");
+            chartEl.innerHTML = "";
+            const chart = new ApexCharts(chartEl, options);
+            chart.render();
+        }
+
+        // 5. Open Modal Logic
+        async function openStatusModal(month) {
+            document.getElementById('statusModal').classList.remove('hidden');
+            document.getElementById('modalTitle').innerText = `Status: ${month}`;
+            document.getElementById('modalSubtitle').innerText = "Member payment details for " + month;
+            
+            const listEl = document.getElementById('statusList');
+            listEl.innerHTML = '<div class="col-span-2 text-center py-10"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-green mx-auto"></div></div>';
+
+            // Get Payments for this month
+            const { data: paidRecords } = await _supabase.from('payments').select('member_id').eq('month_year', month);
+            const paidIds = paidRecords.map(p => p.member_id);
+
+            listEl.innerHTML = '';
+            
+            membersCache.forEach(m => {
+                const isPaid = paidIds.includes(m.id);
+                const bgClass = isPaid ? 'bg-green-500/10 border-green-500/30' : 'bg-red-500/10 border-red-500/30';
+                const textClass = isPaid ? 'text-green-400' : 'text-red-400';
+                const icon = isPaid ? '<i class="ph-bold ph-check"></i>' : '<i class="ph-bold ph-x"></i>';
+                const statusText = isPaid ? 'PAID' : 'NOT PAID';
+
+                listEl.innerHTML += `
+                    <div class="flex items-center justify-between p-3 rounded-xl border ${bgClass}">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full ${isPaid ? 'bg-green-500/20' : 'bg-red-500/20'} flex items-center justify-center ${textClass}">
+                                ${m.full_name.charAt(0)}
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">${m.full_name}</h4>
+                                <p class="text-[10px] text-slate-400 font-mono">${m.member_id || '-'}</p>
+                            </div>
+                        </div>
+                        <div class="text-xs font-bold ${textClass} flex items-center gap-1">
+                            ${statusText} ${icon}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function closeStatusModal() {
+            document.getElementById('statusModal').classList.add('hidden');
+        }
+
+        function logout() {
+            if(confirm("Logout?")) {
+                _supabase.auth.signOut().then(() => window.location.href = '../login.html');
+            }
+        }
+
+        initAdmin();
+    </script>
+</body>
+</html>
