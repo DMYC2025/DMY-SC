@@ -23,10 +23,20 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100 text-gray-900 dark:bg-brand-dark dark:text-slate-100 min-h-screen font-poppins transition-colors duration-300">
 
-    <!-- HOME BUTTON ADDED HERE -->
+    <style>
+        .glass-card {
+            background: rgba(30, 41, 59, 0.6); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-brand-dark min-h-screen font-poppins text-slate-100 selection:bg-brand-green selection:text-white">
+
+    <!-- HOME BUTTON -->
     <a href="../user/index.html" class="absolute top-6 left-6 z-50 w-12 h-12 bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-xl flex items-center justify-center text-white hover:bg-brand-green hover:border-brand-green transition-all duration-300 shadow-lg group">
         <i class="ph-bold ph-house text-xl group-hover:scale-110 transition-transform"></i>
     </a>
@@ -39,15 +49,15 @@
             <h1 class="text-4xl md:text-6xl font-black text-white mb-2 uppercase tracking-tighter drop-shadow-lg">
                 Quick <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-brand-green">Access</span>
             </h1>
-            <p class="text-slate-300 text-lg font-medium">External resources and important links.</p>
+            <p class="text-slate-300 text-sm md:text-lg font-medium">External resources and important links.</p>
         </div>
     </div>
 
-    <main class="max-w-6xl mx-auto px-6 -mt-20 relative z-20 pb-20">
-        <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="col-span-full text-center py-20">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-green mx-auto mb-4"></div>
-                <p class="text-slate-500">Loading Links...</p>
+    <main class="max-w-6xl mx-auto px-4 md:px-6 -mt-20 relative z-20 pb-20">
+        <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+            <div class="col-span-full text-center py-20 glass-card rounded-[2.5rem]">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-green mx-auto mb-4"></div>
+                <p class="text-slate-500 text-sm font-bold uppercase tracking-widest">Loading Links...</p>
             </div>
         </div>
     </main>
@@ -71,7 +81,7 @@
             }) : [];
 
             if(validLinks.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center text-slate-500 italic">No active links available right now.</div>`;
+                grid.innerHTML = `<div class="col-span-full text-center text-slate-500 italic p-8 glass-card rounded-2xl">No active links available right now.</div>`;
                 return;
             }
 
@@ -79,9 +89,9 @@
                 const hasImage = l.image_url && l.image_url.length > 0;
                 
                 grid.innerHTML += `
-                    <a href="${l.url}" target="_blank" class="group relative bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] overflow-hidden hover:transform hover:-translate-y-2 transition duration-300 shadow-xl hover:shadow-brand-green/20" data-aos="fade-up" data-aos-delay="${i*50}">
+                    <a href="${l.url}" target="_blank" class="group relative glass-card rounded-[2rem] overflow-hidden hover:-translate-y-2 transition duration-300" data-aos="fade-up" data-aos-delay="${i*50}">
                         
-                        <div class="h-40 w-full relative overflow-hidden bg-slate-900">
+                        <div class="h-36 md:h-40 w-full relative overflow-hidden bg-slate-900">
                             ${hasImage 
                                 ? `<img src="${l.image_url}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 opacity-80 group-hover:opacity-100">` 
                                 : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900"><i class="ph-duotone ph-link text-6xl text-slate-700 group-hover:text-brand-green transition"></i></div>`
@@ -91,13 +101,13 @@
                             ${l.display_type === 'scheduled' ? `<div class="absolute top-4 right-4 bg-red-600/90 backdrop-blur text-white text-[10px] font-black uppercase px-3 py-1 rounded-full flex items-center gap-1 shadow-lg"><i class="ph-bold ph-timer"></i> Limited</div>` : ''}
                         </div>
 
-                        <div class="p-6 relative">
+                        <div class="p-5 md:p-6 relative">
                             <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-xl bg-slate-700/50 flex items-center justify-center shrink-0 group-hover:bg-brand-green transition-colors duration-300 shadow-inner">
-                                    <i class="ph-bold ph-arrow-square-out text-xl text-white"></i>
+                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-slate-700/50 flex items-center justify-center shrink-0 group-hover:bg-brand-green transition-colors duration-300 shadow-inner">
+                                    <i class="ph-bold ph-arrow-square-out text-lg md:text-xl text-white"></i>
                                 </div>
                                 <div>
-                                    <h3 class="font-bold text-white text-lg leading-tight group-hover:text-brand-green transition">${l.title}</h3>
+                                    <h3 class="font-bold text-white text-base md:text-lg leading-tight group-hover:text-brand-green transition line-clamp-1">${l.title}</h3>
                                     <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">Tap to Open</p>
                                 </div>
                             </div>
