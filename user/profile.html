@@ -115,6 +115,12 @@
                                 <label class="text-xs font-bold text-green-500 uppercase ml-1 mb-1 block">Date of Birth</label>
                                 <input type="date" id="dob" class="w-full bg-slate-900 border border-slate-600 focus:border-green-500 rounded-xl p-4 text-white font-bold outline-none transition shadow-inner">
                             </div>
+
+                            <!-- NEW: Address Field -->
+                            <div class="md:col-span-2">
+                                <label class="text-xs font-bold text-green-500 uppercase ml-1 mb-1 block">Residential Address</label>
+                                <textarea id="address" rows="2" class="w-full bg-slate-900 border border-slate-600 focus:border-green-500 rounded-xl p-4 text-white font-bold outline-none transition shadow-inner" placeholder="No, Street, City..."></textarea>
+                            </div>
                         </div>
 
                         <!-- Contact & Skills -->
@@ -187,6 +193,7 @@
             full_name: "Full Name",
             nic: "NIC Number",
             dob: "Date of Birth",
+            address: "Residential Address", // Added Label
             whatsapp: "WhatsApp Number",
             job: "Job / Profession",
             sports_skills: "Sports Skills",
@@ -213,6 +220,7 @@
                     full_name: profile.full_name || '',
                     nic: profile.nic || '',
                     dob: profile.dob || '',
+                    address: profile.address || '', // Added Address
                     whatsapp: profile.whatsapp || '',
                     job: profile.job || '',
                     sports_skills: profile.sports_skills || '',
@@ -233,6 +241,8 @@
                 document.getElementById('nic').value = originalData.nic;
                 document.getElementById('email').value = profile.email || '';
                 document.getElementById('dob').value = originalData.dob;
+                document.getElementById('address').value = originalData.address; // Populate Address
+                
                 document.getElementById('whatsapp').value = originalData.whatsapp;
                 document.getElementById('job').value = originalData.job;
                 document.getElementById('sports').value = originalData.sports_skills;
@@ -290,6 +300,7 @@
                 full_name: document.getElementById('fullName').value,
                 nic: document.getElementById('nic').value,
                 dob: document.getElementById('dob').value,
+                address: document.getElementById('address').value, // Capture Address
                 whatsapp: document.getElementById('whatsapp').value,
                 job: document.getElementById('job').value,
                 sports_skills: document.getElementById('sports').value,
