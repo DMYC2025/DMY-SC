@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account - DMYSC</title>
-    <!-- Path updated -->
     <link rel="icon" type="image/png" href="../assets/logo_1.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,132 +18,180 @@
             } 
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-gray-100 text-gray-900 dark:bg-brand-dark dark:text-slate-100 min-h-screen font-poppins transition-colors duration-300">
+<body class="bg-gray-100 text-gray-900 dark:bg-brand-dark dark:text-slate-100 min-h-screen font-poppins transition-colors duration-300 overflow-x-hidden">
 
-    <!-- HOME BUTTON ADDED HERE (Path: index.html) -->
-    <a href="index.html" class="absolute top-6 left-6 z-50 w-12 h-12 bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-xl flex items-center justify-center text-white hover:bg-brand-green hover:border-brand-green transition-all duration-300 shadow-lg group">
-        <i class="ph-bold ph-house text-xl group-hover:scale-110 transition-transform"></i>
+    <!-- HOME BUTTON -->
+    <a href="index.html" class="absolute top-4 left-4 md:top-6 md:left-6 z-50 w-10 h-10 md:w-12 md:h-12 bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-xl flex items-center justify-center text-white hover:bg-brand-green hover:border-brand-green transition-all duration-300 shadow-lg group">
+        <i class="ph-bold ph-house text-lg md:text-xl group-hover:scale-110 transition-transform"></i>
     </a>
 
-    <main class="max-w-7xl mx-auto px-4 py-12">
-        <!-- Replaced "Back Link" with the floating button above -->
+    <main class="max-w-7xl mx-auto px-4 py-6 md:py-12">
         
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-8 mt-8 md:mt-6">
             
-            <div class="lg:col-span-1">
-                <h3 class="text-gray-500 font-bold uppercase tracking-widest text-xs mb-4">Your Member Card Preview</h3>
+            <!-- LEFT COLUMN: Card & Avatar -->
+            <div class="lg:col-span-1 space-y-5 md:space-y-6">
                 
-                <div class="bg-[#151b2b] rounded-[24px] overflow-hidden relative shadow-2xl transform hover:scale-105 transition duration-500">
-                    <div class="h-[120px] bg-[#0f7638] w-full"></div>
-                    <div class="w-[100px] h-[100px] bg-white rounded-[20px] p-1 absolute top-[70px] left-1/2 -translate-x-1/2 shadow-lg">
-                        <img id="cardAvatar" src="https://via.placeholder.com/150" class="w-full h-full rounded-[16px] object-cover bg-gray-200">
-                    </div>
-                    <div class="pt-16 pb-6 px-4 text-center">
-                         <h3 class="text-xl font-bold text-white mb-2 flex justify-center items-center gap-1" id="cardName">
-                             Loading... </h3>
-                         <span class="bg-blue-900/30 text-blue-400 border border-blue-900 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-wider inline-block mb-6">Active Member</span>
-                         
-                         <div class="bg-[#222b40] rounded-2xl p-4 text-left space-y-3">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-lg bg-[#2d3748] flex items-center justify-center text-green-500"><i class="ph-fill ph-identification-card"></i></div>
-                                <div><p class="text-[9px] text-gray-500 font-bold uppercase">Member ID</p><p class="text-[11px] text-white font-bold" id="cardId">...</p></div>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-lg bg-[#2d3748] flex items-center justify-center text-green-500"><i class="ph-fill ph-whatsapp-logo"></i></div>
-                                <div><p class="text-[9px] text-gray-500 font-bold uppercase">Contact</p><p class="text-[11px] text-white font-bold font-mono" id="cardPhone">...</p></div>
-                            </div>
-                         </div>
+                <!-- CARD PREVIEW -->
+                <div>
+                    <h3 class="text-gray-500 font-bold uppercase tracking-widest text-[10px] md:text-xs mb-3 md:mb-4 text-center lg:text-left">Your Member Card Preview</h3>
+                    
+                    <div class="bg-[#151b2b] rounded-[20px] md:rounded-[24px] overflow-hidden relative shadow-2xl transform hover:scale-[1.02] transition duration-500 max-w-sm mx-auto lg:max-w-none">
+                        <div class="h-[100px] md:h-[120px] bg-[#0f7638] w-full"></div>
+                        <div class="w-[80px] h-[80px] md:w-[100px] md:h-[100px] bg-white rounded-[16px] md:rounded-[20px] p-1 absolute top-[60px] md:top-[70px] left-1/2 -translate-x-1/2 shadow-lg">
+                            <img id="cardAvatar" src="https://via.placeholder.com/150" class="w-full h-full rounded-[12px] md:rounded-[16px] object-cover bg-gray-200">
+                        </div>
+                        <div class="pt-12 md:pt-16 pb-5 md:pb-6 px-4 text-center">
+                             <h3 class="text-lg md:text-xl font-bold text-white mb-1 md:mb-2 flex justify-center items-center gap-1" id="cardName">
+                                 Loading... </h3>
+                             <span class="bg-blue-900/30 text-blue-400 border border-blue-900 px-3 py-0.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-wider inline-block mb-4 md:mb-6">Active Member</span>
+                             
+                             <div class="bg-[#222b40] rounded-xl md:rounded-2xl p-3 md:p-4 text-left space-y-2 md:space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-[#2d3748] flex items-center justify-center text-green-500 text-sm md:text-base"><i class="ph-fill ph-identification-card"></i></div>
+                                    <div><p class="text-[8px] md:text-[9px] text-gray-500 font-bold uppercase">Member ID</p><p class="text-[10px] md:text-[11px] text-white font-bold" id="cardId">...</p></div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-[#2d3748] flex items-center justify-center text-green-500 text-sm md:text-base"><i class="ph-fill ph-whatsapp-logo"></i></div>
+                                    <div><p class="text-[8px] md:text-[9px] text-gray-500 font-bold uppercase">Contact</p><p class="text-[10px] md:text-[11px] text-white font-bold font-mono" id="cardPhone">...</p></div>
+                                </div>
+                             </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="mt-6 bg-slate-800/50 rounded-2xl p-6 border border-white/5 shadow-lg">
-                    <label class="block text-sm font-bold text-slate-400 mb-3">Update Profile Picture</label>
+                <!-- AVATAR UPDATE SECTION -->
+                <div class="bg-slate-800/50 rounded-2xl p-5 md:p-6 border border-white/5 shadow-lg relative group">
+                    <!-- Overlay when disabled -->
+                    <div id="avatarOverlay" class="absolute inset-0 bg-slate-900/85 z-10 rounded-2xl flex flex-col items-center justify-center backdrop-blur-[2px] cursor-not-allowed p-4 text-center transition-all duration-300">
+                        <span class="text-[10px] md:text-xs font-bold text-slate-400 bg-slate-900 px-3 py-1.5 rounded-full border border-white/10 text-center shadow-lg mb-2 md:mb-3">
+                            <i class="ph-bold ph-lock-key mr-1"></i> Locked
+                        </span>
+                        <p class="text-[9px] md:text-[10px] text-slate-400 leading-relaxed max-w-[200px]">
+                            To change image, click the <br>
+                            <span class="text-brand-green font-bold">Edit Profile</span> button above.
+                        </p>
+                    </div>
+
+                    <label class="block text-xs md:text-sm font-bold text-slate-400 mb-2 md:mb-3">Update Profile Picture</label>
                     <div class="flex gap-2 mb-3">
-                         <label for="avatarUpload" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl text-center cursor-pointer font-bold text-sm transition shadow-lg shadow-green-900/50 flex items-center justify-center gap-2">
-                             <i class="ph-bold ph-upload-simple"></i> Upload Image
+                         <label for="avatarUpload" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2.5 md:py-3 rounded-xl text-center cursor-pointer font-bold text-xs md:text-sm transition shadow-lg shadow-green-900/50 flex items-center justify-center gap-2">
+                             <i class="ph-bold ph-upload-simple"></i> Upload
                          </label>
-                         <input type="file" id="avatarUpload" accept="image/*" class="hidden">
+                         <input type="file" id="avatarUpload" accept="image/*" class="hidden" disabled>
                     </div>
                     <div class="relative">
                         <div class="flex gap-2">
-                            <input type="text" id="avatarLink" placeholder="Or paste image link here..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white outline-none focus:border-green-500 transition">
-                            <button onclick="saveAvatarLink()" class="bg-slate-700 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-slate-600 border border-slate-600">Save</button>
+                            <input type="text" id="avatarLink" placeholder="Paste link..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 md:px-4 md:py-3 text-[10px] md:text-xs text-white outline-none focus:border-green-500 transition" disabled>
+                            <button id="avatarLinkBtn" onclick="saveAvatarLink()" class="bg-slate-700 text-white px-3 py-2 rounded-xl text-[10px] md:text-xs font-bold hover:bg-slate-600 border border-slate-600" disabled>Save</button>
                         </div>
                     </div>
-                    <p class="text-[10px] text-gray-500 mt-2 italic">* Recommended: Square image (1:1 ratio)</p>
                 </div>
             </div>
 
+            <!-- RIGHT COLUMN: Form -->
             <div class="lg:col-span-2">
-                <div class="bg-slate-800/40 backdrop-blur-md rounded-[2.5rem] p-8 border border-white/5 shadow-2xl h-full">
-                    <div class="flex items-center justify-between mb-8">
+                <div class="bg-slate-800/40 backdrop-blur-md rounded-[2rem] md:rounded-[2.5rem] p-5 md:p-8 border border-white/5 shadow-2xl h-full relative">
+                    
+                    <div class="flex flex-col-reverse md:flex-row items-start md:items-center justify-between mb-6 md:mb-8 pb-4 md:pb-6 border-b border-white/5 gap-4">
                         <div>
-                            <h2 class="text-2xl font-black text-white uppercase tracking-wide">Edit Details</h2>
-                            <p class="text-sm text-gray-400">Update your personal information</p>
+                            <h2 class="text-xl md:text-2xl font-black text-white uppercase tracking-wide">Member Details</h2>
+                            <p class="text-[10px] md:text-sm text-gray-400">Manage your personal information</p>
                         </div>
-                        <div class="w-12 h-12 bg-slate-700/50 rounded-full flex items-center justify-center text-gray-400">
-                            <i class="ph-duotone ph-pencil-simple text-2xl"></i>
-                        </div>
+                        
+                        <!-- EDIT TOGGLE BUTTON -->
+                        <button id="editModeBtn" onclick="toggleEditMode()" class="w-full md:w-auto group relative bg-slate-800 hover:bg-slate-700 border border-white/10 px-4 py-2.5 md:px-6 md:py-3 rounded-xl flex items-center justify-between md:justify-start gap-3 transition-all duration-300 shadow-lg">
+                            <div class="text-left md:text-right">
+                                <span class="block text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-slate-300">Tap to</span>
+                                <span class="block text-xs md:text-sm font-black text-white group-hover:text-brand-green uppercase tracking-wide">Edit Profile</span>
+                            </div>
+                            <div class="relative w-8 h-8 md:w-10 md:h-10 bg-slate-700 rounded-lg flex items-center justify-center border border-white/5 group-hover:border-brand-green/30 transition-colors">
+                                <i class="ph-fill ph-pencil-simple text-lg md:text-xl text-slate-300 group-hover:text-brand-green transition-colors"></i>
+                            </div>
+                        </button>
                     </div>
 
-                    <form id="profileForm" class="space-y-6">
+                    <form id="profileForm" class="space-y-4 md:space-y-6">
                         
-                        <!-- Personal Info (Now Editable) -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                             <!-- Email (Read-only) -->
-                             <div class="md:col-span-2">
-                                <label class="text-xs font-bold text-slate-500 uppercase ml-1 mb-1 block"><i class="ph-bold ph-lock-key"></i> Email Address (Cannot be changed)</label>
-                                <input type="text" id="email" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-4 text-slate-400 font-bold outline-none cursor-not-allowed">
+                        <!-- EMAIL ADDRESS: Fixed Mobile View -->
+                        <div class="bg-slate-900/60 rounded-xl md:rounded-2xl p-4 md:p-5 border border-white/5 relative overflow-hidden group shadow-lg">
+                            <div class="absolute inset-0 bg-gradient-to-r from-brand-green/5 to-transparent opacity-50 pointer-events-none"></div>
+                            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4">
+                                <div class="w-full">
+                                    <label class="text-[9px] md:text-[10px] font-bold text-brand-green uppercase tracking-wider mb-1 flex items-center gap-2">
+                                        <i class="ph-fill ph-envelope-simple"></i> Primary Email
+                                    </label>
+                                    <!-- Changed from INPUT to DIV for better text wrapping on mobile -->
+                                    <div id="email" class="text-white font-bold text-sm md:text-lg break-all md:break-words leading-tight bg-transparent select-text">
+                                        Loading email...
+                                    </div>
+                                    <p class="text-[9px] md:text-[10px] text-slate-500 mt-1.5">Linked to your Member ID.</p>
+                                </div>
+                                <div class="hidden md:flex w-10 h-10 rounded-full bg-slate-800 items-center justify-center border border-white/10 text-slate-500 shrink-0">
+                                    <i class="ph-bold ph-lock-key"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Personal Info -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                            
+                            <!-- Display Name -->
+                            <div class="md:col-span-2">
+                                <label class="text-[10px] md:text-xs font-bold text-brand-green uppercase ml-1 mb-1 block flex items-center gap-2">
+                                    <i class="ph-bold ph-star"></i> Display Name (Preferred)
+                                </label>
+                                <input type="text" id="displayName" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="e.g. Isara">
                             </div>
 
                             <div class="md:col-span-2">
-                                <label class="text-xs font-bold text-green-500 uppercase ml-1 mb-1 block">Full Name</label>
-                                <input type="text" id="fullName" class="w-full bg-slate-900 border border-slate-600 focus:border-green-500 rounded-xl p-4 text-white font-bold outline-none transition shadow-inner">
+                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">Full Name</label>
+                                <input type="text" id="fullName" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed">
                             </div>
 
                             <div>
-                                <label class="text-xs font-bold text-green-500 uppercase ml-1 mb-1 block">NIC Number</label>
-                                <input type="text" id="nic" class="w-full bg-slate-900 border border-slate-600 focus:border-green-500 rounded-xl p-4 text-white font-bold outline-none transition shadow-inner">
+                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">NIC Number</label>
+                                <input type="text" id="nic" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed">
                             </div>
                             
                             <div>
-                                <label class="text-xs font-bold text-green-500 uppercase ml-1 mb-1 block">Date of Birth</label>
-                                <input type="date" id="dob" class="w-full bg-slate-900 border border-slate-600 focus:border-green-500 rounded-xl p-4 text-white font-bold outline-none transition shadow-inner">
+                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">Date of Birth</label>
+                                <input type="date" id="dob" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed">
                             </div>
 
-                            <!-- NEW: Address Field -->
+                            <!-- Address Field -->
                             <div class="md:col-span-2">
-                                <label class="text-xs font-bold text-green-500 uppercase ml-1 mb-1 block">Residential Address</label>
-                                <textarea id="address" rows="2" class="w-full bg-slate-900 border border-slate-600 focus:border-green-500 rounded-xl p-4 text-white font-bold outline-none transition shadow-inner" placeholder="No, Street, City..."></textarea>
+                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">Residential Address</label>
+                                <textarea id="address" rows="2" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="No, Street, City..."></textarea>
                             </div>
                         </div>
 
                         <!-- Contact & Skills -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pt-4 border-t border-white/5">
                             <div class="md:col-span-2">
-                                <label class="text-xs font-bold text-green-500 uppercase ml-1 mb-1 block">WhatsApp Number</label>
-                                <input type="text" id="whatsapp" class="w-full bg-slate-900 border border-slate-600 focus:border-green-500 rounded-xl p-4 text-white font-bold outline-none transition shadow-inner" placeholder="07x xxxxxxx">
+                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">WhatsApp Number</label>
+                                <input type="text" id="whatsapp" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="07x xxxxxxx">
                             </div>
                             <div class="md:col-span-2">
-                                <label class="text-xs font-bold text-green-500 uppercase ml-1 mb-1 block">Job / Profession</label>
-                                <input type="text" id="job" class="w-full bg-slate-900 border border-slate-600 focus:border-green-500 rounded-xl p-4 text-white font-bold outline-none transition shadow-inner" placeholder="Student / Engineer / etc.">
+                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">Job / Profession</label>
+                                <input type="text" id="job" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="Student / Engineer / etc.">
                             </div>
                             <div class="md:col-span-2">
-                                <label class="text-xs font-bold text-green-500 uppercase ml-1 mb-1 block">Sports Skills</label>
-                                <textarea id="sports" rows="3" class="w-full bg-slate-900 border border-slate-600 focus:border-green-500 rounded-xl p-4 text-white font-bold outline-none transition shadow-inner" placeholder="Cricket, Volleyball, etc."></textarea>
+                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">Sports Skills</label>
+                                <textarea id="sports" rows="3" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="Cricket, Volleyball, etc."></textarea>
                             </div>
                             <div class="md:col-span-2">
-                                <label class="text-xs font-bold text-green-500 uppercase ml-1 mb-1 block">Aesthetic Skills</label>
-                                <textarea id="aesthetic" rows="3" class="w-full bg-slate-900 border border-slate-600 focus:border-green-500 rounded-xl p-4 text-white font-bold outline-none transition shadow-inner" placeholder="Dancing, Singing, Art, etc."></textarea>
+                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">Aesthetic Skills</label>
+                                <textarea id="aesthetic" rows="3" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="Dancing, Singing, Art, etc."></textarea>
                             </div>
                         </div>
 
-                        <div class="text-right pt-4 border-t border-white/10">
-                            <button type="submit" id="saveBtn" class="bg-gradient-to-r from-green-600 to-emerald-600 hover:to-emerald-500 text-white font-bold py-4 px-10 rounded-xl shadow-lg hover:shadow-green-500/30 transform hover:-translate-y-1 transition flex items-center gap-2 ml-auto">
+                        <div id="saveBtnContainer" class="text-right pt-4 border-t border-white/10 hidden">
+                            <button type="submit" id="saveBtn" class="w-full md:w-auto bg-gradient-to-r from-brand-green to-emerald-600 hover:to-emerald-500 text-white font-bold py-3 md:py-4 px-6 md:px-10 rounded-xl shadow-lg hover:shadow-brand-green/30 transform hover:-translate-y-1 transition flex items-center justify-center gap-2 ml-auto text-xs md:text-sm">
                                 <i class="ph-bold ph-floppy-disk"></i> Review & Save
                             </button>
                         </div>
@@ -156,12 +203,12 @@
 
     <!-- CONFIRMATION MODAL -->
     <div id="confirmModal" class="fixed inset-0 z-[100] hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-white/10 rounded-2xl p-6 max-w-md w-full shadow-2xl transform scale-100 transition-all">
+        <div class="bg-slate-900 border border-white/10 rounded-2xl p-5 md:p-6 max-w-md w-full shadow-2xl transform scale-100 transition-all">
             <div class="flex items-center gap-3 mb-4 text-white">
-                <div class="w-10 h-10 rounded-full bg-brand-green/20 flex items-center justify-center text-brand-green">
-                    <i class="ph-bold ph-pencil-simple text-xl"></i>
+                <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-brand-green/20 flex items-center justify-center text-brand-green">
+                    <i class="ph-bold ph-pencil-simple text-lg md:text-xl"></i>
                 </div>
-                <h3 class="text-xl font-bold">Confirm Changes</h3>
+                <h3 class="text-lg md:text-xl font-bold">Confirm Changes</h3>
             </div>
             
             <p class="text-slate-400 text-xs mb-4">You are about to update the following details:</p>
@@ -171,15 +218,15 @@
             </div>
 
             <div class="flex gap-3 justify-end">
-                <button onclick="closeConfirmModal()" class="px-5 py-2.5 rounded-xl bg-slate-800 text-slate-400 hover:text-white font-bold transition text-xs uppercase tracking-wider">Cancel</button>
-                <button id="confirmSaveBtn" class="px-5 py-2.5 rounded-xl bg-brand-green text-white font-bold hover:bg-emerald-600 transition shadow-lg shadow-brand-green/20 text-xs uppercase tracking-wider flex items-center gap-2">
-                    <i class="ph-bold ph-check"></i> Confirm & Save
+                <button onclick="closeConfirmModal()" class="px-4 py-2 md:px-5 md:py-2.5 rounded-xl bg-slate-800 text-slate-400 hover:text-white font-bold transition text-[10px] md:text-xs uppercase tracking-wider">Cancel</button>
+                <button id="confirmSaveBtn" class="px-4 py-2 md:px-5 md:py-2.5 rounded-xl bg-brand-green text-white font-bold hover:bg-emerald-600 transition shadow-lg shadow-brand-green/20 text-[10px] md:text-xs uppercase tracking-wider flex items-center gap-2">
+                    <i class="ph-bold ph-check"></i> Confirm
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Scripts with updated relative paths -->
+    <!-- Scripts -->
     <script src="../js/supabase.js"></script>
     <script src="../js/ui.js"></script>
     
@@ -187,18 +234,29 @@
         let userId = null;
         let originalData = {};
         let pendingUpdates = {};
+        const DEFAULT_AVATAR = "https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg";
 
-        // Field Label Mapping for better display
+        // Field Label Mapping
         const fieldLabels = {
+            display_name: "Display Name",
             full_name: "Full Name",
             nic: "NIC Number",
             dob: "Date of Birth",
-            address: "Residential Address", // Added Label
+            address: "Residential Address",
             whatsapp: "WhatsApp Number",
             job: "Job / Profession",
             sports_skills: "Sports Skills",
             aesthetic_skills: "Aesthetic Skills"
         };
+
+        // UI Elements
+        const inputs = document.querySelectorAll('#profileForm input:not([type="hidden"]), #profileForm textarea');
+        const saveBtnContainer = document.getElementById('saveBtnContainer');
+        const avatarOverlay = document.getElementById('avatarOverlay');
+        const avatarUploadInput = document.getElementById('avatarUpload');
+        const avatarLinkInput = document.getElementById('avatarLink');
+        const avatarLinkBtn = document.getElementById('avatarLinkBtn');
+        const editModeBtn = document.getElementById('editModeBtn');
 
         async function init() {
             if (typeof _supabase === 'undefined') {
@@ -215,39 +273,115 @@
             const { data: profile } = await _supabase.from('profiles').select('*').eq('id', userId).single();
             
             if (profile) {
-                // Store Original Data for Comparison
+                // Store Original Data
                 originalData = {
+                    display_name: profile.display_name || '',
                     full_name: profile.full_name || '',
                     nic: profile.nic || '',
                     dob: profile.dob || '',
-                    address: profile.address || '', // Added Address
+                    address: profile.address || '',
                     whatsapp: profile.whatsapp || '',
                     job: profile.job || '',
                     sports_skills: profile.sports_skills || '',
                     aesthetic_skills: profile.aesthetic_skills || ''
                 };
 
-                // 1. Populate Member Card Preview
-                const avatar = profile.avatar_url || 'https://via.placeholder.com/150';
+                // 1. Populate Preview Card
+                const avatar = (profile.avatar_url && profile.avatar_url.trim() !== "") 
+                               ? profile.avatar_url 
+                               : DEFAULT_AVATAR;
+
                 const verifyIcon = (typeof getVerifyIcon === 'function') ? getVerifyIcon() : '';
                 
-                document.getElementById('cardName').innerHTML = profile.full_name + verifyIcon; 
+                const nameToShow = profile.display_name || profile.full_name;
+                document.getElementById('cardName').innerHTML = nameToShow + verifyIcon; 
                 document.getElementById('cardId').innerText = profile.member_id || 'PENDING';
                 document.getElementById('cardPhone').innerText = profile.whatsapp || 'N/A';
                 document.getElementById('cardAvatar').src = avatar;
 
                 // 2. Populate Form Fields
+                document.getElementById('displayName').value = originalData.display_name;
                 document.getElementById('fullName').value = originalData.full_name;
                 document.getElementById('nic').value = originalData.nic;
-                document.getElementById('email').value = profile.email || '';
-                document.getElementById('dob').value = originalData.dob;
-                document.getElementById('address').value = originalData.address; // Populate Address
                 
+                // --- FIXED EMAIL POPULATION ---
+                // Use textContent since it's now a DIV, not an INPUT
+                document.getElementById('email').textContent = profile.email || 'No Email Linked';
+                
+                document.getElementById('dob').value = originalData.dob;
+                document.getElementById('address').value = originalData.address;
                 document.getElementById('whatsapp').value = originalData.whatsapp;
                 document.getElementById('job').value = originalData.job;
                 document.getElementById('sports').value = originalData.sports_skills;
                 document.getElementById('aesthetic').value = originalData.aesthetic_skills;
             }
+        }
+
+        function toggleEditMode() {
+            // Check based on first input
+            const isCurrentlyDisabled = document.getElementById('displayName').disabled;
+            
+            if (isCurrentlyDisabled) {
+                // Enable Editing
+                inputs.forEach(input => {
+                    input.disabled = false;
+                    input.classList.remove('text-slate-300');
+                    input.classList.add('text-white', 'bg-slate-900');
+                    const label = input.previousElementSibling;
+                    if(label) label.classList.replace('text-slate-400', 'text-brand-green');
+                });
+
+                // Enable Avatar
+                avatarOverlay.classList.add('hidden');
+                avatarUploadInput.disabled = false;
+                avatarLinkInput.disabled = false;
+                avatarLinkBtn.disabled = false;
+
+                // Show Save
+                saveBtnContainer.classList.remove('hidden');
+
+                // Update Button
+                editModeBtn.classList.add('bg-slate-700', 'border-brand-green');
+                editModeBtn.innerHTML = `
+                    <div class="text-left md:text-right">
+                        <span class="block text-[9px] md:text-[10px] font-bold text-brand-green uppercase tracking-wider">Editing Mode</span>
+                        <span class="block text-xs md:text-sm font-black text-white uppercase tracking-wide">Unlocked</span>
+                    </div>
+                    <div class="w-8 h-8 md:w-10 md:h-10 bg-brand-green rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(22,163,74,0.5)]">
+                        <i class="ph-bold ph-lock-key-open text-lg md:text-xl text-white"></i>
+                    </div>
+                `;
+
+            } else {
+                lockForm();
+                
+                // Reset Button
+                editModeBtn.classList.remove('bg-slate-700', 'border-brand-green');
+                editModeBtn.innerHTML = `
+                    <div class="text-left md:text-right">
+                        <span class="block text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-slate-300">Tap to</span>
+                        <span class="block text-xs md:text-sm font-black text-white group-hover:text-brand-green uppercase tracking-wide">Edit Profile</span>
+                    </div>
+                    <div class="relative w-8 h-8 md:w-10 md:h-10 bg-slate-700 rounded-lg flex items-center justify-center border border-white/5 group-hover:border-brand-green/30 transition-colors">
+                        <i class="ph-fill ph-pencil-simple text-lg md:text-xl text-slate-300 group-hover:text-brand-green transition-colors"></i>
+                    </div>
+                `;
+            }
+        }
+
+        function lockForm() {
+            inputs.forEach(input => {
+                input.disabled = true;
+                input.classList.add('text-slate-300');
+                input.classList.remove('text-white', 'bg-slate-900');
+                const label = input.previousElementSibling;
+                if(label) label.classList.replace('text-brand-green', 'text-slate-400');
+            });
+            avatarOverlay.classList.remove('hidden');
+            avatarUploadInput.disabled = true;
+            avatarLinkInput.disabled = true;
+            avatarLinkBtn.disabled = true;
+            saveBtnContainer.classList.add('hidden');
         }
 
         // --- Avatar Upload Logic ---
@@ -261,7 +395,6 @@
             try {
                 const fileName = `${userId}-${Date.now()}`;
                 const { error: uploadError } = await _supabase.storage.from('avatars').upload(fileName, file);
-
                 if (uploadError) throw uploadError;
 
                 const { data: { publicUrl } } = _supabase.storage.from('avatars').getPublicUrl(fileName);
@@ -270,11 +403,10 @@
             } catch (error) {
                 alert('Upload Error: ' + error.message);
             } finally {
-                btnLabel.innerHTML = '<i class="ph-bold ph-upload-simple"></i> Upload Image';
+                btnLabel.innerHTML = '<i class="ph-bold ph-upload-simple"></i> Upload';
             }
         });
 
-        // --- Link Save Logic ---
         async function saveAvatarLink() {
             const url = document.getElementById('avatarLink').value;
             if(url) await updateAvatarUrl(url);
@@ -291,23 +423,22 @@
             }
         }
 
-        // --- FORM SUBMIT Logic (Now triggers Modal) ---
+        // --- FORM SUBMIT Logic ---
         document.getElementById('profileForm').addEventListener('submit', (e) => {
             e.preventDefault();
             
-            // Gather current values
             const updates = {
+                display_name: document.getElementById('displayName').value,
                 full_name: document.getElementById('fullName').value,
                 nic: document.getElementById('nic').value,
                 dob: document.getElementById('dob').value,
-                address: document.getElementById('address').value, // Capture Address
+                address: document.getElementById('address').value,
                 whatsapp: document.getElementById('whatsapp').value,
                 job: document.getElementById('job').value,
                 sports_skills: document.getElementById('sports').value,
                 aesthetic_skills: document.getElementById('aesthetic').value
             };
 
-            // Detect Changes
             const changedFields = {};
             for (const key in updates) {
                 if (updates[key] !== originalData[key]) {
@@ -315,19 +446,16 @@
                 }
             }
 
-            // If no changes
             if (Object.keys(changedFields).length === 0) {
                 alert("No changes detected.");
                 return;
             }
 
-            // Store updates globally for the confirm button
             pendingUpdates = updates;
 
             // Populate Modal
             const summaryDiv = document.getElementById('changesSummary');
             summaryDiv.innerHTML = '';
-            
             for (const key in changedFields) {
                 summaryDiv.innerHTML += `
                     <div class="flex justify-between items-start border-b border-white/5 pb-2 mb-2 last:border-0 last:mb-0 last:pb-0">
@@ -336,17 +464,13 @@
                     </div>
                 `;
             }
-
-            // Show Modal
             document.getElementById('confirmModal').classList.remove('hidden');
         });
 
-        // --- Modal Actions ---
         function closeConfirmModal() {
             document.getElementById('confirmModal').classList.add('hidden');
         }
 
-        // --- CONFIRM SAVE Logic ---
         document.getElementById('confirmSaveBtn').addEventListener('click', async () => {
             const confirmBtn = document.getElementById('confirmSaveBtn');
             const originalBtnText = confirmBtn.innerHTML;
@@ -357,15 +481,14 @@
             const { error } = await _supabase.from('profiles').update(pendingUpdates).eq('id', userId);
             
             if (!error) {
-                // Update local original data
                 originalData = { ...pendingUpdates };
-                
-                // Refresh card preview
-                document.getElementById('cardName').innerHTML = pendingUpdates.full_name + ((typeof getVerifyIcon === 'function') ? getVerifyIcon() : '');
+                const nameToShow = pendingUpdates.display_name || pendingUpdates.full_name;
+                document.getElementById('cardName').innerHTML = nameToShow + ((typeof getVerifyIcon === 'function') ? getVerifyIcon() : '');
                 document.getElementById('cardPhone').innerText = pendingUpdates.whatsapp || 'N/A';
                 
                 alert('Profile updated successfully!');
                 closeConfirmModal();
+                toggleEditMode(); 
             } else {
                 alert('Error saving details: ' + error.message);
             }
@@ -374,7 +497,6 @@
             confirmBtn.disabled = false;
         });
 
-        // Run Init
         init();
     </script>
     <div id="global-footer-placeholder"></div>

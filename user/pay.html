@@ -27,21 +27,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <style>
-        body { font-family: 'Poppins', sans-serif; }
         .glass-panel { 
-            background: rgba(30, 41, 59, 0.4); 
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(30, 41, 59, 0.6); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             border-radius: 2rem; 
         }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #16a34a; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-brand-dark min-h-screen font-poppins text-slate-100 selection:bg-brand-green selection:text-white">
 
-    <!-- HOME BUTTON ADDED HERE (Path: index.html) -->
+    <!-- HOME BUTTON -->
     <a href="index.html" class="absolute top-6 left-6 z-50 w-12 h-12 bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-xl flex items-center justify-center text-white hover:bg-brand-green hover:border-brand-green transition-all duration-300 shadow-lg group">
         <i class="ph-bold ph-house text-xl group-hover:scale-110 transition-transform"></i>
     </a>
@@ -54,53 +55,58 @@
             <h1 class="text-4xl md:text-6xl font-black text-white mb-2 uppercase tracking-tighter drop-shadow-2xl">
                 Payment <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-green to-emerald-400">History</span>
             </h1>
-            <p class="text-slate-400 text-lg font-medium">Track your membership fees & contributions.</p>
+            <p class="text-slate-400 text-sm md:text-lg font-medium tracking-wide">Track your membership fees & contributions.</p>
         </div>
     </div>
 
     <main class="max-w-7xl mx-auto px-4 md:px-6 -mt-20 relative z-20 pb-20 flex flex-col lg:flex-row gap-8">
         
-        <div class="flex-1 space-y-8">
+        <!-- Left Column -->
+        <div class="flex-1 space-y-6 md:space-y-8">
             
-            <div class="glass-panel p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group" data-aos="fade-up">
+            <!-- Total Summary Card -->
+            <div class="glass-panel p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group" data-aos="fade-up">
                 <div class="absolute right-0 top-0 p-10 opacity-5 group-hover:opacity-10 transition duration-500">
                     <i class="ph-fill ph-coins text-9xl text-brand-green"></i>
                 </div>
-                <div>
+                <div class="text-center md:text-left z-10">
                     <p class="text-slate-400 font-bold uppercase tracking-widest text-xs mb-2">Total Contribution</p>
-                    <h2 class="text-5xl md:text-6xl font-black text-white flex items-baseline gap-2">
+                    <h2 class="text-4xl md:text-6xl font-black text-white flex items-baseline gap-2 justify-center md:justify-start">
                         <span id="totalPaidDisplay">0</span> <span class="text-lg text-brand-green font-bold">LKR</span>
                     </h2>
                 </div>
-                <div class="text-right hidden md:block">
+                <div class="text-center md:text-right z-10">
                     <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-green/10 text-brand-green border border-brand-green/20">
                         <i class="ph-bold ph-check-circle"></i> <span class="text-xs font-bold uppercase">Verified Member</span>
                     </div>
                 </div>
             </div>
 
+            <!-- Chart Section -->
             <div class="glass-panel p-6" data-aos="fade-up" data-aos-delay="100">
-                <div class="flex justify-between items-center mb-6">
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
                     <h3 class="text-lg font-bold text-white flex items-center gap-2">
                         <i class="ph-bold ph-chart-bar text-brand-green"></i> Payment Overview
                     </h3>
                     <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider">
                         <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Paid</span>
-                        <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-red-500/50"></span> Unpaid</span>
+                        <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-slate-600"></span> Unpaid</span>
                     </div>
                 </div>
                 <div id="paymentChart" class="w-full min-h-[300px]"></div>
             </div>
 
+            <!-- History List -->
             <div class="space-y-4" id="historyFeed">
-                <div class="text-center py-10">
+                <div class="text-center py-10 glass-panel">
                     <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-green mx-auto mb-2"></div>
-                    <p class="text-slate-500 text-sm">Loading records...</p>
+                    <p class="text-slate-500 text-sm font-bold uppercase tracking-widest">Loading records...</p>
                 </div>
             </div>
 
         </div>
 
+        <!-- Right Column (Sidebar) -->
         <div class="w-full lg:w-80 shrink-0 space-y-6">
             
             <div class="glass-panel p-6 relative overflow-hidden" data-aos="fade-left">
@@ -112,7 +118,7 @@
                     <div class="w-16 h-16 rounded-full bg-slate-700 flex items-center justify-center text-2xl mb-3 animate-pulse">
                         <i class="ph-duotone ph-circle-notch"></i>
                     </div>
-                    <span class="font-bold text-white">Checking...</span>
+                    <span class="font-bold text-white text-sm">Checking...</span>
                 </div>
                 
                 <p class="text-xs text-slate-400 text-center leading-relaxed">
@@ -178,16 +184,16 @@
                 feed.innerHTML += `
                 <div class="glass-panel p-4 flex items-center justify-between group hover:bg-slate-800/60 transition" data-aos="fade-up" data-aos-delay="${i * 50}">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-brand-green/10 text-brand-green flex items-center justify-center border border-brand-green/20">
-                            <i class="ph-bold ph-receipt text-xl"></i>
+                        <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-brand-green/10 text-brand-green flex items-center justify-center border border-brand-green/20 shrink-0">
+                            <i class="ph-bold ph-receipt text-lg md:text-xl"></i>
                         </div>
                         <div>
-                            <h4 class="font-bold text-white text-lg">${p.month_year}</h4>
-                            <p class="text-xs text-slate-400 font-mono">Paid on ${date}</p>
+                            <h4 class="font-bold text-white text-base md:text-lg">${p.month_year}</h4>
+                            <p class="text-[10px] md:text-xs text-slate-400 font-mono">Paid on ${date}</p>
                         </div>
                     </div>
                     <div class="text-right">
-                        <div class="font-bold text-white mb-1">${p.amount}/=</div>
+                        <div class="font-bold text-white mb-1 text-sm md:text-base">${p.amount}/=</div>
                         <button onclick="generateReceipt('${p.id}', '${p.month_year}', '${p.amount}', '${p.paid_at}')" class="text-[10px] bg-slate-700 hover:bg-white hover:text-slate-900 text-white px-3 py-1.5 rounded-lg transition font-bold flex items-center gap-1 ml-auto">
                             <i class="ph-bold ph-download-simple"></i> Save
                         </button>
@@ -202,10 +208,8 @@
             const chartData = [];
             const arrears = [];
 
-            // Calculate months from Join Date (or Jan 2024 if null) to Now
             let start = joinDateStr ? new Date(joinDateStr) : new Date('2024-01-01');
             const now = new Date();
-            // Start from the 1st of the join month
             start.setDate(1);
 
             while (start <= now) {
@@ -213,17 +217,14 @@
                 chartCategories.push(mStr);
 
                 if (paidMonthsMap.has(mStr)) {
-                    // Paid
-                    chartData.push({ x: mStr, y: 100, fillColor: '#16a34a' }); // Green
+                    chartData.push({ x: mStr, y: 100, fillColor: '#16a34a' }); 
                 } else {
-                    // Unpaid
-                    chartData.push({ x: mStr, y: 100, fillColor: '#334155' }); // Dark Gray (Unpaid visual)
+                    chartData.push({ x: mStr, y: 100, fillColor: '#334155' });
                     arrears.push(mStr);
                 }
                 start.setMonth(start.getMonth() + 1);
             }
 
-            // --- Render Chart ---
             const options = {
                 series: [{ name: 'Status', data: chartData }],
                 chart: { 
@@ -234,11 +235,7 @@
                     background: 'transparent'
                 },
                 plotOptions: { 
-                    bar: { 
-                        borderRadius: 6, 
-                        columnWidth: '60%', 
-                        distributed: true 
-                    } 
+                    bar: { borderRadius: 4, columnWidth: '60%', distributed: true } 
                 },
                 dataLabels: { enabled: false },
                 xaxis: { 
@@ -247,10 +244,7 @@
                     axisBorder: { show: false },
                     axisTicks: { show: false }
                 },
-                yaxis: { 
-                    show: false, 
-                    max: 100 
-                },
+                yaxis: { show: false, max: 100 },
                 grid: { show: false },
                 tooltip: {
                     theme: 'dark',
@@ -265,10 +259,9 @@
             };
 
             const chartEl = document.querySelector("#paymentChart");
-            chartEl.innerHTML = ""; // Clear loader
+            chartEl.innerHTML = ""; 
             new ApexCharts(chartEl, options).render();
 
-            // --- Update Sidebar Status ---
             const statusEl = document.getElementById('statusIndicator');
             const arrearsPanel = document.getElementById('arrearsPanel');
             const arrearsList = document.getElementById('arrearsList');
@@ -301,7 +294,7 @@
             }
         }
 
-        // --- Receipt Gen (Same as before) ---
+        // --- PDF Generation ---
         function getBase64ImageFromURL(url) {
             return new Promise((resolve) => {
                 var img = new Image(); img.setAttribute("crossOrigin", "anonymous");
