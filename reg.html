@@ -54,7 +54,47 @@
             <!-- Glow Effect inside card -->
             <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-brand-green to-transparent opacity-50"></div>
 
-            <form id="regForm" class="space-y-8">
+            <!-- Help Toggle Button (Only visible on card) -->
+            <div class="flex justify-end mb-2">
+                <button id="toggleHelpBtn" type="button" class="group flex items-center gap-3 px-4 py-2 rounded-full bg-slate-800/50 hover:bg-slate-800 border border-white/5 hover:border-brand-green/30 transition-all duration-300">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest group-hover:text-white transition-colors">Need Help Registering?</span>
+                    <div class="w-6 h-6 rounded-full bg-brand-green/20 flex items-center justify-center text-brand-green group-hover:bg-brand-green group-hover:text-white transition shadow-[0_0_10px_rgba(22,163,74,0.2)]">
+                        <i class="ph-bold ph-caret-down group-hover:rotate-180 transition-transform duration-300"></i>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Tutorial Section (Hidden by default, Toggles open) -->
+            <div id="videoSection" class="hidden mb-10 bg-slate-800/40 rounded-2xl p-6 border border-white/5 scroll-mt-32 transition-all duration-500 origin-top">
+                <h3 class="text-white font-bold text-sm flex items-center gap-2 mb-4 uppercase tracking-wider border-b border-white/5 pb-3">
+                    <i class="ph-fill ph-youtube-logo text-brand-green text-lg"></i> Video Guides
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Sinhala Guide -->
+                    <div class="space-y-2 group">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider group-hover:text-brand-green transition">Sinhala Guide</p>
+                            <span class="text-[10px] px-2 py-0.5 rounded bg-brand-green/10 text-brand-green border border-brand-green/20">Sinhala</span>
+                        </div>
+                        <div class="aspect-video rounded-xl overflow-hidden border border-slate-700 shadow-lg group-hover:border-brand-green/30 transition duration-300 relative bg-black">
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/CRga7nRT62s" title="Sinhala Registration Guide" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    
+                    <!-- English Guide -->
+                    <div class="space-y-2 group">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider group-hover:text-brand-green transition">English Guide</p>
+                            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-700 text-slate-300 border border-slate-600">English</span>
+                        </div>
+                        <div class="aspect-video rounded-xl overflow-hidden border border-slate-700 shadow-lg group-hover:border-brand-green/30 transition duration-300 relative bg-black">
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/6s38pjPonRI" title="English Registration Guide" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form id="regForm" class="space-y-8 scroll-mt-32 relative z-10">
                 
                 <!-- Section 1: Personal Info -->
                 <div class="space-y-6">
@@ -169,6 +209,30 @@
         </div>
     </div>
 
+    <!-- Initial Choice Modal -->
+    <div id="welcomeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-dark/95 backdrop-blur-md transition-opacity duration-300">
+        <div class="bg-slate-900 border border-white/10 p-8 rounded-3xl shadow-2xl max-w-md w-full text-center relative overflow-hidden" data-aos="zoom-in" data-aos-duration="500">
+            <!-- Glow -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-brand-green/20 rounded-full blur-[50px] -z-10"></div>
+            
+            <div class="w-16 h-16 bg-brand-green/10 rounded-full flex items-center justify-center mx-auto mb-6 text-brand-green border border-brand-green/20">
+                <i class="ph-fill ph-question text-3xl"></i>
+            </div>
+
+            <h3 class="text-2xl font-black text-white mb-2 tracking-tight">Need Assistance?</h3>
+            <p class="text-slate-400 text-sm mb-8 leading-relaxed">You can watch a quick video guide on how to register, or proceed directly if you're ready.</p>
+
+            <div class="flex flex-col gap-3">
+                <button id="btnWatchGuide" class="w-full py-4 rounded-xl bg-brand-green hover:bg-emerald-600 text-white font-bold uppercase tracking-wider text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-brand-green/20 transform hover:-translate-y-0.5">
+                    <i class="ph-bold ph-youtube-logo text-lg"></i> Watch Tutorial
+                </button>
+                <button id="btnRegisterNow" class="w-full py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/5 font-bold uppercase tracking-wider text-sm transition flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
+                    <i class="ph-bold ph-pencil-simple-line text-lg"></i> Register Now
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
     <!-- Centralized Supabase JS File -->
@@ -177,6 +241,50 @@
     <script>
         AOS.init();
 
+        // Elements
+        const welcomeModal = document.getElementById('welcomeModal');
+        const btnWatchGuide = document.getElementById('btnWatchGuide');
+        const btnRegisterNow = document.getElementById('btnRegisterNow');
+        const videoSection = document.getElementById('videoSection');
+        const toggleHelpBtn = document.getElementById('toggleHelpBtn');
+        const toggleIcon = toggleHelpBtn.querySelector('i');
+
+        // Helper to close modal
+        const closeModal = () => {
+            welcomeModal.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => welcomeModal.remove(), 300);
+        };
+
+        // 1. WATCH GUIDE CLICK
+        btnWatchGuide.addEventListener('click', () => {
+            closeModal();
+            videoSection.classList.remove('hidden');
+            // Animate Icon Rotation
+            toggleIcon.style.transform = 'rotate(180deg)';
+            videoSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        // 2. REGISTER NOW CLICK
+        btnRegisterNow.addEventListener('click', () => {
+            closeModal();
+            // Ensure video section is hidden
+            videoSection.classList.add('hidden');
+            document.getElementById('regForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        // 3. TOGGLE HELP BUTTON CLICK
+        toggleHelpBtn.addEventListener('click', () => {
+            const isHidden = videoSection.classList.contains('hidden');
+            if (isHidden) {
+                videoSection.classList.remove('hidden');
+                toggleIcon.style.transform = 'rotate(180deg)';
+            } else {
+                videoSection.classList.add('hidden');
+                toggleIcon.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        // Form Submission Logic
         const regForm = document.getElementById('regForm');
         const submitBtn = document.getElementById('submitBtn');
         const loadingText = document.getElementById('loadingText');
