@@ -274,20 +274,33 @@
                     </button>
                 </div>
 
-                <!-- Mobile View (Button to Trigger Popup) -->
+                <!-- Mobile View (Button to Trigger Dropdown) -->
                 <div class="lg:hidden w-full">
-                    <button onclick="openCardModal()" class="w-full bg-gradient-to-r from-slate-900 to-slate-800 border border-white/10 p-4 rounded-2xl flex items-center justify-between shadow-lg active:scale-95 transition-transform duration-200 group">
+                    <button onclick="toggleMobileCard()" class="w-full bg-gradient-to-r from-slate-900 to-slate-800 border border-white/10 p-4 rounded-2xl flex items-center justify-between shadow-lg active:scale-95 transition-all duration-200 group z-20 relative">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-full bg-brand-green/20 flex items-center justify-center text-brand-green group-hover:bg-brand-green group-hover:text-white transition">
                                 <i class="ph-bold ph-identification-card text-xl"></i>
                             </div>
                             <div class="text-left">
                                 <h3 class="text-sm font-bold text-white">My Member Card</h3>
-                                <p class="text-[10px] text-slate-400">Tap to view ID details</p>
+                                <p class="text-[10px] text-slate-400">Tap to show/hide details</p>
                             </div>
                         </div>
-                        <i class="ph-bold ph-caret-right text-slate-500 group-hover:text-white transition"></i>
+                        <i id="mobileCardArrow" class="ph-bold ph-caret-right text-slate-500 group-hover:text-white transition-transform duration-300"></i>
                     </button>
+                    
+                    <!-- Dropdown Container -->
+                    <div id="mobileCardDropdown" class="hidden mt-4 transition-all duration-300">
+                        <!-- Card renders here -->
+                        <div id="mobileCardRenderArea" class="transform transition-transform duration-500"></div>
+                        
+                        <!-- Action Buttons for Mobile -->
+                        <div class="grid grid-cols-2 gap-3 mt-4">
+                             <button onclick="openCardModal()" class="col-span-2 bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs font-bold py-3 rounded-xl border border-slate-700 transition flex items-center justify-center gap-2">
+                                <i class="ph-bold ph-download-simple"></i> Save / Print Card
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -574,6 +587,32 @@
 
             container.innerHTML = '';
             container.appendChild(card);
+        }
+
+        function toggleMobileCard() {
+            const dropdown = document.getElementById('mobileCardDropdown');
+            const arrow = document.getElementById('mobileCardArrow');
+            const renderArea = document.getElementById('mobileCardRenderArea');
+            
+            // Check if hidden
+            const isHidden = dropdown.classList.contains('hidden');
+            
+            if (isHidden) {
+                // Show
+                dropdown.classList.remove('hidden');
+                dropdown.classList.add('animate-fade-in-up'); // Use existing animation
+                arrow.style.transform = 'rotate(90deg)';
+                
+                // Render if empty
+                if (renderArea.innerHTML.trim() === '') {
+                    renderCard('mobileCardRenderArea');
+                }
+            } else {
+                // Hide
+                dropdown.classList.add('hidden');
+                dropdown.classList.remove('animate-fade-in-up');
+                arrow.style.transform = 'rotate(0deg)';
+            }
         }
 
         async function checkPaymentStatus(userId, joinDateStr) {
