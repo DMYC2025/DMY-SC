@@ -7,6 +7,8 @@
     <link rel="icon" type="image/png" href="../assets/logo_1.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Add html2canvas for image generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: { green: '#16a34a', dark: '#0b1121' } }, fontFamily: { poppins: ['Poppins', 'sans-serif'] }, animation: { 'swing': 'swing 1s infinite', 'fade-in-up': 'fadeInUp 0.3s ease-out' }, keyframes: { swing: { '0%, 100%': { transform: 'rotate(0deg)' }, '20%': { transform: 'rotate(15deg)' }, '40%': { transform: 'rotate(-10deg)' }, '60%': { transform: 'rotate(5deg)' }, '80%': { transform: 'rotate(-5deg)' } }, fadeInUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } } } } }
     </script>
@@ -369,8 +371,9 @@
                 <!-- Card Rendered Here for Mobile/Popup -->
             </div>
             <div class="flex gap-4 w-full">
-                <button onclick="printCard()" class="flex-1 bg-brand-green hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-green-500/30 transition flex items-center justify-center gap-2">
-                    <i class="ph-bold ph-printer"></i> Print / Save PDF
+                <!-- Changed functionality to Save Image using html2canvas -->
+                <button onclick="downloadCardImage()" class="flex-1 bg-brand-green hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-green-500/30 transition flex items-center justify-center gap-2">
+                    <i class="ph-bold ph-image"></i> Save as Image
                 </button>
                 <button onclick="closeCardModal()" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition">Close</button>
             </div>
@@ -669,7 +672,41 @@
             document.getElementById('cardModal').classList.remove('hidden');
         }
         function closeCardModal() { document.getElementById('cardModal').classList.add('hidden'); }
-        function printCard() { window.print(); }
+        // function printCard() { window.print(); } // Removed old print function
+
+        function downloadCardImage() {
+            const cardElement = document.querySelector('#modalCardContainer > div'); // The actual card wrapper
+            if (!cardElement) return;
+
+            const btn = document.querySelector('button[onclick="downloadCardImage()"]');
+            const originalHTML = btn.innerHTML;
+            
+            // Show loading state
+            btn.innerHTML = '<i class="ph-bold ph-spinner animate-spin"></i> Saving...';
+            btn.disabled = true;
+
+            html2canvas(cardElement, {
+                useCORS: true, // Important for external images (avatars)
+                scale: 2, // 2x scale for better resolution
+                backgroundColor: null, // Transparent background if needed
+                logging: false
+            }).then(canvas => {
+                // Create download link
+                const link = document.createElement('a');
+                link.download = `DMYSC_Member_Card_${currentUserData?.id || 'User'}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                // Reset button
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }).catch(err => {
+                console.error("Error generating image:", err);
+                alert("Could not save image. Please try again.");
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            });
+        }
 
         // --- HERO SLIDESHOW LOGIC ---
         let currentSlide = 0;
