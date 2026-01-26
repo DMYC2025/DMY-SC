@@ -2,77 +2,85 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DMYSC - Login</title>
-    <!-- Assets Folder Path Updated -->
     <link rel="icon" type="image/png" href="../assets/logo_1.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: { green: '#16a34a', dark: '#020617' } }, fontFamily: { poppins: ['Poppins', 'sans-serif'] } } } }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Hide scrollbar for app-like feel */
+        body::-webkit-scrollbar { display: none; }
+        .no-tap-highlight { -webkit-tap-highlight-color: transparent; }
+    </style>
 </head>
-<body class="bg-slate-100 dark:bg-brand-dark min-h-screen flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-500 font-poppins">
+<body class="bg-slate-100 dark:bg-brand-dark min-h-screen flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-500 font-poppins no-tap-highlight">
 
-    <div class="absolute top-0 left-0 w-96 h-96 bg-brand-green/20 rounded-full blur-[100px] animate-pulse"></div>
-    <div class="absolute bottom-0 right-0 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px] animate-pulse"></div>
+    <div class="absolute top-0 left-0 w-96 h-96 bg-brand-green/10 rounded-full blur-[80px] animate-pulse pointer-events-none"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-blue-600/10 rounded-full blur-[80px] animate-pulse pointer-events-none"></div>
 
-    <button onclick="toggleTheme()" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-white dark:bg-slate-800 shadow-lg flex items-center justify-center text-slate-600 dark:text-white z-50">
-        <i class="ph-bold ph-moon dark:hidden"></i><i class="ph-bold ph-sun hidden dark:inline"></i>
+    <button onclick="toggleTheme()" class="absolute top-4 right-4 md:top-6 md:right-6 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur shadow-lg flex items-center justify-center text-slate-600 dark:text-white z-50 transition active:scale-90">
+        <i class="ph-bold ph-moon dark:hidden text-lg"></i><i class="ph-bold ph-sun hidden dark:inline text-lg"></i>
     </button>
 
-    <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/20 dark:border-slate-700 shadow-2xl rounded-3xl w-full max-w-md overflow-hidden relative z-10">
+    <div class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl border border-white/20 dark:border-slate-700 shadow-2xl rounded-[2rem] w-full max-w-sm overflow-hidden relative z-10 transform transition-all">
         
-        <div class="h-32 bg-gradient-to-br from-brand-green to-emerald-700 p-8 flex items-end">
-            <div>
-                <h2 class="text-3xl font-black text-white">Member Login</h2>
-                <p class="text-green-100 text-sm">Welcome Back!</p>
+        <!-- Compact Header -->
+        <div class="h-24 md:h-32 bg-gradient-to-br from-brand-green to-emerald-800 p-6 md:p-8 flex items-end relative overflow-hidden">
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+            <div class="relative z-10">
+                <h2 class="text-2xl md:text-3xl font-black text-white leading-none">Login</h2>
+                <p class="text-green-200 text-[10px] md:text-xs font-medium mt-1 uppercase tracking-wide">Welcome Back Member</p>
             </div>
-            <!-- Assets Folder Path Updated -->
-            <img src="assets/logo.png" class="absolute top-6 right-6 h-16 w-16 opacity-50 drop-shadow-md">
+            <img src="assets/logo.png" class="absolute top-4 right-4 h-12 w-12 md:h-16 md:w-16 opacity-40 drop-shadow-md">
         </div>
 
-        <div class="p-8">
-            <form id="loginForm" class="space-y-6">
+        <div class="p-6 md:p-8">
+            <form id="loginForm" class="space-y-4 md:space-y-6">
+                
                 <div class="space-y-1">
-                    <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Email Address</label>
-                    <div class="relative">
-                        <i class="ph-bold ph-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                        <input type="email" id="email" required class="w-full pl-12 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 focus:border-brand-green dark:focus:border-brand-green outline-none dark:text-white transition font-medium" placeholder="you@example.com">
+                    <label class="text-[10px] md:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider ml-1">Email</label>
+                    <div class="relative group">
+                        <i class="ph-bold ph-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-green transition"></i>
+                        <input type="email" id="email" required class="w-full pl-11 pr-4 py-2.5 md:py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-brand-green dark:focus:border-brand-green outline-none dark:text-white transition font-medium text-sm placeholder:text-slate-400/70 shadow-sm" placeholder="you@example.com">
                     </div>
                 </div>
 
                 <div class="space-y-1">
-                    <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Password</label>
-                    <div class="relative">
-                        <i class="ph-bold ph-lock-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                        <input type="password" id="password" required class="w-full pl-12 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 focus:border-brand-green dark:focus:border-brand-green outline-none dark:text-white transition font-medium" placeholder="••••••••">
+                    <label class="text-[10px] md:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider ml-1">Password</label>
+                    <div class="relative group">
+                        <i class="ph-bold ph-lock-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-green transition"></i>
+                        <input type="password" id="password" required class="w-full pl-11 pr-4 py-2.5 md:py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-brand-green dark:focus:border-brand-green outline-none dark:text-white transition font-medium text-sm placeholder:text-slate-400/70 shadow-sm" placeholder="••••••••">
                     </div>
                 </div>
 
-                <button type="submit" id="loginBtn" class="w-full bg-brand-green text-white py-4 rounded-xl font-bold shadow-lg shadow-green-500/30 hover:bg-green-600 hover:-translate-y-1 transition transform flex justify-center items-center gap-2">
-                    <i class="ph-bold ph-sign-in"></i> Login
+                <button type="submit" id="loginBtn" class="w-full bg-brand-green text-white py-3 md:py-4 rounded-xl font-bold text-sm md:text-base shadow-lg shadow-green-500/30 active:bg-green-700 active:scale-[0.98] transition transform flex justify-center items-center gap-2 mt-2">
+                    <i class="ph-bold ph-sign-in text-lg"></i> Access Account
                 </button>
 
-                <p id="statusMsg" class="text-center text-sm font-bold mt-2 hidden"></p>
+                <p id="statusMsg" class="text-center text-[10px] md:text-xs font-bold mt-2 hidden"></p>
 
-                <div class="flex items-center gap-4 my-4">
+                <div class="flex items-center gap-3 my-3 md:my-4 opacity-70">
                     <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
-                    <span class="text-xs text-slate-400 font-bold">OR</span>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase">Or</span>
                     <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
                 </div>
 
-                <button onclick="signInWithGoogle()" type="button" class="w-full py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition flex items-center justify-center gap-2">
-                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="h-5 w-5" alt="Google">
-                    <span>Login with Google</span>
+                <button onclick="signInWithGoogle()" type="button" class="w-full py-2.5 md:py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 active:scale-[0.98] transition flex items-center justify-center gap-2 text-xs md:text-sm shadow-sm">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="h-4 w-4 md:h-5 md:w-5" alt="Google">
+                    <span>Continue with Google</span>
                 </button>
             </form>
             
-            <div class="mt-8 text-center">
-                <p class="text-sm text-slate-500 dark:text-slate-400">Don't have an account? <a href="reg.html" class="text-brand-green font-bold hover:underline">Register</a></p>
-                <a href="index.html" class="mt-4 inline-block text-xs text-slate-400 hover:text-brand-green transition">Back to Home</a>
+            <div class="mt-6 md:mt-8 text-center space-y-3">
+                <p class="text-xs text-slate-500 dark:text-slate-400">New Member? <a href="reg.html" class="text-brand-green font-bold hover:underline">Register Now</a></p>
+                <a href="index.html" class="inline-flex items-center gap-1 text-[10px] font-bold text-slate-400 hover:text-brand-green transition uppercase tracking-wider">
+                    <i class="ph-bold ph-caret-left"></i> Back Home
+                </a>
             </div>
         </div>
     </div>
@@ -107,7 +115,7 @@
             const password = document.getElementById('password').value;
 
             try {
-                if (typeof _supabase === 'undefined') throw new Error("Database connection failed. Check js/supabase.js");
+                if (typeof _supabase === 'undefined') throw new Error("Database connection failed.");
 
                 const { data: authData, error: authError } = await _supabase.auth.signInWithPassword({ email, password });
                 if (authError) throw authError;
@@ -118,34 +126,30 @@
                     .eq('id', authData.user.id)
                     .single();
 
-                if (profileError) {
-                    console.error("Profile Error:", profileError);
-                    throw new Error("User profile not found. Please contact admin.");
-                }
+                if (profileError) throw new Error("Profile not found.");
 
                 if (profileData && profileData.is_approved === true) {
-                    statusMsg.textContent = "Success! Logging in...";
-                    statusMsg.className = "text-center text-sm font-bold mt-2 text-green-500 block";
+                    statusMsg.textContent = "Success! Redirecting...";
+                    statusMsg.className = "text-center text-[10px] font-bold mt-2 text-green-500 block";
                     
-                    // Redirect Logic Updated for Folders
                     setTimeout(() => {
                         if (profileData.role === 'admin') {
                             window.location.href = 'admin/index.html';
                         } else {
-                            window.location.href = 'user/index.html'; // Assuming user folder
+                            window.location.href = 'user/index.html';
                         }
-                    }, 1000);
+                    }, 800);
                 } else {
                     await _supabase.auth.signOut();
-                    alert("Your account has not been approved by Admin yet.");
-                    throw new Error("Account Approval Pending");
+                    alert("Account pending approval.");
+                    throw new Error("Pending Approval");
                 }
             } catch (error) {
                 console.error("Login Error:", error);
-                statusMsg.textContent = "Error: " + (error.message === "Invalid login credentials" ? "Invalid Email or Password." : error.message);
-                statusMsg.className = "text-center text-sm font-bold mt-2 text-red-500 block";
+                statusMsg.textContent = (error.message === "Invalid login credentials" ? "Wrong details." : error.message);
+                statusMsg.className = "text-center text-[10px] font-bold mt-2 text-red-500 block";
                 loginBtn.disabled = false;
-                loginBtn.innerHTML = '<i class="ph-bold ph-sign-in"></i> Login';
+                loginBtn.innerHTML = '<i class="ph-bold ph-sign-in text-lg"></i> Access Account';
                 isManualLogin = false;
             }
         });
@@ -154,41 +158,23 @@
             try {
                 const { data, error } = await _supabase.auth.signInWithOAuth({
                     provider: 'google',
-                    options: {
-                        redirectTo: window.location.href 
-                    }
+                    options: { redirectTo: window.location.href }
                 });
                 if (error) throw error;
             } catch (error) {
-                alert("Google Login Error: " + error.message);
+                alert("Google Error: " + error.message);
             }
         }
 
         _supabase.auth.onAuthStateChange(async (event, session) => {
             if (isManualLogin) return;
-
             if (session) {
-                const { data: profile, error } = await _supabase
-                    .from('profiles')
-                    .select('id, is_approved, role')
-                    .eq('id', session.user.id)
-                    .single();
-
-                if (!profile) {
-                    await _supabase.auth.signOut();
-                    alert("Account not found. Please Register first.");
+                const { data: profile } = await _supabase.from('profiles').select('id, is_approved, role').eq('id', session.user.id).single();
+                if (profile && profile.is_approved) {
+                    window.location.href = profile.role === 'admin' ? 'admin/index.html' : 'user/index.html';
                 } else {
-                    if (profile.is_approved === true) {
-                        // Redirect Logic Updated
-                        if (profile.role === 'admin') {
-                            window.location.href = 'admin/index.html';
-                        } else {
-                            window.location.href = 'user/index.html';
-                        }
-                    } else {
-                        await _supabase.auth.signOut();
-                        alert("Account Approval Pending.");
-                    }
+                    await _supabase.auth.signOut();
+                    if(profile) alert("Account Approval Pending.");
                 }
             }
         });

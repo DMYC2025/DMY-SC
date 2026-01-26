@@ -2,246 +2,179 @@
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Registration - DMYSC</title>
-    <!-- Path updated -->
     <link rel="icon" type="image/png" href="../assets/logo_1.png">
-    
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { 
-            darkMode: 'class', 
-            theme: { 
-                extend: { 
-                    colors: { brand: { green: '#16a34a', dark: '#0b1121' } }, 
-                    fontFamily: { poppins: ['Poppins', 'sans-serif'] } 
-                } 
-            } 
-        }
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: { green: '#16a34a', dark: '#0b1121' } }, fontFamily: { poppins: ['Poppins', 'sans-serif'] } } } }
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        body::-webkit-scrollbar { display: none; }
+        .no-tap-highlight { -webkit-tap-highlight-color: transparent; }
+    </style>
 </head>
-<body class="bg-brand-dark min-h-screen flex items-center justify-center p-4 font-poppins overflow-x-hidden relative">
+<body class="bg-brand-dark min-h-screen flex items-center justify-center p-3 md:p-4 font-poppins overflow-x-hidden relative no-tap-highlight">
 
-    <!-- Background Layer (Consistent with Login) -->
-    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=2070')] bg-cover bg-center opacity-20 fixed"></div>
-    <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/90 to-brand-dark/60 fixed"></div>
+    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=2070')] bg-cover bg-center opacity-10 fixed"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/95 to-brand-dark/80 fixed"></div>
     
-    <!-- Ambient Blobs -->
-    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-brand-green/10 rounded-full blur-[120px]"></div>
-    </div>
-
-    <!-- Registration Card -->
-    <div class="relative z-10 w-full max-w-4xl" data-aos="fade-up" data-aos-duration="800">
+    <div class="relative z-10 w-full max-w-3xl" data-aos="fade-up" data-aos-duration="600">
         
-        <div class="text-center mb-8" data-aos="fade-down" data-aos-delay="100">
+        <div class="text-center mb-6 md:mb-8" data-aos="fade-down" data-aos-delay="50">
             <a href="index.html" class="inline-block relative group">
-                <div class="absolute inset-0 bg-brand-green/30 rounded-full blur-md group-hover:bg-brand-green/50 transition"></div>
-                <!-- Path updated -->
-                <img src="assets/logo.png" class="h-20 w-auto relative z-10 drop-shadow-[0_0_15px_rgba(22,163,74,0.6)]">
+                <div class="absolute inset-0 bg-brand-green/20 rounded-full blur-md group-hover:bg-brand-green/40 transition"></div>
+                <img src="assets/logo.png" class="h-14 w-auto md:h-20 relative z-10 drop-shadow-lg">
             </a>
-            <h2 class="text-4xl font-black text-white tracking-tight uppercase mt-4">Join The Club</h2>
-            <p class="text-brand-green font-bold text-sm tracking-[0.2em] uppercase">Dream Makers Youth & Sports Club</p>
+            <h2 class="text-2xl md:text-4xl font-black text-white tracking-tight uppercase mt-3">Join The Club</h2>
+            <p class="text-brand-green font-bold text-[10px] md:text-sm tracking-[0.2em] uppercase opacity-80">Dream Makers Youth & Sports Club</p>
         </div>
 
-        <div class="bg-slate-900/60 backdrop-blur-xl border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-[2.5rem] overflow-hidden p-8 md:p-12 relative">
+        <div class="bg-slate-900/80 backdrop-blur-xl border border-white/10 shadow-2xl rounded-[2rem] overflow-hidden p-5 md:p-10 relative">
             
-            <!-- Glow Effect inside card -->
-            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-brand-green to-transparent opacity-50"></div>
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-brand-green to-transparent opacity-60"></div>
 
-            <!-- Help Toggle Button (Only visible on card) -->
-            <div class="flex justify-end mb-2">
-                <button id="toggleHelpBtn" type="button" class="group flex items-center gap-3 px-4 py-2 rounded-full bg-slate-800/50 hover:bg-slate-800 border border-white/5 hover:border-brand-green/30 transition-all duration-300">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest group-hover:text-white transition-colors">Need Help Registering?</span>
-                    <div class="w-6 h-6 rounded-full bg-brand-green/20 flex items-center justify-center text-brand-green group-hover:bg-brand-green group-hover:text-white transition shadow-[0_0_10px_rgba(22,163,74,0.2)]">
-                        <i class="ph-bold ph-caret-down group-hover:rotate-180 transition-transform duration-300"></i>
-                    </div>
+            <!-- Help Toggle (Compact) -->
+            <div class="flex justify-end mb-4">
+                <button id="toggleHelpBtn" type="button" class="group flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800 border border-white/5 active:bg-slate-700 transition">
+                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Help?</span>
+                    <i class="ph-bold ph-caret-down text-brand-green text-sm group-hover:text-white transition"></i>
                 </button>
             </div>
 
-            <!-- Tutorial Section (Hidden by default, Toggles open) -->
-            <div id="videoSection" class="hidden mb-10 bg-slate-800/40 rounded-2xl p-6 border border-white/5 scroll-mt-32 transition-all duration-500 origin-top">
-                <h3 class="text-white font-bold text-sm flex items-center gap-2 mb-4 uppercase tracking-wider border-b border-white/5 pb-3">
-                    <i class="ph-fill ph-youtube-logo text-brand-green text-lg"></i> Video Guides
+            <!-- Tutorial Section -->
+            <div id="videoSection" class="hidden mb-6 bg-black/40 rounded-xl p-4 border border-white/5 transition-all duration-300 origin-top">
+                <h3 class="text-white font-bold text-xs flex items-center gap-2 mb-3 uppercase tracking-wider">
+                    <i class="ph-fill ph-play-circle text-brand-green"></i> Guides
                 </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Sinhala Guide -->
-                    <div class="space-y-2 group">
-                        <div class="flex items-center justify-between">
-                            <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider group-hover:text-brand-green transition">Sinhala Guide</p>
-                            <span class="text-[10px] px-2 py-0.5 rounded bg-brand-green/10 text-brand-green border border-brand-green/20">Sinhala</span>
-                        </div>
-                        <div class="aspect-video rounded-xl overflow-hidden border border-slate-700 shadow-lg group-hover:border-brand-green/30 transition duration-300 relative bg-black">
-                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/CRga7nRT62s" title="Sinhala Registration Guide" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="space-y-1">
+                        <p class="text-[9px] text-slate-500 uppercase font-bold">Sinhala</p>
+                        <div class="aspect-video rounded-lg overflow-hidden border border-slate-700 bg-black">
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/CRga7nRT62s" frameborder="0" allowfullscreen></iframe>
                         </div>
                     </div>
-                    
-                    <!-- English Guide -->
-                    <div class="space-y-2 group">
-                        <div class="flex items-center justify-between">
-                            <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider group-hover:text-brand-green transition">English Guide</p>
-                            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-700 text-slate-300 border border-slate-600">English</span>
-                        </div>
-                        <div class="aspect-video rounded-xl overflow-hidden border border-slate-700 shadow-lg group-hover:border-brand-green/30 transition duration-300 relative bg-black">
-                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/6s38pjPonRI" title="English Registration Guide" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <div class="space-y-1">
+                        <p class="text-[9px] text-slate-500 uppercase font-bold">English</p>
+                        <div class="aspect-video rounded-lg overflow-hidden border border-slate-700 bg-black">
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/6s38pjPonRI" frameborder="0" allowfullscreen></iframe>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <form id="regForm" class="space-y-8 scroll-mt-32 relative z-10">
+            <form id="regForm" class="space-y-6 md:space-y-8 relative z-10">
                 
-                <!-- Section 1: Personal Info -->
-                <div class="space-y-6">
-                    <h3 class="text-white font-bold text-lg flex items-center gap-2 border-b border-white/10 pb-2">
+                <!-- Section 1 -->
+                <div class="space-y-4">
+                    <h3 class="text-white font-bold text-sm md:text-base flex items-center gap-2 border-b border-white/5 pb-2">
                         <i class="ph-fill ph-user text-brand-green"></i> Personal Details
                     </h3>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Full Name -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
                         <div class="md:col-span-2 group">
-                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Name with Initials</label>
-                            <div class="relative">
-                                <i class="ph-bold ph-identification-badge absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-brand-green transition"></i>
-                                <input type="text" id="fullName" required placeholder="e.g. A.B. Perera" class="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white placeholder-slate-600 focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none transition font-medium">
-                            </div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1">Name with Initials</label>
+                            <input type="text" id="fullName" required placeholder="e.g. A.B. Perera" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-600 focus:border-brand-green outline-none transition font-medium text-xs md:text-sm">
                         </div>
 
-                        <!-- DOB -->
                         <div class="group">
-                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Date of Birth</label>
-                            <div class="relative">
-                                <i class="ph-bold ph-calendar-blank absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-brand-green transition"></i>
-                                <input type="date" id="dob" required class="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white placeholder-slate-600 focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none transition font-medium text-slate-400 focus:text-white">
-                            </div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1">Birth Date</label>
+                            <input type="date" id="dob" required class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white focus:border-brand-green outline-none transition font-medium text-xs md:text-sm text-slate-400 focus:text-white">
                         </div>
 
-                        <!-- NIC -->
                         <div class="group">
-                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">NIC Number</label>
-                            <div class="relative">
-                                <i class="ph-bold ph-cardholder absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-brand-green transition"></i>
-                                <input type="text" id="nic" required placeholder="NIC No" class="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white placeholder-slate-600 focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none transition font-medium">
-                            </div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1">NIC No</label>
+                            <input type="text" id="nic" required placeholder="NIC Number" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-600 focus:border-brand-green outline-none transition font-medium text-xs md:text-sm">
                         </div>
 
-                         <!-- Gender -->
                          <div class="group">
-                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Gender</label>
-                            <div class="relative">
-                                <i class="ph-bold ph-gender-intersex absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-brand-green transition"></i>
-                                <select id="gender" required class="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none transition font-medium appearance-none">
-                                    <option value="" class="bg-slate-900 text-slate-500">Select Gender</option>
-                                    <option value="Male" class="bg-slate-900">Male</option>
-                                    <option value="Female" class="bg-slate-900">Female</option>
-                                </select>
-                            </div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1">Gender</label>
+                            <select id="gender" required class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white focus:border-brand-green outline-none transition font-medium text-xs md:text-sm appearance-none">
+                                <option value="" class="bg-slate-900 text-slate-500">Select</option>
+                                <option value="Male" class="bg-slate-900">Male</option>
+                                <option value="Female" class="bg-slate-900">Female</option>
+                            </select>
                         </div>
 
-                         <!-- Phone -->
                          <div class="group">
-                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">WhatsApp Number</label>
-                            <div class="relative">
-                                <i class="ph-bold ph-whatsapp-logo absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-brand-green transition"></i>
-                                <input type="tel" id="phone" required placeholder="07x xxxxxxx" class="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white placeholder-slate-600 focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none transition font-medium">
-                            </div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1">WhatsApp</label>
+                            <input type="tel" id="phone" required placeholder="07x xxxxxxx" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-600 focus:border-brand-green outline-none transition font-medium text-xs md:text-sm">
                         </div>
 
-                        <!-- Address -->
                         <div class="md:col-span-2 group">
-                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Residential Address</label>
-                            <div class="relative">
-                                <i class="ph-bold ph-map-pin absolute left-4 top-4 text-slate-500 group-focus-within:text-brand-green transition"></i>
-                                <textarea id="address" rows="2" required placeholder="No, Street, City..." class="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white placeholder-slate-600 focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none transition font-medium"></textarea>
-                            </div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1">Address</label>
+                            <textarea id="address" rows="2" required placeholder="Full Address" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-600 focus:border-brand-green outline-none transition font-medium text-xs md:text-sm resize-none"></textarea>
                         </div>
                     </div>
                 </div>
 
-                <!-- Section 2: Account Security -->
-                <div class="space-y-6">
-                    <h3 class="text-white font-bold text-lg flex items-center gap-2 border-b border-white/10 pb-2">
-                        <i class="ph-fill ph-lock-key text-brand-green"></i> Account Security
+                <!-- Section 2 -->
+                <div class="space-y-4">
+                    <h3 class="text-white font-bold text-sm md:text-base flex items-center gap-2 border-b border-white/5 pb-2">
+                        <i class="ph-fill ph-lock-key text-brand-green"></i> Login Details
                     </h3>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Email -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
                         <div class="group">
-                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Email Address</label>
-                            <div class="relative">
-                                <i class="ph-bold ph-envelope-simple absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-brand-green transition"></i>
-                                <input type="email" id="email" required placeholder="you@example.com" class="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white placeholder-slate-600 focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none transition font-medium">
-                            </div>
-                            <p class="text-[10px] text-slate-500 mt-1 ml-1">* Used for login & notifications</p>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1">Email</label>
+                            <input type="email" id="email" required placeholder="you@mail.com" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-600 focus:border-brand-green outline-none transition font-medium text-xs md:text-sm">
                         </div>
 
-                        <!-- Password -->
                         <div class="group">
-                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Password</label>
-                            <div class="relative">
-                                <i class="ph-bold ph-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-brand-green transition"></i>
-                                <input type="password" id="password" required minlength="6" placeholder="••••••••" class="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white placeholder-slate-600 focus:border-brand-green focus:ring-1 focus:ring-brand-green outline-none transition font-medium">
-                            </div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1">Password</label>
+                            <input type="password" id="password" required minlength="6" placeholder="******" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-600 focus:border-brand-green outline-none transition font-medium text-xs md:text-sm">
                         </div>
                     </div>
                 </div>
 
-                <div class="pt-6">
-                    <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-brand-green to-emerald-600 text-white font-black uppercase tracking-wider py-4 rounded-xl shadow-[0_0_20px_rgba(22,163,74,0.4)] hover:shadow-[0_0_35px_rgba(22,163,74,0.6)] hover:from-brand-green hover:to-emerald-500 transition transform hover:-translate-y-1 flex justify-center items-center gap-2">
-                        <i class="ph-bold ph-paper-plane-right text-xl"></i> Submit Registration
+                <div class="pt-4">
+                    <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-brand-green to-emerald-600 text-white font-black uppercase tracking-wider py-3 md:py-4 rounded-xl shadow-lg shadow-green-500/20 active:scale-[0.98] transition flex justify-center items-center gap-2 text-sm">
+                        <i class="ph-bold ph-paper-plane-right text-lg"></i> Register
                     </button>
-                    <p id="loadingText" class="text-center text-brand-green text-sm font-bold mt-4 hidden animate-pulse">
-                        <i class="ph-bold ph-spinner animate-spin"></i> Processing...
+                    <p id="loadingText" class="text-center text-brand-green text-[10px] font-bold mt-3 hidden animate-pulse">
+                        Processing...
                     </p>
                 </div>
             </form>
             
-            <div class="mt-8 text-center pt-6 border-t border-white/5">
-                <a href="index.html" class="text-sm text-slate-400 hover:text-white transition font-bold flex items-center justify-center gap-2">
-                    <i class="ph-bold ph-arrow-left"></i> Back to Home
+            <div class="mt-6 text-center pt-4 border-t border-white/5">
+                <a href="index.html" class="text-xs text-slate-500 hover:text-white transition font-bold flex items-center justify-center gap-1 uppercase tracking-wide">
+                    <i class="ph-bold ph-caret-left"></i> Home
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Initial Choice Modal -->
-    <div id="welcomeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-dark/95 backdrop-blur-md transition-opacity duration-300">
-        <div class="bg-slate-900 border border-white/10 p-8 rounded-3xl shadow-2xl max-w-md w-full text-center relative overflow-hidden" data-aos="zoom-in" data-aos-duration="500">
-            <!-- Glow -->
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-brand-green/20 rounded-full blur-[50px] -z-10"></div>
-            
-            <div class="w-16 h-16 bg-brand-green/10 rounded-full flex items-center justify-center mx-auto mb-6 text-brand-green border border-brand-green/20">
-                <i class="ph-fill ph-question text-3xl"></i>
+    <!-- Mobile-First Welcome Modal -->
+    <div id="welcomeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-slate-900 border border-white/10 p-6 rounded-3xl shadow-2xl max-w-xs w-full text-center relative" data-aos="zoom-in" data-aos-duration="400">
+            <div class="w-12 h-12 bg-brand-green/10 rounded-full flex items-center justify-center mx-auto mb-4 text-brand-green border border-brand-green/20">
+                <i class="ph-fill ph-question text-2xl"></i>
             </div>
+            <h3 class="text-xl font-black text-white mb-2">Need Help?</h3>
+            <p class="text-slate-400 text-xs mb-6 leading-relaxed">Watch a quick guide or start registering now.</p>
 
-            <h3 class="text-2xl font-black text-white mb-2 tracking-tight">Need Assistance?</h3>
-            <p class="text-slate-400 text-sm mb-8 leading-relaxed">You can watch a quick video guide on how to register, or proceed directly if you're ready.</p>
-
-            <div class="flex flex-col gap-3">
-                <button id="btnWatchGuide" class="w-full py-4 rounded-xl bg-brand-green hover:bg-emerald-600 text-white font-bold uppercase tracking-wider text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-brand-green/20 transform hover:-translate-y-0.5">
-                    <i class="ph-bold ph-youtube-logo text-lg"></i> Watch Tutorial
+            <div class="flex flex-col gap-2.5">
+                <button id="btnWatchGuide" class="w-full py-3 rounded-xl bg-slate-800 text-white font-bold uppercase tracking-wider text-[10px] border border-white/5 active:bg-slate-700 transition">
+                    Watch Tutorial
                 </button>
-                <button id="btnRegisterNow" class="w-full py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/5 font-bold uppercase tracking-wider text-sm transition flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
-                    <i class="ph-bold ph-pencil-simple-line text-lg"></i> Register Now
+                <button id="btnRegisterNow" class="w-full py-3 rounded-xl bg-brand-green text-white font-bold uppercase tracking-wider text-[10px] shadow-lg shadow-green-500/20 active:bg-green-600 transition">
+                    Start Now
                 </button>
             </div>
         </div>
     </div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    
-    <!-- Centralized Supabase JS File -->
     <script src="js/supabase.js"></script>
 
     <script>
         AOS.init();
 
-        // Elements
         const welcomeModal = document.getElementById('welcomeModal');
         const btnWatchGuide = document.getElementById('btnWatchGuide');
         const btnRegisterNow = document.getElementById('btnRegisterNow');
@@ -249,30 +182,22 @@
         const toggleHelpBtn = document.getElementById('toggleHelpBtn');
         const toggleIcon = toggleHelpBtn.querySelector('i');
 
-        // Helper to close modal
         const closeModal = () => {
             welcomeModal.classList.add('opacity-0', 'pointer-events-none');
             setTimeout(() => welcomeModal.remove(), 300);
         };
 
-        // 1. WATCH GUIDE CLICK
         btnWatchGuide.addEventListener('click', () => {
             closeModal();
             videoSection.classList.remove('hidden');
-            // Animate Icon Rotation
             toggleIcon.style.transform = 'rotate(180deg)';
-            videoSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
 
-        // 2. REGISTER NOW CLICK
         btnRegisterNow.addEventListener('click', () => {
             closeModal();
-            // Ensure video section is hidden
             videoSection.classList.add('hidden');
-            document.getElementById('regForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
 
-        // 3. TOGGLE HELP BUTTON CLICK
         toggleHelpBtn.addEventListener('click', () => {
             const isHidden = videoSection.classList.contains('hidden');
             if (isHidden) {
@@ -284,7 +209,6 @@
             }
         });
 
-        // Form Submission Logic
         const regForm = document.getElementById('regForm');
         const submitBtn = document.getElementById('submitBtn');
         const loadingText = document.getElementById('loadingText');
@@ -292,8 +216,8 @@
         regForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             submitBtn.disabled = true;
-            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            submitBtn.innerHTML = '<i class="ph-bold ph-lock-key"></i> Submitting...';
+            submitBtn.classList.add('opacity-50');
+            submitBtn.innerHTML = '<i class="ph-bold ph-spinner animate-spin"></i>';
             loadingText.classList.remove('hidden');
 
             const email = document.getElementById('email').value;
@@ -308,28 +232,22 @@
             };
 
             try {
-                if (typeof _supabase === 'undefined') throw new Error("Database connection failed. Check js/supabase.js");
-
+                if (typeof _supabase === 'undefined') throw new Error("Database error.");
                 const { data, error } = await _supabase.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: { data: metaData }
+                    email: email, password: password, options: { data: metaData }
                 });
                 if (error) throw error;
-                
-                alert('Registration Successful! \n\nPlease check your email to activate your account.');
-                regForm.reset();
+                alert('Success! Check email.');
                 window.location.href = 'login.html';
             } catch (error) {
-                alert('Registration Failed: ' + error.message);
+                alert('Error: ' + error.message);
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                submitBtn.innerHTML = '<i class="ph-bold ph-paper-plane-right text-xl"></i> Submit Registration';
+                submitBtn.classList.remove('opacity-50');
+                submitBtn.innerHTML = '<i class="ph-bold ph-paper-plane-right text-lg"></i> Register';
                 loadingText.classList.add('hidden');
             }
         });
     </script>
-
 </body>
 </html>
