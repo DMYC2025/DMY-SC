@@ -41,19 +41,15 @@
 </head>
 <body class="bg-brand-dark min-h-screen font-poppins text-slate-100 selection:bg-brand-green selection:text-white">
 
+    <!-- HOME BUTTON ADDED HERE (Path: index.html) -->
+    <a href="index.html" class="absolute top-6 left-6 z-50 w-12 h-12 bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-xl flex items-center justify-center text-white hover:bg-brand-green hover:border-brand-green transition-all duration-300 shadow-lg group">
+        <i class="ph-bold ph-house text-xl group-hover:scale-110 transition-transform"></i>
+    </a>
+
     <div class="relative h-[40vh] w-full overflow-hidden flex items-center justify-center">
         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2000')] bg-cover bg-center opacity-40"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/90 to-brand-dark/40"></div>
         
-        <nav class="absolute top-0 left-0 w-full p-6 z-50 flex justify-between items-center max-w-7xl mx-auto">
-            <a href="index.html" class="flex items-center gap-2 text-slate-400 hover:text-white transition group">
-                <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-brand-green group-hover:text-white transition">
-                    <i class="ph-bold ph-arrow-left text-xl"></i>
-                </div>
-                <span class="font-bold text-sm uppercase tracking-widest hidden md:block">Dashboard</span>
-            </a>
-        </nav>
-
         <div class="relative z-10 text-center px-4" data-aos="fade-down">
             <h1 class="text-4xl md:text-6xl font-black text-white mb-2 uppercase tracking-tighter drop-shadow-2xl">
                 Payment <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-green to-emerald-400">History</span>
