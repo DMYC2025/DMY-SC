@@ -152,11 +152,20 @@
                     </h1>
                     <p class="text-slate-400 mt-2 md:mt-3 text-xs md:text-base max-w-lg leading-relaxed">Welcome back. Stay updated with your club activities.</p>
                 </div>
-                <div class="text-right hidden md:block">
-                   <div class="w-20 h-20 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 backdrop-blur-sm shadow-inner">
-                       <i id="timeIcon" class="ph-duotone ph-sun-dim text-5xl text-brand-green drop-shadow-[0_0_15px_rgba(22,163,74,0.5)]"></i>
-                   </div>
+                
+                <!-- NEW WEATHER WIDGET (Replaces old static Time Icon) -->
+                <div class="text-right hidden md:flex flex-col items-end gap-2">
+                    <div class="flex items-center gap-4 bg-white/5 border border-white/10 p-3 pr-5 rounded-2xl backdrop-blur-sm shadow-inner transition hover:bg-white/10 group">
+                         <div id="weatherIconBg" class="w-12 h-12 rounded-xl flex items-center justify-center bg-brand-green/20 text-brand-green shadow-lg transition-colors duration-500">
+                            <i id="weatherIcon" class="ph-duotone ph-cloud-sun text-2xl animate-pulse"></i>
+                        </div>
+                        <div class="text-right">
+                             <h4 id="weatherTemp" class="text-2xl font-black text-white leading-none">--°C</h4>
+                             <p id="weatherDesc" class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Horana</p>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
 
@@ -299,7 +308,7 @@
                         <!-- Action Buttons for Mobile -->
                         <div class="grid grid-cols-2 gap-3 mt-4">
                              <button onclick="openCardModal()" class="col-span-2 bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs font-bold py-3 rounded-xl border border-slate-700 transition flex items-center justify-center gap-2">
-                                <i class="ph-bold ph-download-simple"></i> Save as Image
+                                <i class="ph-bold ph-download-simple"></i> Save / Print Card
                             </button>
                         </div>
                     </div>
@@ -488,10 +497,64 @@
 
         const hour = new Date().getHours();
         const greetingSpan = document.getElementById('greeting');
-        const icon = document.getElementById('timeIcon');
-        if (hour < 12) { greetingSpan.innerText = "Good Morning"; icon.className = "ph-duotone ph-sun text-5xl text-yellow-400 drop-shadow-[0_0_20px_rgba(250,204,21,0.6)] animate-pulse"; } 
-        else if (hour < 18) { greetingSpan.innerText = "Good Afternoon"; icon.className = "ph-duotone ph-sun-dim text-5xl text-orange-400 drop-shadow-[0_0_20px_rgba(251,146,60,0.6)] animate-pulse"; } 
-        else { greetingSpan.innerText = (hour < 21) ? "Good Evening" : "Good Night"; icon.className = "ph-duotone ph-moon-stars text-5xl text-blue-400 drop-shadow-[0_0_20px_rgba(96,165,250,0.6)] animate-pulse"; }
+        // Removed old static icon Logic
+        if (hour < 12) { greetingSpan.innerText = "Good Morning"; } 
+        else if (hour < 18) { greetingSpan.innerText = "Good Afternoon"; } 
+        else { greetingSpan.innerText = (hour < 21) ? "Good Evening" : "Good Night"; }
+
+        // --- WEATHER WIDGET LOGIC ---
+        async function fetchWeather() {
+            try {
+                // Horana Coordinates: 6.7161, 80.0632
+                const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=6.7161&longitude=80.0632&current_weather=true');
+                const data = await response.json();
+                
+                if (data.current_weather) {
+                    const { temperature, weathercode } = data.current_weather;
+                    updateWeatherUI(temperature, weathercode);
+                }
+            } catch (error) {
+                console.error("Weather fetch failed", error);
+                const descEl = document.getElementById('weatherDesc');
+                if(descEl) descEl.innerText = "Offline";
+            }
+        }
+
+        function updateWeatherUI(temp, code) {
+            const tempEl = document.getElementById('weatherTemp');
+            const descEl = document.getElementById('weatherDesc');
+            const iconEl = document.getElementById('weatherIcon');
+            const bgEl = document.getElementById('weatherIconBg');
+
+            if(tempEl) tempEl.innerText = `${Math.round(temp)}°C`;
+            
+            // Map WMO codes to Icons & Text
+            let iconClass = "ph-cloud-sun";
+            let descText = "Fair";
+            let colorClass = "text-yellow-400";
+            let bgClass = "bg-yellow-400/20";
+
+            // WMO Codes: https://open-meteo.com/en/docs
+            if (code === 0) {
+                iconClass = "ph-sun"; descText = "Clear Sky"; colorClass = "text-yellow-400"; bgClass = "bg-yellow-400/20";
+            } else if ([1, 2, 3].includes(code)) {
+                iconClass = "ph-cloud-sun"; descText = "Cloudy"; colorClass = "text-orange-400"; bgClass = "bg-orange-400/20";
+            } else if ([45, 48].includes(code)) {
+                iconClass = "ph-cloud-fog"; descText = "Foggy"; colorClass = "text-slate-400"; bgClass = "bg-slate-400/20";
+            } else if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) {
+                iconClass = "ph-cloud-rain"; descText = "Rainy"; colorClass = "text-blue-400"; bgClass = "bg-blue-400/20";
+            } else if ([95, 96, 99].includes(code)) {
+                iconClass = "ph-cloud-lightning"; descText = "Storm"; colorClass = "text-purple-400"; bgClass = "bg-purple-400/20";
+            }
+
+            if(iconEl) iconEl.className = `ph-duotone ${iconClass} text-2xl animate-pulse`;
+            if(bgEl) bgEl.className = `w-12 h-12 rounded-xl flex items-center justify-center shadow-lg transition-colors duration-500 ${bgClass} ${colorClass}`;
+            if(descEl) descEl.innerText = descText;
+        }
+        
+        // Fetch weather initially and every 30 mins
+        fetchWeather();
+        setInterval(fetchWeather, 1800000);
 
         document.getElementById('dateDisplay').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         setInterval(() => { document.getElementById('clockDisplay').innerText = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); }, 1000);
@@ -842,4 +905,3 @@
     <script>document.getElementById('year').innerText = new Date().getFullYear();</script>
 </body>
 </html>
-
