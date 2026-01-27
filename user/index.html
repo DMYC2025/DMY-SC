@@ -604,13 +604,19 @@
                         captainNameEl.innerText = teamNames;
                         captainEl.classList.remove('hidden');
                     }
+                    
+                    // Generate Public Verification Link
+                    // Uses current window location to ensure correct path
+                    // e.g. https://mysite.com/user/index.html -> https://mysite.com/user/club_id.html?id=M123
+                    const verificationUrl = new URL('club_id.html', window.location.href).href + '?id=' + (profile.member_id || 'PENDING');
 
                     // Store Data for Card Rendering
                     currentUserData = {
                         name: profile.full_name,
                         id: profile.member_id || 'PENDING',
                         avatar: avatarSrc,
-                        qrCode: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(profile.member_id || 'PENDING')}`,
+                        // UPDATED QR CODE: Now points to the Verification Page URL instead of just the ID string
+                        qrCode: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verificationUrl)}`,
                         isExec: !!exData,
                         execRole: exData ? exData.term_period : null
                     };
