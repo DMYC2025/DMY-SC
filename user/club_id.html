@@ -94,9 +94,10 @@
             <div class="p-6 space-y-4 mt-2">
                 
                 <div class="grid grid-cols-2 gap-4">
+                    <!-- Age Display (Changed from DOB) -->
                     <div class="bg-slate-800/50 p-3 rounded-xl border border-white/5">
-                        <p class="text-[9px] text-slate-500 uppercase font-bold mb-1">Date of Birth</p>
-                        <p id="dob" class="text-sm font-bold text-white">...</p>
+                        <p class="text-[9px] text-slate-500 uppercase font-bold mb-1">Age</p>
+                        <p id="age" class="text-sm font-bold text-white">...</p>
                     </div>
                     <div class="bg-slate-800/50 p-3 rounded-xl border border-white/5">
                         <p class="text-[9px] text-slate-500 uppercase font-bold mb-1">Club ID</p>
@@ -109,7 +110,7 @@
                         <div class="w-6 h-6 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400"><i class="ph-fill ph-envelope-simple"></i></div>
                         <div>
                             <p class="text-[9px] text-slate-500 uppercase font-bold">Email Address</p>
-                            <p id="email" class="text-xs font-bold text-white truncate">...</p>
+                            <p id="email" class="text-xs font-bold text-white truncate w-48">...</p>
                         </div>
                     </div>
                     <div class="w-full h-[1px] bg-white/5 my-2"></div>
@@ -140,6 +141,19 @@
         const DEFAULT_AVATAR = "https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg";
 
         document.getElementById('scanTime').innerText = `Scanned: ${new Date().toLocaleString()}`;
+
+        // Helper to calculate age
+        function calculateAge(dob) {
+            if (!dob) return 'N/A';
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age + " Years";
+        }
 
         async function fetchMemberDetails() {
             if (!queryId) {
@@ -184,13 +198,13 @@
         function renderCard(profile, execData, sportsData) {
             document.getElementById('loading').classList.add('hidden');
             document.getElementById('cardDisplay').classList.remove('hidden');
-            document.getElementById('cardDisplay').classList.add('animate-fade-in-up'); // Ensure Tailwind animation if defined or just default appear
+            document.getElementById('cardDisplay').classList.add('animate-fade-in-up'); 
 
             // Basic Info
             document.getElementById('profileImg').src = profile.avatar_url || DEFAULT_AVATAR;
             document.getElementById('displayName').innerText = profile.display_name || profile.full_name.split(' ')[0];
             document.getElementById('fullName').innerText = profile.full_name;
-            document.getElementById('dob').innerText = profile.dob ? profile.dob : 'N/A';
+            document.getElementById('age').innerText = calculateAge(profile.dob); // Display Age
             document.getElementById('memberId').innerText = profile.member_id;
             document.getElementById('email').innerText = profile.email || 'N/A';
             document.getElementById('phone').innerText = profile.phone || 'N/A';
@@ -203,7 +217,7 @@
             if (execData) {
                 const badge = document.createElement('div');
                 badge.className = "px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-[0_0_10px_rgba(234,179,8,0.2)]";
-                badge.innerHTML = `<i class="ph-fill ph-crown"></i> ${execData.term_period || 'Executive'}`; // Using term_period as role based on user preference, or fallback
+                badge.innerHTML = `<i class="ph-fill ph-crown"></i> ${execData.term_period || 'Executive'}`; 
                 rolesContainer.appendChild(badge);
             }
 
