@@ -19,13 +19,15 @@
         }
     </script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+    <!-- html2canvas for ID Card Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Chart Library -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
@@ -40,6 +42,21 @@
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* ID Card Styles copied from club_id.html for accurate rendering */
+        .id-card-container {
+            font-family: 'Poppins', sans-serif;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.95); /* Slightly more opaque for download clarity */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .bg-pattern {
+            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            opacity: 0.2;
+        }
     </style>
 </head>
 <body class="bg-[#0b1121] text-slate-100 min-h-screen font-poppins overflow-hidden">
@@ -167,15 +184,19 @@
                     </div>
                 </div>
 
-                <!-- Member Growth Chart -->
+                <!-- Member Growth Chart (WEEKLY) -->
                 <div class="glass-panel p-6 rounded-[2rem] shadow-xl mb-8" data-aos="fade-up">
-                    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                        <span class="bg-brand-green/10 text-brand-green p-1.5 rounded-lg"><i class="ph-bold ph-chart-line-up"></i></span>
-                        Member Growth Overview
-                    </h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <span class="bg-brand-green/10 text-brand-green p-1.5 rounded-lg"><i class="ph-bold ph-chart-bar"></i></span>
+                            Weekly Member Registration
+                        </h3>
+                        <p class="text-xs text-slate-400 font-mono">Click on bars to view details</p>
+                    </div>
                     <div id="growthChart" class="w-full h-72"></div>
                 </div>
 
+                <!-- Quick Actions Section -->
                 <div class="bg-slate-900 rounded-[2.5rem] p-8 shadow-xl border border-slate-800 mb-8" data-aos="fade-up" data-aos-delay="400">
                     <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
                         <span class="bg-yellow-500/10 text-yellow-500 p-2 rounded-lg"><i class="ph-fill ph-lightning"></i></span> 
@@ -207,39 +228,75 @@
                     </div>
                 </div>
 
-                <div class="glass-panel p-8 rounded-[2rem] shadow-xl border border-slate-800" data-aos="fade-up">
-                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                        <div>
-                            <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                                <i class="ph-duotone ph-file-pdf text-red-500"></i> Member Reports
-                            </h3>
-                            <p class="text-xs text-slate-400 mt-1">Select members to generate detailed PDF report</p>
-                        </div>
-                        <div class="flex gap-3">
-                            <button onclick="downloadPDF()" class="bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg shadow-red-500/20 transition flex items-center gap-2 text-sm">
-                                <i class="ph-bold ph-download-simple"></i> Download PDF
+                <!-- Combined Reports & ID Cards Section (To reduce empty space) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <!-- Member Reports Section -->
+                    <div class="glass-panel p-8 rounded-[2rem] shadow-xl border border-slate-800" data-aos="fade-up">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                                    <i class="ph-duotone ph-file-pdf text-red-500"></i> Reports
+                                </h3>
+                                <p class="text-xs text-slate-400 mt-1">Generate member PDF reports</p>
+                            </div>
+                            <button onclick="downloadPDF()" class="bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg shadow-red-500/20 transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
+                                <i class="ph-bold ph-download-simple"></i> Download
                             </button>
+                        </div>
+
+                        <div class="overflow-x-auto rounded-xl border border-slate-700 max-h-[350px] overflow-y-auto custom-scrollbar">
+                            <table class="w-full text-left text-sm text-slate-400">
+                                <thead class="bg-slate-800 text-xs uppercase font-bold text-slate-200 sticky top-0 z-10">
+                                    <tr>
+                                        <th class="p-4 w-10">
+                                            <input type="checkbox" id="selectAll" onclick="toggleSelectAll()" class="rounded border-slate-600 bg-slate-700 text-brand-green focus:ring-offset-slate-900">
+                                        </th>
+                                        <th class="p-4">Name</th>
+                                        <th class="p-4 text-center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashboardMemberTable" class="divide-y divide-slate-700 bg-slate-900/50">
+                                    <tr><td colspan="3" class="p-8 text-center"><div class="animate-spin rounded-full h-6 w-6 border-b-2 border-brand-green mx-auto"></div></td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
-                    <div class="overflow-x-auto rounded-xl border border-slate-700">
-                        <table class="w-full text-left text-sm text-slate-400">
-                            <thead class="bg-slate-800 text-xs uppercase font-bold text-slate-200">
-                                <tr>
-                                    <th class="p-4 w-10">
-                                        <input type="checkbox" id="selectAll" onclick="toggleSelectAll()" class="rounded border-slate-600 bg-slate-700 text-brand-green focus:ring-offset-slate-900">
-                                    </th>
-                                    <th class="p-4">Name</th>
-                                    <th class="p-4">Phone</th>
-                                    <th class="p-4">NIC</th>
-                                    <th class="p-4">City</th>
-                                    <th class="p-4 text-center">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="dashboardMemberTable" class="divide-y divide-slate-700 bg-slate-900/50">
-                                <tr><td colspan="6" class="p-8 text-center"><div class="animate-spin rounded-full h-6 w-6 border-b-2 border-brand-green mx-auto"></div></td></tr>
-                            </tbody>
-                        </table>
+                    <!-- Club Identity Cards Section -->
+                    <div class="glass-panel p-8 rounded-[2rem] shadow-xl border border-slate-800">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                                    <i class="ph-fill ph-identification-card text-blue-400"></i> ID Cards
+                                </h3>
+                                <p class="text-xs text-slate-400 mt-1">Manage active member IDs</p>
+                            </div>
+                            <button onclick="downloadSelectedCards()" id="downloadCardsBtn" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg shadow-blue-500/20 transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
+                                <i class="ph-bold ph-download-simple"></i> Download
+                            </button>
+                        </div>
+
+                        <!-- Search Box -->
+                        <div class="mb-4">
+                            <input type="text" id="cardSearch" onkeyup="filterCardList()" placeholder="Search members..." class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
+                        </div>
+
+                        <div class="overflow-x-auto rounded-xl border border-slate-700 max-h-[280px] overflow-y-auto custom-scrollbar">
+                            <table class="w-full text-left text-sm text-slate-400">
+                                <thead class="bg-slate-800 text-xs uppercase font-bold text-slate-200 sticky top-0 z-10">
+                                    <tr>
+                                        <th class="p-4 w-10">
+                                            <input type="checkbox" id="selectAllCards" onclick="toggleSelectAllCards()" class="rounded border-slate-600 bg-slate-700 text-blue-500 focus:ring-offset-slate-900">
+                                        </th>
+                                        <th class="p-4">Member Name</th>
+                                        <th class="p-4 text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="idCardListTable" class="divide-y divide-slate-700 bg-slate-900/50">
+                                    <tr><td colspan="3" class="p-8 text-center text-xs">Loading Active Members...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -261,6 +318,121 @@
                 <!-- Pending Items Will Be Injected Here -->
             </div>
         </div>
+    </div>
+
+    <!-- Chart Details Modal -->
+    <div id="chartDetailsModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/90 backdrop-blur-md">
+        <div class="bg-slate-900 border border-brand-green/30 p-6 rounded-[2rem] shadow-2xl max-w-md w-full relative transform transition-all scale-100">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="ph-fill ph-calendar-check text-brand-green"></i> 
+                    <span id="chartModalTitle">Week Details</span>
+                </h3>
+                <button onclick="closeChartModal()" class="text-slate-400 hover:text-white p-2 hover:bg-slate-800 rounded-full transition"><i class="ph-bold ph-x text-lg"></i></button>
+            </div>
+            
+            <div id="chartModalList" class="space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
+                <!-- Items Injected Here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ID Card Preview Modal -->
+    <div id="idCardModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/95 backdrop-blur-md">
+        <div class="relative w-full max-w-sm p-4">
+            <button onclick="closeIdCardModal()" class="absolute -top-10 right-0 text-white hover:text-red-500 transition"><i class="ph-bold ph-x text-2xl"></i></button>
+            
+            <!-- Card Container (Visual Only) -->
+            <div id="cardPreviewContainer" class="w-full relative group transform transition hover:scale-[1.02]">
+                <!-- Glow Effect -->
+                <div class="absolute -inset-1 bg-gradient-to-r from-brand-green to-blue-600 rounded-[2rem] blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+
+                <div class="relative glass-card rounded-[1.8rem] overflow-hidden shadow-2xl">
+                    <!-- Header Banner -->
+                    <div class="relative h-32 bg-gradient-to-r from-green-900 to-slate-900">
+                        <div class="absolute inset-0 bg-pattern"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#1e293b] to-transparent"></div>
+                        
+                        <div class="absolute top-5 left-5 flex items-center gap-3">
+                            <img src="../assets/logo.png" class="h-10 w-10 object-contain drop-shadow-md">
+                            <div>
+                                <h4 class="text-white font-bold text-sm leading-tight">Dream Makers</h4>
+                                <p class="text-[9px] text-green-400 uppercase font-bold tracking-wider">Youth & Sports Club</p>
+                            </div>
+                        </div>
+
+                        <!-- Status Badge -->
+                        <div class="absolute top-5 right-5">
+                            <span class="bg-green-500 text-white text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded shadow-lg shadow-green-500/20">
+                                VERIFIED
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Profile Image Area -->
+                    <div class="relative px-6 -mt-16 flex flex-col items-center">
+                        <div class="w-32 h-32 p-1 bg-gradient-to-br from-brand-green to-slate-700 rounded-full shadow-xl">
+                            <img id="cardProfileImg" src="" class="w-full h-full rounded-full object-cover bg-slate-900 border-4 border-[#1e293b]">
+                        </div>
+                        
+                        <h2 id="cardDisplayName" class="mt-4 text-2xl font-black text-white text-center leading-tight">...</h2>
+                        <p id="cardFullName" class="text-xs text-slate-400 font-medium text-center px-4 mt-1">...</p>
+
+                        <!-- Roles Container -->
+                        <div class="mt-4 flex flex-wrap justify-center gap-2 w-full" id="cardRolesContainer">
+                            <!-- Roles injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Details Grid -->
+                    <div class="p-6 space-y-4 mt-2">
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Age Display -->
+                            <div class="bg-slate-800/50 p-3 rounded-xl border border-white/5">
+                                <p class="text-[9px] text-slate-500 uppercase font-bold mb-1">Age</p>
+                                <p id="cardAge" class="text-sm font-bold text-white">...</p>
+                            </div>
+                            <div class="bg-slate-800/50 p-3 rounded-xl border border-white/5">
+                                <p class="text-[9px] text-slate-500 uppercase font-bold mb-1">Club ID</p>
+                                <p id="cardMemberId" class="text-sm font-bold text-brand-green font-mono">...</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-800/50 p-3 rounded-xl border border-white/5">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-6 h-6 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400"><i class="ph-fill ph-envelope-simple"></i></div>
+                                <div>
+                                    <p class="text-[9px] text-slate-500 uppercase font-bold">Email Address</p>
+                                    <p id="cardEmail" class="text-xs font-bold text-white truncate w-48">...</p>
+                                </div>
+                            </div>
+                            <div class="w-full h-[1px] bg-white/5 my-2"></div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400"><i class="ph-fill ph-phone"></i></div>
+                                <div>
+                                    <p class="text-[9px] text-slate-500 uppercase font-bold">Contact Number</p>
+                                    <p id="cardPhone" class="text-xs font-bold text-white">...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Info -->
+                        <div class="text-center pt-4 border-t border-white/5">
+                            <p class="text-[9px] text-slate-600 font-mono">Official Club Identification Card</p>
+                            <p class="text-[9px] text-slate-600 font-mono mt-0.5">www.dmyc.space</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Hidden Container for Bulk PDF Generation -->
+    <div id="hiddenPDFContainer" class="absolute top-[-9999px] left-[-9999px] flex flex-wrap gap-4 bg-[#0b1121] p-4 w-[800px]">
+        <!-- Cards will be rendered here for html2canvas -->
     </div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -295,6 +467,8 @@
 
         let memberDataCache = [];
         let allProfilesCache = [];
+        let activeMembersCache = []; // Cache for ID Cards
+        let weeklyMemberData = {}; // NEW: Store members grouped by week
 
         // Initialization: Checks if User is Admin
         async function initAdmin() {
@@ -316,6 +490,7 @@
                 
                 loadStatsAndChart(); // Load stats and graph
                 loadDashboardMembers(); // Load table
+                loadActiveMembersForCards(); // NEW: Load active members for ID Cards
             } catch (err) { console.error("Init Error:", err); }
         }
 
@@ -325,11 +500,11 @@
                 if (typeof _supabase === 'undefined') return;
                 
                 // Fetch profiles for stats & chart
-                const { data: profiles, error } = await _supabase.from('profiles').select('id, role, is_approved, created_at');
+                const { data: profiles, error } = await _supabase.from('profiles').select('id, role, is_approved, created_at, full_name, member_id');
                 const { count: e } = await _supabase.from('events').select('*', { count: 'exact', head: true });
 
                 if (!error && profiles) {
-                    allProfilesCache = profiles; // Cache for popup
+                    allProfilesCache = profiles; 
                     
                     const m = profiles.filter(p => p.role === 'member').length;
                     const p = profiles.filter(p => p.is_approved === false).length;
@@ -344,38 +519,116 @@
             } catch (err) { console.error("Stats Error:", err); }
         }
 
-        // Render ApexChart
+        // ----------------------------------------------------
+        // UPDATED: Render ApexChart with Weekly Grouping
+        // ----------------------------------------------------
         function renderGrowthChart(data) {
-            // Group by Month
-            const counts = {};
+            weeklyMemberData = {}; // Reset cache
+
+            // Helper to get week label (e.g., "Week 3, Jan")
+            function getWeekLabel(dateStr) {
+                const date = new Date(dateStr);
+                const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+                const dayOfWeek = firstDayOfMonth.getDay(); // 0-6
+                const dayOfMonth = date.getDate();
+                
+                // Calculate week number in month (approx)
+                const weekNum = Math.ceil((dayOfMonth + dayOfWeek) / 7);
+                const month = date.toLocaleString('default', { month: 'short' });
+                const year = date.getFullYear();
+                
+                return `Week ${weekNum} - ${month} ${year}`;
+            }
+
+            // Group by Week
             data.forEach(m => {
-                const date = new Date(m.created_at);
-                const key = date.toLocaleString('default', { month: 'short', year: 'numeric' }); // e.g. "Jan 2026"
-                counts[key] = (counts[key] || 0) + 1;
+                if (m.role !== 'member') return; // Filter admins if needed
+                const key = getWeekLabel(m.created_at);
+                if (!weeklyMemberData[key]) weeklyMemberData[key] = [];
+                weeklyMemberData[key].push(m);
             });
 
-            // Sort keys by date
-            const keys = Object.keys(counts).sort((a, b) => new Date(a) - new Date(b));
-            const values = keys.map(k => counts[k]);
+            // Sort keys by actual date (using first member's date as proxy)
+            const keys = Object.keys(weeklyMemberData).sort((a, b) => {
+                const dateA = new Date(weeklyMemberData[a][0].created_at);
+                const dateB = new Date(weeklyMemberData[b][0].created_at);
+                return dateA - dateB;
+            });
+
+            const values = keys.map(k => weeklyMemberData[k].length);
 
             var options = {
                 series: [{ name: 'New Members', data: values }],
-                chart: { type: 'area', height: 300, toolbar: { show: false }, background: 'transparent', fontFamily: 'Poppins, sans-serif' },
+                chart: { 
+                    type: 'bar', 
+                    height: 300, 
+                    toolbar: { show: false }, 
+                    background: 'transparent', 
+                    fontFamily: 'Poppins, sans-serif',
+                    events: {
+                        // Click Event for Chart Columns
+                        dataPointSelection: function(event, chartContext, config) {
+                            const selectedIndex = config.dataPointIndex;
+                            const weekLabel = keys[selectedIndex];
+                            showChartDetails(weekLabel);
+                        }
+                    }
+                },
                 colors: ['#16a34a'],
+                plotOptions: {
+                    bar: { borderRadius: 4, columnWidth: '40%', distributed: true }
+                },
                 dataLabels: { enabled: false },
-                stroke: { curve: 'smooth', width: 3 },
-                fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.1, stops: [0, 90, 100] } },
-                xaxis: { categories: keys, labels: { style: { colors: '#94a3b8' } }, axisBorder: { show: false }, axisTicks: { show: false } },
+                xaxis: { 
+                    categories: keys, 
+                    labels: { style: { colors: '#94a3b8', fontSize: '10px' }, rotate: -45 }, 
+                    axisBorder: { show: false }, 
+                    axisTicks: { show: false } 
+                },
                 yaxis: { labels: { style: { colors: '#94a3b8' } } },
                 grid: { borderColor: '#334155', strokeDashArray: 4 },
                 theme: { mode: 'dark' },
-                tooltip: { theme: 'dark' }
+                tooltip: { theme: 'dark', y: { formatter: function (val) { return val + " members" } } },
+                legend: { show: false }
             };
 
             const chartEl = document.querySelector("#growthChart");
             chartEl.innerHTML = "";
             var chart = new ApexCharts(chartEl, options);
             chart.render();
+        }
+
+        // Show Weekly Details Modal
+        function showChartDetails(weekLabel) {
+            const members = weeklyMemberData[weekLabel];
+            if(!members) return;
+
+            document.getElementById('chartModalTitle').innerText = weekLabel;
+            const list = document.getElementById('chartModalList');
+            list.innerHTML = '';
+
+            members.forEach(m => {
+                list.innerHTML += `
+                    <div class="flex items-center justify-between bg-slate-800/50 p-3 rounded-xl border border-white/5 animate-fade-in-up">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center font-bold text-xs">
+                                ${m.full_name.charAt(0)}
+                            </div>
+                            <div>
+                                <h4 class="text-white text-sm font-bold">${m.full_name}</h4>
+                                <p class="text-[10px] text-slate-400">Registered: ${new Date(m.created_at).toLocaleDateString()}</p>
+                            </div>
+                        </div>
+                        <span class="bg-slate-700 text-white text-[10px] px-2 py-1 rounded font-mono">${m.member_id || 'No ID'}</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('chartDetailsModal').classList.remove('hidden');
+        }
+
+        function closeChartModal() {
+            document.getElementById('chartDetailsModal').classList.add('hidden');
         }
 
         // Pending Popup Logic
@@ -431,6 +684,7 @@
                 openPendingModal(); // Refresh popup list
                 loadStatsAndChart(); // Refresh counters
                 loadDashboardMembers(); // Refresh table
+                loadActiveMembersForCards(); // Refresh Card list
             }
         }
 
@@ -574,6 +828,275 @@
             } catch (err) {
                 console.error("PDF Error:", err);
                 alert("Error generating PDF. Please check console.");
+            }
+        }
+
+        // ==========================================
+        //  NEW: Club Identity Card Logic
+        // ==========================================
+
+        // 1. Fetch Active Members for ID Cards
+        async function loadActiveMembersForCards() {
+            const tbody = document.getElementById('idCardListTable');
+            try {
+                // Fetch members + Exec Roles + Sports Roles
+                // Note: Complex join might be needed, but simple fetch & filter is safer for now
+                const { data: members, error } = await _supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('is_approved', true) // Only Active
+                    .order('full_name', { ascending: true });
+
+                if (error) throw error;
+                
+                activeMembersCache = members;
+                tbody.innerHTML = '';
+
+                if (members.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-slate-500">No active members found.</td></tr>';
+                    return;
+                }
+
+                members.forEach(m => {
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-800/50 transition border-b border-slate-800/50">
+                            <td class="p-4">
+                                <input type="checkbox" class="card-checkbox rounded border-slate-600 bg-slate-700 text-blue-500 focus:ring-offset-slate-900" value="${m.id}">
+                            </td>
+                            <td class="p-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center overflow-hidden">
+                                        ${m.avatar_url 
+                                            ? `<img src="${m.avatar_url}" class="w-full h-full object-cover">` 
+                                            : `<span class="text-xs font-bold text-white">${m.full_name.charAt(0)}</span>`
+                                        }
+                                    </div>
+                                    <span class="text-white text-sm font-medium">${m.full_name}</span>
+                                </div>
+                            </td>
+                            <td class="p-4 font-mono text-xs text-brand-green">${m.member_id || 'N/A'}</td>
+                            <td class="p-4 text-center">
+                                <button onclick="viewIdCard('${m.id}')" class="bg-blue-600/10 hover:bg-blue-600 text-blue-500 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-2 mx-auto">
+                                    <i class="ph-bold ph-eye"></i> View Card
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+            } catch (err) {
+                console.error("ID List Error:", err);
+                tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-red-400">Error loading list.</td></tr>';
+            }
+        }
+
+        // 2. Select All Logic for Cards
+        function toggleSelectAllCards() {
+            const mainCheck = document.getElementById('selectAllCards');
+            const checkboxes = document.querySelectorAll('.card-checkbox');
+            checkboxes.forEach(cb => cb.checked = mainCheck.checked);
+        }
+
+        // 3. Search Filter
+        function filterCardList() {
+            const input = document.getElementById('cardSearch').value.toLowerCase();
+            const rows = document.getElementById('idCardListTable').getElementsByTagName('tr');
+            
+            for (let i = 0; i < rows.length; i++) {
+                const nameCell = rows[i].getElementsByTagName('td')[1];
+                if (nameCell) {
+                    const txtValue = nameCell.textContent || nameCell.innerText;
+                    rows[i].style.display = txtValue.toLowerCase().indexOf(input) > -1 ? "" : "none";
+                }
+            }
+        }
+
+        // 4. View Card (Populate Modal)
+        async function viewIdCard(id) {
+            const member = activeMembersCache.find(m => m.id === id);
+            if (!member) return;
+
+            // Show Modal
+            const modal = document.getElementById('idCardModal');
+            modal.classList.remove('hidden');
+
+            // Populate Data
+            // Fetch extra roles (Exec/Sports) individually for preview accuracy
+            const { data: execData } = await _supabase.from('executive_committee').select('*').eq('profile_id', member.id).single();
+            const { data: sportsData } = await _supabase.from('sports').select('name').eq('captain_id', member.id);
+
+            populateCardHTML(member, execData, sportsData, 'card');
+        }
+
+        function closeIdCardModal() {
+            document.getElementById('idCardModal').classList.add('hidden');
+        }
+
+        // Helper to Populate Card Elements (Reusable)
+        function populateCardHTML(profile, execData, sportsData, prefix) {
+            const DEFAULT_AVATAR = "https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg";
+            
+            // Basic Info
+            document.getElementById(prefix + 'ProfileImg').src = profile.avatar_url || DEFAULT_AVATAR;
+            document.getElementById(prefix + 'DisplayName').innerText = profile.display_name || profile.full_name.split(' ')[0];
+            document.getElementById(prefix + 'FullName').innerText = profile.full_name;
+            document.getElementById(prefix + 'Age').innerText = calculateAge(profile.dob);
+            document.getElementById(prefix + 'MemberId').innerText = profile.member_id || 'N/A';
+            document.getElementById(prefix + 'Email').innerText = profile.email || 'N/A';
+            document.getElementById(prefix + 'Phone').innerText = profile.phone || 'N/A';
+
+            // Roles
+            const rolesContainer = document.getElementById(prefix + 'RolesContainer');
+            rolesContainer.innerHTML = '';
+
+            // 1. Executive Role
+            if (execData) {
+                const badge = document.createElement('div');
+                badge.className = "px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-[0_0_10px_rgba(234,179,8,0.2)]";
+                badge.innerHTML = `<i class="ph-fill ph-crown"></i> ${execData.term_period || 'Executive'}`; 
+                rolesContainer.appendChild(badge);
+            }
+
+            // 2. Captain Roles
+            if (sportsData && sportsData.length > 0) {
+                sportsData.forEach(sport => {
+                    const badge = document.createElement('div');
+                    badge.className = "px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-[0_0_10px_rgba(59,130,246,0.2)]";
+                    badge.innerHTML = `<i class="ph-fill ph-star"></i> ${sport.name} Captain`;
+                    rolesContainer.appendChild(badge);
+                });
+            }
+
+            // 3. Default Member Tag
+            if (!execData && (!sportsData || sportsData.length === 0)) {
+                const badge = document.createElement('div');
+                badge.className = "px-3 py-1 rounded-full bg-brand-green/10 border border-brand-green/30 text-brand-green text-[10px] font-black uppercase tracking-wider";
+                badge.innerText = "CLUB MEMBER";
+                rolesContainer.appendChild(badge);
+            }
+        }
+
+        function calculateAge(dob) {
+            if (!dob) return 'N/A';
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age + " Years";
+        }
+
+        // 5. Bulk Download Logic
+        async function downloadSelectedCards() {
+            const checkboxes = document.querySelectorAll('.card-checkbox:checked');
+            if (checkboxes.length === 0) {
+                alert("Please select at least one ID Card to download.");
+                return;
+            }
+
+            const btn = document.getElementById('downloadCardsBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="ph-bold ph-spinner animate-spin"></i> Generating PDF...';
+            btn.disabled = true;
+
+            const hiddenContainer = document.getElementById('hiddenPDFContainer');
+            hiddenContainer.innerHTML = ''; // Clear previous
+
+            // Using jsPDF to create a multi-page PDF or single page list
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            
+            let yOffset = 10;
+            let xOffset = 10;
+            const cardW = 85; // Standard ID Card width in mm roughly (credit card size)
+            // HTML2Canvas pixel ratio logic needed. 
+            // Better strategy: Render one by one, capture canvas, add to PDF.
+
+            try {
+                const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+
+                for (let i = 0; i < selectedIds.length; i++) {
+                    const memberId = selectedIds[i];
+                    const member = activeMembersCache.find(m => m.id === memberId);
+                    
+                    // Fetch Roles for accurate card
+                    const { data: execData } = await _supabase.from('executive_committee').select('*').eq('profile_id', member.id).single();
+                    const { data: sportsData } = await _supabase.from('sports').select('name').eq('captain_id', member.id);
+
+                    // Create a DOM element for the card (clone the structure of preview)
+                    const cardClone = document.getElementById('cardPreviewContainer').querySelector('.glass-card').cloneNode(true);
+                    
+                    // Populate clone data manually (IDs are duplicated so querySelector inside clone is safer)
+                    // Basic replacements for clone
+                    const DEFAULT_AVATAR = "https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg";
+                    cardClone.querySelector('#cardProfileImg').src = member.avatar_url || DEFAULT_AVATAR;
+                    cardClone.querySelector('#cardDisplayName').innerText = member.display_name || member.full_name.split(' ')[0];
+                    cardClone.querySelector('#cardFullName').innerText = member.full_name;
+                    cardClone.querySelector('#cardAge').innerText = calculateAge(member.dob);
+                    cardClone.querySelector('#cardMemberId').innerText = member.member_id || 'N/A';
+                    cardClone.querySelector('#cardEmail').innerText = member.email || 'N/A';
+                    cardClone.querySelector('#cardPhone').innerText = member.phone || 'N/A';
+                    
+                    // FIXED: Ensure Text is visible (Remove Truncate)
+                    const emailEl = cardClone.querySelector('#cardEmail');
+                    const phoneEl = cardClone.querySelector('#cardPhone');
+                    emailEl.classList.remove('truncate', 'w-48');
+                    phoneEl.classList.remove('truncate');
+                    emailEl.style.whiteSpace = "normal"; // Allow wrap if needed
+                    emailEl.style.wordBreak = "break-all"; // Break long emails
+
+                    const rolesDiv = cardClone.querySelector('#cardRolesContainer');
+                    rolesDiv.innerHTML = '';
+                    // (Re-using role logic slightly condensed)
+                    if (execData) rolesDiv.innerHTML += `<div class="px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-[10px] font-black uppercase tracking-wider shadow-[0_0_10px_rgba(234,179,8,0.2)]"><i class="ph-fill ph-crown"></i> ${execData.term_period || 'Exec'}</div>`;
+                    else if (sportsData && sportsData.length > 0) rolesDiv.innerHTML += `<div class="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[10px] font-black uppercase tracking-wider shadow-[0_0_10px_rgba(59,130,246,0.2)]"><i class="ph-fill ph-star"></i> Captain</div>`;
+                    else rolesDiv.innerHTML += `<div class="px-3 py-1 rounded-full bg-brand-green/10 border border-brand-green/30 text-brand-green text-[10px] font-black uppercase tracking-wider">MEMBER</div>`;
+
+                    // Style tweaks for PDF render (remove transparency issues)
+                    cardClone.style.background = '#0f172a'; // Solid bg for PDF
+                    cardClone.style.width = '350px'; // Fixed width
+                    cardClone.style.margin = '20px';
+                    
+                    hiddenContainer.appendChild(cardClone);
+                    
+                    // Capture
+                    const canvas = await html2canvas(cardClone, { scale: 2, useCORS: true, backgroundColor: '#0b1121' });
+                    const imgData = canvas.toDataURL('image/png');
+
+                    // Add to PDF (Grid layout 2x2 or list)
+                    // Simple List: 2 cards per page
+                    const imgProps = pdf.getImageProperties(imgData);
+                    const pdfImgWidth = 90; // mm
+                    const pdfImgHeight = (imgProps.height * pdfImgWidth) / imgProps.width;
+
+                    if (yOffset + pdfImgHeight > pdfHeight - 10) {
+                        pdf.addPage();
+                        yOffset = 10;
+                    }
+                    
+                    pdf.addImage(imgData, 'PNG', xOffset, yOffset, pdfImgWidth, pdfImgHeight);
+                    
+                    // Grid logic (next position)
+                    xOffset += pdfImgWidth + 10;
+                    if (xOffset + pdfImgWidth > pdfWidth) {
+                        xOffset = 10;
+                        yOffset += pdfImgHeight + 10;
+                    }
+                }
+
+                pdf.save('DMYSC_ID_Cards.pdf');
+
+            } catch (err) {
+                console.error("PDF Gen Error:", err);
+                alert("Error generating ID Cards. Check console.");
+            } finally {
+                hiddenContainer.innerHTML = ''; // Cleanup
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
         }
 
