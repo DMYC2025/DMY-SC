@@ -126,7 +126,7 @@
                                         <i class="ph-fill ph-envelope-simple"></i> Primary Email
                                     </label>
                                     <!-- Changed from INPUT to DIV for better text wrapping on mobile -->
-                                    <div id="email" class="text-white font-bold text-sm md:text-lg break-all md:break-words leading-tight bg-transparent select-text">
+                                    <div id="email" class="text-white font-bold text-sm md:text-lg break-all md:break-words leading-tight bg-transparent select-text flex items-center gap-2">
                                         Loading email...
                                     </div>
                                     <p class="text-[9px] md:text-[10px] text-slate-500 mt-1.5">Linked to your Member ID.</p>
@@ -145,7 +145,7 @@
                                 <label class="text-[10px] md:text-xs font-bold text-brand-green uppercase ml-1 mb-1 block flex items-center gap-2">
                                     <i class="ph-bold ph-star"></i> Display Name (Preferred)
                                 </label>
-                                <input type="text" id="displayName" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="e.g. Isara">
+                                <input type="text" id="displayName" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="e.g. name ***">
                             </div>
 
                             <div class="md:col-span-2">
@@ -172,10 +172,16 @@
 
                         <!-- Contact & Skills -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pt-4 border-t border-white/5">
-                            <div class="md:col-span-2">
+                            <div>
                                 <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">WhatsApp Number</label>
                                 <input type="text" id="whatsapp" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="07x xxxxxxx">
                             </div>
+                            <!-- NEW PHONE FIELD -->
+                            <div>
+                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">Phone Number</label>
+                                <input type="text" id="phone" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="07x xxxxxxx">
+                            </div>
+
                             <div class="md:col-span-2">
                                 <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">Job / Profession</label>
                                 <input type="text" id="job" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="Student / Engineer / etc.">
@@ -244,6 +250,7 @@
             dob: "Date of Birth",
             address: "Residential Address",
             whatsapp: "WhatsApp Number",
+            phone: "Phone Number", // Added Phone
             job: "Job / Profession",
             sports_skills: "Sports Skills",
             aesthetic_skills: "Aesthetic Skills"
@@ -281,6 +288,7 @@
                     dob: profile.dob || '',
                     address: profile.address || '',
                     whatsapp: profile.whatsapp || '',
+                    phone: profile.phone || '', // Added phone
                     job: profile.job || '',
                     sports_skills: profile.sports_skills || '',
                     aesthetic_skills: profile.aesthetic_skills || ''
@@ -304,13 +312,33 @@
                 document.getElementById('fullName').value = originalData.full_name;
                 document.getElementById('nic').value = originalData.nic;
                 
-                // --- FIXED EMAIL POPULATION ---
-                // Use textContent since it's now a DIV, not an INPUT
-                document.getElementById('email').textContent = profile.email || 'No Email Linked';
+                // --- FIXED EMAIL POPULATION WITH ICONS ---
+                const email = profile.email || 'No Email Linked';
+                const emailEl = document.getElementById('email');
+                
+                if (email.endsWith('@gmail.com')) {
+                    // If Gmail: Show Google Logo AND Mail Icon
+                    emailEl.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <i class="ph-bold ph-google-logo text-blue-500" title="Google Account"></i>
+                            <i class="ph-bold ph-envelope-simple text-slate-400"></i>
+                            <span>${email}</span>
+                        </div>
+                    `;
+                } else {
+                    // If not Gmail: Show Mail Icon only
+                    emailEl.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <i class="ph-bold ph-envelope-simple text-slate-400"></i>
+                            <span>${email}</span>
+                        </div>
+                    `;
+                }
                 
                 document.getElementById('dob').value = originalData.dob;
                 document.getElementById('address').value = originalData.address;
                 document.getElementById('whatsapp').value = originalData.whatsapp;
+                document.getElementById('phone').value = originalData.phone; // Populate phone
                 document.getElementById('job').value = originalData.job;
                 document.getElementById('sports').value = originalData.sports_skills;
                 document.getElementById('aesthetic').value = originalData.aesthetic_skills;
@@ -434,6 +462,7 @@
                 dob: document.getElementById('dob').value,
                 address: document.getElementById('address').value,
                 whatsapp: document.getElementById('whatsapp').value,
+                phone: document.getElementById('phone').value, // Capture phone
                 job: document.getElementById('job').value,
                 sports_skills: document.getElementById('sports').value,
                 aesthetic_skills: document.getElementById('aesthetic').value
