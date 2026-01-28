@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>About Us - DMYSC</title>
-    <link rel="icon" type="image/png" href="../assets/logo_1.png">
+    <link rel="icon" type="image/png" href="assets/logo_1.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -149,7 +149,7 @@
                         <tr class="bg-slate-900/50 text-slate-400 text-[10px] uppercase tracking-widest border-b border-white/5">
                             <th class="p-6 font-bold">Member Name</th>
                             <th class="p-6 font-bold text-center">Age</th>
-                            <th class="p-6 font-bold text-right">Status</th>
+                            <th class="p-6 font-bold text-right">Role / Status</th>
                         </tr>
                     </thead>
                     <tbody id="memTableBody"></tbody>
@@ -273,7 +273,7 @@
             </div>`;
         }
 
-        function createMemRow(data) {
+        function createMemRow(data, specialRole) {
             const name = data.full_name;
             const avatar = (data.avatar_url && data.avatar_url.trim() !== "") 
                            ? data.avatar_url 
@@ -287,6 +287,28 @@
                 const m = today.getMonth() - birthDate.getMonth();
                 if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { a--; }
                 age = a;
+            }
+
+            let badgeHtml = '';
+            if (specialRole) {
+                // Determine styling based on role type
+                let badgeClass = 'bg-brand-green/10 text-brand-green border-brand-green/20 shadow-[0_0_10px_rgba(22,163,74,0.2)]'; // Default
+                
+                if(specialRole.type === 'exec') {
+                    badgeClass = 'bg-purple-500/10 text-purple-400 border-purple-500/20 shadow-[0_0_10px_rgba(168,85,247,0.2)]';
+                } else if (specialRole.type === 'captain') {
+                    badgeClass = 'bg-orange-500/10 text-orange-400 border-orange-500/20 shadow-[0_0_10px_rgba(249,115,22,0.2)]';
+                }
+
+                badgeHtml = `
+                    <span class="${badgeClass} border px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">
+                        ${specialRole.text}
+                    </span>`;
+            } else {
+                badgeHtml = `
+                    <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(59,130,246,0.2)]">
+                        Active Member
+                    </span>`;
             }
 
             return `
@@ -306,9 +328,7 @@
                     <span class="text-sm font-bold text-slate-300 font-mono">${age}</span>
                 </td>
                 <td class="p-6 text-right">
-                    <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(59,130,246,0.2)]">
-                        Active
-                    </span>
+                    ${badgeHtml}
                 </td>
             </tr>`;
         }
@@ -337,7 +357,6 @@
             }
 
             // B. Executive Committee
-            // Updated query to fetch appointed_date
             const { data: ex, error: exError } = await _supabase
                 .from('executive_committee')
                 .select('term_period, appointed_date, profiles(full_name, avatar_url, email, whatsapp)')
@@ -357,6 +376,39 @@
                 exGrid.innerHTML = '<p class="col-span-full text-center text-slate-500 italic">No committee members found.</p>';
             }
 
+            // --- FETCH SPECIAL ROLES FOR MEMBERS TABLE ---
+            const roleMap = new Map();
+
+            // 1. Get Executive Committee Roles (Linked to Profile ID)
+            const { data: execRoles } = await _supabase
+                .from('executive_committee')
+                .select('term_period, profiles!inner(id)');
+            
+            if(execRoles) {
+                execRoles.forEach(r => {
+                    if(r.profiles && r.profiles.id) {
+                        roleMap.set(r.profiles.id, { type: 'exec', text: r.term_period });
+                    }
+                });
+            }
+
+            // 2. Get Sports Captains
+            const { data: sportsRoles } = await _supabase
+                .from('sports')
+                .select('name, captain_id');
+            
+            if(sportsRoles) {
+                sportsRoles.forEach(s => {
+                    if(s.captain_id) {
+                        // If already has Exec role, keep it (Exec usually higher priority). 
+                        // Or change this logic if you want to show Captain instead.
+                        if(!roleMap.has(s.captain_id)) {
+                            roleMap.set(s.captain_id, { type: 'captain', text: `Captain - ${s.name}` });
+                        }
+                    }
+                });
+            }
+
             // C. Members Table
             const { data: mems, error: memError } = await _supabase
                 .from('profiles')
@@ -374,7 +426,8 @@
             } else if(mems && mems.length > 0) {
                 document.getElementById('memCount').innerText = mems.length;
                 mems.forEach(m => {
-                    memTable.innerHTML += createMemRow(m);
+                    const role = roleMap.get(m.id);
+                    memTable.innerHTML += createMemRow(m, role);
                 });
             } else {
                 memTable.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-slate-500">No active members yet.</td></tr>';
