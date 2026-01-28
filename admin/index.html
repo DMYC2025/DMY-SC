@@ -174,13 +174,14 @@
                         <p class="text-xs font-bold text-slate-400 uppercase tracking-widest group-hover:text-blue-400 transition">Active Events <i class="ph-bold ph-arrow-right"></i></p>
                     </div>
 
-                    <div class="glass-panel p-6 rounded-[2rem] shadow-2xl relative overflow-hidden group hover:-translate-y-2 transition duration-300" data-aos="fade-up" data-aos-delay="300">
+                    <!-- Online Status (New: Clickable System Status) -->
+                    <div onclick="openSystemStatus()" class="cursor-pointer glass-panel p-6 rounded-[2rem] shadow-2xl relative overflow-hidden group hover:-translate-y-2 transition duration-300 border border-transparent hover:border-green-500/30" data-aos="fade-up" data-aos-delay="300">
                         <div class="absolute right-0 top-0 w-24 h-24 bg-green-500/10 rounded-bl-full group-hover:scale-110 transition"></div>
                         <div class="w-12 h-12 bg-slate-800 text-green-500 rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-inner border border-slate-700">
                             <i class="ph-duotone ph-wifi-high"></i>
                         </div>
                         <h3 class="text-xl font-black text-green-500 mb-1">ONLINE</h3>
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">System Status</p>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest group-hover:text-green-400 transition">System Status <i class="ph-bold ph-info"></i></p>
                     </div>
                 </div>
 
@@ -196,8 +197,8 @@
                     <div id="growthChart" class="w-full h-72"></div>
                 </div>
 
-                <!-- Quick Actions Section -->
-                <div class="bg-slate-900 rounded-[2.5rem] p-8 shadow-xl border border-slate-800 mb-8" data-aos="fade-up" data-aos-delay="400">
+                <!-- Quick Actions Section (Removed AOS to fix visibility) -->
+                <div class="bg-slate-900 rounded-[2.5rem] p-8 shadow-xl border border-slate-800 mb-8">
                     <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
                         <span class="bg-yellow-500/10 text-yellow-500 p-2 rounded-lg"><i class="ph-fill ph-lightning"></i></span> 
                         Quick Actions
@@ -228,10 +229,10 @@
                     </div>
                 </div>
 
-                <!-- Combined Reports & ID Cards Section (To reduce empty space) -->
+                <!-- Combined Reports & ID Cards Section -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                    <!-- Member Reports Section -->
-                    <div class="glass-panel p-8 rounded-[2rem] shadow-xl border border-slate-800" data-aos="fade-up">
+                    <!-- Member Reports Section (Removed AOS to fix visibility) -->
+                    <div class="glass-panel p-8 rounded-[2rem] shadow-xl border border-slate-800">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                             <div>
                                 <h3 class="text-xl font-bold text-white flex items-center gap-2">
@@ -262,7 +263,7 @@
                         </div>
                     </div>
 
-                    <!-- Club Identity Cards Section -->
+                    <!-- Club Identity Cards Section (Removed AOS to fix visibility) -->
                     <div class="glass-panel p-8 rounded-[2rem] shadow-xl border border-slate-800">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                             <div>
@@ -333,6 +334,33 @@
             
             <div id="chartModalList" class="space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
                 <!-- Items Injected Here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- UPDATED: System Status Modal (Larger for Table) -->
+    <div id="systemStatusModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/95 backdrop-blur-md">
+        <div class="bg-slate-900 border border-green-500/30 p-8 rounded-[2rem] shadow-2xl max-w-5xl w-full relative transform transition-all scale-100 max-h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center mb-6 shrink-0">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="ph-fill ph-shield-check text-green-500"></i> System Logs & Status
+                </h3>
+                <div class="flex items-center gap-3">
+                    <button onclick="logout()" class="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition border border-red-500/20">
+                        <i class="ph-bold ph-sign-out"></i> Logout
+                    </button>
+                    <button onclick="closeSystemStatus()" class="text-slate-400 hover:text-white p-2 hover:bg-slate-800 rounded-full transition"><i class="ph-bold ph-x text-lg"></i></button>
+                </div>
+            </div>
+
+            <div id="systemStatusContent" class="overflow-y-auto custom-scrollbar flex-1 pr-2">
+                <div class="text-center py-8"><i class="ph-bold ph-spinner animate-spin text-3xl text-brand-green"></i></div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t border-slate-800 shrink-0 text-center">
+                <button onclick="logout()" class="w-full md:w-auto px-8 py-3 bg-red-600 hover:bg-red-500 text-white rounded-xl transition font-bold shadow-lg shadow-red-900/20">
+                    <i class="ph-bold ph-power"></i> End Current Session
+                </button>
             </div>
         </div>
     </div>
@@ -439,7 +467,21 @@
     <script src="../js/supabase.js"></script> 
     
     <script>
-        AOS.init();
+        // FIXED: AOS Initialization to prevent hidden elements
+        // This ensures elements are shown even if not fully scrolled to
+        window.addEventListener('load', () => {
+            AOS.init({
+                duration: 800,
+                once: true, // Animation happens only once
+                mirror: false,
+                offset: 0, // IMPORTANT: Reduced offset to show elements immediately
+            });
+
+            // Force refresh to catch any elements that might have been missed due to layout shifts
+            setTimeout(() => {
+                AOS.refresh();
+            }, 500);
+        });
         
         // Date Display
         document.getElementById('dateDisplay').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
@@ -631,6 +673,112 @@
             document.getElementById('chartDetailsModal').classList.add('hidden');
         }
 
+        // ------------------------------------------------------------------
+        // UPDATED: System Status with ALL Members List
+        // ------------------------------------------------------------------
+        async function openSystemStatus() {
+            const modal = document.getElementById('systemStatusModal');
+            const content = document.getElementById('systemStatusContent');
+            modal.classList.remove('hidden');
+            
+            content.innerHTML = '<div class="text-center py-8"><i class="ph-bold ph-spinner animate-spin text-3xl text-green-500"></i><p class="text-xs mt-2 text-slate-400">Fetching System Logs...</p></div>';
+
+            try {
+                // Fetch All Profiles with required fields
+                // Note: 'last_sign_in_at' and 'auth_provider' usually exist in 'auth.users' which is restricted client-side.
+                // However, often 'profiles' table is synced. We will fetch '*' to get everything available.
+                const { data: users, error } = await _supabase
+                    .from('profiles')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                // Date Formatter
+                const formatTime = (isoString) => {
+                    if (!isoString) return '<span class="text-slate-600">N/A</span>';
+                    const d = new Date(isoString);
+                    return `<div class="flex flex-col">
+                        <span class="font-bold text-white">${d.toISOString().split('T')[0]}</span>
+                        <span class="text-[10px] text-slate-500 font-mono">${d.toLocaleTimeString()}</span>
+                    </div>`;
+                };
+
+                let tableHTML = `
+                    <div class="overflow-x-auto rounded-xl border border-slate-800">
+                        <table class="w-full text-left text-sm text-slate-400">
+                            <thead class="bg-slate-800 text-xs uppercase font-bold text-slate-200 sticky top-0 z-10">
+                                <tr>
+                                    <th class="p-4">User</th>
+                                    <th class="p-4">Auth / Email</th>
+                                    <th class="p-4">Account Created</th>
+                                    <th class="p-4">Last Login</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800 bg-slate-900/50">
+                `;
+
+                if (!users || users.length === 0) {
+                    tableHTML += `<tr><td colspan="4" class="p-6 text-center text-slate-500">No logs found.</td></tr>`;
+                } else {
+                    users.forEach(u => {
+                        // Avatar Logic
+                        const avatar = u.avatar_url 
+                            ? `<img src="${u.avatar_url}" class="w-8 h-8 rounded-full object-cover">` 
+                            : `<div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-white text-xs font-bold">${u.full_name ? u.full_name.charAt(0) : '?'}</div>`;
+
+                        // Status Dot
+                        const roleColor = u.role === 'admin' ? 'bg-red-500' : 'bg-green-500';
+
+                        // Auth Method - Try to deduce or show email
+                        // If 'last_sign_in_at' is missing in public table, we show 'N/A'
+                        const lastLoginDisplay = u.last_sign_in_at ? formatTime(u.last_sign_in_at) : '<span class="text-[10px] text-slate-600 italic">Data not synced</span>';
+                        
+                        tableHTML += `
+                            <tr class="hover:bg-slate-800/50 transition">
+                                <td class="p-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="relative">
+                                            ${avatar}
+                                            <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 ${roleColor} rounded-full border-2 border-slate-900"></span>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-white text-sm">${u.full_name || 'Unknown'}</p>
+                                            <p class="text-[10px] text-brand-green font-mono">${u.member_id || 'NO-ID'}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4">
+                                    <div class="flex items-center gap-2">
+                                        <i class="ph-fill ph-envelope-simple text-blue-400"></i>
+                                        <span class="text-xs truncate max-w-[150px]" title="${u.email}">${u.email || 'No Email'}</span>
+                                    </div>
+                                </td>
+                                <td class="p-4">
+                                    ${formatTime(u.created_at)}
+                                </td>
+                                <td class="p-4">
+                                    ${lastLoginDisplay}
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                tableHTML += `</tbody></table></div>`;
+                content.innerHTML = tableHTML;
+
+            } catch (err) {
+                console.error(err);
+                content.innerHTML = `<div class="text-center text-red-400 py-4">Error loading system logs.<br><span class="text-xs text-slate-500">${err.message}</span></div>`;
+            }
+        }
+
+        function closeSystemStatus() {
+            document.getElementById('systemStatusModal').classList.add('hidden');
+        }
+
+
         // Pending Popup Logic
         async function openPendingModal() {
             const list = document.getElementById('pendingList');
@@ -730,6 +878,9 @@
                         </tr>
                     `;
                 });
+                
+                // IMPORTANT: Refresh AOS after data loads to catch new elements
+                setTimeout(() => AOS.refresh(), 100);
 
             } catch (err) { console.error("Error loading members:", err); }
         }
@@ -883,6 +1034,9 @@
                         </tr>
                     `;
                 });
+                
+                // IMPORTANT: Refresh AOS after data loads to catch new elements
+                setTimeout(() => AOS.refresh(), 100);
 
             } catch (err) {
                 console.error("ID List Error:", err);
