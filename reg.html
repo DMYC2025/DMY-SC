@@ -5,62 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Registration - DMYSC</title>
     <link rel="icon" type="image/png" href="../assets/logo_1.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: { green: '#16a34a', dark: '#0b1121' } }, fontFamily: { poppins: ['Poppins', 'sans-serif'] } } } }
+        tailwind.config = { 
+            darkMode: 'class', 
+            theme: { 
+                extend: { 
+                    colors: { 
+                        background: '#121212',
+                        surface: '#1E1E1E',
+                        'surface-container': '#252529',
+                        primary: '#a6f7bd',
+                        'on-primary': '#003915',
+                        secondary: '#c2c9bd',
+                        error: '#ffb4ab',
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'], 
+                        display: ['Outfit', 'sans-serif']
+                    }
+                } 
+            } 
+        }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
+        body { background-color: #121212; font-family: 'Roboto', sans-serif; }
+        .material-symbols-rounded { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
         body::-webkit-scrollbar { display: none; }
         .no-tap-highlight { -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
-<body class="bg-brand-dark min-h-screen flex items-center justify-center p-3 md:p-4 font-poppins overflow-x-hidden relative no-tap-highlight">
+<body class="min-h-screen flex items-center justify-center p-3 md:p-4 overflow-x-hidden relative no-tap-highlight">
 
-    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=2070')] bg-cover bg-center opacity-10 fixed"></div>
-    <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/95 to-brand-dark/80 fixed"></div>
+    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=2070')] bg-cover bg-center opacity-5 fixed"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-background via-background/95 to-background/80 fixed"></div>
     
     <div class="relative z-10 w-full max-w-3xl" data-aos="fade-up" data-aos-duration="600">
         
-        <div class="text-center mb-6 md:mb-8" data-aos="fade-down" data-aos-delay="50">
+        <div class="text-center mb-8" data-aos="fade-down" data-aos-delay="50">
             <a href="index.html" class="inline-block relative group">
-                <div class="absolute inset-0 bg-brand-green/20 rounded-full blur-md group-hover:bg-brand-green/40 transition"></div>
-                <img src="assets/logo.png" class="h-14 w-auto md:h-20 relative z-10 drop-shadow-lg">
+                <div class="absolute inset-0 bg-primary/10 rounded-full blur-md group-hover:bg-primary/20 transition"></div>
+                <img src="assets/logo_2.png" class="h-16 w-auto md:h-20 relative z-10 drop-shadow-lg opacity-90">
             </a>
-            <h2 class="text-2xl md:text-4xl font-black text-white tracking-tight uppercase mt-3">Join The Club</h2>
-            <p class="text-brand-green font-bold text-[10px] md:text-sm tracking-[0.2em] uppercase opacity-80">Dream Makers Youth & Sports Club</p>
+            <h2 class="text-2xl md:text-4xl font-display font-bold text-[#E3E3E3] tracking-tight uppercase mt-4">Join The Club</h2>
+            <p class="text-primary font-bold text-[10px] md:text-xs tracking-[0.2em] uppercase opacity-80">Dream Makers Youth & Sports Club</p>
         </div>
 
-        <div class="bg-slate-900/80 backdrop-blur-xl border border-white/10 shadow-2xl rounded-[2rem] overflow-hidden p-5 md:p-10 relative">
+        <div class="bg-[#1E1E1E] border border-white/5 shadow-2xl rounded-[32px] overflow-hidden p-6 md:p-10 relative">
             
-            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-brand-green to-transparent opacity-60"></div>
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-60"></div>
 
-            <!-- Help Toggle (Compact) -->
             <div class="flex justify-end mb-4">
-                <button id="toggleHelpBtn" type="button" class="group flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800 border border-white/5 active:bg-slate-700 transition">
-                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Help?</span>
-                    <i class="ph-bold ph-caret-down text-brand-green text-sm group-hover:text-white transition"></i>
+                <button id="toggleHelpBtn" type="button" class="group flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#252529] border border-white/5 active:bg-[#353539] transition">
+                    <span class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider">Help?</span>
+                    <span class="material-symbols-rounded text-primary text-sm group-hover:text-white transition">expand_more</span>
                 </button>
             </div>
 
-            <!-- Tutorial Section -->
-            <div id="videoSection" class="hidden mb-6 bg-black/40 rounded-xl p-4 border border-white/5 transition-all duration-300 origin-top">
-                <h3 class="text-white font-bold text-xs flex items-center gap-2 mb-3 uppercase tracking-wider">
-                    <i class="ph-fill ph-play-circle text-brand-green"></i> Guides
+            <div id="videoSection" class="hidden mb-6 bg-[#121212] rounded-[24px] p-4 border border-white/5 transition-all duration-300 origin-top">
+                <h3 class="text-[#E3E3E3] font-bold text-xs flex items-center gap-2 mb-3 uppercase tracking-wider">
+                    <span class="material-symbols-rounded text-primary">play_circle</span> Guides
                 </h3>
                 <div class="grid grid-cols-2 gap-3">
                     <div class="space-y-1">
-                        <p class="text-[9px] text-slate-500 uppercase font-bold">Sinhala</p>
-                        <div class="aspect-video rounded-lg overflow-hidden border border-slate-700 bg-black">
+                        <p class="text-[9px] text-[#8e918f] uppercase font-bold">Sinhala</p>
+                        <div class="aspect-video rounded-xl overflow-hidden border border-[#353539] bg-black">
                             <iframe class="w-full h-full" src="https://www.youtube.com/embed/CRga7nRT62s" frameborder="0" allowfullscreen></iframe>
                         </div>
                     </div>
                     <div class="space-y-1">
-                        <p class="text-[9px] text-slate-500 uppercase font-bold">English</p>
-                        <div class="aspect-video rounded-lg overflow-hidden border border-slate-700 bg-black">
+                        <p class="text-[9px] text-[#8e918f] uppercase font-bold">English</p>
+                        <div class="aspect-video rounded-xl overflow-hidden border border-[#353539] bg-black">
                             <iframe class="w-full h-full" src="https://www.youtube.com/embed/6s38pjPonRI" frameborder="0" allowfullscreen></iframe>
                         </div>
                     </div>
@@ -69,100 +92,97 @@
 
             <form id="regForm" class="space-y-6 md:space-y-8 relative z-10">
                 
-                <!-- Section 1 -->
                 <div class="space-y-4">
-                    <h3 class="text-white font-bold text-sm md:text-base flex items-center gap-2 border-b border-white/5 pb-2">
-                        <i class="ph-fill ph-user text-brand-green"></i> Personal Details
+                    <h3 class="text-[#E3E3E3] font-display font-medium text-sm md:text-base flex items-center gap-2 border-b border-white/5 pb-2">
+                        <span class="material-symbols-rounded text-primary">person</span> Personal Details
                     </h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
                         <div class="md:col-span-2 group">
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1">Name with Initials</label>
-                            <input type="text" id="fullName" required placeholder="e.g. A.B. Perera" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-600 focus:border-brand-green outline-none transition font-medium text-xs md:text-sm">
+                            <label class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Name with Initials</label>
+                            <input type="text" id="fullName" required placeholder="e.g. A.B. Perera" class="w-full px-4 py-3 rounded-xl bg-[#252529] border border-[#353539] text-[#E3E3E3] placeholder-[#444746] focus:border-primary outline-none transition font-medium text-xs md:text-sm">
                         </div>
 
                         <div class="group">
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1">Birth Date</label>
-                            <input type="date" id="dob" required class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white focus:border-brand-green outline-none transition font-medium text-xs md:text-sm text-slate-400 focus:text-white">
+                            <label class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Birth Date</label>
+                            <input type="date" id="dob" required class="w-full px-4 py-3 rounded-xl bg-[#252529] border border-[#353539] text-[#E3E3E3] focus:border-primary outline-none transition font-medium text-xs md:text-sm text-[#8e918f] focus:text-[#E3E3E3]">
                         </div>
 
                         <div class="group">
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1">NIC No</label>
-                            <input type="text" id="nic" required placeholder="NIC Number" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-600 focus:border-brand-green outline-none transition font-medium text-xs md:text-sm">
+                            <label class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">NIC No</label>
+                            <input type="text" id="nic" required placeholder="NIC Number" class="w-full px-4 py-3 rounded-xl bg-[#252529] border border-[#353539] text-[#E3E3E3] placeholder-[#444746] focus:border-primary outline-none transition font-medium text-xs md:text-sm">
                         </div>
 
                          <div class="group">
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1">Gender</label>
-                            <select id="gender" required class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white focus:border-brand-green outline-none transition font-medium text-xs md:text-sm appearance-none">
-                                <option value="" class="bg-slate-900 text-slate-500">Select</option>
-                                <option value="Male" class="bg-slate-900">Male</option>
-                                <option value="Female" class="bg-slate-900">Female</option>
+                            <label class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Gender</label>
+                            <select id="gender" required class="w-full px-4 py-3 rounded-xl bg-[#252529] border border-[#353539] text-[#E3E3E3] focus:border-primary outline-none transition font-medium text-xs md:text-sm appearance-none">
+                                <option value="" class="bg-[#252529] text-[#8e918f]">Select</option>
+                                <option value="Male" class="bg-[#252529]">Male</option>
+                                <option value="Female" class="bg-[#252529]">Female</option>
                             </select>
                         </div>
 
                          <div class="group">
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1">WhatsApp</label>
-                            <input type="tel" id="phone" required placeholder="07x xxxxxxx" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-600 focus:border-brand-green outline-none transition font-medium text-xs md:text-sm">
+                            <label class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Phone No</label>
+                            <input type="tel" id="phone" required placeholder="07x xxxxxxx" class="w-full px-4 py-3 rounded-xl bg-[#252529] border border-[#353539] text-[#E3E3E3] placeholder-[#444746] focus:border-primary outline-none transition font-medium text-xs md:text-sm">
                         </div>
 
                         <div class="md:col-span-2 group">
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1">Address</label>
-                            <textarea id="address" rows="2" required placeholder="Full Address" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-600 focus:border-brand-green outline-none transition font-medium text-xs md:text-sm resize-none"></textarea>
+                            <label class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Address</label>
+                            <textarea id="address" rows="2" required placeholder="Full Address" class="w-full px-4 py-3 rounded-xl bg-[#252529] border border-[#353539] text-[#E3E3E3] placeholder-[#444746] focus:border-primary outline-none transition font-medium text-xs md:text-sm resize-none"></textarea>
                         </div>
                     </div>
                 </div>
 
-                <!-- Section 2 -->
                 <div class="space-y-4">
-                    <h3 class="text-white font-bold text-sm md:text-base flex items-center gap-2 border-b border-white/5 pb-2">
-                        <i class="ph-fill ph-lock-key text-brand-green"></i> Login Details
+                    <h3 class="text-[#E3E3E3] font-display font-medium text-sm md:text-base flex items-center gap-2 border-b border-white/5 pb-2">
+                        <span class="material-symbols-rounded text-primary">lock</span> Login Details
                     </h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
                         <div class="group">
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1">Email</label>
-                            <input type="email" id="email" required placeholder="you@mail.com" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-600 focus:border-brand-green outline-none transition font-medium text-xs md:text-sm">
+                            <label class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Email</label>
+                            <input type="email" id="email" required placeholder="you@mail.com" class="w-full px-4 py-3 rounded-xl bg-[#252529] border border-[#353539] text-[#E3E3E3] placeholder-[#444746] focus:border-primary outline-none transition font-medium text-xs md:text-sm">
                         </div>
 
                         <div class="group">
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1">Password</label>
-                            <input type="password" id="password" required minlength="6" placeholder="******" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-600 focus:border-brand-green outline-none transition font-medium text-xs md:text-sm">
+                            <label class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Password</label>
+                            <input type="password" id="password" required minlength="6" placeholder="******" class="w-full px-4 py-3 rounded-xl bg-[#252529] border border-[#353539] text-[#E3E3E3] placeholder-[#444746] focus:border-primary outline-none transition font-medium text-xs md:text-sm">
                         </div>
                     </div>
                 </div>
 
                 <div class="pt-4">
-                    <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-brand-green to-emerald-600 text-white font-black uppercase tracking-wider py-3 md:py-4 rounded-xl shadow-lg shadow-green-500/20 active:scale-[0.98] transition flex justify-center items-center gap-2 text-sm">
-                        <i class="ph-bold ph-paper-plane-right text-lg"></i> Register
+                    <button type="submit" id="submitBtn" class="w-full bg-primary text-[#003915] font-bold uppercase tracking-wider py-4 rounded-full shadow-lg shadow-primary/20 hover:bg-[#b1fcc5] active:scale-[0.98] transition flex justify-center items-center gap-2 text-sm">
+                        <span class="material-symbols-rounded">send</span> Register
                     </button>
-                    <p id="loadingText" class="text-center text-brand-green text-[10px] font-bold mt-3 hidden animate-pulse">
+                    <p id="loadingText" class="text-center text-primary text-[10px] font-bold mt-3 hidden animate-pulse">
                         Processing...
                     </p>
                 </div>
             </form>
             
             <div class="mt-6 text-center pt-4 border-t border-white/5">
-                <a href="index.html" class="text-xs text-slate-500 hover:text-white transition font-bold flex items-center justify-center gap-1 uppercase tracking-wide">
-                    <i class="ph-bold ph-caret-left"></i> Home
+                <a href="index.html" class="text-xs text-[#8e918f] hover:text-[#E3E3E3] transition font-bold flex items-center justify-center gap-1 uppercase tracking-wide">
+                    <span class="material-symbols-rounded text-sm">arrow_back</span> Home
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Mobile-First Welcome Modal -->
-    <div id="welcomeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm transition-opacity duration-300">
-        <div class="bg-slate-900 border border-white/10 p-6 rounded-3xl shadow-2xl max-w-xs w-full text-center relative" data-aos="zoom-in" data-aos-duration="400">
-            <div class="w-12 h-12 bg-brand-green/10 rounded-full flex items-center justify-center mx-auto mb-4 text-brand-green border border-brand-green/20">
-                <i class="ph-fill ph-question text-2xl"></i>
+    <div id="welcomeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-[#1E1E1E] border border-white/5 p-6 rounded-[28px] shadow-2xl max-w-xs w-full text-center relative" data-aos="zoom-in" data-aos-duration="400">
+            <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 text-primary border border-primary/20">
+                <span class="material-symbols-rounded text-2xl">help</span>
             </div>
-            <h3 class="text-xl font-black text-white mb-2">Need Help?</h3>
-            <p class="text-slate-400 text-xs mb-6 leading-relaxed">Watch a quick guide or start registering now.</p>
+            <h3 class="text-xl font-display font-bold text-[#E3E3E3] mb-2">Need Help?</h3>
+            <p class="text-[#C4C7C5] text-xs mb-6 leading-relaxed font-light">Watch a quick guide or start registering now.</p>
 
             <div class="flex flex-col gap-2.5">
-                <button id="btnWatchGuide" class="w-full py-3 rounded-xl bg-slate-800 text-white font-bold uppercase tracking-wider text-[10px] border border-white/5 active:bg-slate-700 transition">
+                <button id="btnWatchGuide" class="w-full py-3 rounded-full bg-[#252529] text-[#E3E3E3] font-bold uppercase tracking-wider text-[10px] border border-white/5 active:bg-[#353539] transition">
                     Watch Tutorial
                 </button>
-                <button id="btnRegisterNow" class="w-full py-3 rounded-xl bg-brand-green text-white font-bold uppercase tracking-wider text-[10px] shadow-lg shadow-green-500/20 active:bg-green-600 transition">
+                <button id="btnRegisterNow" class="w-full py-3 rounded-full bg-primary text-[#003915] font-bold uppercase tracking-wider text-[10px] shadow-lg shadow-primary/20 active:bg-[#b1fcc5] transition">
                     Start Now
                 </button>
             </div>
@@ -180,7 +200,7 @@
         const btnRegisterNow = document.getElementById('btnRegisterNow');
         const videoSection = document.getElementById('videoSection');
         const toggleHelpBtn = document.getElementById('toggleHelpBtn');
-        const toggleIcon = toggleHelpBtn.querySelector('i');
+        const toggleIcon = toggleHelpBtn.querySelector('span.material-symbols-rounded');
 
         const closeModal = () => {
             welcomeModal.classList.add('opacity-0', 'pointer-events-none');
@@ -217,7 +237,7 @@
             e.preventDefault();
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-50');
-            submitBtn.innerHTML = '<i class="ph-bold ph-spinner animate-spin"></i>';
+            submitBtn.innerHTML = '<span class="material-symbols-rounded animate-spin">progress_activity</span>';
             loadingText.classList.remove('hidden');
 
             const email = document.getElementById('email').value;
@@ -233,18 +253,39 @@
 
             try {
                 if (typeof _supabase === 'undefined') throw new Error("Database error.");
+                
                 const { data, error } = await _supabase.auth.signUp({
                     email: email, password: password, options: { data: metaData }
                 });
+
                 if (error) throw error;
-                alert('Success! Check email.');
+                
+                // --- SUCCESS MESSAGE UPDATED (With Email Confirm + Admin Approval) ---
+                alert(
+                    "Registration successful!\n\n" +
+                    "1. Please check your email (Inbox/Spam) and click the confirmation link sent by 'Supabase Auth'.\n" +
+                    "2. Then wait for Admin approval (max 24h).\n\n" +
+                    "ලියාපදිංචිය සාර්ථකයි!\n\n" +
+                    "1. කරුණාකර ඔබගේ ඊමේල් (Inbox/Spam) පරීක්ෂා කර 'Supabase Auth' මගින් ලැබී ඇති ලින්ක් එක Confirm කරන්න.\n" +
+                    "2. ඉන්පසු ඇඩ්මින් අනුමැතිය ලැබෙන තෙක් රැඳී සිටින්න (උපරිම පැය 24)."
+                );
                 window.location.href = 'login.html';
+
             } catch (error) {
-                alert('Error: ' + error.message);
+                // --- DUPLICATE / ERROR MESSAGE ---
+                console.error(error);
+                if (error.message.includes("already registered") || error.status === 422 || error.message.includes("User already exists")) {
+                    alert(
+                        "You have already created an account with this email.\nPlease try logging in.\n\n" +
+                        "ඔබ මීට පෙර මෙම ඊමේල් ලිපිනය මගින් ගිණුමක් සාදා ඇත.\nකරුණාකර එම ඊමේලය භාවිතා කර ලොග් වීමට උත්සාහ කරන්න."
+                    );
+                } else {
+                    alert('Error: ' + error.message);
+                }
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-50');
-                submitBtn.innerHTML = '<i class="ph-bold ph-paper-plane-right text-lg"></i> Register';
+                submitBtn.innerHTML = '<span class="material-symbols-rounded">send</span> Register';
                 loadingText.classList.add('hidden');
             }
         });
