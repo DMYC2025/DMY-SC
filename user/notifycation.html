@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Notifications - DMYSC</title>
+    <link rel="icon" type="image/png" href="../assets/logo_1.png">
+    
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- MATERIAL SYMBOLS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { 
+            darkMode: 'class', 
+            theme: { 
+                extend: { 
+                    colors: { 
+                        background: '#121212',
+                        surface: '#1E1E1E',
+                        'surface-container': '#252529',
+                        primary: '#a6f7bd',
+                        'on-primary': '#003915',
+                        secondary: '#c2c9bd',
+                        tertiary: '#a0cfd0',
+                        error: '#ffb4ab',
+                        'on-error': '#690005',
+                        'error-container': '#93000a'
+                    }, 
+                    fontFamily: { 
+                        sans: ['Roboto', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif']
+                    }, 
+                    borderRadius: {
+                        '4xl': '28px',
+                        '5xl': '32px',
+                    },
+                    animation: { 
+                        'fade-in': 'fadeIn 0.4s cubic-bezier(0.2, 0.0, 0, 1.0)',
+                        'scale-up': 'scaleUp 0.3s cubic-bezier(0.2, 0.0, 0, 1.0)',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        scaleUp: { '0%': { transform: 'scale(0.95)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } }
+                    }
+                } 
+            } 
+        }
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        body { 
+            background-color: #121212;
+            color: #E3E3E3;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-rounded { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+        
+        /* M3 Card Style - Consistent with Index */
+        .m3-card {
+            background-color: #1E1E1E;
+            border-radius: 28px; /* Standardized radius */
+            transition: background-color 0.2s cubic-bezier(0.2, 0.0, 0, 1.0), box-shadow 0.2s, transform 0.2s;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .m3-card:hover {
+            background-color: #28282D;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
+        }
+
+        .m3-navbar { 
+            background-color: #252529; 
+            border-radius: 999px; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15); 
+        }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="min-h-screen pb-24 md:pb-0 font-sans">
+
+    <!-- Top Navigation (Desktop) -->
+    <nav class="sticky top-4 z-40 w-full px-4 no-print">
+        <div class="max-w-7xl mx-auto m3-navbar px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 pl-2 group">
+                <button class="w-10 h-10 rounded-full bg-[#353539] flex items-center justify-center group-hover:bg-primary group-hover:text-[#003915] transition">
+                    <span class="material-symbols-rounded text-[22px]">arrow_back</span>
+                </button>
+                <div class="flex flex-col">
+                    <span class="text-sm font-display font-medium text-[#E3E3E3]">Notifications</span>
+                    <span class="text-[10px] text-secondary tracking-wider font-bold">Inbox</span>
+                </div>
+            </a>
+            
+            <div class="flex items-center gap-3">
+                <a href="profile.html" class="w-10 h-10 rounded-full p-1 hover:bg-[#3b3b3f] transition hidden md:block">
+                    <img id="navAvatar" src="https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg" class="w-full h-full rounded-full object-cover">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 py-6 space-y-6">
+        
+        <!-- Header Section (Consistent with Dashboard Hero) -->
+        <div class="m3-card p-6 md:p-10 relative overflow-hidden bg-[#252529]" data-aos="fade-down">
+            <div class="relative z-10">
+                <div class="flex items-center gap-2 text-primary mb-2">
+                    <span class="material-symbols-rounded">notifications_active</span>
+                    <span class="text-xs font-bold uppercase tracking-widest">Alerts</span>
+                </div>
+                <h1 class="text-3xl md:text-5xl font-display font-normal text-[#E3E3E3] leading-tight">
+                    Club <span class="text-primary">Updates</span>
+                </h1>
+                <p class="text-[#C4C7C5] mt-2 text-sm md:text-base max-w-xl font-light">
+                    Stay informed about the latest announcements, events, and important news from DMYSC.
+                </p>
+            </div>
+            <!-- Decorative Elements -->
+            <div class="absolute top-[-20px] right-[-20px] w-64 h-64 bg-[#EAB308] opacity-5 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-[-20px] left-[-20px] w-40 h-40 bg-primary opacity-5 rounded-full blur-3xl"></div>
+        </div>
+
+        <!-- Filter / Tabs (Optional UI Enhancement) -->
+        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+            <button class="px-4 py-1.5 rounded-full bg-[#a6f7bd] text-[#003915] text-xs font-bold border border-transparent">All</button>
+            <button class="px-4 py-1.5 rounded-full bg-[#1E1E1E] text-[#C4C7C5] border border-[#353539] text-xs font-medium hover:bg-[#353539] transition">Urgent</button>
+            <button class="px-4 py-1.5 rounded-full bg-[#1E1E1E] text-[#C4C7C5] border border-[#353539] text-xs font-medium hover:bg-[#353539] transition">General</button>
+        </div>
+
+        <!-- Notification Feed -->
+        <div id="notificationFeed" class="space-y-3">
+            <!-- Loading State -->
+            <div class="py-20 text-center">
+                <div class="w-12 h-12 rounded-full border-4 border-[#353539] border-t-primary animate-spin mx-auto mb-4"></div>
+                <p class="text-xs text-[#C4C7C5] uppercase tracking-widest animate-pulse">Checking Alerts...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <div id="global-footer-placeholder" class="pb-24 md:pb-0"></div>
+
+    <!-- Mobile Bottom Nav (Google Style) -->
+    <div class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#1E1E1E] border-t border-[#252529] pb-safe">
+        <div class="flex justify-around items-center h-20 px-2">
+            <a href="index.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5] group">
+                <span class="material-symbols-rounded group-hover:text-[#E3E3E3] transition">home</span>
+                <span class="text-[10px] font-medium">Home</span>
+            </a>
+            <button class="flex flex-col items-center gap-1 w-full text-[#E3E3E3]">
+                <div class="w-16 h-8 rounded-full bg-[#003915] flex items-center justify-center text-primary">
+                    <span class="material-symbols-rounded text-[20px]">notifications</span>
+                </div>
+                <span class="text-[10px] font-bold text-primary">Alerts</span>
+            </button>
+            <a href="profile.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5] group">
+                <span class="material-symbols-rounded group-hover:text-[#E3E3E3] transition">person</span>
+                <span class="text-[10px] font-medium">Profile</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="../js/ui.js"></script>
+    <script>
+        AOS.init();
+
+        // 1. Check Login
+        async function checkAccess() {
+            if (typeof _supabase === 'undefined') return;
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) window.location.href = '../login.html';
+            else loadAvatar(session.user.id);
+        }
+
+        // 2. Load Avatar for Nav
+        async function loadAvatar(uid) {
+            const { data } = await _supabase.from('profiles').select('avatar_url').eq('id', uid).single();
+            if(data && data.avatar_url) {
+                const navAv = document.getElementById('navAvatar');
+                if(navAv) navAv.src = data.avatar_url;
+            }
+        }
+
+        // 3. Fetch Notifications Logic
+        async function fetchNotifications() {
+            const { data, error } = await _supabase
+                .from('notifications')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            const feed = document.getElementById('notificationFeed');
+            feed.innerHTML = '';
+
+            if (!data || data.length === 0) {
+                feed.innerHTML = `
+                    <div class="m3-card p-12 text-center flex flex-col items-center border-dashed border-2 border-[#353539] bg-transparent">
+                        <div class="w-16 h-16 rounded-full bg-[#252529] flex items-center justify-center text-[#C4C7C5] mb-4">
+                            <span class="material-symbols-rounded text-3xl">notifications_off</span>
+                        </div>
+                        <h3 class="text-lg font-display font-medium text-[#E3E3E3]">No New Alerts</h3>
+                        <p class="text-sm text-[#C4C7C5] mt-1">You are all caught up!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            data.forEach((n, index) => {
+                const isUrgent = n.priority === 'urgent';
+                const dateObj = new Date(n.created_at);
+                const date = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                const time = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit' });
+
+                // M3 Styling Logic - Refined for "Glassy/Modern" look
+                const icon = isUrgent ? 'warning' : 'info';
+                
+                // Color Palettes
+                const iconBg = isUrgent ? 'bg-[#3c2525] text-[#ffb4ab]' : 'bg-[#1b2e23] text-[#a6f7bd]';
+                const cardBorder = isUrgent ? 'border-[#533535] bg-[#2d1f1f]' : 'bg-[#1E1E1E]'; // Slight red tint for urgent background
+                const titleColor = isUrgent ? 'text-[#ffb4ab]' : 'text-[#E3E3E3]';
+                const badge = isUrgent 
+                    ? `<span class="bg-[#93000a] text-[#ffdad6] text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-wider shadow-sm">Urgent Action</span>` 
+                    : `<span class="bg-[#252529] text-[#C4C7C5] border border-[#353539] text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">Info</span>`;
+
+                const item = `
+                    <div class="m3-card p-5 relative overflow-hidden group ${cardBorder}" data-aos="fade-up" data-aos-delay="${index * 50}">
+                        <div class="flex gap-4 items-start relative z-10">
+                            
+                            <!-- Icon Box -->
+                            <div class="shrink-0">
+                                <div class="w-12 h-12 rounded-2xl ${iconBg} flex items-center justify-center shadow-inner">
+                                    <span class="material-symbols-rounded text-[24px]">${icon}</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Content -->
+                            <div class="flex-1 min-w-0">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2">
+                                    <h3 class="text-lg font-display font-medium ${titleColor} leading-tight truncate pr-2">${n.title}</h3>
+                                    <div class="shrink-0 flex items-center gap-2">
+                                        ${badge}
+                                        <span class="text-[10px] text-[#8e918f] font-mono bg-[#121212] px-2 py-1 rounded-md">${date} • ${time}</span>
+                                    </div>
+                                </div>
+                                
+                                <p class="text-[#C4C7C5] text-sm leading-relaxed font-light opacity-90">${n.message}</p>
+                            </div>
+                        </div>
+
+                        <!-- Hover Effect Decoration -->
+                        <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition duration-500 rounded-bl-full pointer-events-none"></div>
+                    </div>
+                `;
+                feed.insertAdjacentHTML('beforeend', item);
+            });
+        }
+
+        checkAccess();
+        fetchNotifications();
+    </script>
+    <div id="global-footer-placeholder"></div>
+    <script src="../js/footer-loader.js"></script>
+</body>
+</html>

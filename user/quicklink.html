@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quick Links - DMYSC</title>
+    <link rel="icon" type="image/png" href="../assets/logo_1.png">
+    
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- MATERIAL SYMBOLS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { 
+            darkMode: 'class', 
+            theme: { 
+                extend: { 
+                    colors: { 
+                        background: '#121212',
+                        surface: '#1E1E1E',
+                        'surface-container': '#252529',
+                        primary: '#a6f7bd',
+                        'on-primary': '#003915',
+                        secondary: '#c2c9bd',
+                        error: '#ffb4ab'
+                    }, 
+                    fontFamily: { 
+                        sans: ['Roboto', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif']
+                    }, 
+                    borderRadius: {
+                        '4xl': '28px',
+                    },
+                    animation: { 
+                        'fade-in': 'fadeIn 0.4s cubic-bezier(0.2, 0.0, 0, 1.0)',
+                        'scale-up': 'scaleUp 0.3s cubic-bezier(0.2, 0.0, 0, 1.0)',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        scaleUp: { '0%': { transform: 'scale(0.95)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } }
+                    }
+                } 
+            } 
+        }
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        body { 
+            background-color: #121212;
+            color: #E3E3E3;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-rounded { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+        
+        .m3-card {
+            background-color: #1E1E1E;
+            border-radius: 24px;
+            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .m3-card:hover {
+            background-color: #28282D;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
+        }
+        .m3-card:active { transform: scale(0.98); }
+
+        .m3-navbar { background-color: #252529; border-radius: 999px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="min-h-screen pb-24 md:pb-0 font-sans">
+
+    <!-- Top Navigation (Desktop) -->
+    <nav class="sticky top-4 z-40 w-full px-4 no-print">
+        <div class="max-w-7xl mx-auto m3-navbar px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 pl-2 group">
+                <button class="w-8 h-8 rounded-full bg-[#353539] flex items-center justify-center group-hover:bg-primary group-hover:text-[#003915] transition">
+                    <span class="material-symbols-rounded text-[20px]">arrow_back</span>
+                </button>
+                <div class="flex flex-col">
+                    <span class="text-sm font-display font-medium text-[#E3E3E3]">Quick Links</span>
+                    <span class="text-[10px] text-secondary tracking-wider font-bold">DMYSC</span>
+                </div>
+            </a>
+            
+            <!-- Desktop Profile/Notifs -->
+            <div class="flex items-center gap-3">
+                <a href="notifycation.html" class="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#3b3b3f] transition text-[#C4C7C5]">
+                    <span class="material-symbols-rounded">notifications</span>
+                </a>
+                <a href="profile.html" class="w-10 h-10 rounded-full p-1 hover:bg-[#3b3b3f] transition hidden md:block">
+                    <img id="navAvatar" src="https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg" class="w-full h-full rounded-full object-cover">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+        
+        <!-- Header Card -->
+        <div class="m3-card p-6 md:p-8 relative overflow-hidden bg-[#252529]" data-aos="fade-down">
+            <div class="relative z-10">
+                <div class="flex items-center gap-2 text-primary mb-2">
+                    <span class="material-symbols-rounded">link</span>
+                    <span class="text-xs font-bold uppercase tracking-widest">Resources</span>
+                </div>
+                <h1 class="text-3xl md:text-5xl font-display font-normal text-[#E3E3E3] leading-tight">
+                    External <span class="text-primary">Access</span>
+                </h1>
+                <p class="text-[#C4C7C5] mt-2 text-sm md:text-base max-w-xl">
+                    Important links, forms, and resources curated for club members.
+                </p>
+            </div>
+            <!-- Decorative Elements -->
+            <div class="absolute top-[-20px] right-[-20px] w-64 h-64 bg-blue-500 opacity-5 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-[-20px] left-[-20px] w-40 h-40 bg-primary opacity-5 rounded-full blur-3xl"></div>
+        </div>
+
+        <!-- Links Grid -->
+        <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Loading State -->
+            <div class="col-span-full py-20 text-center">
+                <span class="material-symbols-rounded animate-spin text-4xl text-primary mb-2">progress_activity</span>
+                <p class="text-xs text-[#C4C7C5] uppercase tracking-widest">Loading Links...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <div id="global-footer-placeholder" class="pb-20 md:pb-0"></div>
+
+    <!-- Mobile Bottom Nav -->
+    <div class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#1E1E1E] border-t border-[#252529] pb-safe">
+        <div class="flex justify-around items-center h-16">
+            <a href="index.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5]">
+                <span class="material-symbols-rounded">home</span>
+                <span class="text-[10px] font-medium">Home</span>
+            </a>
+            <button class="flex flex-col items-center gap-1 w-full text-primary">
+                <div class="w-12 h-7 rounded-full bg-[#003915] flex items-center justify-center">
+                    <span class="material-symbols-rounded text-[20px]">link</span>
+                </div>
+                <span class="text-[10px] font-medium">Links</span>
+            </button>
+            <a href="profile.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5]">
+                <span class="material-symbols-rounded">person</span>
+                <span class="text-[10px] font-medium">Profile</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="../js/ui.js"></script>
+    <script>
+        AOS.init();
+
+        // 1. Check Login
+        async function checkAccess() {
+            if (typeof _supabase === 'undefined') return;
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) window.location.href = '../login.html';
+            else loadAvatar(session.user.id);
+        }
+
+        // 2. Load Avatar for Nav
+        async function loadAvatar(uid) {
+            const { data } = await _supabase.from('profiles').select('avatar_url').eq('id', uid).single();
+            if(data && data.avatar_url) {
+                const navAv = document.getElementById('navAvatar');
+                if(navAv) navAv.src = data.avatar_url;
+            }
+        }
+
+        // 3. Load Links Logic
+        async function load() {
+            const now = new Date().toISOString();
+            const { data } = await _supabase.from('quick_links').select('*');
+            
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+
+            const validLinks = data ? data.filter(l => {
+                if(l.display_type === 'always') return true;
+                return l.start_date <= now && l.end_date >= now;
+            }) : [];
+
+            if(validLinks.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full m3-card p-8 text-center flex flex-col items-center">
+                        <div class="w-16 h-16 rounded-full bg-[#252529] flex items-center justify-center text-[#C4C7C5] mb-3">
+                            <span class="material-symbols-rounded text-3xl">link_off</span>
+                        </div>
+                        <p class="text-[#E3E3E3] font-medium">No active links</p>
+                        <p class="text-xs text-[#C4C7C5]">Check back later for updates.</p>
+                    </div>`;
+                return;
+            }
+
+            validLinks.forEach((l, i) => {
+                const hasImage = l.image_url && l.image_url.length > 0;
+                
+                // M3 Card Template
+                grid.innerHTML += `
+                    <a href="${l.url}" target="_blank" class="m3-card group relative overflow-hidden flex flex-col h-full" data-aos="fade-up" data-aos-delay="${i*50}">
+                        
+                        <!-- Image Area -->
+                        <div class="h-40 w-full relative overflow-hidden bg-[#252529]">
+                            ${hasImage 
+                                ? `<img src="${l.image_url}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100">` 
+                                : `<div class="w-full h-full flex items-center justify-center bg-[#252529]"><span class="material-symbols-rounded text-6xl text-[#3b3b3f] group-hover:text-primary transition">link</span></div>`
+                            }
+                            <!-- Limited Badge -->
+                            ${l.display_type === 'scheduled' ? `
+                            <div class="absolute top-3 right-3 bg-error/90 backdrop-blur-md text-[#690005] text-[10px] font-bold uppercase px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
+                                <span class="material-symbols-rounded text-[12px]">timer</span> Limited
+                            </div>` : ''}
+                        </div>
+
+                        <!-- Content Area -->
+                        <div class="p-5 flex items-start gap-4 bg-[#1E1E1E]">
+                            <div class="w-10 h-10 rounded-full bg-[#252529] flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-[#003915] transition-colors duration-300">
+                                <span class="material-symbols-rounded text-[20px]">open_in_new</span>
+                            </div>
+                            <div>
+                                <h3 class="font-display font-medium text-[#E3E3E3] text-lg leading-tight group-hover:text-primary transition line-clamp-1">${l.title}</h3>
+                                <p class="text-xs text-[#C4C7C5] mt-1">Tap to access resource</p>
+                            </div>
+                        </div>
+                    </a>`;
+            });
+        }
+
+        checkAccess();
+        load();
+    </script>
+    <div id="global-footer-placeholder"></div>
+    <script src="../js/footer-loader.js"></script>
+</body>
+</html>

@@ -6,6 +6,14 @@
     <title>Dashboard - DMYSC</title>
     <link rel="icon" type="image/png" href="../assets/logo_1.png">
     
+    <!-- GOOGLE FONTS: Roboto & Outfit (Product Sans Alternative) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- GOOGLE MATERIAL SYMBOLS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
@@ -13,465 +21,427 @@
             darkMode: 'class', 
             theme: { 
                 extend: { 
-                    colors: { brand: { green: '#16a34a', dark: '#0b1121', surface: '#1e293b' } }, 
-                    fontFamily: { poppins: ['Poppins', 'sans-serif'] }, 
-                    animation: { 'swing': 'swing 1s infinite', 'fade-in-up': 'fadeInUp 0.3s ease-out', 'bounce-slow': 'bounce 3s infinite' }, 
-                    keyframes: { 
-                        swing: { '0%, 100%': { transform: 'rotate(0deg)' }, '20%': { transform: 'rotate(15deg)' }, '40%': { transform: 'rotate(-10deg)' }, '60%': { transform: 'rotate(5deg)' }, '80%': { transform: 'rotate(-5deg)' } }, 
-                        fadeInUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } 
-                    } 
+                    colors: { 
+                        // Google Material 3 Dark Colors
+                        background: '#121212',
+                        surface: '#1E1E1E',
+                        'surface-container': '#252529',
+                        'surface-bright': '#3b3b3f',
+                        primary: '#a6f7bd', /* Pastel Green */
+                        'on-primary': '#003915',
+                        secondary: '#c2c9bd',
+                        tertiary: '#a0cfd0',
+                        error: '#ffb4ab'
+                    }, 
+                    fontFamily: { 
+                        sans: ['Roboto', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'] // Like Google Sans
+                    }, 
+                    borderRadius: {
+                        '4xl': '28px', // Material 3 Standard
+                    },
+                    animation: { 
+                        'fade-in': 'fadeIn 0.4s cubic-bezier(0.2, 0.0, 0, 1.0)',
+                        'scale-up': 'scaleUp 0.3s cubic-bezier(0.2, 0.0, 0, 1.0)',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        scaleUp: { '0%': { transform: 'scale(0.95)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } }
+                    }
                 } 
             } 
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
-        /* Mobile App Feel Improvements */
-        body { -webkit-tap-highlight-color: transparent; }
+        /* Google Material Reset */
+        body { 
+            background-color: #121212;
+            color: #E3E3E3;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Material Icon Settings */
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        /* M3 Cards */
+        .m3-card {
+            background-color: #1E1E1E;
+            border-radius: 24px;
+            transition: background-color 0.2s cubic-bezier(0.2, 0.0, 0, 1.0), box-shadow 0.2s;
+        }
+        .m3-card:hover {
+            background-color: #28282D; /* Surface Container High */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .m3-card:active {
+            transform: scale(0.98);
+        }
+
+        /* M3 Navigation Bar (Floating) */
+        .m3-navbar {
+            background-color: #252529;
+            border-radius: 999px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        /* M3 Button */
+        .m3-btn-primary {
+            background-color: #a6f7bd;
+            color: #003915;
+            border-radius: 999px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            transition: box-shadow 0.2s;
+        }
+        .m3-btn-primary:hover {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            background-color: #b1fcc5;
+        }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .slide-content iframe { pointer-events: none; }
         
-        .glass-nav {
-            background: rgba(11, 17, 33, 0.9);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .glass-card {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        /* Specific Styles for the ID Card to match club_id.html */
-        .id-card-glass {
-            background: rgba(30, 41, 59, 0.85); /* Slightly more opaque for readability */
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .bg-pattern {
-            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-            opacity: 0.2;
-        }
-
-        /* Iframe pointer events fix for slider */
-        .slide-content iframe {
-            pointer-events: none;
-        }
-
         @media print {
             .no-print { display: none !important; }
             #cardModal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: white; z-index: 9999; }
         }
     </style>
 </head>
-<body class="bg-brand-dark min-h-screen font-poppins text-slate-100 selection:bg-brand-green selection:text-white pb-24 md:pb-0">
+<body class="min-h-screen pb-24 md:pb-0 font-sans">
 
-    <!-- Background Elements -->
-    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none no-print">
-        <div class="absolute top-[-10%] left-[-10%] w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-brand-green/10 rounded-full blur-[100px]"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-blue-600/10 rounded-full blur-[100px]"></div>
-    </div>
-
-    <!-- Top Navigation -->
-    <nav class="sticky top-0 z-40 w-full glass-nav px-4 py-3 md:pt-4 no-print transition-all duration-300">
-        <div class="max-w-7xl mx-auto flex justify-between items-center relative">
+    <!-- Top Navigation (Google Style Floating Bar) -->
+    <nav class="sticky top-4 z-40 w-full px-4 no-print">
+        <div class="max-w-7xl mx-auto m3-navbar px-4 py-3 flex justify-between items-center">
             
-            <!-- Logo Area with Full Name -->
-            <div class="flex items-center gap-2 md:gap-3">
-                <img src="../assets/logo.png" class="h-8 md:h-10 w-auto">
+            <!-- Logo -->
+            <div class="flex items-center gap-3 pl-2">
+                <img src="../assets/logo_2.png" class="h-8 w-auto">
                 <div class="flex flex-col">
-                    <h1 class="text-[10px] md:text-lg font-black text-white leading-tight uppercase tracking-wide">Dream Makers</h1>
-                    <p class="text-[8px] md:text-xs text-brand-green font-bold tracking-widest uppercase">Youth & Sports Club</p>
+                    <span class="text-sm font-display font-medium text-[#E3E3E3]">Dream Makers</span>
+                    <span class="text-[10px] text-primary tracking-wider font-bold">Youth & Sports Club</span>
                 </div>
             </div>
 
             <!-- Desktop Nav Items -->
-            <div class="flex items-center gap-2 md:gap-4">
+            <div class="flex items-center gap-3">
                 
-                <!-- Payment Status (Desktop) -->
-                <button onclick="openPayStatusModal()" id="navPayBtn" class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full shadow-lg transition-all duration-300 font-bold text-sm border backdrop-blur-md">
+                <!-- Payment Status Pill -->
+                <button onclick="openPayStatusModal()" id="navPayBtn" class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-[#353539] hover:bg-[#404045] transition text-xs font-medium border border-transparent">
+                    <span class="material-symbols-rounded text-[18px]">sync</span> Checking...
                 </button>
 
                 <!-- Notifications -->
-                <a href="../notifycation.html" class="relative w-8 h-8 md:w-auto md:h-10 flex items-center justify-center md:px-4 md:gap-2 bg-slate-800/50 hover:bg-slate-700/50 rounded-full border border-white/5 transition-all group">
-                    <div class="relative">
-                        <i class="ph-fill ph-bell-ringing text-lg md:text-xl animate-swing text-slate-300 group-hover:text-brand-green transition-colors"></i>
-                        <!-- Indicators -->
-                        <span id="notifBadgePing" class="hidden absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
-                        <span id="notifBadgeDot" class="hidden absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-slate-900"></span>
-                    </div>
-                    <span class="hidden md:inline text-sm font-bold">Notifications</span>
+                <a href="notifycation.html" class="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#3b3b3f] transition text-[#C4C7C5]">
+                    <span class="material-symbols-rounded">notifications</span>
+                    <span id="notifBadgeDot" class="hidden absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-[#252529]"></span>
                 </a>
 
-                <!-- Profile (Desktop & Mobile Target) -->
+                <!-- Profile -->
                 <div class="relative">
-                    <button onclick="toggleProfilePopup()" class="w-10 h-10 rounded-full border-2 border-brand-green p-0.5 hover:shadow-[0_0_15px_rgba(22,163,74,0.5)] transition-all duration-300 focus:outline-none hidden md:block">
-                        <img id="navAvatar" src="https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg" class="w-full h-full rounded-full object-cover bg-slate-800">
+                    <button onclick="toggleProfilePopup()" class="w-10 h-10 rounded-full p-1 hover:bg-[#3b3b3f] transition hidden md:block">
+                        <img id="navAvatar" src="https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg" class="w-full h-full rounded-full object-cover">
                     </button>
-                    <!-- Popup (Dropdown Menu) -->
-                    <div id="profilePopup" class="hidden absolute right-0 mt-4 w-80 bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-6 transform origin-top-right transition-all duration-300 z-50">
-                        <div class="flex flex-col items-center border-b border-white/5 pb-6 mb-4">
-                            <img id="popupAvatar" src="" class="w-20 h-20 rounded-full border-2 border-brand-green/30 mb-3 object-cover bg-slate-800">
-                            <h3 id="popupName" class="text-lg font-black text-white text-center leading-tight">Loading...</h3>
-                            <p id="popupEmail" class="text-xs text-slate-400">...</p>
+                    <!-- M3 Menu -->
+                    <div id="profilePopup" class="hidden absolute right-0 mt-2 w-72 bg-[#252529] rounded-[28px] shadow-xl p-4 origin-top-right z-50 animate-scale-up border border-[#353539]">
+                        <div class="flex flex-col items-center pb-4 border-b border-[#353539] mb-2">
+                            <img id="popupAvatar" src="" class="w-16 h-16 rounded-full mb-2 object-cover">
+                            <h3 id="popupName" class="text-base font-display font-medium text-[#E3E3E3]">Loading...</h3>
+                            <p id="popupEmail" class="text-xs text-[#C4C7C5]">...</p>
                         </div>
-                        <div class="space-y-3 mb-6">
-                            <div class="flex justify-between p-3 rounded-xl bg-slate-800/50"><span class="text-xs text-slate-400">Club ID</span><span id="popupClubId" class="text-xs font-bold text-white">...</span></div>
-                            <div class="flex justify-between p-3 rounded-xl bg-slate-800/50"><span class="text-xs text-slate-400">NIC</span><span id="popupNic" class="text-xs font-bold text-white">...</span></div>
+                        <div class="space-y-1">
+                            <div class="flex justify-between px-4 py-3 rounded-full hover:bg-[#353539] transition cursor-default">
+                                <span class="text-xs text-[#C4C7C5]">Club ID</span><span id="popupClubId" class="text-xs font-medium text-primary">...</span>
+                            </div>
+                            <div class="flex justify-between px-4 py-3 rounded-full hover:bg-[#353539] transition cursor-default">
+                                <span class="text-xs text-[#C4C7C5]">NIC</span><span id="popupNic" class="text-xs font-medium text-[#E3E3E3]">...</span>
+                            </div>
                         </div>
-                        <div id="popupExecRole" class="hidden mb-4 p-2 rounded-lg bg-yellow-900/20 border border-yellow-500/20 text-center text-yellow-500 text-xs font-bold"></div>
-                        <div id="popupCaptainRole" class="hidden mb-4 p-2 rounded-lg bg-blue-900/20 border border-blue-500/20 text-center text-blue-400 text-xs font-bold"></div>
-                        <a href="profile.html" class="block w-full py-3 mb-2 bg-slate-800 text-slate-300 font-bold rounded-xl hover:bg-slate-700 text-center text-xs border border-white/5">Edit Profile</a>
-                        <button onclick="logout()" class="w-full py-3 bg-red-500/10 text-red-500 font-bold rounded-xl hover:bg-red-500 hover:text-white transition text-xs">Logout</button>
+                        <div id="popupExecRole" class="hidden mt-2 p-2 rounded-lg bg-[#3b2d1d] text-[#ffdcbe] text-center text-xs font-bold"></div>
+                        <div id="popupCaptainRole" class="hidden mt-2 p-2 rounded-lg bg-[#1d2a3b] text-[#a0cfd0] text-center text-xs font-bold"></div>
+                        
+                        <a href="profile.html" class="flex items-center gap-3 px-4 py-3 mt-2 rounded-full hover:bg-[#353539] transition text-sm text-[#E3E3E3]">
+                            <span class="material-symbols-rounded text-[20px]">edit</span> Edit Profile
+                        </a>
+                        <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-full hover:bg-[#3c2525] text-error transition text-sm text-left">
+                            <span class="material-symbols-rounded text-[20px]">logout</span> Logout
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 py-4 md:py-6 no-print space-y-4 md:space-y-6">
+    <main class="max-w-7xl mx-auto px-4 py-6 no-print space-y-6">
         
-        <!-- Hero Section (Mobile Optimized: Stacked Layout) -->
-        <div class="bg-gradient-to-br from-slate-900 to-slate-800 backdrop-blur-xl border border-white/5 rounded-[1.5rem] md:rounded-[2.5rem] p-4 md:p-8 relative overflow-hidden group shadow-2xl" data-aos="fade-down">
-            <!-- Background Pattern -->
-            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
-            <div class="absolute right-0 top-0 w-32 md:w-64 h-32 md:h-64 bg-brand-green/20 blur-[50px] md:blur-[80px] rounded-full"></div>
-            
-            <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 md:gap-2">
-                <div class="flex-1 w-full">
-                    <!-- Live Clock & Date -->
-                    <div class="inline-flex items-center gap-2 md:gap-3 bg-white/5 px-3 py-1.5 rounded-full border border-white/5 backdrop-blur-sm mb-3 md:mb-4">
-                        <span id="dateDisplay" class="text-brand-green font-bold text-[10px] md:text-xs uppercase tracking-widest">Loading...</span>
-                        <span class="w-1 h-1 bg-slate-500 rounded-full"></span>
-                        <span id="clockDisplay" class="font-mono text-slate-300 text-[10px] md:text-xs font-bold">00:00:00</span>
+        <!-- Hero Section ("At A Glance" Style) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" data-aos="fade-up">
+            <!-- Greeting Card -->
+            <div class="col-span-1 md:col-span-2 m3-card p-6 md:p-8 relative overflow-hidden bg-[#252529]">
+                <div class="relative z-10 flex flex-col justify-between h-full min-h-[180px]">
+                    <div>
+                        <div class="flex items-center gap-2 text-primary font-display font-medium text-sm mb-1">
+                            <span class="material-symbols-rounded text-[18px]">calendar_today</span>
+                            <span id="dateDisplay">Loading...</span>
+                        </div>
+                        <h1 class="text-3xl md:text-5xl font-display font-normal text-[#E3E3E3] leading-tight mt-2">
+                            <span id="greeting">Hello</span>,<br>
+                            <span id="dashName" class="text-primary font-medium">Member</span>
+                        </h1>
                     </div>
-
-                    <!-- Greeting -->
-                    <h1 class="text-2xl md:text-5xl font-black text-white leading-tight drop-shadow-lg">
-                        <span id="greeting">Hello</span>, <br class="hidden md:block">
-                        <span id="dashName" class="text-transparent bg-clip-text bg-gradient-to-r from-brand-green to-emerald-300">Member</span>
-                    </h1>
-                    <p class="text-slate-400 mt-2 text-[10px] md:text-base max-w-lg leading-relaxed">Welcome back. Stay updated with your club activities.</p>
+                    <div class="mt-4 flex items-center gap-2">
+                        <span class="px-3 py-1 bg-[#353539] rounded-lg text-xs font-mono text-[#C4C7C5]" id="clockDisplay">00:00:00</span>
+                    </div>
                 </div>
-                
-                <!-- Weather Widget (Full width on mobile, Auto on desktop) -->
-                <div class="w-full md:w-auto flex flex-col items-start md:items-end gap-1 md:gap-2">
-                    <div class="flex flex-row items-center justify-between md:justify-end gap-4 bg-white/5 border border-white/10 p-3 rounded-2xl backdrop-blur-sm shadow-inner w-full md:w-auto">
-                         <div class="flex items-center gap-3">
-                             <div id="weatherIconBg" class="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center bg-brand-green/20 text-brand-green shadow-lg">
-                                <i id="weatherIcon" class="ph-duotone ph-cloud-sun text-lg md:text-2xl animate-pulse"></i>
-                            </div>
-                            <div class="text-left md:text-right">
-                                 <h4 id="weatherTemp" class="text-xl md:text-2xl font-black text-white leading-none">--°C</h4>
-                                 <p id="weatherDesc" class="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest">Horana</p>
-                            </div>
-                         </div>
-                         <!-- Add refreshing animation or icon for mobile appeal -->
-                         <div class="md:hidden">
-                             <i class="ph-bold ph-map-pin text-slate-500"></i>
-                         </div>
-                    </div>
+                <!-- Decorative Circles (Google Style) -->
+                <div class="absolute top-[-20px] right-[-20px] w-40 h-40 bg-primary opacity-5 rounded-full blur-3xl"></div>
+            </div>
+            
+            <!-- Weather Widget (Pill Style) -->
+            <div class="col-span-1 m3-card p-6 flex flex-col justify-center items-center bg-[#1b2e23] relative overflow-hidden">
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10"></div>
+                <div class="z-10 text-center">
+                    <span class="material-symbols-rounded text-[48px] text-[#a6f7bd] mb-2 animate-pulse" id="weatherIconGoogle">wb_sunny</span>
+                    <h4 id="weatherTemp" class="text-4xl font-display font-normal text-[#e4e2e2]">--°C</h4>
+                    <p id="weatherDesc" class="text-xs text-[#c1c8c5] uppercase tracking-widest mt-1">Horana</p>
                 </div>
             </div>
         </div>
 
-        <!-- Birthday Wish (Conditional) -->
-        <div id="birthdayCard" class="hidden relative overflow-hidden rounded-2xl md:rounded-3xl bg-gradient-to-r from-pink-500 to-orange-500 p-[1px] shadow-2xl animate-fade-in-up">
-            <div class="bg-slate-900/90 backdrop-blur-xl rounded-[15px] md:rounded-[23px] p-3 md:p-4 flex items-center gap-3 md:gap-4">
-                <div class="w-8 h-8 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white text-lg md:text-2xl shadow-lg shrink-0 animate-bounce-slow">
-                    <i class="ph-fill ph-cake"></i>
+        <!-- Birthday Chip -->
+        <div id="birthdayCard" class="hidden m3-card bg-[#3c2e25] p-4 flex items-center justify-between animate-fade-in">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-[#ffb783] flex items-center justify-center text-[#512300]">
+                    <span class="material-symbols-rounded">cake</span>
                 </div>
-                <div class="flex-1">
-                    <h3 class="text-white font-bold text-xs md:text-lg leading-tight">Happy Birthday! 🎉</h3>
-                    <p class="text-[9px] md:text-xs text-slate-200">Best wishes from the entire DMYSC family!</p>
+                <div>
+                    <h3 class="text-[#ffdcbe] font-display font-medium text-sm">Happy Birthday!</h3>
+                    <p class="text-xs text-[#e6beac]">Best wishes from DMYSC.</p>
                 </div>
-                <button onclick="document.getElementById('birthdayCard').classList.add('hidden')" class="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center rounded-full bg-white/10 text-white"><i class="ph-bold ph-x text-xs md:text-base"></i></button>
             </div>
+            <button onclick="document.getElementById('birthdayCard').classList.add('hidden')" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#554133] text-[#ffb4ab]">
+                <span class="material-symbols-rounded">close</span>
+            </button>
         </div>
 
-        <!-- Main Dashboard Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
-            <!-- Quick Links -->
-            <a href="../quicklink.html" class="glass-card p-3 md:p-6 rounded-2xl md:rounded-3xl hover:bg-slate-800 transition-all active:scale-95 group flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-2 md:gap-4 border-l-2 md:border-l-0 md:border-t-4 border-pink-500/50" data-aos="fade-up" data-aos-delay="50">
-                <div class="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-pink-500/10 text-pink-500 flex items-center justify-center text-xl md:text-3xl group-hover:bg-pink-500 group-hover:text-white transition-colors duration-300">
-                    <i class="ph-duotone ph-link"></i>
+        <!-- Grid Menu (Google Home Style) -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            <!-- Updated Links to point to current directory since files will be moved -->
+            <a href="quicklink.html" class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group" data-aos="fade-up" data-aos-delay="50">
+                <div class="w-12 h-12 rounded-full bg-[#3c2a2a] group-hover:bg-[#ffb4ab] text-[#ffb4ab] group-hover:text-[#690005] flex items-center justify-center transition-colors">
+                    <span class="material-symbols-rounded text-[24px]">link</span>
                 </div>
-                <div>
-                    <h3 class="font-bold text-white text-[10px] md:text-lg">Quick Links</h3>
-                    <p class="text-[8px] md:text-xs text-slate-400 mt-0.5 md:mt-1 leading-tight">External resources.</p>
-                </div>
+                <span class="text-sm font-medium text-[#E3E3E3]">Quick Links</span>
             </a>
-            <!-- Events -->
-            <a href="../event.html" class="glass-card p-3 md:p-6 rounded-2xl md:rounded-3xl hover:bg-slate-800 transition-all active:scale-95 group flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-2 md:gap-4 border-l-2 md:border-l-0 md:border-t-4 border-brand-green/50" data-aos="fade-up" data-aos-delay="100">
-                <div class="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-brand-green/10 text-brand-green flex items-center justify-center text-xl md:text-3xl group-hover:bg-brand-green group-hover:text-white transition-colors duration-300">
-                    <i class="ph-duotone ph-calendar-check"></i>
+
+            <a href="event.html" class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-12 h-12 rounded-full bg-[#1e2f23] group-hover:bg-[#a6f7bd] text-[#a6f7bd] group-hover:text-[#003915] flex items-center justify-center transition-colors">
+                    <span class="material-symbols-rounded text-[24px]">event</span>
                 </div>
-                <div>
-                    <h3 class="font-bold text-white text-[10px] md:text-lg">Events</h3>
-                    <p class="text-[8px] md:text-xs text-slate-400 mt-0.5 md:mt-1 leading-tight">schedules.</p>
-                </div>
+                <span class="text-sm font-medium text-[#E3E3E3]">Events</span>
             </a>
-            <!-- Sports -->
-            <a href="../sport.html" class="glass-card p-3 md:p-6 rounded-2xl md:rounded-3xl hover:bg-slate-800 transition-all active:scale-95 group flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-2 md:gap-4 border-l-2 md:border-l-0 md:border-t-4 border-blue-500/50" data-aos="fade-up" data-aos-delay="150">
-                <div class="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center text-xl md:text-3xl group-hover:bg-blue-500 group-hover:text-white transition-colors duration-300">
-                    <i class="ph-duotone ph-trophy"></i>
+
+            <a href="sport.html" class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group" data-aos="fade-up" data-aos-delay="150">
+                <div class="w-12 h-12 rounded-full bg-[#232a3b] group-hover:bg-[#a0cfd0] text-[#a0cfd0] group-hover:text-[#003334] flex items-center justify-center transition-colors">
+                    <span class="material-symbols-rounded text-[24px]">emoji_events</span>
                 </div>
-                <div>
-                    <h3 class="font-bold text-white text-[10px] md:text-lg">Sports</h3>
-                    <p class="text-[8px] md:text-xs text-slate-400 mt-0.5 md:mt-1 leading-tight">Teams & stats.</p>
-                </div>
+                <span class="text-sm font-medium text-[#E3E3E3]">Sports</span>
             </a>
-            <!-- Profile -->
-            <a href="profile.html" class="glass-card p-3 md:p-6 rounded-2xl md:rounded-3xl hover:bg-slate-800 transition-all active:scale-95 group flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-2 md:gap-4 border-l-2 md:border-l-0 md:border-t-4 border-purple-500/50" data-aos="fade-up" data-aos-delay="200">
-                <div class="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-purple-500/10 text-purple-500 flex items-center justify-center text-xl md:text-3xl group-hover:bg-purple-500 group-hover:text-white transition-colors duration-300">
-                    <i class="ph-duotone ph-user-circle"></i>
+
+            <a href="profile.html" class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-12 h-12 rounded-full bg-[#2f2536] group-hover:bg-[#e7bdfb] text-[#e7bdfb] group-hover:text-[#4d0076] flex items-center justify-center transition-colors">
+                    <span class="material-symbols-rounded text-[24px]">person</span>
                 </div>
-                <div>
-                    <h3 class="font-bold text-white text-[10px] md:text-lg">My Profile</h3>
-                    <p class="text-[8px] md:text-xs text-slate-400 mt-0.5 md:mt-1 leading-tight">Edit personal details.</p>
-                </div>
+                <span class="text-sm font-medium text-[#E3E3E3]">Profile</span>
             </a>
-            <!-- Payments -->
-            <a href="pay.html" class="glass-card p-3 md:p-6 rounded-2xl md:rounded-3xl hover:bg-slate-800 transition-all active:scale-95 group flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-2 md:gap-4 border-l-2 md:border-l-0 md:border-t-4 border-emerald-500/50" data-aos="fade-up" data-aos-delay="250">
-                <div class="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-xl md:text-3xl group-hover:bg-emerald-500 group-hover:text-white transition-colors duration-300">
-                    <i class="ph-duotone ph-wallet"></i>
+
+            <a href="pay.html" class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group" data-aos="fade-up" data-aos-delay="250">
+                <div class="w-12 h-12 rounded-full bg-[#1b2e2b] group-hover:bg-[#6dd58c] text-[#6dd58c] group-hover:text-[#00391b] flex items-center justify-center transition-colors">
+                    <span class="material-symbols-rounded text-[24px]">account_balance_wallet</span>
                 </div>
-                <div>
-                    <h3 class="font-bold text-white text-[10px] md:text-lg">Payments</h3>
-                    <p class="text-[8px] md:text-xs text-slate-400 mt-0.5 md:mt-1 leading-tight">Fee history & status.</p>
-                </div>
+                <span class="text-sm font-medium text-[#E3E3E3]">Payments</span>
             </a>
-            <!-- About -->
-            <a href="../about.html" class="glass-card p-3 md:p-6 rounded-2xl md:rounded-3xl hover:bg-slate-800 transition-all active:scale-95 group flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-2 md:gap-4 border-l-2 md:border-l-0 md:border-t-4 border-orange-500/50" data-aos="fade-up" data-aos-delay="300">
-                <div class="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-orange-500/10 text-orange-500 flex items-center justify-center text-xl md:text-3xl group-hover:bg-orange-500 group-hover:text-white transition-colors duration-300">
-                    <i class="ph-duotone ph-info"></i>
+
+            <a href="about.html" class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-12 h-12 rounded-full bg-[#362a1d] group-hover:bg-[#ffdcbe] text-[#ffdcbe] group-hover:text-[#2c1600] flex items-center justify-center transition-colors">
+                    <span class="material-symbols-rounded text-[24px]">info</span>
                 </div>
-                <div>
-                    <h3 class="font-bold text-white text-[10px] md:text-lg">About Club</h3>
-                    <p class="text-[8px] md:text-xs text-slate-400 mt-0.5 md:mt-1 leading-tight">Info & directory.</p>
-                </div>
+                <span class="text-sm font-medium text-[#E3E3E3]">About</span>
             </a>
         </div>
 
-        <!-- Desktop Slideshow & ID Section -->
-        <div class="hidden lg:grid grid-cols-3 gap-6 h-[400px]">
+        <!-- Desktop Slideshow & ID -->
+        <div class="hidden lg:grid grid-cols-3 gap-4 h-[400px]">
             
-            <!-- Main Slide (Col Span 2) -->
-            <div class="col-span-2 relative bg-slate-900 border border-white/5 rounded-3xl overflow-hidden group shadow-2xl">
+            <!-- Slideshow (Rounded Corners) -->
+            <div class="col-span-2 relative bg-[#1E1E1E] rounded-[28px] overflow-hidden group">
                 <div id="mainSlideContainer" class="w-full h-full slide-content"></div>
                 
-                <!-- Navigation Arrows -->
-                <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/50 hover:bg-brand-green text-white rounded-full flex items-center justify-center backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 hover:scale-110">
-                    <i class="ph-bold ph-caret-left text-2xl"></i>
+                <!-- Google Style FABs for arrows -->
+                <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-[#252529] hover:bg-[#a6f7bd] hover:text-[#003915] text-[#E3E3E3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all z-20">
+                    <span class="material-symbols-rounded">chevron_left</span>
                 </button>
-                <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/50 hover:bg-brand-green text-white rounded-full flex items-center justify-center backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 hover:scale-110">
-                    <i class="ph-bold ph-caret-right text-2xl"></i>
+                <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-[#252529] hover:bg-[#a6f7bd] hover:text-[#003915] text-[#E3E3E3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all z-20">
+                    <span class="material-symbols-rounded">chevron_right</span>
                 </button>
-
-                <!-- Now Showing Label -->
-                <div class="absolute bottom-4 left-6 bg-black/60 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 pointer-events-none z-10">
-                    <span class="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2"><i class="ph-fill ph-eye text-brand-green"></i> Now Showing</span>
-                </div>
             </div>
             
-            <!-- Right Column: Next Preview + ID Card -->
             <div class="col-span-1 flex flex-col gap-4 h-full">
-                
-                <!-- Next Up Preview (Top Half) -->
-                <div class="relative flex-1 bg-slate-900/50 border border-white/5 rounded-3xl overflow-hidden shadow-lg group/next">
-                    <div id="nextSlideContainer" class="w-full h-full opacity-60 group-hover/next:opacity-80 transition-opacity duration-300 slide-content"></div>
-                    <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
-                    <div class="absolute bottom-3 right-4 bg-brand-green/80 backdrop-blur-md px-3 py-1 rounded-lg shadow-lg">
-                        <span class="text-[10px] font-black text-white uppercase tracking-widest">Next Up</span>
+                <!-- Next Preview -->
+                <div class="relative flex-1 bg-[#252529] rounded-[28px] overflow-hidden">
+                    <div id="nextSlideContainer" class="w-full h-full opacity-60 slide-content grayscale"></div>
+                    <div class="absolute bottom-3 right-4 bg-[#121212]/80 px-3 py-1 rounded-md">
+                        <span class="text-[10px] font-bold text-white uppercase">Next</span>
                     </div>
                 </div>
 
-                <!-- ID Card Download (Bottom Half) -->
-                <div class="h-40 glass-card rounded-3xl p-4 flex flex-col items-center justify-center text-center relative overflow-hidden group/card hover:border-brand-green/30 transition-colors">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-brand-green/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
-                    <div class="relative z-10">
-                        <div class="w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-2 text-brand-green group-hover/card:scale-110 transition-transform">
-                            <i class="ph-duotone ph-identification-card text-2xl"></i>
-                        </div>
-                        <h4 class="text-sm font-bold text-white mb-1">Digital ID Card</h4>
-                        <button onclick="openCardModal()" class="mt-1 px-4 py-2 bg-slate-800 hover:bg-brand-green text-xs font-bold text-white rounded-lg transition border border-white/10 flex items-center gap-2 mx-auto">
-                            <i class="ph-bold ph-download-simple"></i> Download
-                        </button>
-                    </div>
+                <!-- ID Card Download Widget -->
+                <div class="h-40 bg-[#1b2e23] rounded-[28px] p-4 flex flex-col items-center justify-center text-center relative overflow-hidden group border border-[#233f2e]">
+                    <span class="material-symbols-rounded text-[40px] text-[#a6f7bd] mb-2 group-hover:scale-110 transition">badge</span>
+                    <h4 class="text-sm font-medium text-[#E3E3E3] mb-2">Digital ID Pass</h4>
+                    <button onclick="openCardModal()" class="m3-btn-primary px-4 py-2 text-xs flex items-center gap-2">
+                        <span class="material-symbols-rounded text-[16px]">download</span> Save
+                    </button>
                 </div>
-
             </div>
         </div>
 
-        <!-- Mobile Slideshow (With Arrows) -->
-        <div class="lg:hidden w-full aspect-video rounded-2xl overflow-hidden shadow-lg bg-slate-900 relative group">
+        <!-- Mobile Slideshow -->
+        <div class="lg:hidden w-full aspect-video rounded-[28px] overflow-hidden bg-[#1E1E1E] relative group">
              <div id="mobileSlideContainer" class="w-full h-full slide-content"></div>
-             
-             <!-- Mobile Arrows -->
-             <button onclick="prevSlide()" class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/40 text-white rounded-full flex items-center justify-center backdrop-blur-sm z-20 active:scale-95">
-                <i class="ph-bold ph-caret-left"></i>
+             <button onclick="prevSlide()" class="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#121212]/50 text-white rounded-full flex items-center justify-center z-20">
+                <span class="material-symbols-rounded">chevron_left</span>
             </button>
-            <button onclick="nextSlide()" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/40 text-white rounded-full flex items-center justify-center backdrop-blur-sm z-20 active:scale-95">
-                <i class="ph-bold ph-caret-right"></i>
+            <button onclick="nextSlide()" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#121212]/50 text-white rounded-full flex items-center justify-center z-20">
+                <span class="material-symbols-rounded">chevron_right</span>
             </button>
         </div>
 
     </main>
 
-    <!-- FOOTER (Restored) -->
     <div id="global-footer-placeholder" class="no-print pb-20 md:pb-0"></div>
 
-    <!-- MOBILE BOTTOM NAVIGATION (Small Fonts) -->
-    <div class="md:hidden fixed bottom-0 left-0 w-full z-50 glass-nav pb-safe pt-2 px-6">
-        <div class="flex justify-between items-center h-16">
-            <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="flex flex-col items-center gap-1 text-brand-green">
-                <i class="ph-fill ph-house text-xl"></i>
-                <span class="text-[8px] font-bold tracking-wide">Home</span>
+    <!-- MOBILE NAV BAR (Google Bottom Bar) -->
+    <div class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#1E1E1E] border-t border-[#252529] pb-safe">
+        <div class="flex justify-around items-center h-16">
+            <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="flex flex-col items-center gap-1 w-full">
+                <div class="w-16 h-8 rounded-full bg-[#a6f7bd] flex items-center justify-center text-[#003915]">
+                    <span class="material-symbols-rounded">home</span>
+                </div>
+                <span class="text-[10px] font-medium text-[#E3E3E3]">Home</span>
             </button>
-            <button onclick="openCardModal()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-brand-green transition">
-                <i class="ph-bold ph-identification-card text-xl"></i>
-                <span class="text-[8px] font-bold tracking-wide">ID Card</span>
+            <button onclick="openCardModal()" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5]">
+                <span class="material-symbols-rounded">badge</span>
+                <span class="text-[10px] font-medium">ID</span>
             </button>
-            <button onclick="openPayStatusModal()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-emerald-500 transition relative">
-                <i class="ph-bold ph-wallet text-xl"></i>
-                <span class="text-[8px] font-bold tracking-wide">Pay</span>
-                <span id="mobilePayBadge" class="hidden absolute top-0 right-1 w-1.5 h-1.5 bg-red-500 rounded-full"></span>
+            <button onclick="openPayStatusModal()" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5] relative">
+                <span class="material-symbols-rounded">account_balance_wallet</span>
+                <span class="text-[10px] font-medium">Pay</span>
+                <span id="mobilePayBadge" class="hidden absolute top-1 right-8 w-2 h-2 bg-error rounded-full"></span>
             </button>
-            <button onclick="toggleProfilePopup()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-purple-500 transition">
-                <i class="ph-bold ph-user text-xl"></i>
-                <span class="text-[8px] font-bold tracking-wide">Profile</span>
+            <button onclick="toggleProfilePopup()" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5]">
+                <span class="material-symbols-rounded">person</span>
+                <span class="text-[10px] font-medium">Profile</span>
             </button>
         </div>
     </div>
 
-    <!-- Modals (Card & Pay) -->
+    <!-- Modals (Google Dialogs) -->
     <div id="cardModal" class="fixed inset-0 z-[100] hidden no-print flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/90 backdrop-blur-md transition-opacity" onclick="closeCardModal()"></div>
+        <div class="absolute inset-0 bg-black/60 transition-opacity" onclick="closeCardModal()"></div>
         
-        <!-- Modal Content Container - Added scrolling support for small screens -->
-        <div class="relative w-full max-w-sm flex flex-col items-center gap-4 max-h-[90vh] overflow-y-auto no-scrollbar">
-            
-            <!-- Name Selection Option -->
-            <div class="bg-slate-800 p-3 rounded-xl w-full flex justify-between items-center border border-white/10 shadow-lg shrink-0" onclick="event.stopPropagation()">
-                <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Print Name:</span>
-                <div class="flex gap-4">
-                    <label class="flex items-center gap-2 cursor-pointer group">
-                        <input type="radio" name="nameChoice" value="full" checked onchange="updateCardName()" class="w-4 h-4 accent-brand-green bg-slate-700 border-white/20">
-                        <span class="text-xs font-bold text-white group-hover:text-brand-green transition">Full</span>
+        <div class="relative w-full max-w-sm flex flex-col gap-4 max-h-[90vh] overflow-y-auto no-scrollbar">
+            <!-- Settings Card -->
+            <div class="bg-[#252529] p-4 rounded-[28px] flex justify-between items-center shadow-lg" onclick="event.stopPropagation()">
+                <span class="text-sm text-[#C4C7C5] font-medium">Name Format</span>
+                <div class="flex gap-4 bg-[#1E1E1E] p-1 rounded-full border border-[#353539]">
+                    <label class="px-3 py-1 rounded-full cursor-pointer flex items-center gap-2 has-[:checked]:bg-[#353539]">
+                        <input type="radio" name="nameChoice" value="full" checked onchange="updateCardName()" class="hidden">
+                        <span class="text-xs font-medium text-[#E3E3E3]">Full</span>
                     </label>
-                    <label class="flex items-center gap-2 cursor-pointer group">
-                        <input type="radio" name="nameChoice" value="display" onchange="updateCardName()" class="w-4 h-4 accent-brand-green bg-slate-700 border-white/20">
-                        <span class="text-xs font-bold text-white group-hover:text-brand-green transition">Display</span>
+                    <label class="px-3 py-1 rounded-full cursor-pointer flex items-center gap-2 has-[:checked]:bg-[#353539]">
+                        <input type="radio" name="nameChoice" value="display" onchange="updateCardName()" class="hidden">
+                        <span class="text-xs font-medium text-[#E3E3E3]">Display</span>
                     </label>
                 </div>
             </div>
 
-            <!-- Card Render Container -->
             <div id="modalCardContainer" class="w-full transform transition-all duration-300 scale-100 origin-top"></div>
             
-            <div class="flex gap-4 w-full shrink-0">
-                <button onclick="downloadCardImage()" class="flex-1 bg-brand-green hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
-                    <i class="ph-bold ph-image"></i> Save Image
+            <div class="flex gap-3 w-full shrink-0">
+                <button onclick="downloadCardImage()" class="flex-1 m3-btn-primary py-3 text-sm flex items-center justify-center gap-2">
+                    <span class="material-symbols-rounded text-[18px]">download</span> Save
                 </button>
-                <button onclick="closeCardModal()" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition">Close</button>
+                <button onclick="closeCardModal()" class="px-6 py-3 text-[#a6f7bd] font-medium text-sm hover:bg-[#252529] rounded-full transition">Close</button>
             </div>
         </div>
     </div>
 
-    <!-- UPDATED: New ID Card Template (Matches club_id.html) -->
+    <!-- ID Card Template (Google Wallet Style) -->
     <div id="cardTemplate" class="hidden">
-        <div class="relative id-card-glass rounded-[1.8rem] overflow-hidden shadow-2xl w-full max-w-[320px] mx-auto border border-white/10">
+        <div class="relative bg-[#1e2f23] rounded-[24px] overflow-hidden shadow-2xl w-full max-w-[320px] mx-auto border border-[#2b3e32]">
+            <!-- Pattern -->
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 mix-blend-overlay"></div>
             
-            <!-- Header Banner -->
-            <div class="relative h-28 bg-gradient-to-r from-green-900 to-slate-900">
-                <div class="absolute inset-0 bg-pattern"></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-[#1e293b] to-transparent"></div>
-                
-                <div class="absolute top-4 left-4 flex items-center gap-2">
-                    <img src="../assets/logo.png" class="h-8 w-8 object-contain drop-shadow-md">
-                    <div>
-                        <h4 class="text-white font-bold text-xs leading-tight">Dream Makers</h4>
-                        <p class="text-[8px] text-green-400 uppercase font-bold tracking-wider">Youth & Sports Club</p>
+            <div class="relative p-6 flex flex-col items-center">
+                <!-- Header -->
+                <div class="w-full flex justify-between items-start mb-6">
+                    <div class="flex items-center gap-2">
+                        <img src="../assets/logo.png" class="h-6 w-6">
+                        <span class="text-xs font-display font-medium text-[#e4e2e2] tracking-wide">DMYSC PASS</span>
                     </div>
+                    <span class="bg-[#a6f7bd] text-[#003915] text-[10px] font-bold px-2 py-0.5 rounded-md">VERIFIED</span>
                 </div>
 
-                <!-- Status Badge -->
-                <div class="absolute top-4 right-4">
-                    <span class="bg-green-500 text-white text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded shadow-lg shadow-green-500/20">
-                        VERIFIED
-                    </span>
-                </div>
-            </div>
-
-            <!-- Profile Image Area -->
-            <div class="relative px-6 -mt-14 flex flex-col items-center">
-                <div class="w-24 h-24 p-1 bg-gradient-to-br from-brand-green to-slate-700 rounded-full shadow-xl">
-                    <img id="cardAvatarImg" src="" class="w-full h-full rounded-full object-cover bg-slate-900 border-4 border-[#1e293b]">
+                <!-- Photo -->
+                <div class="w-28 h-28 p-1 rounded-full border-2 border-[#a6f7bd] mb-3">
+                    <img id="cardAvatarImg" src="" class="w-full h-full rounded-full object-cover bg-[#2b3e32]">
                 </div>
                 
-                <h2 id="cardUserName" class="mt-3 text-lg font-black text-white text-center leading-tight transition-opacity duration-200">...</h2>
-                <p id="cardUserType" class="text-[10px] text-brand-green font-bold uppercase tracking-wider mt-1">Club Member</p>
+                <h2 id="cardUserName" class="text-xl font-display font-medium text-white text-center leading-tight">...</h2>
+                <div id="cardRolesContainer" class="mt-2 flex flex-wrap justify-center gap-1"></div>
 
-                <!-- Roles Container -->
-                <div class="mt-2 flex flex-wrap justify-center gap-1 w-full" id="cardRolesContainer">
-                    <!-- Roles injected via JS -->
-                </div>
-            </div>
-
-            <!-- Details Grid -->
-            <div class="p-5 space-y-3 mt-1">
-                
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-slate-800/50 p-2 rounded-xl border border-white/5 text-center">
-                        <p class="text-[8px] text-slate-500 uppercase font-bold mb-0.5">Age</p>
-                        <p id="cardAge" class="text-xs font-bold text-white">...</p>
-                    </div>
-                    <div class="bg-slate-800/50 p-2 rounded-xl border border-white/5 text-center">
-                        <p class="text-[8px] text-slate-500 uppercase font-bold mb-0.5">Club ID</p>
-                        <p id="cardUserId" class="text-xs font-bold text-brand-green font-mono">...</p>
-                    </div>
+                <!-- QR Area -->
+                <div class="bg-white p-2 rounded-xl mt-6 mb-4 shadow-sm">
+                    <img id="cardQrCode" src="" class="w-32 h-32 mix-blend-multiply">
                 </div>
 
-                <div class="bg-slate-800/50 p-3 rounded-xl border border-white/5 flex items-center gap-4">
-                    <div class="bg-white p-1 rounded-lg shadow-lg">
-                        <img id="cardQrCode" src="" class="w-12 h-12 mix-blend-multiply opacity-90">
-                    </div>
-                    <div>
-                        <p class="text-[8px] text-slate-500 uppercase font-bold">Verification</p>
-                        <p class="text-[10px] text-slate-300 leading-tight">Scan QR code to verify membership status.</p>
-                    </div>
+                <!-- Details Footer -->
+                <div class="w-full grid grid-cols-2 gap-2 mt-2">
+                     <div class="bg-[#2b3e32] p-2 rounded-lg text-center">
+                        <span class="block text-[9px] text-[#8e928f] uppercase">Club ID</span>
+                        <span id="cardUserId" class="text-sm text-white font-mono">...</span>
+                     </div>
+                     <div class="bg-[#2b3e32] p-2 rounded-lg text-center">
+                        <span class="block text-[9px] text-[#8e928f] uppercase">Age</span>
+                        <span id="cardAge" class="text-sm text-white">...</span>
+                     </div>
                 </div>
-
-                <!-- Footer Info -->
-                <div class="text-center pt-2 border-t border-white/5">
-                    <p class="text-[8px] text-slate-600 font-mono">Official Club Identification Card</p>
-                </div>
-
             </div>
         </div>
     </div>
 
-    <div id="payStatusModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 no-print">
+    <!-- Pay Status Modal -->
+    <div id="payStatusModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/50 p-4 no-print">
         <div class="absolute inset-0" onclick="closePayStatusModal()"></div>
-        <div class="bg-slate-900 border border-slate-700 rounded-[2rem] p-6 max-w-sm w-full relative shadow-2xl flex flex-col max-h-[80vh]">
+        <div class="bg-[#252529] rounded-[28px] p-6 max-w-sm w-full relative shadow-xl flex flex-col max-h-[80vh]">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="ph-fill ph-wallet text-brand-green"></i> Payment Status</h3>
-                <button onclick="closePayStatusModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition"><i class="ph-bold ph-x"></i></button>
+                <h3 class="text-lg font-display font-medium text-[#E3E3E3] flex items-center gap-2">
+                    <span class="material-symbols-rounded text-primary">account_balance_wallet</span> Payments
+                </h3>
+                <button onclick="closePayStatusModal()" class="w-8 h-8 rounded-full hover:bg-[#353539] text-[#C4C7C5] flex items-center justify-center">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
             </div>
-            <div class="space-y-2 overflow-y-auto flex-1 custom-scrollbar pr-1" id="payStatusList">
-                <div class="text-center text-slate-500 text-xs py-4">Checking history...</div>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-800 text-center">
-                <a href="pay.html" class="block w-full bg-brand-green hover:bg-green-600 text-white text-xs font-bold py-3 rounded-xl transition">
-                    View Full History
-                </a>
+            <div class="space-y-2 overflow-y-auto flex-1 pr-1 custom-scrollbar" id="payStatusList"></div>
+            <div class="mt-4 pt-4 border-t border-[#353539] text-center">
+                <a href="pay.html" class="block w-full m3-btn-primary py-3 text-sm">View Full History</a>
             </div>
         </div>
     </div>
@@ -514,7 +484,6 @@
             }
         });
 
-        // --- Clock & Greeting Logic ---
         function updateClock() {
             const now = new Date();
             document.getElementById('clockDisplay').innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -528,7 +497,6 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // --- Helper: Calculate Age ---
         function calculateAge(dob) {
             if (!dob) return 'N/A';
             const birthDate = new Date(dob);
@@ -541,7 +509,6 @@
             return age;
         }
 
-        // --- User Data Loading ---
         async function loadUserData() {
             if (typeof _supabase === 'undefined') return;
             const { data: { session } } = await _supabase.auth.getSession();
@@ -607,10 +574,8 @@
             if (typeof _supabase === 'undefined') return;
             const { count, error } = await _supabase.from('notifications').select('*', { count: 'exact', head: true });
             if (!error && count > 0) {
-                document.getElementById('notifBadgePing').classList.remove('hidden');
                 document.getElementById('notifBadgeDot').classList.remove('hidden');
             } else {
-                document.getElementById('notifBadgePing').classList.add('hidden');
                 document.getElementById('notifBadgeDot').classList.add('hidden');
             }
         }
@@ -620,7 +585,6 @@
             if(!container || !currentUserData) return;
             const card = document.getElementById('cardTemplate').firstElementChild.cloneNode(true);
             
-            // Set basic details
             card.querySelector('#cardAvatarImg').src = currentUserData.avatar;
             card.querySelector('#cardUserName').innerText = currentUserData.fullName; 
             card.querySelector('#cardUserId').innerText = currentUserData.id;
@@ -628,21 +592,20 @@
             card.querySelector('#cardAge').innerText = currentUserData.age;
             
             const rolesContainer = card.querySelector('#cardRolesContainer');
-            rolesContainer.innerHTML = ''; // Clear previous
+            rolesContainer.innerHTML = '';
 
-            // Logic for roles badges in card
             if (currentUserData.isExec) {
                 const badge = document.createElement('div');
-                badge.className = "px-2 py-0.5 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-[8px] font-black uppercase tracking-wider flex items-center gap-1 shadow-[0_0_10px_rgba(234,179,8,0.2)]";
-                badge.innerHTML = `<i class="ph-fill ph-crown"></i> ${currentUserData.execRole || 'Executive'}`;
+                badge.className = "px-2 py-0.5 rounded-full bg-[#ffb783] text-[#512300] text-[8px] font-bold uppercase tracking-wider flex items-center gap-1";
+                badge.innerHTML = `<span class="material-symbols-rounded text-[10px]">crown</span> ${currentUserData.execRole || 'Executive'}`;
                 rolesContainer.appendChild(badge);
             }
 
             if (currentUserData.captainRoles && currentUserData.captainRoles.length > 0) {
                 currentUserData.captainRoles.forEach(sport => {
                     const badge = document.createElement('div');
-                    badge.className = "px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[8px] font-black uppercase tracking-wider flex items-center gap-1 shadow-[0_0_10px_rgba(59,130,246,0.2)]";
-                    badge.innerHTML = `<i class="ph-fill ph-star"></i> ${sport} Captain`;
+                    badge.className = "px-2 py-0.5 rounded-full bg-[#a0cfd0] text-[#003334] text-[8px] font-bold uppercase tracking-wider flex items-center gap-1";
+                    badge.innerHTML = `<span class="material-symbols-rounded text-[10px]">star</span> ${sport}`;
                     rolesContainer.appendChild(badge);
                 });
             }
@@ -673,11 +636,11 @@
             const btn = document.getElementById('navPayBtn');
             btn.classList.remove('hidden');
             if (isPaidCurrent) {
-                btn.classList.add('bg-brand-green/10', 'border-brand-green/50', 'text-brand-green');
-                btn.innerHTML = `<i class="ph-fill ph-check-circle text-xl"></i> <span class="hidden md:inline">Paid</span>`;
+                btn.classList.add('bg-[#a6f7bd]', 'text-[#003915]');
+                btn.innerHTML = `<span class="material-symbols-rounded text-[18px]">check_circle</span> <span class="hidden md:inline">Paid</span>`;
             } else {
-                btn.classList.add('bg-red-500/10', 'border-red-500/50', 'text-red-500', 'animate-pulse');
-                btn.innerHTML = `<i class="ph-fill ph-warning-circle text-xl"></i> <span class="hidden md:inline">Due</span>`;
+                btn.classList.add('bg-[#93000a]', 'text-[#ffdad6]');
+                btn.innerHTML = `<span class="material-symbols-rounded text-[18px]">error</span> <span class="hidden md:inline">Due</span>`;
                 document.getElementById('mobilePayBadge').classList.remove('hidden');
             }
             window.userJoinDate = joinDateStr;
@@ -702,12 +665,13 @@
             while (tempDate >= start) {
                 const mStr = `${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, '0')}`;
                 const isPaid = paidMonths.includes(mStr);
-                const colorClass = isPaid ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20';
-                const label = isPaid ? 'PAID <i class="ph-bold ph-check"></i>' : 'UNPAID <i class="ph-bold ph-warning"></i>';
-                html += `<div class="flex items-center justify-between p-3 rounded-xl border mb-2 ${colorClass}"><span class="font-bold text-sm">${mStr}</span><div class="flex items-center gap-2 text-xs font-bold">${label}</div></div>`;
+                const colorClass = isPaid ? 'bg-[#1b2e23] border-[#2b3e32] text-[#a6f7bd]' : 'bg-[#3c2525] border-[#533535] text-[#ffb4ab]';
+                const label = isPaid ? 'PAID' : 'UNPAID';
+                const icon = isPaid ? 'check' : 'warning';
+                html += `<div class="flex items-center justify-between p-3 rounded-xl border mb-2 ${colorClass}"><span class="font-bold text-sm font-mono">${mStr}</span><div class="flex items-center gap-2 text-xs font-bold"><span class="material-symbols-rounded text-[16px]">${icon}</span> ${label}</div></div>`;
                 tempDate.setMonth(tempDate.getMonth() - 1);
             }
-            list.innerHTML = html || '<div class="text-center text-slate-500">No history found.</div>';
+            list.innerHTML = html || '<div class="text-center text-[#C4C7C5]">No history found.</div>';
             document.getElementById('payStatusModal').classList.remove('hidden');
         }
         function closePayStatusModal() { document.getElementById('payStatusModal').classList.add('hidden'); }
@@ -717,7 +681,7 @@
             if (!cardElement) return;
             const btn = document.querySelector('button[onclick="downloadCardImage()"]');
             const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i class="ph-bold ph-spinner animate-spin"></i> Saving...';
+            btn.innerHTML = '<span class="material-symbols-rounded animate-spin">refresh</span> Saving...';
             btn.disabled = true;
             html2canvas(cardElement, { useCORS: true, scale: 3, backgroundColor: null }).then(canvas => {
                 const link = document.createElement('a');
@@ -728,7 +692,6 @@
             }).catch(err => { console.error(err); btn.innerHTML = originalHTML; btn.disabled = false; });
         }
 
-        // --- Slideshow Logic ---
         let currentSlide = 0; let slides = []; let slideInterval;
         async function loadHeroSlides() {
             if (typeof _supabase === 'undefined') return;
@@ -740,7 +703,6 @@
             }
         }
 
-        // Helper to extract YouTube ID
         function getYouTubeId(url) {
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
             const match = url.match(regExp);
@@ -752,7 +714,7 @@
             if (ytId) {
                 const iframe = document.createElement('iframe');
                 iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${ytId}&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1`;
-                iframe.className = "absolute inset-0 w-full h-full object-cover animate-fade-in-up pointer-events-none"; 
+                iframe.className = "absolute inset-0 w-full h-full object-cover animate-fade-in pointer-events-none"; 
                 iframe.allow = "autoplay; encrypted-media";
                 iframe.setAttribute('frameborder', '0');
                 return iframe;
@@ -762,17 +724,16 @@
                 const video = document.createElement('video');
                 video.src = url;
                 video.autoplay = true; loop = true; muted = true; playsInline = true;
-                video.className = "absolute inset-0 w-full h-full object-cover animate-fade-in-up";
+                video.className = "absolute inset-0 w-full h-full object-cover animate-fade-in";
                 return video;
             } 
             const img = document.createElement('img');
             img.src = url;
-            img.className = "absolute inset-0 w-full h-full object-cover animate-fade-in-up";
+            img.className = "absolute inset-0 w-full h-full object-cover animate-fade-in";
             return img;
         }
 
         function updateSlideView() {
-            // Main Slide
             const mainContainers = [document.getElementById('mainSlideContainer'), document.getElementById('mobileSlideContainer')];
             mainContainers.forEach(c => {
                 if(c) {
@@ -781,7 +742,6 @@
                 }
             });
 
-            // Next Slide Preview
             const nextContainer = document.getElementById('nextSlideContainer');
             if(nextContainer && slides.length > 1) {
                 const nextIndex = (currentSlide + 1) % slides.length;
@@ -815,6 +775,13 @@
                 const data = await res.json();
                 if (data.current_weather) {
                     tempEl.innerText = `${Math.round(data.current_weather.temperature)}°C`;
+                    // Simple icon logic for Google Material
+                    const code = data.current_weather.weathercode;
+                    const iconEl = document.getElementById('weatherIconGoogle');
+                    if (code <= 1) iconEl.innerText = 'wb_sunny';
+                    else if (code <= 3) iconEl.innerText = 'partly_cloudy_day';
+                    else if (code <= 67) iconEl.innerText = 'rainy';
+                    else iconEl.innerText = 'thunderstorm';
                 }
             } catch(e) {
                 console.warn("Weather fetch error:", e);

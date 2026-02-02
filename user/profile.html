@@ -2,203 +2,286 @@
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Account - DMYSC</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Profile - DMYSC</title>
     <link rel="icon" type="image/png" href="../assets/logo_1.png">
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { 
             darkMode: 'class', 
             theme: { 
                 extend: { 
-                    colors: { brand: { green: '#16a34a', dark: '#0b1121' } }, 
-                    fontFamily: { poppins: ['Poppins', 'sans-serif'] } 
+                    colors: { 
+                        background: '#121212',
+                        surface: '#1E1E1E',
+                        'surface-container': '#252529',
+                        primary: '#a6f7bd',
+                        'on-primary': '#003915',
+                        secondary: '#c2c9bd',
+                        tertiary: '#a0cfd0',
+                        error: '#ffb4ab',
+                    }, 
+                    fontFamily: { 
+                        sans: ['Roboto', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif']
+                    }, 
+                    borderRadius: {
+                        '4xl': '28px',
+                    },
+                    animation: { 
+                        'fade-in': 'fadeIn 0.4s cubic-bezier(0.2, 0.0, 0, 1.0)',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+                    }
                 } 
             } 
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head>
-<body class="bg-gray-100 text-gray-900 dark:bg-brand-dark dark:text-slate-100 min-h-screen font-poppins transition-colors duration-300 overflow-x-hidden">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-    <!-- HOME BUTTON -->
-    <a href="index.html" class="absolute top-4 left-4 md:top-6 md:left-6 z-50 w-10 h-10 md:w-12 md:h-12 bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-xl flex items-center justify-center text-white hover:bg-brand-green hover:border-brand-green transition-all duration-300 shadow-lg group">
-        <i class="ph-bold ph-house text-lg md:text-xl group-hover:scale-110 transition-transform"></i>
-    </a>
-
-    <main class="max-w-7xl mx-auto px-4 py-6 md:py-12">
+    <style>
+        body { 
+            background-color: #121212;
+            color: #E3E3E3;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-rounded { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
         
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-8 mt-8 md:mt-6">
-            
-            <!-- LEFT COLUMN: Card & Avatar -->
-            <div class="lg:col-span-1 space-y-5 md:space-y-6">
-                
-                <!-- CARD PREVIEW -->
-                <div>
-                    <h3 class="text-gray-500 font-bold uppercase tracking-widest text-[10px] md:text-xs mb-3 md:mb-4 text-center lg:text-left">Your Member Card Preview</h3>
-                    
-                    <div class="bg-[#151b2b] rounded-[20px] md:rounded-[24px] overflow-hidden relative shadow-2xl transform hover:scale-[1.02] transition duration-500 max-w-sm mx-auto lg:max-w-none">
-                        <div class="h-[100px] md:h-[120px] bg-[#0f7638] w-full"></div>
-                        <div class="w-[80px] h-[80px] md:w-[100px] md:h-[100px] bg-white rounded-[16px] md:rounded-[20px] p-1 absolute top-[60px] md:top-[70px] left-1/2 -translate-x-1/2 shadow-lg">
-                            <img id="cardAvatar" src="https://via.placeholder.com/150" class="w-full h-full rounded-[12px] md:rounded-[16px] object-cover bg-gray-200">
-                        </div>
-                        <div class="pt-12 md:pt-16 pb-5 md:pb-6 px-4 text-center">
-                             <h3 class="text-lg md:text-xl font-bold text-white mb-1 md:mb-2 flex justify-center items-center gap-1" id="cardName">
-                                 Loading... </h3>
-                             <span class="bg-blue-900/30 text-blue-400 border border-blue-900 px-3 py-0.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-wider inline-block mb-4 md:mb-6">Active Member</span>
-                             
-                             <div class="bg-[#222b40] rounded-xl md:rounded-2xl p-3 md:p-4 text-left space-y-2 md:space-y-3">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-[#2d3748] flex items-center justify-center text-green-500 text-sm md:text-base"><i class="ph-fill ph-identification-card"></i></div>
-                                    <div><p class="text-[8px] md:text-[9px] text-gray-500 font-bold uppercase">Member ID</p><p class="text-[10px] md:text-[11px] text-white font-bold" id="cardId">...</p></div>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <div class="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-[#2d3748] flex items-center justify-center text-green-500 text-sm md:text-base"><i class="ph-fill ph-whatsapp-logo"></i></div>
-                                    <div><p class="text-[8px] md:text-[9px] text-gray-500 font-bold uppercase">Contact</p><p class="text-[10px] md:text-[11px] text-white font-bold font-mono" id="cardPhone">...</p></div>
-                                </div>
-                             </div>
-                        </div>
-                    </div>
+        .m3-card {
+            background-color: #1E1E1E;
+            border-radius: 24px;
+            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .m3-card:hover {
+            background-color: #28282D;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
+        }
+
+        .m3-navbar { background-color: #252529; border-radius: 999px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* M3 Input Styles */
+        .m3-input {
+            background-color: #252529;
+            border: 1px solid #353539;
+            color: #E3E3E3;
+            border-radius: 12px;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        .m3-input:focus {
+            border-color: #a6f7bd;
+            outline: none;
+            background-color: #1E1E1E;
+        }
+        .m3-input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            border-color: transparent;
+            background-color: #1E1E1E;
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background-color: #353539;
+            color: #C4C7C5;
+            transition: all 0.2s;
+        }
+        .action-btn:hover { background-color: #a6f7bd; color: #003915; }
+        .action-btn.delete:hover { background-color: #ffb4ab; color: #690005; }
+    </style>
+</head>
+<body class="min-h-screen pb-24 md:pb-0 font-sans">
+
+    <nav class="sticky top-4 z-40 w-full px-4 no-print">
+        <div class="max-w-7xl mx-auto m3-navbar px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 pl-2 group">
+                <button class="w-8 h-8 rounded-full bg-[#353539] flex items-center justify-center group-hover:bg-primary group-hover:text-[#003915] transition">
+                    <span class="material-symbols-rounded text-[20px]">arrow_back</span>
+                </button>
+                <div class="flex flex-col">
+                    <span class="text-sm font-display font-medium text-[#E3E3E3]">My Profile</span>
+                    <span class="text-[10px] text-secondary tracking-wider font-bold">Manage Account</span>
                 </div>
-
-                <!-- AVATAR UPDATE SECTION -->
-                <div class="bg-slate-800/50 rounded-2xl p-5 md:p-6 border border-white/5 shadow-lg relative group">
-                    <!-- Overlay when disabled -->
-                    <div id="avatarOverlay" class="absolute inset-0 bg-slate-900/85 z-10 rounded-2xl flex flex-col items-center justify-center backdrop-blur-[2px] cursor-not-allowed p-4 text-center transition-all duration-300">
-                        <span class="text-[10px] md:text-xs font-bold text-slate-400 bg-slate-900 px-3 py-1.5 rounded-full border border-white/10 text-center shadow-lg mb-2 md:mb-3">
-                            <i class="ph-bold ph-lock-key mr-1"></i> Locked
-                        </span>
-                        <p class="text-[9px] md:text-[10px] text-slate-400 leading-relaxed max-w-[200px]">
-                            To change image, click the <br>
-                            <span class="text-brand-green font-bold">Edit Profile</span> button above.
-                        </p>
-                    </div>
-
-                    <label class="block text-xs md:text-sm font-bold text-slate-400 mb-2 md:mb-3">Update Profile Picture</label>
-                    <div class="flex gap-2 mb-3">
-                         <label for="avatarUpload" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2.5 md:py-3 rounded-xl text-center cursor-pointer font-bold text-xs md:text-sm transition shadow-lg shadow-green-900/50 flex items-center justify-center gap-2">
-                             <i class="ph-bold ph-upload-simple"></i> Upload
-                         </label>
-                         <input type="file" id="avatarUpload" accept="image/*" class="hidden" disabled>
-                    </div>
-                    <div class="relative">
-                        <div class="flex gap-2">
-                            <input type="text" id="avatarLink" placeholder="Paste link..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 md:px-4 md:py-3 text-[10px] md:text-xs text-white outline-none focus:border-green-500 transition" disabled>
-                            <button id="avatarLinkBtn" onclick="saveAvatarLink()" class="bg-slate-700 text-white px-3 py-2 rounded-xl text-[10px] md:text-xs font-bold hover:bg-slate-600 border border-slate-600" disabled>Save</button>
-                        </div>
-                    </div>
+            </a>
+            
+            <div class="flex items-center gap-3">
+                <a href="notifycation.html" class="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#3b3b3f] transition text-[#C4C7C5]">
+                    <span class="material-symbols-rounded">notifications</span>
+                </a>
+                <div class="w-10 h-10 rounded-full p-1 bg-[#353539] hidden md:block border border-primary">
+                    <img id="navAvatar" src="https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg" class="w-full h-full rounded-full object-cover">
                 </div>
             </div>
+        </div>
+    </nav>
 
-            <!-- RIGHT COLUMN: Form -->
-            <div class="lg:col-span-2">
-                <div class="bg-slate-800/40 backdrop-blur-md rounded-[2rem] md:rounded-[2.5rem] p-5 md:p-8 border border-white/5 shadow-2xl h-full relative">
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <div class="lg:col-span-1 space-y-6">
+                
+                <div class="m3-card bg-[#1e2f23] p-0 overflow-hidden border border-[#2b3e32] relative group shadow-xl" data-aos="fade-up">
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 mix-blend-overlay"></div>
                     
-                    <div class="flex flex-col-reverse md:flex-row items-start md:items-center justify-between mb-6 md:mb-8 pb-4 md:pb-6 border-b border-white/5 gap-4">
-                        <div>
-                            <h2 class="text-xl md:text-2xl font-black text-white uppercase tracking-wide">Member Details</h2>
-                            <p class="text-[10px] md:text-sm text-gray-400">Manage your personal information</p>
+                    <div class="p-4 flex flex-col items-center relative z-10 pt-8 pb-8">
+                        <div class="w-full flex justify-between items-start mb-4 px-2">
+                            <span class="text-[10px] font-display font-bold text-[#e4e2e2] tracking-widest opacity-50">DMYSC PASS</span>
+                            <span class="bg-[#a6f7bd] text-[#003915] text-[9px] font-bold px-2 py-0.5 rounded-md">MEMBER</span>
+                        </div>
+
+                        <div class="w-28 h-28 p-1 rounded-full border-2 border-[#a6f7bd] mb-3 shadow-lg shadow-primary/20 relative">
+                            <img id="cardAvatar" src="https://via.placeholder.com/150" class="w-full h-full rounded-full object-cover bg-[#2b3e32]">
+                            <div id="googleBadge" class="hidden absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-md w-7 h-7 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-4 h-4"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+                            </div>
                         </div>
                         
-                        <!-- EDIT TOGGLE BUTTON -->
-                        <button id="editModeBtn" onclick="toggleEditMode()" class="w-full md:w-auto group relative bg-slate-800 hover:bg-slate-700 border border-white/10 px-4 py-2.5 md:px-6 md:py-3 rounded-xl flex items-center justify-between md:justify-start gap-3 transition-all duration-300 shadow-lg">
-                            <div class="text-left md:text-right">
-                                <span class="block text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-slate-300">Tap to</span>
-                                <span class="block text-xs md:text-sm font-black text-white group-hover:text-brand-green uppercase tracking-wide">Edit Profile</span>
-                            </div>
-                            <div class="relative w-8 h-8 md:w-10 md:h-10 bg-slate-700 rounded-lg flex items-center justify-center border border-white/5 group-hover:border-brand-green/30 transition-colors">
-                                <i class="ph-fill ph-pencil-simple text-lg md:text-xl text-slate-300 group-hover:text-brand-green transition-colors"></i>
-                            </div>
+                        <h2 id="cardName" class="text-xl font-display font-medium text-white text-center leading-tight flex items-center gap-1">...</h2>
+                        <p class="text-[10px] text-[#a6f7bd] font-mono mt-1">ID: <span id="cardId">...</span></p>
+                    </div>
+
+                    <div id="photoActions" class="bg-[#121212]/90 backdrop-blur p-4 border-t border-[#353539] flex justify-center gap-4 hidden">
+                        <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden">
+                        <input type="file" id="galleryInput" accept="image/*" class="hidden">
+                        
+                        <button onclick="document.getElementById('cameraInput').click()" class="action-btn" title="Take Photo">
+                            <span class="material-symbols-rounded">photo_camera</span>
+                        </button>
+                        <button onclick="document.getElementById('galleryInput').click()" class="action-btn" title="Upload from Gallery">
+                            <span class="material-symbols-rounded">image</span>
+                        </button>
+                        <button onclick="toggleLinkInput()" class="action-btn" title="Link URL">
+                            <span class="material-symbols-rounded">link</span>
+                        </button>
+                        <button onclick="removeAvatar()" class="action-btn delete" title="Remove Photo">
+                            <span class="material-symbols-rounded">delete</span>
                         </button>
                     </div>
 
-                    <form id="profileForm" class="space-y-4 md:space-y-6">
+                    <div id="linkInputArea" class="hidden bg-[#121212] p-4 border-t border-[#353539] flex gap-2">
+                        <input type="text" id="avatarLink" placeholder="Paste image URL..." class="flex-1 bg-[#252529] border border-[#353539] rounded-full px-4 py-2 text-xs text-[#E3E3E3] outline-none focus:border-primary">
+                        <button onclick="saveAvatarLink()" class="w-8 h-8 rounded-full bg-primary text-[#003915] flex items-center justify-center">
+                            <span class="material-symbols-rounded text-sm">check</span>
+                        </button>
+                    </div>
+                </div>
+
+                <p class="text-center text-xs text-[#C4C7C5] hidden" id="photoHelpText">Enable editing to manage photo.</p>
+
+            </div>
+
+            <div class="lg:col-span-2 space-y-4">
+                
+                <div class="m3-card p-6 md:p-8 bg-[#1E1E1E] relative" data-aos="fade-left">
+                    
+                    <div class="flex flex-row items-center justify-between mb-6 pb-4 border-b border-[#353539]">
+                        <div>
+                            <h2 class="text-xl font-display font-medium text-[#E3E3E3]">Profile Details</h2>
+                            <p class="text-xs text-[#C4C7C5] mt-1">Manage your personal information.</p>
+                        </div>
+                        <button id="editModeBtn" onclick="toggleEditMode()" class="group bg-[#252529] hover:bg-[#353539] border border-[#353539] px-4 py-2 rounded-full flex items-center gap-2 transition-all duration-300">
+                            <span class="text-xs font-bold text-[#C4C7C5] uppercase tracking-wider group-hover:text-white">Edit</span>
+                            <span class="material-symbols-rounded text-[18px] text-[#C4C7C5] group-hover:text-primary">edit</span>
+                        </button>
+                    </div>
+
+                    <form id="profileForm" class="space-y-8">
                         
-                        <!-- EMAIL ADDRESS: Fixed Mobile View -->
-                        <div class="bg-slate-900/60 rounded-xl md:rounded-2xl p-4 md:p-5 border border-white/5 relative overflow-hidden group shadow-lg">
-                            <div class="absolute inset-0 bg-gradient-to-r from-brand-green/5 to-transparent opacity-50 pointer-events-none"></div>
-                            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4">
-                                <div class="w-full">
-                                    <label class="text-[9px] md:text-[10px] font-bold text-brand-green uppercase tracking-wider mb-1 flex items-center gap-2">
-                                        <i class="ph-fill ph-envelope-simple"></i> Primary Email
-                                    </label>
-                                    <!-- Changed from INPUT to DIV for better text wrapping on mobile -->
-                                    <div id="email" class="text-white font-bold text-sm md:text-lg break-all md:break-words leading-tight bg-transparent select-text flex items-center gap-2">
-                                        Loading email...
+                        <div class="space-y-4">
+                            <h3 class="text-xs font-bold text-primary uppercase tracking-widest flex items-center gap-2">
+                                <span class="material-symbols-rounded text-base">badge</span> Identity
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="md:col-span-2">
+                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Display Name</label>
+                                    <input type="text" id="displayName" disabled class="m3-input p-3 text-sm font-medium" placeholder="Name on ID Card">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Full Name</label>
+                                    <input type="text" id="fullName" disabled class="m3-input p-3 text-sm font-medium">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">NIC Number</label>
+                                    <input type="text" id="nic" disabled class="m3-input p-3 text-sm font-medium font-mono">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Date of Birth</label>
+                                    <input type="date" id="dob" disabled class="m3-input p-3 text-sm font-medium text-[#C4C7C5]">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 pt-4 border-t border-[#353539]">
+                            <h3 class="text-xs font-bold text-secondary uppercase tracking-widest flex items-center gap-2">
+                                <span class="material-symbols-rounded text-base">contact_phone</span> Contact Info
+                            </h3>
+                            
+                            <div id="emailContainer" class="bg-[#252529]/50 rounded-xl p-4 border border-[#353539] flex items-center justify-between">
+                                <div>
+                                    <label class="text-[10px] font-bold text-[#C4C7C5] uppercase tracking-widest mb-1 block">Primary Email</label>
+                                    <div id="email" class="text-[#E3E3E3] font-mono text-sm break-all flex items-center gap-2">
+                                        Loading...
                                     </div>
-                                    <p class="text-[9px] md:text-[10px] text-slate-500 mt-1.5">Linked to your Member ID.</p>
                                 </div>
-                                <div class="hidden md:flex w-10 h-10 rounded-full bg-slate-800 items-center justify-center border border-white/10 text-slate-500 shrink-0">
-                                    <i class="ph-bold ph-lock-key"></i>
+                                <span class="material-symbols-rounded text-[#353539]">lock</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">WhatsApp</label>
+                                    <input type="text" id="whatsapp" disabled class="m3-input p-3 text-sm font-medium font-mono" placeholder="07x xxxxxxx">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Phone Number</label>
+                                    <input type="text" id="phone" disabled class="m3-input p-3 text-sm font-medium font-mono" placeholder="07x xxxxxxx">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Residential Address</label>
+                                    <textarea id="address" rows="2" disabled class="m3-input p-3 text-sm font-medium" placeholder="No, Street, City..."></textarea>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Personal Info -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                            
-                            <!-- Display Name -->
-                            <div class="md:col-span-2">
-                                <label class="text-[10px] md:text-xs font-bold text-brand-green uppercase ml-1 mb-1 block flex items-center gap-2">
-                                    <i class="ph-bold ph-star"></i> Display Name (Preferred)
-                                </label>
-                                <input type="text" id="displayName" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="e.g. name ***">
-                            </div>
-
-                            <div class="md:col-span-2">
-                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">Full Name</label>
-                                <input type="text" id="fullName" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed">
-                            </div>
-
-                            <div>
-                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">NIC Number</label>
-                                <input type="text" id="nic" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed">
-                            </div>
-                            
-                            <div>
-                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">Date of Birth</label>
-                                <input type="date" id="dob" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed">
-                            </div>
-
-                            <!-- Address Field -->
-                            <div class="md:col-span-2">
-                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">Residential Address</label>
-                                <textarea id="address" rows="2" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="No, Street, City..."></textarea>
+                        <div class="space-y-4 pt-4 border-t border-[#353539]">
+                            <h3 class="text-xs font-bold text-tertiary uppercase tracking-widest flex items-center gap-2">
+                                <span class="material-symbols-rounded text-base">school</span> Professional & Skills
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="md:col-span-2">
+                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Job / Profession</label>
+                                    <input type="text" id="job" disabled class="m3-input p-3 text-sm font-medium" placeholder="Student / Engineer / etc.">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Sports Skills</label>
+                                    <textarea id="sports" rows="2" disabled class="m3-input p-3 text-sm font-medium" placeholder="Cricket, Volleyball, etc."></textarea>
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Aesthetic Skills</label>
+                                    <textarea id="aesthetic" rows="2" disabled class="m3-input p-3 text-sm font-medium" placeholder="Dancing, Singing, etc."></textarea>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Contact & Skills -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pt-4 border-t border-white/5">
-                            <div>
-                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">WhatsApp Number</label>
-                                <input type="text" id="whatsapp" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="07x xxxxxxx">
-                            </div>
-                            <!-- NEW PHONE FIELD -->
-                            <div>
-                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">Phone Number</label>
-                                <input type="text" id="phone" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="07x xxxxxxx">
-                            </div>
-
-                            <div class="md:col-span-2">
-                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">Job / Profession</label>
-                                <input type="text" id="job" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="Student / Engineer / etc.">
-                            </div>
-                            <div class="md:col-span-2">
-                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">Sports Skills</label>
-                                <textarea id="sports" rows="3" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="Cricket, Volleyball, etc."></textarea>
-                            </div>
-                            <div class="md:col-span-2">
-                                <label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">Aesthetic Skills</label>
-                                <textarea id="aesthetic" rows="3" disabled class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 md:p-4 text-xs md:text-sm text-slate-300 font-bold outline-none focus:border-brand-green focus:bg-slate-900 transition shadow-inner disabled:opacity-60 disabled:cursor-not-allowed" placeholder="Dancing, Singing, Art, etc."></textarea>
-                            </div>
-                        </div>
-
-                        <div id="saveBtnContainer" class="text-right pt-4 border-t border-white/10 hidden">
-                            <button type="submit" id="saveBtn" class="w-full md:w-auto bg-gradient-to-r from-brand-green to-emerald-600 hover:to-emerald-500 text-white font-bold py-3 md:py-4 px-6 md:px-10 rounded-xl shadow-lg hover:shadow-brand-green/30 transform hover:-translate-y-1 transition flex items-center justify-center gap-2 ml-auto text-xs md:text-sm">
-                                <i class="ph-bold ph-floppy-disk"></i> Review & Save
+                        <div id="saveBtnContainer" class="text-right pt-6 border-t border-[#353539] hidden">
+                            <button type="submit" id="saveBtn" class="bg-primary hover:bg-[#b1fcc5] text-[#003915] font-medium py-3 px-8 rounded-full shadow-lg transition flex items-center justify-center gap-2 ml-auto text-sm">
+                                <span class="material-symbols-rounded text-[20px]">save</span> Save Changes
                             </button>
                         </div>
                     </form>
@@ -207,69 +290,83 @@
         </div>
     </main>
 
-    <!-- CONFIRMATION MODAL -->
-    <div id="confirmModal" class="fixed inset-0 z-[100] hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-white/10 rounded-2xl p-5 md:p-6 max-w-md w-full shadow-2xl transform scale-100 transition-all">
-            <div class="flex items-center gap-3 mb-4 text-white">
-                <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-brand-green/20 flex items-center justify-center text-brand-green">
-                    <i class="ph-bold ph-pencil-simple text-lg md:text-xl"></i>
+    <div id="global-footer-placeholder" class="pb-20 md:pb-0"></div>
+
+    <div class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#1E1E1E] border-t border-[#252529] pb-safe">
+        <div class="flex justify-around items-center h-16">
+            <a href="index.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5]">
+                <span class="material-symbols-rounded">home</span>
+                <span class="text-[10px] font-medium">Home</span>
+            </a>
+            <button class="flex flex-col items-center gap-1 w-full text-primary">
+                <div class="w-12 h-7 rounded-full bg-[#003915] flex items-center justify-center">
+                    <span class="material-symbols-rounded text-[20px]">person</span>
                 </div>
-                <h3 class="text-lg md:text-xl font-bold">Confirm Changes</h3>
+                <span class="text-[10px] font-medium">Profile</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 transition-opacity" onclick="closeConfirmModal()"></div>
+        <div class="bg-[#252529] rounded-[28px] max-w-sm w-full p-6 relative z-10 shadow-2xl border border-[#353539]">
+            <div class="flex items-center gap-3 mb-4 border-b border-[#353539] pb-3">
+                <div class="w-10 h-10 rounded-full bg-[#1b2e23] text-primary flex items-center justify-center">
+                    <span class="material-symbols-rounded text-xl">fact_check</span>
+                </div>
+                <div>
+                    <h3 class="text-lg font-display font-medium text-[#E3E3E3]">Review Changes</h3>
+                    <p class="text-[10px] text-[#C4C7C5]">Please review your updates before saving.</p>
+                </div>
             </div>
             
-            <p class="text-slate-400 text-xs mb-4">You are about to update the following details:</p>
-            
-            <div class="space-y-2 mb-6 text-sm bg-slate-800/50 p-4 rounded-xl border border-white/5 max-h-60 overflow-y-auto" id="changesSummary">
-                <!-- Changes will be injected here -->
-            </div>
+            <div class="space-y-3 mb-6 bg-[#1E1E1E] p-4 rounded-xl border border-[#353539] max-h-60 overflow-y-auto custom-scrollbar" id="changesSummary">
+                </div>
 
             <div class="flex gap-3 justify-end">
-                <button onclick="closeConfirmModal()" class="px-4 py-2 md:px-5 md:py-2.5 rounded-xl bg-slate-800 text-slate-400 hover:text-white font-bold transition text-[10px] md:text-xs uppercase tracking-wider">Cancel</button>
-                <button id="confirmSaveBtn" class="px-4 py-2 md:px-5 md:py-2.5 rounded-xl bg-brand-green text-white font-bold hover:bg-emerald-600 transition shadow-lg shadow-brand-green/20 text-[10px] md:text-xs uppercase tracking-wider flex items-center gap-2">
-                    <i class="ph-bold ph-check"></i> Confirm
+                <button onclick="closeConfirmModal()" class="px-5 py-2.5 rounded-full text-error font-bold text-xs hover:bg-[#3c2525] border border-transparent hover:border-error/30 transition">Discard Changes</button>
+                <button id="confirmSaveBtn" class="px-5 py-2.5 rounded-full bg-primary text-[#003915] font-bold text-xs hover:bg-[#b1fcc5] transition flex items-center gap-2">
+                    <span class="material-symbols-rounded text-[16px]">check_circle</span> Confirm
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="../js/supabase.js"></script>
     <script src="../js/ui.js"></script>
     
     <script>
+        AOS.init();
+        
         let userId = null;
         let originalData = {};
         let pendingUpdates = {};
         const DEFAULT_AVATAR = "https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg";
 
-        // Field Label Mapping
+        // UI Elements
+        const inputs = document.querySelectorAll('#profileForm input:not([type="hidden"]), #profileForm textarea');
+        const saveBtnContainer = document.getElementById('saveBtnContainer');
+        const photoActions = document.getElementById('photoActions');
+        const photoHelpText = document.getElementById('photoHelpText');
+        const editModeBtn = document.getElementById('editModeBtn');
+
+        // Field Label Mapping for UI
         const fieldLabels = {
             display_name: "Display Name",
             full_name: "Full Name",
             nic: "NIC Number",
             dob: "Date of Birth",
-            address: "Residential Address",
-            whatsapp: "WhatsApp Number",
-            phone: "Phone Number", // Added Phone
-            job: "Job / Profession",
-            sports_skills: "Sports Skills",
-            aesthetic_skills: "Aesthetic Skills"
+            address: "Address",
+            whatsapp: "WhatsApp",
+            phone: "Phone",
+            job: "Job/Profession",
+            sports_skills: "Sports",
+            aesthetic_skills: "Skills"
         };
 
-        // UI Elements
-        const inputs = document.querySelectorAll('#profileForm input:not([type="hidden"]), #profileForm textarea');
-        const saveBtnContainer = document.getElementById('saveBtnContainer');
-        const avatarOverlay = document.getElementById('avatarOverlay');
-        const avatarUploadInput = document.getElementById('avatarUpload');
-        const avatarLinkInput = document.getElementById('avatarLink');
-        const avatarLinkBtn = document.getElementById('avatarLinkBtn');
-        const editModeBtn = document.getElementById('editModeBtn');
-
         async function init() {
-            if (typeof _supabase === 'undefined') {
-                console.error("Supabase not loaded.");
-                return;
-            }
+            if (typeof _supabase === 'undefined') return;
 
             // Check Session
             const { data: { session } } = await _supabase.auth.getSession();
@@ -280,119 +377,81 @@
             const { data: profile } = await _supabase.from('profiles').select('*').eq('id', userId).single();
             
             if (profile) {
-                // Store Original Data
-                originalData = {
-                    display_name: profile.display_name || '',
-                    full_name: profile.full_name || '',
-                    nic: profile.nic || '',
-                    dob: profile.dob || '',
-                    address: profile.address || '',
-                    whatsapp: profile.whatsapp || '',
-                    phone: profile.phone || '', // Added phone
-                    job: profile.job || '',
-                    sports_skills: profile.sports_skills || '',
-                    aesthetic_skills: profile.aesthetic_skills || ''
-                };
+                originalData = { ...profile };
 
-                // 1. Populate Preview Card
-                const avatar = (profile.avatar_url && profile.avatar_url.trim() !== "") 
-                               ? profile.avatar_url 
-                               : DEFAULT_AVATAR;
-
-                const verifyIcon = (typeof getVerifyIcon === 'function') ? getVerifyIcon() : '';
+                // 1. Populate Avatar & Info
+                const avatar = (profile.avatar_url && profile.avatar_url.trim() !== "") ? profile.avatar_url : DEFAULT_AVATAR;
+                document.getElementById('cardAvatar').src = avatar;
+                if(document.getElementById('navAvatar')) document.getElementById('navAvatar').src = avatar;
                 
                 const nameToShow = profile.display_name || profile.full_name;
-                document.getElementById('cardName').innerHTML = nameToShow + verifyIcon; 
+                document.getElementById('cardName').innerText = nameToShow;
                 document.getElementById('cardId').innerText = profile.member_id || 'PENDING';
-                document.getElementById('cardPhone').innerText = profile.whatsapp || 'N/A';
-                document.getElementById('cardAvatar').src = avatar;
-
-                // 2. Populate Form Fields
-                document.getElementById('displayName').value = originalData.display_name;
-                document.getElementById('fullName').value = originalData.full_name;
-                document.getElementById('nic').value = originalData.nic;
                 
-                // --- FIXED EMAIL POPULATION WITH ICONS ---
+                // 2. Google Binding Logic
                 const email = profile.email || 'No Email Linked';
-                const emailEl = document.getElementById('email');
+                const isGoogle = email.includes('@gmail.com') || (session.user.app_metadata.provider === 'google');
                 
-                if (email.endsWith('@gmail.com')) {
-                    // If Gmail: Show Google Logo AND Mail Icon
-                    emailEl.innerHTML = `
-                        <div class="flex items-center gap-2">
-                            <i class="ph-bold ph-google-logo text-blue-500" title="Google Account"></i>
-                            <i class="ph-bold ph-envelope-simple text-slate-400"></i>
-                            <span>${email}</span>
+                if (isGoogle) {
+                    document.getElementById('email').innerHTML = `
+                        <div class="flex items-center gap-2 bg-white/10 px-2 py-1 rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-4 h-4"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+                            <span class="text-xs font-bold text-white">Linked with Google</span>
                         </div>
+                        <span class="text-[#C4C7C5] ml-2">${email}</span>
                     `;
+                    document.getElementById('emailContainer').classList.replace('border-[#353539]', 'border-blue-500/30');
+                    document.getElementById('googleBadge').classList.remove('hidden');
                 } else {
-                    // If not Gmail: Show Mail Icon only
-                    emailEl.innerHTML = `
-                        <div class="flex items-center gap-2">
-                            <i class="ph-bold ph-envelope-simple text-slate-400"></i>
-                            <span>${email}</span>
-                        </div>
-                    `;
+                    document.getElementById('email').innerHTML = `<span class="material-symbols-rounded text-sm text-[#C4C7C5]">mail</span> <span>${email}</span>`;
                 }
-                
-                document.getElementById('dob').value = originalData.dob;
-                document.getElementById('address').value = originalData.address;
-                document.getElementById('whatsapp').value = originalData.whatsapp;
-                document.getElementById('phone').value = originalData.phone; // Populate phone
-                document.getElementById('job').value = originalData.job;
-                document.getElementById('sports').value = originalData.sports_skills;
-                document.getElementById('aesthetic').value = originalData.aesthetic_skills;
+
+                // 3. Populate Inputs
+                document.getElementById('displayName').value = originalData.display_name || '';
+                document.getElementById('fullName').value = originalData.full_name || '';
+                document.getElementById('nic').value = originalData.nic || '';
+                document.getElementById('dob').value = originalData.dob || '';
+                document.getElementById('whatsapp').value = originalData.whatsapp || '';
+                document.getElementById('phone').value = originalData.phone || '';
+                document.getElementById('address').value = originalData.address || '';
+                document.getElementById('job').value = originalData.job || '';
+                document.getElementById('sports').value = originalData.sports_skills || '';
+                document.getElementById('aesthetic').value = originalData.aesthetic_skills || '';
             }
         }
 
         function toggleEditMode() {
-            // Check based on first input
             const isCurrentlyDisabled = document.getElementById('displayName').disabled;
             
             if (isCurrentlyDisabled) {
-                // Enable Editing
+                // UNLOCK
                 inputs.forEach(input => {
                     input.disabled = false;
-                    input.classList.remove('text-slate-300');
-                    input.classList.add('text-white', 'bg-slate-900');
                     const label = input.previousElementSibling;
-                    if(label) label.classList.replace('text-slate-400', 'text-brand-green');
+                    if(label) label.classList.replace('text-[#8e918f]', 'text-primary');
                 });
 
-                // Enable Avatar
-                avatarOverlay.classList.add('hidden');
-                avatarUploadInput.disabled = false;
-                avatarLinkInput.disabled = false;
-                avatarLinkBtn.disabled = false;
-
-                // Show Save
+                // Show Actions
+                photoActions.classList.remove('hidden');
+                photoHelpText.classList.add('hidden');
                 saveBtnContainer.classList.remove('hidden');
 
-                // Update Button
-                editModeBtn.classList.add('bg-slate-700', 'border-brand-green');
+                // Button Style
+                editModeBtn.classList.replace('border-[#353539]', 'border-primary');
                 editModeBtn.innerHTML = `
-                    <div class="text-left md:text-right">
-                        <span class="block text-[9px] md:text-[10px] font-bold text-brand-green uppercase tracking-wider">Editing Mode</span>
-                        <span class="block text-xs md:text-sm font-black text-white uppercase tracking-wide">Unlocked</span>
-                    </div>
-                    <div class="w-8 h-8 md:w-10 md:h-10 bg-brand-green rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(22,163,74,0.5)]">
-                        <i class="ph-bold ph-lock-key-open text-lg md:text-xl text-white"></i>
-                    </div>
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">Editing</span>
+                    <span class="material-symbols-rounded text-[18px] text-primary">lock_open</span>
                 `;
 
             } else {
+                // LOCK
                 lockForm();
                 
-                // Reset Button
-                editModeBtn.classList.remove('bg-slate-700', 'border-brand-green');
+                // Button Style
+                editModeBtn.classList.replace('border-primary', 'border-[#353539]');
                 editModeBtn.innerHTML = `
-                    <div class="text-left md:text-right">
-                        <span class="block text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-slate-300">Tap to</span>
-                        <span class="block text-xs md:text-sm font-black text-white group-hover:text-brand-green uppercase tracking-wide">Edit Profile</span>
-                    </div>
-                    <div class="relative w-8 h-8 md:w-10 md:h-10 bg-slate-700 rounded-lg flex items-center justify-center border border-white/5 group-hover:border-brand-green/30 transition-colors">
-                        <i class="ph-fill ph-pencil-simple text-lg md:text-xl text-slate-300 group-hover:text-brand-green transition-colors"></i>
-                    </div>
+                    <span class="text-xs font-bold text-[#C4C7C5] uppercase tracking-wider group-hover:text-white">Edit</span>
+                    <span class="material-symbols-rounded text-[18px] text-[#C4C7C5] group-hover:text-primary">edit</span>
                 `;
             }
         }
@@ -400,58 +459,75 @@
         function lockForm() {
             inputs.forEach(input => {
                 input.disabled = true;
-                input.classList.add('text-slate-300');
-                input.classList.remove('text-white', 'bg-slate-900');
                 const label = input.previousElementSibling;
-                if(label) label.classList.replace('text-brand-green', 'text-slate-400');
+                if(label) label.classList.replace('text-primary', 'text-[#8e918f]');
             });
-            avatarOverlay.classList.remove('hidden');
-            avatarUploadInput.disabled = true;
-            avatarLinkInput.disabled = true;
-            avatarLinkBtn.disabled = true;
+            photoActions.classList.add('hidden');
+            photoHelpText.classList.remove('hidden');
+            document.getElementById('linkInputArea').classList.add('hidden');
             saveBtnContainer.classList.add('hidden');
         }
 
-        // --- Avatar Upload Logic ---
-        document.getElementById('avatarUpload').addEventListener('change', async (e) => {
-            const file = e.target.files[0];
+        // --- PHOTO LOGIC ---
+        function handleFileUpload(file) {
             if (!file) return;
+            const fileName = `${userId}-${Date.now()}`;
+            
+            // Simple visual feedback
+            const btn = document.querySelector('.action-btn'); 
+            
+            _supabase.storage.from('avatars').upload(fileName, file)
+                .then(({ error }) => {
+                    if (error) throw error;
+                    const { data: { publicUrl } } = _supabase.storage.from('avatars').getPublicUrl(fileName);
+                    return updateAvatarUrl(publicUrl);
+                })
+                .catch(err => {
+                    alert('Upload failed: ' + err.message);
+                });
+        }
 
-            const btnLabel = e.target.parentElement;
-            btnLabel.innerHTML = '<i class="ph-bold ph-spinner animate-spin"></i> Uploading...';
+        // 1. Camera & 2. Gallery Handlers
+        // Note: The 'capture="environment"' attribute on the camera input handles the native camera opening on mobile.
+        document.getElementById('cameraInput').addEventListener('change', (e) => handleFileUpload(e.target.files[0]));
+        document.getElementById('galleryInput').addEventListener('change', (e) => handleFileUpload(e.target.files[0]));
 
-            try {
-                const fileName = `${userId}-${Date.now()}`;
-                const { error: uploadError } = await _supabase.storage.from('avatars').upload(fileName, file);
-                if (uploadError) throw uploadError;
-
-                const { data: { publicUrl } } = _supabase.storage.from('avatars').getPublicUrl(fileName);
-                await updateAvatarUrl(publicUrl);
-
-            } catch (error) {
-                alert('Upload Error: ' + error.message);
-            } finally {
-                btnLabel.innerHTML = '<i class="ph-bold ph-upload-simple"></i> Upload';
-            }
-        });
+        // 3. Link Logic
+        function toggleLinkInput() {
+            document.getElementById('linkInputArea').classList.toggle('hidden');
+        }
 
         async function saveAvatarLink() {
             const url = document.getElementById('avatarLink').value;
-            if(url) await updateAvatarUrl(url);
-        }
-
-        async function updateAvatarUrl(url) {
-            const { error } = await _supabase.from('profiles').update({ avatar_url: url }).eq('id', userId);
-            if (!error) {
-                document.getElementById('cardAvatar').src = url;
-                localStorage.setItem('userAvatar', url);
-                alert('Profile picture updated successfully!');
-            } else {
-                alert('Error updating profile picture.');
+            if(url) {
+                await updateAvatarUrl(url);
+                document.getElementById('linkInputArea').classList.add('hidden');
             }
         }
 
-        // --- FORM SUBMIT Logic ---
+        // 4. Remove Logic
+        async function removeAvatar() {
+            if(confirm("Remove profile photo and reset to default?")) {
+                await updateAvatarUrl("");
+            }
+        }
+
+        async function updateAvatarUrl(url) {
+            const finalUrl = url || ""; 
+            const { error } = await _supabase.from('profiles').update({ avatar_url: finalUrl }).eq('id', userId);
+            
+            if (!error) {
+                const displayUrl = finalUrl || DEFAULT_AVATAR;
+                document.getElementById('cardAvatar').src = displayUrl;
+                if(document.getElementById('navAvatar')) document.getElementById('navAvatar').src = displayUrl;
+                // Optional: Update original data to reflect image change immediately
+                if(originalData) originalData.avatar_url = finalUrl;
+            } else {
+                alert('Error updating photo.');
+            }
+        }
+
+        // --- FORM SAVE LOGIC WITH DIFF ---
         document.getElementById('profileForm').addEventListener('submit', (e) => {
             e.preventDefault();
             
@@ -462,77 +538,92 @@
                 dob: document.getElementById('dob').value,
                 address: document.getElementById('address').value,
                 whatsapp: document.getElementById('whatsapp').value,
-                phone: document.getElementById('phone').value, // Capture phone
+                phone: document.getElementById('phone').value,
                 job: document.getElementById('job').value,
                 sports_skills: document.getElementById('sports').value,
                 aesthetic_skills: document.getElementById('aesthetic').value
             };
 
-            const changedFields = {};
+            const changedFields = [];
             for (const key in updates) {
-                if (updates[key] !== originalData[key]) {
-                    changedFields[key] = updates[key];
+                const originalVal = originalData[key] || '';
+                const newVal = updates[key] || '';
+                
+                if (originalVal !== newVal) {
+                    changedFields.push({
+                        label: fieldLabels[key],
+                        old: originalVal || '(Empty)',
+                        new: newVal || '(Empty)'
+                    });
                 }
             }
 
-            if (Object.keys(changedFields).length === 0) {
+            if (changedFields.length === 0) {
                 alert("No changes detected.");
                 return;
             }
 
             pendingUpdates = updates;
 
-            // Populate Modal
+            // Populate Modal with Diff
             const summaryDiv = document.getElementById('changesSummary');
             summaryDiv.innerHTML = '';
-            for (const key in changedFields) {
+            
+            changedFields.forEach(field => {
                 summaryDiv.innerHTML += `
-                    <div class="flex justify-between items-start border-b border-white/5 pb-2 mb-2 last:border-0 last:mb-0 last:pb-0">
-                        <span class="text-slate-500 font-bold uppercase text-[10px] w-1/3">${fieldLabels[key]}</span>
-                        <span class="text-white font-medium text-xs w-2/3 text-right break-words">${changedFields[key] || '<span class="italic text-slate-600">Empty</span>'}</span>
+                    <div class="mb-3 pb-3 border-b border-[#353539] last:border-0 last:mb-0 last:pb-0">
+                        <p class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1">${field.label}</p>
+                        <div class="flex flex-col gap-1 text-xs">
+                            <div class="flex items-center gap-2 text-error/80 line-through decoration-error/50">
+                                <span class="material-symbols-rounded text-[14px]">remove_circle</span> ${field.old}
+                            </div>
+                            <div class="flex items-center gap-2 text-primary">
+                                <span class="material-symbols-rounded text-[14px]">add_circle</span> ${field.new}
+                            </div>
+                        </div>
                     </div>
                 `;
-            }
+            });
+
             document.getElementById('confirmModal').classList.remove('hidden');
         });
 
-        function closeConfirmModal() {
-            document.getElementById('confirmModal').classList.add('hidden');
+        // "Discard" action simply closes the modal without saving
+        function closeConfirmModal() { 
+            document.getElementById('confirmModal').classList.add('hidden'); 
         }
 
         document.getElementById('confirmSaveBtn').addEventListener('click', async () => {
-            const confirmBtn = document.getElementById('confirmSaveBtn');
-            const originalBtnText = confirmBtn.innerHTML;
+            const btn = document.getElementById('confirmSaveBtn');
+            const originalHTML = btn.innerHTML;
             
-            confirmBtn.innerHTML = '<i class="ph-bold ph-spinner animate-spin"></i> Saving...';
-            confirmBtn.disabled = true;
+            btn.innerHTML = '<span class="material-symbols-rounded animate-spin">refresh</span> Saving...';
+            btn.disabled = true;
 
             const { error } = await _supabase.from('profiles').update(pendingUpdates).eq('id', userId);
             
             if (!error) {
-                originalData = { ...pendingUpdates };
-                const nameToShow = pendingUpdates.display_name || pendingUpdates.full_name;
-                document.getElementById('cardName').innerHTML = nameToShow + ((typeof getVerifyIcon === 'function') ? getVerifyIcon() : '');
-                document.getElementById('cardPhone').innerText = pendingUpdates.whatsapp || 'N/A';
+                // Update local originalData
+                originalData = { ...originalData, ...pendingUpdates };
                 
-                alert('Profile updated successfully!');
+                const nameToShow = pendingUpdates.display_name || pendingUpdates.full_name;
+                document.getElementById('cardName').innerText = nameToShow;
+                
                 closeConfirmModal();
-                toggleEditMode(); 
+                toggleEditMode(); // Lock form again
+                
+                // Show success feedback (toast-like) could be added here
+                alert('Profile updated successfully!'); 
             } else {
-                alert('Error saving details: ' + error.message);
+                alert('Error saving: ' + error.message);
             }
-
-            confirmBtn.innerHTML = originalBtnText;
-            confirmBtn.disabled = false;
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
         });
 
         init();
     </script>
     <div id="global-footer-placeholder"></div>
     <script src="../js/footer-loader.js"></script>
-    
-    <script>
-        document.getElementById('year').innerText = new Date().getFullYear();
-    </script>
 </body>
 </html>
