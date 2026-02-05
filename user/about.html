@@ -526,5 +526,75 @@
     </script>
     <div id="global-footer-placeholder"></div>
     <script src="../js/footer-loader.js"></script>
+    <script>
+    // --- Footer Script Start ---
+
+    // 1. Footer එකේ වර්ෂය update කිරීම
+    const yearElem = document.getElementById('year');
+    if(yearElem) {
+        yearElem.innerText = new Date().getFullYear();
+    }
+
+    // 2. Contact තොරතුරු පෙන්වීම (Simulated)
+    setTimeout(() => {
+        const addr = document.getElementById('footerAddress');
+        const phone = document.getElementById('footerPhone');
+        const email = document.getElementById('footerEmail');
+        
+        if(addr) addr.innerText = "616-B, Dikhenagama, Horana";
+        if(phone) phone.innerText = "+94 77 155 7685";
+        if(email) email.innerText = "dreammakersysc@gmail.com";
+    }, 500);
+
+    // 3. Popup (Modal) Open Function
+    window.openModal = function(modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return; // Modal එක නැත්නම් නවතින්න
+
+        const backdrop = modal.querySelector('.modal-backdrop');
+        const panel = modal.querySelector('.modal-panel');
+
+        modal.classList.remove('hidden');
+        
+        // Animation එක පෙනෙන්නට සුළු වේලාවක් දෙන්න
+        setTimeout(() => {
+            if(backdrop) backdrop.classList.remove('opacity-0');
+            if(panel) {
+                panel.classList.remove('scale-95', 'opacity-0');
+                panel.classList.add('scale-100', 'opacity-100');
+            }
+        }, 10);
+    }
+
+    // 4. Popup (Modal) Close Function
+    window.closeModal = function(modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+
+        const backdrop = modal.querySelector('.modal-backdrop');
+        const panel = modal.querySelector('.modal-panel');
+
+        if(backdrop) backdrop.classList.add('opacity-0');
+        if(panel) {
+            panel.classList.remove('scale-100', 'opacity-100');
+            panel.classList.add('scale-95', 'opacity-0');
+        }
+
+        // Animation එක ඉවර වුනාම hide කරන්න
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
+    // 5. Modal එකෙන් එලිය click කල විට close වීම
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('modal-backdrop')) {
+            const modal = event.target.closest('[role="dialog"]');
+            if(modal) closeModal(modal.id);
+        }
+    });
+
+    // --- Footer Script End ---
+</script>
 </body>
 </html>
