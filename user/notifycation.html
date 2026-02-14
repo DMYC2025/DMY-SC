@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Notifications - DMYSC</title>
-    <link rel="icon" type="image/png" href="../assets/logo_1.png">
-    
+    <link rel="icon" type="image/png" href="../assets/images/logo_1.png">
+
     <!-- GOOGLE FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
     <!-- MATERIAL SYMBOLS -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { 
-            darkMode: 'class', 
-            theme: { 
-                extend: { 
-                    colors: { 
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
                         background: '#121212',
                         surface: '#1E1E1E',
                         'surface-container': '#252529',
@@ -31,16 +35,16 @@
                         error: '#ffb4ab',
                         'on-error': '#690005',
                         'error-container': '#93000a'
-                    }, 
-                    fontFamily: { 
+                    },
+                    fontFamily: {
                         sans: ['Roboto', 'sans-serif'],
                         display: ['Outfit', 'sans-serif']
-                    }, 
+                    },
                     borderRadius: {
                         '4xl': '28px',
                         '5xl': '32px',
                     },
-                    animation: { 
+                    animation: {
                         'fade-in': 'fadeIn 0.4s cubic-bezier(0.2, 0.0, 0, 1.0)',
                         'scale-up': 'scaleUp 0.3s cubic-bezier(0.2, 0.0, 0, 1.0)',
                     },
@@ -48,51 +52,61 @@
                         fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
                         scaleUp: { '0%': { transform: 'scale(0.95)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } }
                     }
-                } 
-            } 
+                }
+            }
         }
     </script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
-        body { 
+        body {
             background-color: #121212;
             color: #E3E3E3;
             -webkit-tap-highlight-color: transparent;
         }
-        .material-symbols-rounded { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
-        
+
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
         /* M3 Card Style - Consistent with Index */
         .m3-card {
             background-color: #1E1E1E;
-            border-radius: 28px; /* Standardized radius */
+            border-radius: 28px;
+            /* Standardized radius */
             transition: background-color 0.2s cubic-bezier(0.2, 0.0, 0, 1.0), box-shadow 0.2s, transform 0.2s;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
+
         .m3-card:hover {
             background-color: #28282D;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             transform: translateY(-2px);
         }
 
-        .m3-navbar { 
-            background-color: #252529; 
-            border-radius: 999px; 
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15); 
+        .m3-navbar {
+            background-color: #252529;
+            border-radius: 999px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
         }
-        
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
     </style>
 </head>
+
 <body class="min-h-screen pb-24 md:pb-0 font-sans">
 
     <!-- Top Navigation (Desktop) -->
     <nav class="sticky top-4 z-40 w-full px-4 no-print">
         <div class="max-w-7xl mx-auto m3-navbar px-4 py-3 flex justify-between items-center">
             <a href="index.html" class="flex items-center gap-3 pl-2 group">
-                <button class="w-10 h-10 rounded-full bg-[#353539] flex items-center justify-center group-hover:bg-primary group-hover:text-[#003915] transition">
+                <button
+                    class="w-10 h-10 rounded-full bg-[#353539] flex items-center justify-center group-hover:bg-primary group-hover:text-[#003915] transition">
                     <span class="material-symbols-rounded text-[22px]">arrow_back</span>
                 </button>
                 <div class="flex flex-col">
@@ -100,17 +114,19 @@
                     <span class="text-[10px] text-secondary tracking-wider font-bold">Inbox</span>
                 </div>
             </a>
-            
+
             <div class="flex items-center gap-3">
                 <a href="profile.html" class="w-10 h-10 rounded-full p-1 hover:bg-[#3b3b3f] transition hidden md:block">
-                    <img id="navAvatar" src="https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg" class="w-full h-full rounded-full object-cover">
+                    <img id="navAvatar"
+                        src="https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg"
+                        class="w-full h-full rounded-full object-cover">
                 </a>
             </div>
         </div>
     </nav>
 
     <main class="max-w-5xl mx-auto px-4 py-6 space-y-6">
-        
+
         <!-- Header Section (Consistent with Dashboard Hero) -->
         <div class="m3-card p-6 md:p-10 relative overflow-hidden bg-[#252529]" data-aos="fade-down">
             <div class="relative z-10">
@@ -126,22 +142,29 @@
                 </p>
             </div>
             <!-- Decorative Elements -->
-            <div class="absolute top-[-20px] right-[-20px] w-64 h-64 bg-[#EAB308] opacity-5 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-[-20px] left-[-20px] w-40 h-40 bg-primary opacity-5 rounded-full blur-3xl"></div>
+            <div class="absolute top-[-20px] right-[-20px] w-64 h-64 bg-[#EAB308] opacity-5 rounded-full blur-3xl">
+            </div>
+            <div class="absolute bottom-[-20px] left-[-20px] w-40 h-40 bg-primary opacity-5 rounded-full blur-3xl">
+            </div>
         </div>
 
         <!-- Filter / Tabs (Optional UI Enhancement) -->
         <div class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
-            <button class="px-4 py-1.5 rounded-full bg-[#a6f7bd] text-[#003915] text-xs font-bold border border-transparent">All</button>
-            <button class="px-4 py-1.5 rounded-full bg-[#1E1E1E] text-[#C4C7C5] border border-[#353539] text-xs font-medium hover:bg-[#353539] transition">Urgent</button>
-            <button class="px-4 py-1.5 rounded-full bg-[#1E1E1E] text-[#C4C7C5] border border-[#353539] text-xs font-medium hover:bg-[#353539] transition">General</button>
+            <button
+                class="px-4 py-1.5 rounded-full bg-[#a6f7bd] text-[#003915] text-xs font-bold border border-transparent">All</button>
+            <button
+                class="px-4 py-1.5 rounded-full bg-[#1E1E1E] text-[#C4C7C5] border border-[#353539] text-xs font-medium hover:bg-[#353539] transition">Urgent</button>
+            <button
+                class="px-4 py-1.5 rounded-full bg-[#1E1E1E] text-[#C4C7C5] border border-[#353539] text-xs font-medium hover:bg-[#353539] transition">General</button>
         </div>
 
         <!-- Notification Feed -->
         <div id="notificationFeed" class="space-y-3">
             <!-- Loading State -->
             <div class="py-20 text-center">
-                <div class="w-12 h-12 rounded-full border-4 border-[#353539] border-t-primary animate-spin mx-auto mb-4"></div>
+                <div
+                    class="w-12 h-12 rounded-full border-4 border-[#353539] border-t-primary animate-spin mx-auto mb-4">
+                </div>
                 <p class="text-xs text-[#C4C7C5] uppercase tracking-widest animate-pulse">Checking Alerts...</p>
             </div>
         </div>
@@ -181,16 +204,16 @@
         async function checkAccess() {
             if (typeof _supabase === 'undefined') return;
             const { data: { session } } = await _supabase.auth.getSession();
-            if (!session) window.location.href = '../login.html';
+            if (!session) window.location.href = '../up and in/login.html';
             else loadAvatar(session.user.id);
         }
 
         // 2. Load Avatar for Nav
         async function loadAvatar(uid) {
             const { data } = await _supabase.from('profiles').select('avatar_url').eq('id', uid).single();
-            if(data && data.avatar_url) {
+            if (data && data.avatar_url) {
                 const navAv = document.getElementById('navAvatar');
-                if(navAv) navAv.src = data.avatar_url;
+                if (navAv) navAv.src = data.avatar_url;
             }
         }
 
@@ -221,17 +244,17 @@
                 const isUrgent = n.priority === 'urgent';
                 const dateObj = new Date(n.created_at);
                 const date = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                const time = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit' });
+                const time = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
                 // M3 Styling Logic - Refined for "Glassy/Modern" look
                 const icon = isUrgent ? 'warning' : 'info';
-                
+
                 // Color Palettes
                 const iconBg = isUrgent ? 'bg-[#3c2525] text-[#ffb4ab]' : 'bg-[#1b2e23] text-[#a6f7bd]';
                 const cardBorder = isUrgent ? 'border-[#533535] bg-[#2d1f1f]' : 'bg-[#1E1E1E]'; // Slight red tint for urgent background
                 const titleColor = isUrgent ? 'text-[#ffb4ab]' : 'text-[#E3E3E3]';
-                const badge = isUrgent 
-                    ? `<span class="bg-[#93000a] text-[#ffdad6] text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-wider shadow-sm">Urgent Action</span>` 
+                const badge = isUrgent
+                    ? `<span class="bg-[#93000a] text-[#ffdad6] text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-wider shadow-sm">Urgent Action</span>`
                     : `<span class="bg-[#252529] text-[#C4C7C5] border border-[#353539] text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">Info</span>`;
 
                 const item = `
@@ -273,4 +296,5 @@
     <div id="global-footer-placeholder"></div>
     <script src="../js/footer-loader.js"></script>
 </body>
+
 </html>

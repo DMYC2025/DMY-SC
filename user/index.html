@@ -1,27 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard - DMYSC</title>
-    <link rel="icon" type="image/png" href="../assets/logo_1.png">
-    
-    <!-- GOOGLE FONTS: Roboto & Outfit (Product Sans Alternative) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- GOOGLE MATERIAL SYMBOLS -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="icon" type="image/png" href="../assets/images/logo_1.png">
+
+    <!-- External User CSS -->
+    <link rel="stylesheet" href="../assets/css/user-style.css">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
-        tailwind.config = { 
-            darkMode: 'class', 
-            theme: { 
-                extend: { 
-                    colors: { 
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
                         // Google Material 3 Dark Colors
                         background: '#121212',
                         surface: '#1E1E1E',
@@ -32,15 +28,15 @@
                         secondary: '#c2c9bd',
                         tertiary: '#a0cfd0',
                         error: '#ffb4ab'
-                    }, 
-                    fontFamily: { 
+                    },
+                    fontFamily: {
                         sans: ['Roboto', 'sans-serif'],
                         display: ['Outfit', 'sans-serif'] // Like Google Sans
-                    }, 
+                    },
                     borderRadius: {
                         '4xl': '28px', // Material 3 Standard
                     },
-                    animation: { 
+                    animation: {
                         'fade-in': 'fadeIn 0.4s cubic-bezier(0.2, 0.0, 0, 1.0)',
                         'scale-up': 'scaleUp 0.3s cubic-bezier(0.2, 0.0, 0, 1.0)',
                     },
@@ -48,81 +44,27 @@
                         fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
                         scaleUp: { '0%': { transform: 'scale(0.95)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } }
                     }
-                } 
-            } 
+                }
+            }
         }
     </script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
-    <style>
-        /* Google Material Reset */
-        body { 
-            background-color: #121212;
-            color: #E3E3E3;
-            -webkit-tap-highlight-color: transparent;
-        }
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-        /* Material Icon Settings */
-        .material-symbols-rounded {
-            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            vertical-align: middle;
-        }
 
-        /* M3 Cards */
-        .m3-card {
-            background-color: #1E1E1E;
-            border-radius: 24px;
-            transition: background-color 0.2s cubic-bezier(0.2, 0.0, 0, 1.0), box-shadow 0.2s;
-        }
-        .m3-card:hover {
-            background-color: #28282D; /* Surface Container High */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        .m3-card:active {
-            transform: scale(0.98);
-        }
-
-        /* M3 Navigation Bar (Floating) */
-        .m3-navbar {
-            background-color: #252529;
-            border-radius: 999px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-        }
-
-        /* M3 Button */
-        .m3-btn-primary {
-            background-color: #a6f7bd;
-            color: #003915;
-            border-radius: 999px;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 500;
-            transition: box-shadow 0.2s;
-        }
-        .m3-btn-primary:hover {
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            background-color: #b1fcc5;
-        }
-
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .slide-content iframe { pointer-events: none; }
-        
-        @media print {
-            .no-print { display: none !important; }
-            #cardModal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: white; z-index: 9999; }
-        }
-    </style>
 </head>
+
 <body class="min-h-screen pb-24 md:pb-0 font-sans">
 
     <!-- Top Navigation (Google Style Floating Bar) -->
     <nav class="sticky top-4 z-40 w-full px-4 no-print">
         <div class="max-w-7xl mx-auto m3-navbar px-4 py-3 flex justify-between items-center">
-            
+
             <!-- Logo -->
             <div class="flex items-center gap-3 pl-2">
-                <img src="../assets/logo_2.png" class="h-8 w-auto">
+                <img src="../assets/images/logo_2.png" class="h-8 w-auto">
                 <div class="flex flex-col">
                     <span class="text-sm font-display font-medium text-[#E3E3E3]">Dream Makers</span>
                     <span class="text-[10px] text-primary tracking-wider font-bold">Youth & Sports Club</span>
@@ -131,45 +73,87 @@
 
             <!-- Desktop Nav Items -->
             <div class="flex items-center gap-3">
-                
+
                 <!-- Payment Status Pill -->
-                <button onclick="openPayStatusModal()" id="navPayBtn" class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-[#353539] hover:bg-[#404045] transition text-xs font-medium border border-transparent">
+                <button onclick="openPayStatusModal()" id="navPayBtn"
+                    class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-[#353539] hover:bg-[#404045] transition text-xs font-medium border border-transparent">
                     <span class="material-symbols-rounded text-[18px]">sync</span> Checking...
                 </button>
 
                 <!-- Notifications -->
-                <a href="notifycation.html" class="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#3b3b3f] transition text-[#C4C7C5]">
-                    <span class="material-symbols-rounded">notifications</span>
-                    <span id="notifBadgeDot" class="hidden absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-[#252529]"></span>
-                </a>
+                <div class="relative">
+                    <button onclick="toggleNotifPopup()"
+                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#3b3b3f] transition text-[#C4C7C5] relative">
+                        <span class="material-symbols-rounded">notifications</span>
+                        <span id="notifBadgeDot"
+                            class="hidden absolute top-2 right-2.5 w-2 h-2 bg-error rounded-full border-2 border-[#252529]"></span>
+                    </button>
+                    <!-- Notification Popup -->
+                    <div id="notifPopup"
+                        class="hidden absolute right-0 mt-2 w-[320px] md:w-[380px] bg-[#252529] rounded-[28px] shadow-2xl origin-top-right z-50 animate-scale-up border border-[#353539] overflow-hidden">
+                        <div class="px-6 py-4 border-b border-[#353539] flex justify-between items-center bg-[#1E1E1E]">
+                            <h3 class="text-sm font-display font-bold text-[#E3E3E3] uppercase tracking-wider">Club
+                                Alerts</h3>
+                            <span class="text-[10px] text-primary font-bold">Recent</span>
+                        </div>
+                        <div id="notifPopupList" class="max-h-[350px] overflow-y-auto custom-scrollbar p-2 space-y-2">
+                            <!-- Items will be injected here -->
+                            <div class="text-center py-8">
+                                <span class="material-symbols-rounded animate-spin text-primary">sync</span>
+                            </div>
+                        </div>
+                        <div class="p-3 border-t border-[#353539] bg-[#1E1E1E]">
+                            <a href="notifycation.html"
+                                class="flex items-center justify-center gap-2 w-full py-2 rounded-full bg-[#353539] hover:bg-primary hover:text-[#003915] text-[#E3E3E3] text-xs font-bold transition-all duration-300 group">
+                                View All Notifications
+                                <span
+                                    class="material-symbols-rounded text-xs group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Profile -->
                 <div class="relative">
-                    <button onclick="toggleProfilePopup()" class="w-10 h-10 rounded-full p-1 hover:bg-[#3b3b3f] transition hidden md:block">
-                        <img id="navAvatar" src="https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg" class="w-full h-full rounded-full object-cover">
+                    <button onclick="toggleProfilePopup()"
+                        class="w-10 h-10 rounded-full p-1 hover:bg-[#3b3b3f] transition hidden md:block">
+                        <img id="navAvatar"
+                            src="https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg"
+                            class="w-full h-full rounded-full object-cover">
                     </button>
                     <!-- M3 Menu -->
-                    <div id="profilePopup" class="hidden absolute right-0 mt-2 w-72 bg-[#252529] rounded-[28px] shadow-xl p-4 origin-top-right z-50 animate-scale-up border border-[#353539]">
+                    <div id="profilePopup"
+                        class="hidden absolute right-0 mt-2 w-72 bg-[#252529] rounded-[28px] shadow-xl p-4 origin-top-right z-50 animate-scale-up border border-[#353539]">
                         <div class="flex flex-col items-center pb-4 border-b border-[#353539] mb-2">
                             <img id="popupAvatar" src="" class="w-16 h-16 rounded-full mb-2 object-cover">
                             <h3 id="popupName" class="text-base font-display font-medium text-[#E3E3E3]">Loading...</h3>
                             <p id="popupEmail" class="text-xs text-[#C4C7C5]">...</p>
                         </div>
                         <div class="space-y-1">
-                            <div class="flex justify-between px-4 py-3 rounded-full hover:bg-[#353539] transition cursor-default">
-                                <span class="text-xs text-[#C4C7C5]">Club ID</span><span id="popupClubId" class="text-xs font-medium text-primary">...</span>
+                            <div
+                                class="flex justify-between px-4 py-3 rounded-full hover:bg-[#353539] transition cursor-default">
+                                <span class="text-xs text-[#C4C7C5]">Club ID</span><span id="popupClubId"
+                                    class="text-xs font-medium text-primary">...</span>
                             </div>
-                            <div class="flex justify-between px-4 py-3 rounded-full hover:bg-[#353539] transition cursor-default">
-                                <span class="text-xs text-[#C4C7C5]">NIC</span><span id="popupNic" class="text-xs font-medium text-[#E3E3E3]">...</span>
+                            <div
+                                class="flex justify-between px-4 py-3 rounded-full hover:bg-[#353539] transition cursor-default">
+                                <span class="text-xs text-[#C4C7C5]">NIC</span><span id="popupNic"
+                                    class="text-xs font-medium text-[#E3E3E3]">...</span>
                             </div>
                         </div>
-                        <div id="popupExecRole" class="hidden mt-2 p-2 rounded-lg bg-[#3b2d1d] text-[#ffdcbe] text-center text-xs font-bold"></div>
-                        <div id="popupCaptainRole" class="hidden mt-2 p-2 rounded-lg bg-[#1d2a3b] text-[#a0cfd0] text-center text-xs font-bold"></div>
-                        
-                        <a href="profile.html" class="flex items-center gap-3 px-4 py-3 mt-2 rounded-full hover:bg-[#353539] transition text-sm text-[#E3E3E3]">
+                        <div id="popupExecRole"
+                            class="hidden mt-2 p-2 rounded-lg bg-[#3b2d1d] text-[#ffdcbe] text-center text-xs font-bold">
+                        </div>
+                        <div id="popupCaptainRole"
+                            class="hidden mt-2 p-2 rounded-lg bg-[#1d2a3b] text-[#a0cfd0] text-center text-xs font-bold">
+                        </div>
+
+                        <a href="profile.html"
+                            class="flex items-center gap-3 px-4 py-3 mt-2 rounded-full hover:bg-[#353539] transition text-sm text-[#E3E3E3]">
                             <span class="material-symbols-rounded text-[20px]">edit</span> Edit Profile
                         </a>
-                        <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-full hover:bg-[#3c2525] text-error transition text-sm text-left">
+                        <button onclick="logout()"
+                            class="w-full flex items-center gap-3 px-4 py-3 rounded-full hover:bg-[#3c2525] text-error transition text-sm text-left">
                             <span class="material-symbols-rounded text-[20px]">logout</span> Logout
                         </button>
                     </div>
@@ -179,7 +163,7 @@
     </nav>
 
     <main class="max-w-7xl mx-auto px-4 py-6 no-print space-y-6">
-        
+
         <!-- Hero Section ("At A Glance" Style) -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4" data-aos="fade-up">
             <!-- Greeting Card -->
@@ -194,20 +178,58 @@
                             <span id="greeting">Hello</span>,<br>
                             <span id="dashName" class="text-primary font-medium">Member</span>
                         </h1>
+
+                        <!-- Mobile-Only Weather Info -->
+                        <div class="mt-4 flex items-center gap-4 md:hidden animate-fade-in">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-rounded text-[28px] text-primary"
+                                    id="mobileWeatherIcon">wb_sunny</span>
+                                <span class="text-2xl font-display font-medium text-[#E3E3E3]"
+                                    id="mobileWeatherTemp">--°C</span>
+                            </div>
+                            <div class="h-8 w-[1px] bg-white/10"></div>
+                            <div class="flex flex-col">
+                                <span class="text-[10px] text-primary font-bold uppercase tracking-wider">Horana</span>
+                                <span class="text-[10px] text-[#C4C7C5]" id="mobileWeatherDesc">Weather</span>
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="mt-4 flex items-center gap-2">
-                        <span class="px-3 py-1 bg-[#353539] rounded-lg text-xs font-mono text-[#C4C7C5]" id="clockDisplay">00:00:00</span>
+                    <div class="mt-4 flex flex-wrap items-center gap-4">
+                        <span class="px-3 py-1 bg-[#353539] rounded-lg text-xs font-mono text-[#C4C7C5]"
+                            id="clockDisplay">00:00:00</span>
+
+                        <!-- Social Links from Footer -->
+                        <div class="flex items-center gap-3 ml-auto">
+                            <a href="https://www.facebook.com/profile.php?id=61585478932161" target="_blank"
+                                class="w-8 h-8 rounded-full bg-[#353539] hover:bg-[#1877F2] flex items-center justify-center text-[#C4C7C5] hover:text-white transition duration-300">
+                                <i class="ph-fill ph-facebook-logo text-lg"></i>
+                            </a>
+                            <a href="https://whatsapp.com/channel/0029Vb7AQ1bEKyZKwmjeYt0F" target="_blank"
+                                class="w-8 h-8 rounded-full bg-[#353539] hover:bg-[#25D366] flex items-center justify-center text-[#C4C7C5] hover:text-white transition duration-300">
+                                <i class="ph-fill ph-whatsapp-logo text-lg"></i>
+                            </a>
+                            <a href="https://www.youtube.com/channel/UCbeh371G6OERp1zaAUMyuBQ" target="_blank"
+                                class="w-8 h-8 rounded-full bg-[#353539] hover:bg-[#FF0000] flex items-center justify-center text-[#C4C7C5] hover:text-white transition duration-300">
+                                <i class="ph-fill ph-youtube-logo text-lg"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <!-- Decorative Circles (Google Style) -->
-                <div class="absolute top-[-20px] right-[-20px] w-40 h-40 bg-primary opacity-5 rounded-full blur-3xl"></div>
+                <div class="absolute top-[-20px] right-[-20px] w-40 h-40 bg-primary opacity-5 rounded-full blur-3xl">
+                </div>
             </div>
-            
-            <!-- Weather Widget (Pill Style) -->
-            <div class="col-span-1 m3-card p-6 flex flex-col justify-center items-center bg-[#1b2e23] relative overflow-hidden">
-                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10"></div>
+
+            <!-- Weather Widget (Pill Style - Hidden on Mobile) -->
+            <div
+                class="hidden md:flex col-span-1 m3-card p-6 flex-col justify-center items-center bg-[#1b2e23] relative overflow-hidden">
+                <div
+                    class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10">
+                </div>
                 <div class="z-10 text-center">
-                    <span class="material-symbols-rounded text-[48px] text-[#a6f7bd] mb-2 animate-pulse" id="weatherIconGoogle">wb_sunny</span>
+                    <span class="material-symbols-rounded text-[48px] text-[#a6f7bd] mb-2 animate-pulse"
+                        id="weatherIconGoogle">wb_sunny</span>
                     <h4 id="weatherTemp" class="text-4xl font-display font-normal text-[#e4e2e2]">--°C</h4>
                     <p id="weatherDesc" class="text-xs text-[#c1c8c5] uppercase tracking-widest mt-1">Horana</p>
                 </div>
@@ -215,7 +237,8 @@
         </div>
 
         <!-- Birthday Chip -->
-        <div id="birthdayCard" class="hidden m3-card bg-[#3c2e25] p-4 flex items-center justify-between animate-fade-in">
+        <div id="birthdayCard"
+            class="hidden m3-card bg-[#3c2e25] p-4 flex items-center justify-between animate-fade-in">
             <div class="flex items-center gap-4">
                 <div class="w-10 h-10 rounded-full bg-[#ffb783] flex items-center justify-center text-[#512300]">
                     <span class="material-symbols-rounded">cake</span>
@@ -225,7 +248,8 @@
                     <p class="text-xs text-[#e6beac]">Best wishes from DMYSC.</p>
                 </div>
             </div>
-            <button onclick="document.getElementById('birthdayCard').classList.add('hidden')" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#554133] text-[#ffb4ab]">
+            <button onclick="document.getElementById('birthdayCard').classList.add('hidden')"
+                class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#554133] text-[#ffb4ab]">
                 <span class="material-symbols-rounded">close</span>
             </button>
         </div>
@@ -233,43 +257,61 @@
         <!-- Grid Menu (Google Home Style) -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             <!-- Updated Links to point to current directory since files will be moved -->
-            <a href="quicklink.html" class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group" data-aos="fade-up" data-aos-delay="50">
-                <div class="w-12 h-12 rounded-full bg-[#3c2a2a] group-hover:bg-[#ffb4ab] text-[#ffb4ab] group-hover:text-[#690005] flex items-center justify-center transition-colors">
+            <a href="quicklink.html"
+                class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group"
+                data-aos="fade-up" data-aos-delay="50">
+                <div
+                    class="w-12 h-12 rounded-full bg-[#3c2a2a] group-hover:bg-[#ffb4ab] text-[#ffb4ab] group-hover:text-[#690005] flex items-center justify-center transition-colors">
                     <span class="material-symbols-rounded text-[24px]">link</span>
                 </div>
                 <span class="text-sm font-medium text-[#E3E3E3]">Quick Links</span>
             </a>
 
-            <a href="event.html" class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group" data-aos="fade-up" data-aos-delay="100">
-                <div class="w-12 h-12 rounded-full bg-[#1e2f23] group-hover:bg-[#a6f7bd] text-[#a6f7bd] group-hover:text-[#003915] flex items-center justify-center transition-colors">
+            <a href="event.html"
+                class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group"
+                data-aos="fade-up" data-aos-delay="100">
+                <div
+                    class="w-12 h-12 rounded-full bg-[#1e2f23] group-hover:bg-[#a6f7bd] text-[#a6f7bd] group-hover:text-[#003915] flex items-center justify-center transition-colors">
                     <span class="material-symbols-rounded text-[24px]">event</span>
                 </div>
                 <span class="text-sm font-medium text-[#E3E3E3]">Events</span>
             </a>
 
-            <a href="sport.html" class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group" data-aos="fade-up" data-aos-delay="150">
-                <div class="w-12 h-12 rounded-full bg-[#232a3b] group-hover:bg-[#a0cfd0] text-[#a0cfd0] group-hover:text-[#003334] flex items-center justify-center transition-colors">
+            <a href="sport.html"
+                class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group"
+                data-aos="fade-up" data-aos-delay="150">
+                <div
+                    class="w-12 h-12 rounded-full bg-[#232a3b] group-hover:bg-[#a0cfd0] text-[#a0cfd0] group-hover:text-[#003334] flex items-center justify-center transition-colors">
                     <span class="material-symbols-rounded text-[24px]">emoji_events</span>
                 </div>
                 <span class="text-sm font-medium text-[#E3E3E3]">Sports</span>
             </a>
 
-            <a href="profile.html" class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group" data-aos="fade-up" data-aos-delay="200">
-                <div class="w-12 h-12 rounded-full bg-[#2f2536] group-hover:bg-[#e7bdfb] text-[#e7bdfb] group-hover:text-[#4d0076] flex items-center justify-center transition-colors">
+            <a href="profile.html"
+                class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group"
+                data-aos="fade-up" data-aos-delay="200">
+                <div
+                    class="w-12 h-12 rounded-full bg-[#2f2536] group-hover:bg-[#e7bdfb] text-[#e7bdfb] group-hover:text-[#4d0076] flex items-center justify-center transition-colors">
                     <span class="material-symbols-rounded text-[24px]">person</span>
                 </div>
                 <span class="text-sm font-medium text-[#E3E3E3]">Profile</span>
             </a>
 
-            <a href="pay.html" class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group" data-aos="fade-up" data-aos-delay="250">
-                <div class="w-12 h-12 rounded-full bg-[#1b2e2b] group-hover:bg-[#6dd58c] text-[#6dd58c] group-hover:text-[#00391b] flex items-center justify-center transition-colors">
+            <a href="pay.html"
+                class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group"
+                data-aos="fade-up" data-aos-delay="250">
+                <div
+                    class="w-12 h-12 rounded-full bg-[#1b2e2b] group-hover:bg-[#6dd58c] text-[#6dd58c] group-hover:text-[#00391b] flex items-center justify-center transition-colors">
                     <span class="material-symbols-rounded text-[24px]">account_balance_wallet</span>
                 </div>
                 <span class="text-sm font-medium text-[#E3E3E3]">Payments</span>
             </a>
 
-            <a href="about.html" class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group" data-aos="fade-up" data-aos-delay="300">
-                <div class="w-12 h-12 rounded-full bg-[#362a1d] group-hover:bg-[#ffdcbe] text-[#ffdcbe] group-hover:text-[#2c1600] flex items-center justify-center transition-colors">
+            <a href="about.html"
+                class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group"
+                data-aos="fade-up" data-aos-delay="300">
+                <div
+                    class="w-12 h-12 rounded-full bg-[#362a1d] group-hover:bg-[#ffdcbe] text-[#ffdcbe] group-hover:text-[#2c1600] flex items-center justify-center transition-colors">
                     <span class="material-symbols-rounded text-[24px]">info</span>
                 </div>
                 <span class="text-sm font-medium text-[#E3E3E3]">About</span>
@@ -278,20 +320,22 @@
 
         <!-- Desktop Slideshow & ID -->
         <div class="hidden lg:grid grid-cols-3 gap-4 h-[400px]">
-            
+
             <!-- Slideshow (Rounded Corners) -->
             <div class="col-span-2 relative bg-[#1E1E1E] rounded-[28px] overflow-hidden group">
                 <div id="mainSlideContainer" class="w-full h-full slide-content"></div>
-                
+
                 <!-- Google Style FABs for arrows -->
-                <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-[#252529] hover:bg-[#a6f7bd] hover:text-[#003915] text-[#E3E3E3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all z-20">
+                <button onclick="prevSlide()"
+                    class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-[#252529] hover:bg-[#a6f7bd] hover:text-[#003915] text-[#E3E3E3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all z-20">
                     <span class="material-symbols-rounded">chevron_left</span>
                 </button>
-                <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-[#252529] hover:bg-[#a6f7bd] hover:text-[#003915] text-[#E3E3E3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all z-20">
+                <button onclick="nextSlide()"
+                    class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-[#252529] hover:bg-[#a6f7bd] hover:text-[#003915] text-[#E3E3E3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all z-20">
                     <span class="material-symbols-rounded">chevron_right</span>
                 </button>
             </div>
-            
+
             <div class="col-span-1 flex flex-col gap-4 h-full">
                 <!-- Next Preview -->
                 <div class="relative flex-1 bg-[#252529] rounded-[28px] overflow-hidden">
@@ -302,8 +346,10 @@
                 </div>
 
                 <!-- ID Card Download Widget -->
-                <div class="h-40 bg-[#1b2e23] rounded-[28px] p-4 flex flex-col items-center justify-center text-center relative overflow-hidden group border border-[#233f2e]">
-                    <span class="material-symbols-rounded text-[40px] text-[#a6f7bd] mb-2 group-hover:scale-110 transition">badge</span>
+                <div
+                    class="h-40 bg-[#1b2e23] rounded-[28px] p-4 flex flex-col items-center justify-center text-center relative overflow-hidden group border border-[#233f2e]">
+                    <span
+                        class="material-symbols-rounded text-[40px] text-[#a6f7bd] mb-2 group-hover:scale-110 transition">badge</span>
                     <h4 class="text-sm font-medium text-[#E3E3E3] mb-2">Digital ID Pass</h4>
                     <button onclick="openCardModal()" class="m3-btn-primary px-4 py-2 text-xs flex items-center gap-2">
                         <span class="material-symbols-rounded text-[16px]">download</span> Save
@@ -314,11 +360,13 @@
 
         <!-- Mobile Slideshow -->
         <div class="lg:hidden w-full aspect-video rounded-[28px] overflow-hidden bg-[#1E1E1E] relative group">
-             <div id="mobileSlideContainer" class="w-full h-full slide-content"></div>
-             <button onclick="prevSlide()" class="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#121212]/50 text-white rounded-full flex items-center justify-center z-20">
+            <div id="mobileSlideContainer" class="w-full h-full slide-content"></div>
+            <button onclick="prevSlide()"
+                class="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#121212]/50 text-white rounded-full flex items-center justify-center z-20">
                 <span class="material-symbols-rounded">chevron_left</span>
             </button>
-            <button onclick="nextSlide()" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#121212]/50 text-white rounded-full flex items-center justify-center z-20">
+            <button onclick="nextSlide()"
+                class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#121212]/50 text-white rounded-full flex items-center justify-center z-20">
                 <span class="material-symbols-rounded">chevron_right</span>
             </button>
         </div>
@@ -330,7 +378,8 @@
     <!-- MOBILE NAV BAR (Google Bottom Bar) -->
     <div class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#1E1E1E] border-t border-[#252529] pb-safe">
         <div class="flex justify-around items-center h-16">
-            <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="flex flex-col items-center gap-1 w-full">
+            <button onclick="window.scrollTo({top:0, behavior:'smooth'})"
+                class="flex flex-col items-center gap-1 w-full">
                 <div class="w-16 h-8 rounded-full bg-[#a6f7bd] flex items-center justify-center text-[#003915]">
                     <span class="material-symbols-rounded">home</span>
                 </div>
@@ -340,7 +389,8 @@
                 <span class="material-symbols-rounded">badge</span>
                 <span class="text-[10px] font-medium">ID</span>
             </button>
-            <button onclick="openPayStatusModal()" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5] relative">
+            <button onclick="openPayStatusModal()"
+                class="flex flex-col items-center gap-1 w-full text-[#C4C7C5] relative">
                 <span class="material-symbols-rounded">account_balance_wallet</span>
                 <span class="text-[10px] font-medium">Pay</span>
                 <span id="mobilePayBadge" class="hidden absolute top-1 right-8 w-2 h-2 bg-error rounded-full"></span>
@@ -355,56 +405,69 @@
     <!-- Modals (Google Dialogs) -->
     <div id="cardModal" class="fixed inset-0 z-[100] hidden no-print flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/60 transition-opacity" onclick="closeCardModal()"></div>
-        
+
         <div class="relative w-full max-w-sm flex flex-col gap-4 max-h-[90vh] overflow-y-auto no-scrollbar">
             <!-- Settings Card -->
-            <div class="bg-[#252529] p-4 rounded-[28px] flex justify-between items-center shadow-lg" onclick="event.stopPropagation()">
+            <div class="bg-[#252529] p-4 rounded-[28px] flex justify-between items-center shadow-lg"
+                onclick="event.stopPropagation()">
                 <span class="text-sm text-[#C4C7C5] font-medium">Name Format</span>
                 <div class="flex gap-4 bg-[#1E1E1E] p-1 rounded-full border border-[#353539]">
-                    <label class="px-3 py-1 rounded-full cursor-pointer flex items-center gap-2 has-[:checked]:bg-[#353539]">
-                        <input type="radio" name="nameChoice" value="full" checked onchange="updateCardName()" class="hidden">
+                    <label
+                        class="px-3 py-1 rounded-full cursor-pointer flex items-center gap-2 has-[:checked]:bg-[#353539]">
+                        <input type="radio" name="nameChoice" value="full" checked onchange="updateCardName()"
+                            class="hidden">
                         <span class="text-xs font-medium text-[#E3E3E3]">Full</span>
                     </label>
-                    <label class="px-3 py-1 rounded-full cursor-pointer flex items-center gap-2 has-[:checked]:bg-[#353539]">
-                        <input type="radio" name="nameChoice" value="display" onchange="updateCardName()" class="hidden">
+                    <label
+                        class="px-3 py-1 rounded-full cursor-pointer flex items-center gap-2 has-[:checked]:bg-[#353539]">
+                        <input type="radio" name="nameChoice" value="display" onchange="updateCardName()"
+                            class="hidden">
                         <span class="text-xs font-medium text-[#E3E3E3]">Display</span>
                     </label>
                 </div>
             </div>
 
-            <div id="modalCardContainer" class="w-full transform transition-all duration-300 scale-100 origin-top"></div>
-            
+            <div id="modalCardContainer" class="w-full transform transition-all duration-300 scale-100 origin-top">
+            </div>
+
             <div class="flex gap-3 w-full shrink-0">
-                <button onclick="downloadCardImage()" class="flex-1 m3-btn-primary py-3 text-sm flex items-center justify-center gap-2">
+                <button onclick="downloadCardImage()"
+                    class="flex-1 m3-btn-primary py-3 text-sm flex items-center justify-center gap-2">
                     <span class="material-symbols-rounded text-[18px]">download</span> Save
                 </button>
-                <button onclick="closeCardModal()" class="px-6 py-3 text-[#a6f7bd] font-medium text-sm hover:bg-[#252529] rounded-full transition">Close</button>
+                <button onclick="closeCardModal()"
+                    class="px-6 py-3 text-[#a6f7bd] font-medium text-sm hover:bg-[#252529] rounded-full transition">Close</button>
             </div>
         </div>
     </div>
 
     <!-- ID Card Template (Google Wallet Style) -->
     <div id="cardTemplate" class="hidden">
-        <div class="relative bg-[#1e2f23] rounded-[24px] overflow-hidden shadow-2xl w-full max-w-[320px] mx-auto border border-[#2b3e32]">
+        <div
+            class="relative bg-[#1e2f23] rounded-[24px] overflow-hidden shadow-2xl w-full max-w-[320px] mx-auto border border-[#2b3e32]">
             <!-- Pattern -->
-            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 mix-blend-overlay"></div>
-            
+            <div
+                class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 mix-blend-overlay">
+            </div>
+
             <div class="relative p-6 flex flex-col items-center">
                 <!-- Header -->
                 <div class="w-full flex justify-between items-start mb-6">
                     <div class="flex items-center gap-2">
-                        <img src="../assets/logo.png" class="h-6 w-6">
+                        <img src="../assets/images/logo.png" class="h-6 w-6">
                         <span class="text-xs font-display font-medium text-[#e4e2e2] tracking-wide">DMYSC PASS</span>
                     </div>
-                    <span class="bg-[#a6f7bd] text-[#003915] text-[10px] font-bold px-2 py-0.5 rounded-md">VERIFIED</span>
+                    <span
+                        class="bg-[#a6f7bd] text-[#003915] text-[10px] font-bold px-2 py-0.5 rounded-md">VERIFIED</span>
                 </div>
 
                 <!-- Photo -->
                 <div class="w-28 h-28 p-1 rounded-full border-2 border-[#a6f7bd] mb-3">
                     <img id="cardAvatarImg" src="" class="w-full h-full rounded-full object-cover bg-[#2b3e32]">
                 </div>
-                
-                <h2 id="cardUserName" class="text-xl font-display font-medium text-white text-center leading-tight">...</h2>
+
+                <h2 id="cardUserName" class="text-xl font-display font-medium text-white text-center leading-tight">...
+                </h2>
                 <div id="cardRolesContainer" class="mt-2 flex flex-wrap justify-center gap-1"></div>
 
                 <!-- QR Area -->
@@ -414,28 +477,30 @@
 
                 <!-- Details Footer -->
                 <div class="w-full grid grid-cols-2 gap-2 mt-2">
-                     <div class="bg-[#2b3e32] p-2 rounded-lg text-center">
+                    <div class="bg-[#2b3e32] p-2 rounded-lg text-center">
                         <span class="block text-[9px] text-[#8e928f] uppercase">Club ID</span>
                         <span id="cardUserId" class="text-sm text-white font-mono">...</span>
-                     </div>
-                     <div class="bg-[#2b3e32] p-2 rounded-lg text-center">
+                    </div>
+                    <div class="bg-[#2b3e32] p-2 rounded-lg text-center">
                         <span class="block text-[9px] text-[#8e928f] uppercase">Age</span>
                         <span id="cardAge" class="text-sm text-white">...</span>
-                     </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Pay Status Modal -->
-    <div id="payStatusModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/50 p-4 no-print">
+    <div id="payStatusModal"
+        class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/50 p-4 no-print">
         <div class="absolute inset-0" onclick="closePayStatusModal()"></div>
         <div class="bg-[#252529] rounded-[28px] p-6 max-w-sm w-full relative shadow-xl flex flex-col max-h-[80vh]">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-display font-medium text-[#E3E3E3] flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary">account_balance_wallet</span> Payments
                 </h3>
-                <button onclick="closePayStatusModal()" class="w-8 h-8 rounded-full hover:bg-[#353539] text-[#C4C7C5] flex items-center justify-center">
+                <button onclick="closePayStatusModal()"
+                    class="w-8 h-8 rounded-full hover:bg-[#353539] text-[#C4C7C5] flex items-center justify-center">
                     <span class="material-symbols-rounded">close</span>
                 </button>
             </div>
@@ -449,65 +514,18 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="../js/supabase.js"></script>
     <script src="../js/ui.js"></script>
-    
+
     <script>
         AOS.init();
         const DEFAULT_AVATAR = "https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg";
         let currentUserData = null;
-        
+
         async function checkAccess() {
             if (typeof _supabase === 'undefined') return;
             const { data: { session } } = await _supabase.auth.getSession();
-            if (!session) window.location.href = '../login.html';
+            if (!session) window.location.href = '../up and in/login.html';
         }
         checkAccess();
-
-        async function logout() {
-            if(confirm("Are you sure you want to logout?")) {
-                await _supabase.auth.signOut();
-                window.location.href = '../login.html';
-            }
-        }
-
-        function toggleProfilePopup() {
-            const popup = document.getElementById('profilePopup');
-            popup.classList.toggle('hidden');
-        }
-
-        document.addEventListener('click', function(event) {
-            const popup = document.getElementById('profilePopup');
-            const toggleBtns = document.querySelectorAll('button[onclick="toggleProfilePopup()"]');
-            let clickedToggle = false;
-            toggleBtns.forEach(btn => { if (btn.contains(event.target)) clickedToggle = true; });
-            if (!popup.classList.contains('hidden') && !popup.contains(event.target) && !clickedToggle) {
-                popup.classList.add('hidden');
-            }
-        });
-
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clockDisplay').innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            document.getElementById('dateDisplay').innerText = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            const hour = now.getHours();
-            const greetingSpan = document.getElementById('greeting');
-            if (hour < 12) { greetingSpan.innerText = "Good Morning"; } 
-            else if (hour < 18) { greetingSpan.innerText = "Good Afternoon"; } 
-            else { greetingSpan.innerText = (hour < 21) ? "Good Evening" : "Good Night"; }
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        function calculateAge(dob) {
-            if (!dob) return 'N/A';
-            const birthDate = new Date(dob);
-            const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const m = today.getMonth() - birthDate.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
-            return age;
-        }
 
         async function loadUserData() {
             if (typeof _supabase === 'undefined') return;
@@ -517,27 +535,10 @@
                 if (profile) {
                     const preferredName = profile.display_name && profile.display_name.trim() !== "" ? profile.display_name : profile.full_name.split(' ')[0];
                     document.getElementById('dashName').innerHTML = preferredName;
-                    document.getElementById('popupName').innerText = profile.display_name || profile.full_name;
-                    document.getElementById('popupEmail').innerText = profile.email;
-                    document.getElementById('popupClubId').innerText = profile.member_id || 'PENDING';
-                    document.getElementById('popupNic').innerText = profile.nic || 'N/A';
                     const avatarSrc = (profile.avatar_url && profile.avatar_url.trim() !== "") ? profile.avatar_url : DEFAULT_AVATAR;
-                    document.getElementById('navAvatar').src = avatarSrc;
-                    document.getElementById('popupAvatar').src = avatarSrc;
-                    
-                    const { data: exData } = await _supabase.from('executive_committee').select('*').eq('profile_id', session.user.id).single();
-                    if(exData && exData.term_period) {
-                        const el = document.getElementById('popupExecRole');
-                        el.classList.remove('hidden');
-                        el.innerText = `Exec: ${exData.term_period}`;
-                    }
 
+                    const { data: exData } = await _supabase.from('executive_committee').select('*').eq('profile_id', session.user.id).single();
                     const { data: sportsData } = await _supabase.from('sports').select('name').eq('captain_id', session.user.id);
-                    if (sportsData && sportsData.length > 0) {
-                        const el = document.getElementById('popupCaptainRole');
-                        el.classList.remove('hidden');
-                        el.innerText = `Captain: ${sportsData.map(t => t.name).join(', ')}`;
-                    }
 
                     const verificationUrl = new URL('club_id.html', window.location.href).href + '?id=' + (profile.member_id || 'PENDING');
                     const age = calculateAge(profile.dob);
@@ -554,7 +555,7 @@
                         execRole: exData ? exData.term_period : null,
                         captainRoles: sportsData ? sportsData.map(t => t.name) : []
                     };
-                    
+
                     checkPaymentStatus(session.user.id, profile.created_at);
                     checkNotifications();
                     if (profile.dob) {
@@ -566,8 +567,40 @@
                             }
                         }
                     }
+
+                    // Call shared popup loader
+                    loadProfilePopupData();
                 }
             }
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const clockEl = document.getElementById('clockDisplay');
+            const dateEl = document.getElementById('dateDisplay');
+            if (clockEl) clockEl.innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            if (dateEl) dateEl.innerText = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const hour = now.getHours();
+            const greetingSpan = document.getElementById('greeting');
+            if (greetingSpan) {
+                if (hour < 12) { greetingSpan.innerText = "Good Morning"; }
+                else if (hour < 18) { greetingSpan.innerText = "Good Afternoon"; }
+                else { greetingSpan.innerText = (hour < 21) ? "Good Evening" : "Good Night"; }
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function calculateAge(dob) {
+            if (!dob) return 'N/A';
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
         }
 
         async function checkNotifications() {
@@ -582,15 +615,15 @@
 
         function renderCard(containerId) {
             const container = document.getElementById(containerId);
-            if(!container || !currentUserData) return;
+            if (!container || !currentUserData) return;
             const card = document.getElementById('cardTemplate').firstElementChild.cloneNode(true);
-            
+
             card.querySelector('#cardAvatarImg').src = currentUserData.avatar;
-            card.querySelector('#cardUserName').innerText = currentUserData.fullName; 
+            card.querySelector('#cardUserName').innerText = currentUserData.fullName;
             card.querySelector('#cardUserId').innerText = currentUserData.id;
             card.querySelector('#cardQrCode').src = currentUserData.qrCode;
             card.querySelector('#cardAge').innerText = currentUserData.age;
-            
+
             const rolesContainer = card.querySelector('#cardRolesContainer');
             rolesContainer.innerHTML = '';
 
@@ -617,7 +650,7 @@
         function updateCardName() {
             const choice = document.querySelector('input[name="nameChoice"]:checked').value;
             const nameEl = document.querySelector('#modalCardContainer #cardUserName');
-            if(nameEl && currentUserData) {
+            if (nameEl && currentUserData) {
                 nameEl.style.opacity = '0';
                 setTimeout(() => {
                     nameEl.innerText = (choice === 'display') ? currentUserData.displayName : currentUserData.fullName;
@@ -646,15 +679,15 @@
             window.userJoinDate = joinDateStr;
         }
 
-        function openCardModal() { 
-            renderCard('modalCardContainer'); 
+        function openCardModal() {
+            renderCard('modalCardContainer');
             const fullRadio = document.querySelector('input[name="nameChoice"][value="full"]');
-            if(fullRadio) { fullRadio.checked = true; updateCardName(); }
-            document.getElementById('cardModal').classList.remove('hidden'); 
+            if (fullRadio) { fullRadio.checked = true; updateCardName(); }
+            document.getElementById('cardModal').classList.remove('hidden');
         }
         function closeCardModal() { document.getElementById('cardModal').classList.add('hidden'); }
-        
-        function openPayStatusModal() { 
+
+        function openPayStatusModal() {
             const list = document.getElementById('payStatusList');
             const paidMonths = window.paymentHistoryData || [];
             let start = window.userJoinDate ? new Date(window.userJoinDate) : new Date('2024-01-01');
@@ -710,11 +743,11 @@
         }
 
         function createMediaElement(url) {
-             const ytId = getYouTubeId(url);
+            const ytId = getYouTubeId(url);
             if (ytId) {
                 const iframe = document.createElement('iframe');
                 iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${ytId}&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1`;
-                iframe.className = "absolute inset-0 w-full h-full object-cover animate-fade-in pointer-events-none"; 
+                iframe.className = "absolute inset-0 w-full h-full object-cover animate-fade-in pointer-events-none";
                 iframe.allow = "autoplay; encrypted-media";
                 iframe.setAttribute('frameborder', '0');
                 return iframe;
@@ -726,7 +759,7 @@
                 video.autoplay = true; loop = true; muted = true; playsInline = true;
                 video.className = "absolute inset-0 w-full h-full object-cover animate-fade-in";
                 return video;
-            } 
+            }
             const img = document.createElement('img');
             img.src = url;
             img.className = "absolute inset-0 w-full h-full object-cover animate-fade-in";
@@ -736,14 +769,14 @@
         function updateSlideView() {
             const mainContainers = [document.getElementById('mainSlideContainer'), document.getElementById('mobileSlideContainer')];
             mainContainers.forEach(c => {
-                if(c) {
+                if (c) {
                     c.innerHTML = '';
                     c.appendChild(createMediaElement(slides[currentSlide].image_url));
                 }
             });
 
             const nextContainer = document.getElementById('nextSlideContainer');
-            if(nextContainer && slides.length > 1) {
+            if (nextContainer && slides.length > 1) {
                 const nextIndex = (currentSlide + 1) % slides.length;
                 nextContainer.innerHTML = '';
                 nextContainer.appendChild(createMediaElement(slides[nextIndex].image_url));
@@ -768,28 +801,46 @@
         async function fetchWeather() {
             const tempEl = document.getElementById('weatherTemp');
             const descEl = document.getElementById('weatherDesc');
+            const mTempEl = document.getElementById('mobileWeatherTemp');
+            const mDescEl = document.getElementById('mobileWeatherDesc');
+
             try {
-                if (!tempEl || !descEl) return;
                 const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=6.7161&longitude=80.0632&current_weather=true');
                 if (!res.ok) throw new Error('Weather API failed');
                 const data = await res.json();
+
                 if (data.current_weather) {
-                    tempEl.innerText = `${Math.round(data.current_weather.temperature)}°C`;
+                    const temp = Math.round(data.current_weather.temperature);
+                    if (tempEl) tempEl.innerText = `${temp}°C`;
+                    if (mTempEl) mTempEl.innerText = `${temp}°C`;
+
                     // Simple icon logic for Google Material
                     const code = data.current_weather.weathercode;
                     const iconEl = document.getElementById('weatherIconGoogle');
-                    if (code <= 1) iconEl.innerText = 'wb_sunny';
-                    else if (code <= 3) iconEl.innerText = 'partly_cloudy_day';
-                    else if (code <= 67) iconEl.innerText = 'rainy';
-                    else iconEl.innerText = 'thunderstorm';
+                    const mIconEl = document.getElementById('mobileWeatherIcon');
+
+                    let iconName = 'wb_sunny';
+                    let descText = 'Clear Sky';
+
+                    if (code <= 1) { iconName = 'wb_sunny'; descText = 'Clear'; }
+                    else if (code <= 3) { iconName = 'partly_cloudy_day'; descText = 'Cloudy'; }
+                    else if (code <= 67) { iconName = 'rainy'; descText = 'Rainy'; }
+                    else { iconName = 'thunderstorm'; descText = 'Stormy'; }
+
+                    if (iconEl) iconEl.innerText = iconName;
+                    if (mIconEl) mIconEl.innerText = iconName;
+                    if (descEl) descEl.innerText = 'Horana'; // Keeping city fixed as it was
+                    if (mDescEl) mDescEl.innerText = descText;
                 }
-            } catch(e) {
+            } catch (e) {
                 console.warn("Weather fetch error:", e);
-                tempEl.innerText = "--°C";
-                descEl.innerText = "Offline";
+                if (tempEl) tempEl.innerText = "--°C";
+                if (mTempEl) mTempEl.innerText = "--°C";
             }
         }
-        
+
+        fetchWeather();
+
         loadHeroSlides();
         loadUserData();
         fetchWeather();
@@ -797,74 +848,75 @@
 
     <script src="../js/footer-loader.js"></script>
     <script>
-    // --- Footer Script Start ---
+        // --- Footer Script Start ---
 
-    // 1. Footer එකේ වර්ෂය update කිරීම
-    const yearElem = document.getElementById('year');
-    if(yearElem) {
-        yearElem.innerText = new Date().getFullYear();
-    }
+        // 1. Footer එකේ වර්ෂය update කිරීම
+        const yearElem = document.getElementById('year');
+        if (yearElem) {
+            yearElem.innerText = new Date().getFullYear();
+        }
 
-    // 2. Contact තොරතුරු පෙන්වීම (Simulated)
-    setTimeout(() => {
-        const addr = document.getElementById('footerAddress');
-        const phone = document.getElementById('footerPhone');
-        const email = document.getElementById('footerEmail');
-        
-        if(addr) addr.innerText = "616-B, Dikhenagama, Horana";
-        if(phone) phone.innerText = "+94 77 155 7685";
-        if(email) email.innerText = "dreammakersysc@gmail.com";
-    }, 500);
-
-    // 3. Popup (Modal) Open Function
-    window.openModal = function(modalId) {
-        const modal = document.getElementById(modalId);
-        if (!modal) return; // Modal එක නැත්නම් නවතින්න
-
-        const backdrop = modal.querySelector('.modal-backdrop');
-        const panel = modal.querySelector('.modal-panel');
-
-        modal.classList.remove('hidden');
-        
-        // Animation එක පෙනෙන්නට සුළු වේලාවක් දෙන්න
+        // 2. Contact තොරතුරු පෙන්වීම (Simulated)
         setTimeout(() => {
-            if(backdrop) backdrop.classList.remove('opacity-0');
-            if(panel) {
-                panel.classList.remove('scale-95', 'opacity-0');
-                panel.classList.add('scale-100', 'opacity-100');
+            const addr = document.getElementById('footerAddress');
+            const phone = document.getElementById('footerPhone');
+            const email = document.getElementById('footerEmail');
+
+            if (addr) addr.innerText = "616-B, Dikhenagama, Horana";
+            if (phone) phone.innerText = "+94 77 155 7685";
+            if (email) email.innerText = "dreammakersysc@gmail.com";
+        }, 500);
+
+        // 3. Popup (Modal) Open Function
+        window.openModal = function (modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return; // Modal එක නැත්නම් නවතින්න
+
+            const backdrop = modal.querySelector('.modal-backdrop');
+            const panel = modal.querySelector('.modal-panel');
+
+            modal.classList.remove('hidden');
+
+            // Animation එක පෙනෙන්නට සුළු වේලාවක් දෙන්න
+            setTimeout(() => {
+                if (backdrop) backdrop.classList.remove('opacity-0');
+                if (panel) {
+                    panel.classList.remove('scale-95', 'opacity-0');
+                    panel.classList.add('scale-100', 'opacity-100');
+                }
+            }, 10);
+        }
+
+        // 4. Popup (Modal) Close Function
+        window.closeModal = function (modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+
+            const backdrop = modal.querySelector('.modal-backdrop');
+            const panel = modal.querySelector('.modal-panel');
+
+            if (backdrop) backdrop.classList.add('opacity-0');
+            if (panel) {
+                panel.classList.remove('scale-100', 'opacity-100');
+                panel.classList.add('scale-95', 'opacity-0');
             }
-        }, 10);
-    }
 
-    // 4. Popup (Modal) Close Function
-    window.closeModal = function(modalId) {
-        const modal = document.getElementById(modalId);
-        if (!modal) return;
-
-        const backdrop = modal.querySelector('.modal-backdrop');
-        const panel = modal.querySelector('.modal-panel');
-
-        if(backdrop) backdrop.classList.add('opacity-0');
-        if(panel) {
-            panel.classList.remove('scale-100', 'opacity-100');
-            panel.classList.add('scale-95', 'opacity-0');
+            // Animation එක ඉවර වුනාම hide කරන්න
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
         }
 
-        // Animation එක ඉවර වුනාම hide කරන්න
-        setTimeout(() => {
-            modal.classList.add('hidden');
-        }, 300);
-    }
+        // 5. Modal එකෙන් එලිය click කල විට close වීම
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('modal-backdrop')) {
+                const modal = event.target.closest('[role="dialog"]');
+                if (modal) closeModal(modal.id);
+            }
+        });
 
-    // 5. Modal එකෙන් එලිය click කල විට close වීම
-    document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('modal-backdrop')) {
-            const modal = event.target.closest('[role="dialog"]');
-            if(modal) closeModal(modal.id);
-        }
-    });
-
-    // --- Footer Script End ---
-</script>
+        // --- Footer Script End ---
+    </script>
 </body>
+
 </html>

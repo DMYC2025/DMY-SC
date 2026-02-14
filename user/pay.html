@@ -1,26 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>My Payments - DMYSC</title>
-    <link rel="icon" type="image/png" href="../assets/logo_1.png">
-    
-    <!-- GOOGLE FONTS -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- MATERIAL SYMBOLS -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="icon" type="image/png" href="../assets/images/logo_1.png">
+
+    <!-- External User CSS -->
+    <link rel="stylesheet" href="../assets/css/user-style.css">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { 
-            darkMode: 'class', 
-            theme: { 
-                extend: { 
-                    colors: { 
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
                         // Google Material 3 Dark Colors
                         background: '#121212',
                         surface: '#1E1E1E',
@@ -32,64 +28,42 @@
                         error: '#ffb4ab',
                         'on-error': '#690005',
                         'surface-variant': '#444746',
-                    }, 
-                    fontFamily: { 
+                    },
+                    fontFamily: {
                         sans: ['Roboto', 'sans-serif'],
                         display: ['Outfit', 'sans-serif']
-                    }, 
+                    },
                     borderRadius: {
                         '4xl': '28px',
                     },
-                    animation: { 
+                    animation: {
                         'fade-in': 'fadeIn 0.4s cubic-bezier(0.2, 0.0, 0, 1.0)',
                     },
                     keyframes: {
                         fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
                     }
-                } 
-            } 
+                }
+            }
         }
     </script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    <style>
-        body { 
-            background-color: #121212;
-            color: #E3E3E3;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .material-symbols-rounded { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
-        
-        .m3-card {
-            background-color: #1E1E1E;
-            border-radius: 24px;
-            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .m3-card:hover {
-            background-color: #28282D;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transform: translateY(-2px);
-        }
 
-        .m3-navbar { background-color: #252529; border-radius: 999px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #252529; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #353539; border-radius: 10px; }
-    </style>
 </head>
+
 <body class="min-h-screen pb-24 md:pb-0 font-sans">
 
     <!-- Top Navigation (Desktop) -->
     <nav class="sticky top-4 z-40 w-full px-4 no-print">
         <div class="max-w-7xl mx-auto m3-navbar px-4 py-3 flex justify-between items-center">
             <a href="index.html" class="flex items-center gap-3 pl-2 group">
-                <button class="w-8 h-8 rounded-full bg-[#353539] flex items-center justify-center group-hover:bg-primary group-hover:text-[#003915] transition">
+                <button
+                    class="w-8 h-8 rounded-full bg-[#353539] flex items-center justify-center group-hover:bg-primary group-hover:text-[#003915] transition">
                     <span class="material-symbols-rounded text-[20px]">arrow_back</span>
                 </button>
                 <div class="flex flex-col">
@@ -97,20 +71,89 @@
                     <span class="text-[10px] text-secondary tracking-wider font-bold">History & Dues</span>
                 </div>
             </a>
-            
+
             <div class="flex items-center gap-3">
-                <a href="notifycation.html" class="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#3b3b3f] transition text-[#C4C7C5]">
-                    <span class="material-symbols-rounded">notifications</span>
-                </a>
-                <a href="profile.html" class="w-10 h-10 rounded-full p-1 hover:bg-[#3b3b3f] transition hidden md:block">
-                    <img id="navAvatar" src="https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg" class="w-full h-full rounded-full object-cover">
-                </a>
+                <!-- Notifications -->
+                <div class="relative">
+                    <button onclick="toggleNotifPopup()"
+                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#3b3b3f] transition text-[#C4C7C5] relative">
+                        <span class="material-symbols-rounded">notifications</span>
+                        <span id="notifBadgeDot"
+                            class="hidden absolute top-2 right-2.5 w-2 h-2 bg-error rounded-full border-2 border-[#252529]"></span>
+                    </button>
+                    <!-- Notification Popup -->
+                    <div id="notifPopup"
+                        class="hidden absolute right-0 mt-2 w-[300px] md:w-[380px] bg-[#252529] rounded-[28px] shadow-2xl origin-top-right z-50 animate-scale-up border border-[#353539] overflow-hidden">
+                        <div class="px-6 py-4 border-b border-[#353539] flex justify-between items-center bg-[#1E1E1E]">
+                            <h3 class="text-sm font-display font-bold text-[#E3E3E3] uppercase tracking-wider">Club
+                                Alerts</h3>
+                            <span class="text-[10px] text-primary font-bold">Recent</span>
+                        </div>
+                        <div id="notifPopupList" class="max-h-[350px] overflow-y-auto custom-scrollbar p-2 space-y-2">
+                            <div class="text-center py-8">
+                                <span class="material-symbols-rounded animate-spin text-primary">sync</span>
+                            </div>
+                        </div>
+                        <div class="p-3 border-t border-[#353539] bg-[#1E1E1E]">
+                            <a href="notifycation.html"
+                                class="flex items-center justify-center gap-2 w-full py-2 rounded-full bg-[#353539] hover:bg-primary hover:text-[#003915] text-[#E3E3E3] text-xs font-bold transition-all duration-300 group">
+                                View All Notifications
+                                <span
+                                    class="material-symbols-rounded text-xs group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Profile Pop -->
+                <div class="relative">
+                    <button onclick="toggleProfilePopup()"
+                        class="w-10 h-10 rounded-full p-1 bg-[#353539] hidden md:block border border-primary hover:scale-105 transition duration-300">
+                        <img id="navAvatar"
+                            src="https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg"
+                            class="w-full h-full rounded-full object-cover">
+                    </button>
+                    <div id="profilePopup"
+                        class="hidden absolute right-0 mt-2 w-72 bg-[#252529] rounded-[28px] shadow-xl p-4 origin-top-right z-50 animate-scale-up border border-[#353539]">
+                        <div class="flex flex-col items-center pb-4 border-b border-[#353539] mb-2">
+                            <img id="popupAvatar" src="" class="w-16 h-16 rounded-full mb-2 object-cover">
+                            <h3 id="popupName" class="text-base font-display font-medium text-[#E3E3E3]">Loading...</h3>
+                            <p id="popupEmail" class="text-xs text-[#C4C7C5]">...</p>
+                        </div>
+                        <div class="space-y-1">
+                            <div
+                                class="flex justify-between px-4 py-3 rounded-full hover:bg-[#353539] transition cursor-default">
+                                <span class="text-xs text-[#C4C7C5]">Club ID</span><span id="popupClubId"
+                                    class="text-xs font-medium text-primary">...</span>
+                            </div>
+                            <div
+                                class="flex justify-between px-4 py-3 rounded-full hover:bg-[#353539] transition cursor-default">
+                                <span class="text-xs text-[#C4C7C5]">NIC</span><span id="popupNic"
+                                    class="text-xs font-medium text-[#E3E3E3]">...</span>
+                            </div>
+                        </div>
+                        <div id="popupExecRole"
+                            class="hidden mt-2 p-2 rounded-lg bg-[#3b2d1d] text-[#ffdcbe] text-center text-xs font-bold">
+                        </div>
+                        <div id="popupCaptainRole"
+                            class="hidden mt-2 p-2 rounded-lg bg-[#1d2a3b] text-[#a0cfd0] text-center text-xs font-bold">
+                        </div>
+
+                        <a href="profile.html"
+                            class="flex items-center gap-3 px-4 py-3 mt-2 rounded-full hover:bg-[#353539] transition text-sm text-[#E3E3E3]">
+                            <span class="material-symbols-rounded text-[20px]">edit</span> Edit Profile
+                        </a>
+                        <button onclick="logout()"
+                            class="w-full mt-1 flex items-center gap-3 px-4 py-3 rounded-full hover:bg-[#3c2525] text-error transition text-sm text-left">
+                            <span class="material-symbols-rounded text-[20px]">logout</span> Logout
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
 
     <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
-        
+
         <!-- Header Card -->
         <div class="m3-card p-6 md:p-8 relative overflow-hidden bg-[#252529]" data-aos="fade-down">
             <div class="relative z-10">
@@ -130,37 +173,45 @@
         </div>
 
         <div class="flex flex-col lg:flex-row gap-6">
-            
+
             <!-- Left Column: Content -->
             <div class="flex-1 space-y-6">
-                
+
                 <!-- Total Summary Card -->
-                <div class="m3-card p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group bg-[#1b2e23] border border-[#233f2e]" data-aos="fade-up">
+                <div class="m3-card p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group bg-[#1b2e23] border border-[#233f2e]"
+                    data-aos="fade-up">
                     <div class="absolute right-0 top-0 p-10 opacity-5 group-hover:opacity-10 transition duration-500">
                         <span class="material-symbols-rounded text-9xl text-primary">payments</span>
                     </div>
                     <div class="text-center md:text-left z-10">
-                        <p class="text-[#a6f7bd] font-bold uppercase tracking-widest text-xs mb-2 opacity-80">Total Contribution</p>
-                        <h2 class="text-4xl md:text-6xl font-display font-normal text-[#E3E3E3] flex items-baseline gap-2 justify-center md:justify-start">
+                        <p class="text-[#a6f7bd] font-bold uppercase tracking-widest text-xs mb-2 opacity-80">Total
+                            Contribution</p>
+                        <h2
+                            class="text-4xl md:text-6xl font-display font-normal text-[#E3E3E3] flex items-baseline gap-2 justify-center md:justify-start">
                             <span id="totalPaidDisplay">0</span> <span class="text-lg text-primary font-bold">LKR</span>
                         </h2>
                     </div>
                     <div class="text-center md:text-right z-10">
-                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 text-primary border border-primary/30">
-                            <span class="material-symbols-rounded text-lg">verified</span> <span class="text-xs font-bold uppercase">Verified Member</span>
+                        <div
+                            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 text-primary border border-primary/30">
+                            <span class="material-symbols-rounded text-lg">verified</span> <span
+                                class="text-xs font-bold uppercase">Verified Member</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Chart Section -->
                 <div class="m3-card p-6 bg-[#1E1E1E]" data-aos="fade-up" data-aos-delay="100">
-                    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 border-b border-[#353539] pb-4">
+                    <div
+                        class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 border-b border-[#353539] pb-4">
                         <h3 class="text-lg font-display font-medium text-[#E3E3E3] flex items-center gap-2">
                             <span class="material-symbols-rounded text-secondary">bar_chart</span> Overview
                         </h3>
                         <div class="flex gap-4 text-[10px] font-bold uppercase tracking-wider text-[#C4C7C5]">
-                            <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-primary"></span> Paid</span>
-                            <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-[#353539]">Unpaid</span></span>
+                            <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-primary"></span>
+                                Paid</span>
+                            <span class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-[#353539]">Unpaid</span></span>
                         </div>
                     </div>
                     <div id="paymentChart" class="w-full min-h-[300px]"></div>
@@ -178,27 +229,31 @@
 
             <!-- Right Column: Sidebar (Status) -->
             <div class="w-full lg:w-80 shrink-0 space-y-4 lg:order-last">
-                
+
                 <!-- Membership Status Card -->
                 <div class="m3-card p-6 bg-[#252529]" data-aos="fade-left">
                     <h3 class="text-xs font-bold text-secondary uppercase mb-4 tracking-widest flex items-center gap-2">
                         <span class="material-symbols-rounded text-[18px]">info</span> Membership Status
                     </h3>
-                    
-                    <div id="statusIndicator" class="flex flex-col items-center justify-center p-6 bg-[#1E1E1E] rounded-2xl border border-[#353539] mb-4">
-                        <div class="w-16 h-16 rounded-full bg-[#353539] flex items-center justify-center text-3xl mb-3 text-[#C4C7C5] animate-pulse">
+
+                    <div id="statusIndicator"
+                        class="flex flex-col items-center justify-center p-6 bg-[#1E1E1E] rounded-2xl border border-[#353539] mb-4">
+                        <div
+                            class="w-16 h-16 rounded-full bg-[#353539] flex items-center justify-center text-3xl mb-3 text-[#C4C7C5] animate-pulse">
                             <span class="material-symbols-rounded">sync</span>
                         </div>
                         <span class="font-bold text-[#E3E3E3] text-sm">Checking...</span>
                     </div>
-                    
+
                     <p class="text-xs text-[#C4C7C5] text-center leading-relaxed font-light">
-                        Monthly Fee: <strong class="text-[#E3E3E3]">100 LKR</strong>. <br>Please settle any arrears to maintain active status.
+                        Monthly Fee: <strong class="text-[#E3E3E3]">100 LKR</strong>. <br>Please settle any arrears to
+                        maintain active status.
                     </p>
                 </div>
 
                 <!-- Arrears Panel (Hidden by default) -->
-                <div id="arrearsPanel" class="m3-card p-6 hidden bg-[#3c2525] border border-[#533535]" data-aos="fade-left" data-aos-delay="100">
+                <div id="arrearsPanel" class="m3-card p-6 hidden bg-[#3c2525] border border-[#533535]"
+                    data-aos="fade-left" data-aos-delay="100">
                     <h3 class="text-xs font-bold text-error uppercase mb-4 tracking-widest flex items-center gap-2">
                         <span class="material-symbols-rounded text-[18px]">error</span> Action Required
                     </h3>
@@ -238,7 +293,7 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="../js/supabase.js"></script>
     <script src="../js/ui.js"></script>
-    
+
     <script>
         AOS.init();
         let currentUserProfile = null;
@@ -247,8 +302,10 @@
             // Check Access
             if (typeof _supabase === 'undefined') return;
             const { data: { session } } = await _supabase.auth.getSession();
-            if(!session) return window.location.href = '../login.html';
-            else loadAvatar(session.user.id);
+            if (!session) return window.location.href = '../up and in/login.html';
+            else {
+                loadProfilePopupData(); // Shared logic from ui.js
+            }
 
             // 1. Get User Profile (for Join Date & Name)
             const { data: profile } = await _supabase.from('profiles').select('full_name, member_id, created_at').eq('id', session.user.id).single();
@@ -267,10 +324,6 @@
             renderChartAndStatus(profile.created_at, payments);
         }
 
-        async function loadAvatar(uid) {
-            const { data } = await _supabase.from('profiles').select('avatar_url').eq('id', uid).single();
-            if(data && data.avatar_url) document.getElementById('navAvatar').src = data.avatar_url;
-        }
 
         function renderTotal(payments) {
             const total = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
@@ -281,7 +334,7 @@
             const feed = document.getElementById('historyFeed');
             feed.innerHTML = '<h3 class="text-lg font-display font-medium text-[#E3E3E3] mb-4 px-1">Recent Receipts</h3>';
 
-            if(!payments || payments.length === 0) {
+            if (!payments || payments.length === 0) {
                 feed.innerHTML += `
                     <div class="m3-card p-8 text-center flex flex-col items-center bg-[#252529] border-dashed border-2 border-[#353539]">
                         <span class="material-symbols-rounded text-[#C4C7C5] text-3xl mb-2">receipt_long</span>
@@ -338,19 +391,19 @@
 
             const options = {
                 series: [{ name: 'Status', data: chartData }],
-                chart: { 
-                    type: 'bar', 
-                    height: 300, 
-                    toolbar: { show: false }, 
+                chart: {
+                    type: 'bar',
+                    height: 300,
+                    toolbar: { show: false },
                     fontFamily: 'Roboto, sans-serif',
                     background: 'transparent'
                 },
-                plotOptions: { 
-                    bar: { borderRadius: 4, columnWidth: '60%', distributed: true } 
+                plotOptions: {
+                    bar: { borderRadius: 4, columnWidth: '60%', distributed: true }
                 },
                 dataLabels: { enabled: false },
-                xaxis: { 
-                    categories: chartCategories, 
+                xaxis: {
+                    categories: chartCategories,
                     labels: { style: { colors: '#8e918f', fontSize: '10px' }, rotate: -45 },
                     axisBorder: { show: false },
                     axisTicks: { show: false }
@@ -359,7 +412,7 @@
                 grid: { show: false },
                 tooltip: {
                     theme: 'dark',
-                    custom: function({ series, seriesIndex, dataPointIndex, w }) {
+                    custom: function ({ series, seriesIndex, dataPointIndex, w }) {
                         const data = w.config.series[seriesIndex].data[dataPointIndex];
                         const status = data.fillColor === '#a6f7bd' ? 'PAID' : 'UNPAID';
                         const colorClass = status === 'PAID' ? 'text-[#a6f7bd]' : 'text-[#ffb4ab]';
@@ -371,7 +424,7 @@
             };
 
             const chartEl = document.querySelector("#paymentChart");
-            chartEl.innerHTML = ""; 
+            chartEl.innerHTML = "";
             new ApexCharts(chartEl, options).render();
 
             const statusEl = document.getElementById('statusIndicator');
@@ -421,7 +474,7 @@
         async function generateReceipt(payId, month, amount, paidAt) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [100, 150] });
-            const logoData = await getBase64ImageFromURL('../assets/logo.png');
+            const logoData = await getBase64ImageFromURL('../assets/images/logo.png');
 
             // Header Background (Dark)
             doc.setFillColor(18, 18, 18); doc.rect(0, 0, 100, 30, 'F');
@@ -438,9 +491,9 @@
             doc.setDrawColor(200); doc.line(10, 40, 90, 40);
 
             let y = 48;
-            function addRow(l, v, b=false) {
+            function addRow(l, v, b = false) {
                 doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(80); doc.text(l, 10, y);
-                doc.setFont("helvetica", b?"bold":"normal"); doc.setTextColor(0); doc.text(v, 90, y, { align: 'right' });
+                doc.setFont("helvetica", b ? "bold" : "normal"); doc.setTextColor(0); doc.text(v, 90, y, { align: 'right' });
                 y += 8;
             }
 
@@ -450,14 +503,14 @@
 
             y += 5;
             // Amount Box (Green tint)
-            doc.setFillColor(230, 255, 240); doc.roundedRect(10, y-5, 80, 15, 2, 2, 'F');
+            doc.setFillColor(230, 255, 240); doc.roundedRect(10, y - 5, 80, 15, 2, 2, 'F');
             doc.setTextColor(0, 57, 21); // On-Primary
             doc.setFontSize(12); doc.setFont("helvetica", "bold");
-            doc.text("AMOUNT PAID", 15, y+2); doc.text(amount + " LKR", 85, y+2, { align: 'right' });
+            doc.text("AMOUNT PAID", 15, y + 2); doc.text(amount + " LKR", 85, y + 2, { align: 'right' });
 
             y += 20; doc.setFontSize(7); doc.setTextColor(150);
             doc.text("Thank you for your contribution!", 50, y, { align: 'center' });
-            
+
             doc.save(`Receipt_${month}.pdf`);
         }
 
@@ -466,74 +519,75 @@
     <div id="global-footer-placeholder"></div>
     <script src="../js/footer-loader.js"></script>
     <script>
-    // --- Footer Script Start ---
+        // --- Footer Script Start ---
 
-    // 1. Footer එකේ වර්ෂය update කිරීම
-    const yearElem = document.getElementById('year');
-    if(yearElem) {
-        yearElem.innerText = new Date().getFullYear();
-    }
+        // 1. Footer එකේ වර්ෂය update කිරීම
+        const yearElem = document.getElementById('year');
+        if (yearElem) {
+            yearElem.innerText = new Date().getFullYear();
+        }
 
-    // 2. Contact තොරතුරු පෙන්වීම (Simulated)
-    setTimeout(() => {
-        const addr = document.getElementById('footerAddress');
-        const phone = document.getElementById('footerPhone');
-        const email = document.getElementById('footerEmail');
-        
-        if(addr) addr.innerText = "616-B, Dikhenagama, Horana";
-        if(phone) phone.innerText = "+94 77 155 7685";
-        if(email) email.innerText = "dreammakersysc@gmail.com";
-    }, 500);
-
-    // 3. Popup (Modal) Open Function
-    window.openModal = function(modalId) {
-        const modal = document.getElementById(modalId);
-        if (!modal) return; // Modal එක නැත්නම් නවතින්න
-
-        const backdrop = modal.querySelector('.modal-backdrop');
-        const panel = modal.querySelector('.modal-panel');
-
-        modal.classList.remove('hidden');
-        
-        // Animation එක පෙනෙන්නට සුළු වේලාවක් දෙන්න
+        // 2. Contact තොරතුරු පෙන්වීම (Simulated)
         setTimeout(() => {
-            if(backdrop) backdrop.classList.remove('opacity-0');
-            if(panel) {
-                panel.classList.remove('scale-95', 'opacity-0');
-                panel.classList.add('scale-100', 'opacity-100');
+            const addr = document.getElementById('footerAddress');
+            const phone = document.getElementById('footerPhone');
+            const email = document.getElementById('footerEmail');
+
+            if (addr) addr.innerText = "616-B, Dikhenagama, Horana";
+            if (phone) phone.innerText = "+94 77 155 7685";
+            if (email) email.innerText = "dreammakersysc@gmail.com";
+        }, 500);
+
+        // 3. Popup (Modal) Open Function
+        window.openModal = function (modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return; // Modal එක නැත්නම් නවතින්න
+
+            const backdrop = modal.querySelector('.modal-backdrop');
+            const panel = modal.querySelector('.modal-panel');
+
+            modal.classList.remove('hidden');
+
+            // Animation එක පෙනෙන්නට සුළු වේලාවක් දෙන්න
+            setTimeout(() => {
+                if (backdrop) backdrop.classList.remove('opacity-0');
+                if (panel) {
+                    panel.classList.remove('scale-95', 'opacity-0');
+                    panel.classList.add('scale-100', 'opacity-100');
+                }
+            }, 10);
+        }
+
+        // 4. Popup (Modal) Close Function
+        window.closeModal = function (modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+
+            const backdrop = modal.querySelector('.modal-backdrop');
+            const panel = modal.querySelector('.modal-panel');
+
+            if (backdrop) backdrop.classList.add('opacity-0');
+            if (panel) {
+                panel.classList.remove('scale-100', 'opacity-100');
+                panel.classList.add('scale-95', 'opacity-0');
             }
-        }, 10);
-    }
 
-    // 4. Popup (Modal) Close Function
-    window.closeModal = function(modalId) {
-        const modal = document.getElementById(modalId);
-        if (!modal) return;
-
-        const backdrop = modal.querySelector('.modal-backdrop');
-        const panel = modal.querySelector('.modal-panel');
-
-        if(backdrop) backdrop.classList.add('opacity-0');
-        if(panel) {
-            panel.classList.remove('scale-100', 'opacity-100');
-            panel.classList.add('scale-95', 'opacity-0');
+            // Animation එක ඉවර වුනාම hide කරන්න
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
         }
 
-        // Animation එක ඉවර වුනාම hide කරන්න
-        setTimeout(() => {
-            modal.classList.add('hidden');
-        }, 300);
-    }
+        // 5. Modal එකෙන් එලිය click කල විට close වීම
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('modal-backdrop')) {
+                const modal = event.target.closest('[role="dialog"]');
+                if (modal) closeModal(modal.id);
+            }
+        });
 
-    // 5. Modal එකෙන් එලිය click කල විට close වීම
-    document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('modal-backdrop')) {
-            const modal = event.target.closest('[role="dialog"]');
-            if(modal) closeModal(modal.id);
-        }
-    });
-
-    // --- Footer Script End ---
-</script>
+        // --- Footer Script End ---
+    </script>
 </body>
+
 </html>

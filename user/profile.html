@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>My Profile - DMYSC</title>
-    <link rel="icon" type="image/png" href="../assets/logo_1.png">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="icon" type="image/png" href="../assets/images/logo_1.png">
+
+    <!-- External User CSS -->
+    <link rel="stylesheet" href="../assets/css/user-style.css">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { 
-            darkMode: 'class', 
-            theme: { 
-                extend: { 
-                    colors: { 
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
                         background: '#121212',
                         surface: '#1E1E1E',
                         'surface-container': '#252529',
@@ -27,91 +25,39 @@
                         secondary: '#c2c9bd',
                         tertiary: '#a0cfd0',
                         error: '#ffb4ab',
-                    }, 
-                    fontFamily: { 
+                    },
+                    fontFamily: {
                         sans: ['Roboto', 'sans-serif'],
                         display: ['Outfit', 'sans-serif']
-                    }, 
+                    },
                     borderRadius: {
                         '4xl': '28px',
                     },
-                    animation: { 
+                    animation: {
                         'fade-in': 'fadeIn 0.4s cubic-bezier(0.2, 0.0, 0, 1.0)',
                     },
                     keyframes: {
                         fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
                     }
-                } 
-            } 
+                }
+            }
         }
     </script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    <style>
-        body { 
-            background-color: #121212;
-            color: #E3E3E3;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .material-symbols-rounded { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
-        
-        .m3-card {
-            background-color: #1E1E1E;
-            border-radius: 24px;
-            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .m3-card:hover {
-            background-color: #28282D;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transform: translateY(-2px);
-        }
 
-        .m3-navbar { background-color: #252529; border-radius: 999px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-
-        /* M3 Input Styles */
-        .m3-input {
-            background-color: #252529;
-            border: 1px solid #353539;
-            color: #E3E3E3;
-            border-radius: 12px;
-            transition: all 0.2s;
-            width: 100%;
-        }
-        .m3-input:focus {
-            border-color: #a6f7bd;
-            outline: none;
-            background-color: #1E1E1E;
-        }
-        .m3-input:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            border-color: transparent;
-            background-color: #1E1E1E;
-        }
-
-        /* Action Buttons */
-        .action-btn {
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            background-color: #353539;
-            color: #C4C7C5;
-            transition: all 0.2s;
-        }
-        .action-btn:hover { background-color: #a6f7bd; color: #003915; }
-        .action-btn.delete:hover { background-color: #ffb4ab; color: #690005; }
-    </style>
 </head>
+
 <body class="min-h-screen pb-24 md:pb-0 font-sans">
 
     <nav class="sticky top-4 z-40 w-full px-4 no-print">
         <div class="max-w-7xl mx-auto m3-navbar px-4 py-3 flex justify-between items-center">
             <a href="index.html" class="flex items-center gap-3 pl-2 group">
-                <button class="w-8 h-8 rounded-full bg-[#353539] flex items-center justify-center group-hover:bg-primary group-hover:text-[#003915] transition">
+                <button
+                    class="w-8 h-8 rounded-full bg-[#353539] flex items-center justify-center group-hover:bg-primary group-hover:text-[#003915] transition">
                     <span class="material-symbols-rounded text-[20px]">arrow_back</span>
                 </button>
                 <div class="flex flex-col">
@@ -119,52 +65,141 @@
                     <span class="text-[10px] text-secondary tracking-wider font-bold">Manage Account</span>
                 </div>
             </a>
-            
+
             <div class="flex items-center gap-3">
-                <a href="notifycation.html" class="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#3b3b3f] transition text-[#C4C7C5]">
-                    <span class="material-symbols-rounded">notifications</span>
-                </a>
-                <div class="w-10 h-10 rounded-full p-1 bg-[#353539] hidden md:block border border-primary">
-                    <img id="navAvatar" src="https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg" class="w-full h-full rounded-full object-cover">
+                <!-- Notifications -->
+                <div class="relative">
+                    <button onclick="toggleNotifPopup()"
+                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#3b3b3f] transition text-[#C4C7C5] relative">
+                        <span class="material-symbols-rounded">notifications</span>
+                        <span id="notifBadgeDot"
+                            class="hidden absolute top-2 right-2.5 w-2 h-2 bg-error rounded-full border-2 border-[#252529]"></span>
+                    </button>
+                    <!-- Notification Popup -->
+                    <div id="notifPopup"
+                        class="hidden absolute right-0 mt-2 w-[300px] md:w-[380px] bg-[#252529] rounded-[28px] shadow-2xl origin-top-right z-50 animate-scale-up border border-[#353539] overflow-hidden">
+                        <div class="px-6 py-4 border-b border-[#353539] flex justify-between items-center bg-[#1E1E1E]">
+                            <h3 class="text-sm font-display font-bold text-[#E3E3E3] uppercase tracking-wider">Club
+                                Alerts</h3>
+                            <span class="text-[10px] text-primary font-bold">Recent</span>
+                        </div>
+                        <div id="notifPopupList" class="max-h-[350px] overflow-y-auto custom-scrollbar p-2 space-y-2">
+                            <div class="text-center py-8">
+                                <span class="material-symbols-rounded animate-spin text-primary">sync</span>
+                            </div>
+                        </div>
+                        <div class="p-3 border-t border-[#353539] bg-[#1E1E1E]">
+                            <a href="notifycation.html"
+                                class="flex items-center justify-center gap-2 w-full py-2 rounded-full bg-[#353539] hover:bg-primary hover:text-[#003915] text-[#E3E3E3] text-xs font-bold transition-all duration-300 group">
+                                View All Notifications
+                                <span
+                                    class="material-symbols-rounded text-xs group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Profile Pop -->
+                <div class="relative">
+                    <button onclick="toggleProfilePopup()"
+                        class="w-10 h-10 rounded-full p-1 bg-[#353539] hidden md:block border border-primary hover:scale-105 transition duration-300">
+                        <img id="navAvatar"
+                            src="https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg"
+                            class="w-full h-full rounded-full object-cover">
+                    </button>
+                    <div id="profilePopup"
+                        class="hidden absolute right-0 mt-2 w-72 bg-[#252529] rounded-[28px] shadow-xl p-4 origin-top-right z-[60] animate-scale-up border border-[#353539]">
+                        <div class="flex flex-col items-center pb-4 border-b border-[#353539] mb-2">
+                            <img id="popupAvatar" src="" class="w-16 h-16 rounded-full mb-2 object-cover">
+                            <h3 id="popupName" class="text-base font-display font-medium text-[#E3E3E3]">Loading...</h3>
+                            <p id="popupEmail" class="text-xs text-[#C4C7C5]">...</p>
+                        </div>
+                        <div class="space-y-1">
+                            <div
+                                class="flex justify-between px-4 py-3 rounded-full hover:bg-[#353539] transition cursor-default">
+                                <span class="text-xs text-[#C4C7C5]">Club ID</span><span id="popupClubId"
+                                    class="text-xs font-medium text-primary">...</span>
+                            </div>
+                            <div
+                                class="flex justify-between px-4 py-3 rounded-full hover:bg-[#353539] transition cursor-default">
+                                <span class="text-xs text-[#C4C7C5]">NIC</span><span id="popupNic"
+                                    class="text-xs font-medium text-[#E3E3E3]">...</span>
+                            </div>
+                        </div>
+                        <div id="popupExecRole"
+                            class="hidden mt-2 p-2 rounded-lg bg-[#3b2d1d] text-[#ffdcbe] text-center text-xs font-bold">
+                        </div>
+                        <div id="popupCaptainRole"
+                            class="hidden mt-2 p-2 rounded-lg bg-[#1d2a3b] text-[#a0cfd0] text-center text-xs font-bold">
+                        </div>
+
+                        <button onclick="logout()"
+                            class="w-full mt-4 flex items-center gap-3 px-4 py-3 rounded-full hover:bg-[#3c2525] text-error transition text-sm text-left">
+                            <span class="material-symbols-rounded text-[20px]">logout</span> Logout
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </nav>
 
     <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
-        
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
+
             <div class="lg:col-span-1 space-y-6">
-                
-                <div class="m3-card bg-[#1e2f23] p-0 overflow-hidden border border-[#2b3e32] relative group shadow-xl" data-aos="fade-up">
-                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 mix-blend-overlay"></div>
-                    
+
+                <div class="m3-card bg-[#1e2f23] p-0 overflow-hidden border border-[#2b3e32] relative group shadow-xl"
+                    data-aos="fade-up">
+                    <div
+                        class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 mix-blend-overlay">
+                    </div>
+
                     <div class="p-4 flex flex-col items-center relative z-10 pt-8 pb-8">
                         <div class="w-full flex justify-between items-start mb-4 px-2">
-                            <span class="text-[10px] font-display font-bold text-[#e4e2e2] tracking-widest opacity-50">DMYSC PASS</span>
-                            <span class="bg-[#a6f7bd] text-[#003915] text-[9px] font-bold px-2 py-0.5 rounded-md">MEMBER</span>
+                            <span
+                                class="text-[10px] font-display font-bold text-[#e4e2e2] tracking-widest opacity-50">DMYSC
+                                PASS</span>
+                            <span
+                                class="bg-[#a6f7bd] text-[#003915] text-[9px] font-bold px-2 py-0.5 rounded-md">MEMBER</span>
                         </div>
 
-                        <div class="w-28 h-28 p-1 rounded-full border-2 border-[#a6f7bd] mb-3 shadow-lg shadow-primary/20 relative">
-                            <img id="cardAvatar" src="https://via.placeholder.com/150" class="w-full h-full rounded-full object-cover bg-[#2b3e32]">
-                            <div id="googleBadge" class="hidden absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-md w-7 h-7 flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-4 h-4"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+                        <div
+                            class="w-28 h-28 p-1 rounded-full border-2 border-[#a6f7bd] mb-3 shadow-lg shadow-primary/20 relative">
+                            <img id="cardAvatar" src="https://via.placeholder.com/150"
+                                class="w-full h-full rounded-full object-cover bg-[#2b3e32]">
+                            <div id="googleBadge"
+                                class="hidden absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-md w-7 h-7 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-4 h-4">
+                                    <path fill="#EA4335"
+                                        d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+                                    <path fill="#4285F4"
+                                        d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+                                    <path fill="#FBBC05"
+                                        d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+                                    <path fill="#34A853"
+                                        d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+                                    <path fill="none" d="M0 0h48v48H0z" />
+                                </svg>
                             </div>
                         </div>
-                        
-                        <h2 id="cardName" class="text-xl font-display font-medium text-white text-center leading-tight flex items-center gap-1">...</h2>
+
+                        <h2 id="cardName"
+                            class="text-xl font-display font-medium text-white text-center leading-tight flex items-center gap-1">
+                            ...</h2>
                         <p class="text-[10px] text-[#a6f7bd] font-mono mt-1">ID: <span id="cardId">...</span></p>
                     </div>
 
-                    <div id="photoActions" class="bg-[#121212]/90 backdrop-blur p-4 border-t border-[#353539] flex justify-center gap-4 hidden">
+                    <div id="photoActions"
+                        class="bg-[#121212]/90 backdrop-blur p-4 border-t border-[#353539] flex justify-center gap-4 hidden">
                         <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden">
                         <input type="file" id="galleryInput" accept="image/*" class="hidden">
-                        
-                        <button onclick="document.getElementById('cameraInput').click()" class="action-btn" title="Take Photo">
+
+                        <button onclick="document.getElementById('cameraInput').click()" class="action-btn"
+                            title="Take Photo">
                             <span class="material-symbols-rounded">photo_camera</span>
                         </button>
-                        <button onclick="document.getElementById('galleryInput').click()" class="action-btn" title="Upload from Gallery">
+                        <button onclick="document.getElementById('galleryInput').click()" class="action-btn"
+                            title="Upload from Gallery">
                             <span class="material-symbols-rounded">image</span>
                         </button>
                         <button onclick="toggleLinkInput()" class="action-btn" title="Link URL">
@@ -176,67 +211,87 @@
                     </div>
 
                     <div id="linkInputArea" class="hidden bg-[#121212] p-4 border-t border-[#353539] flex gap-2">
-                        <input type="text" id="avatarLink" placeholder="Paste image URL..." class="flex-1 bg-[#252529] border border-[#353539] rounded-full px-4 py-2 text-xs text-[#E3E3E3] outline-none focus:border-primary">
-                        <button onclick="saveAvatarLink()" class="w-8 h-8 rounded-full bg-primary text-[#003915] flex items-center justify-center">
+                        <input type="text" id="avatarLink" placeholder="Paste image URL..."
+                            class="flex-1 bg-[#252529] border border-[#353539] rounded-full px-4 py-2 text-xs text-[#E3E3E3] outline-none focus:border-primary">
+                        <button onclick="saveAvatarLink()"
+                            class="w-8 h-8 rounded-full bg-primary text-[#003915] flex items-center justify-center">
                             <span class="material-symbols-rounded text-sm">check</span>
                         </button>
                     </div>
                 </div>
 
-                <p class="text-center text-xs text-[#C4C7C5] hidden" id="photoHelpText">Enable editing to manage photo.</p>
+                <p class="text-center text-xs text-[#C4C7C5] hidden" id="photoHelpText">Enable editing to manage photo.
+                </p>
 
             </div>
 
             <div class="lg:col-span-2 space-y-4">
-                
+
                 <div class="m3-card p-6 md:p-8 bg-[#1E1E1E] relative" data-aos="fade-left">
-                    
+
                     <div class="flex flex-row items-center justify-between mb-6 pb-4 border-b border-[#353539]">
                         <div>
                             <h2 class="text-xl font-display font-medium text-[#E3E3E3]">Profile Details</h2>
                             <p class="text-xs text-[#C4C7C5] mt-1">Manage your personal information.</p>
                         </div>
-                        <button id="editModeBtn" onclick="toggleEditMode()" class="group bg-[#252529] hover:bg-[#353539] border border-[#353539] px-4 py-2 rounded-full flex items-center gap-2 transition-all duration-300">
-                            <span class="text-xs font-bold text-[#C4C7C5] uppercase tracking-wider group-hover:text-white">Edit</span>
-                            <span class="material-symbols-rounded text-[18px] text-[#C4C7C5] group-hover:text-primary">edit</span>
+                        <button id="editModeBtn" onclick="toggleEditMode()"
+                            class="group bg-[#252529] hover:bg-[#353539] border border-[#353539] px-4 py-2 rounded-full flex items-center gap-2 transition-all duration-300">
+                            <span
+                                class="text-xs font-bold text-[#C4C7C5] uppercase tracking-wider group-hover:text-white">Edit</span>
+                            <span
+                                class="material-symbols-rounded text-[18px] text-[#C4C7C5] group-hover:text-primary">edit</span>
                         </button>
                     </div>
 
                     <form id="profileForm" class="space-y-8">
-                        
+
                         <div class="space-y-4">
-                            <h3 class="text-xs font-bold text-primary uppercase tracking-widest flex items-center gap-2">
+                            <h3
+                                class="text-xs font-bold text-primary uppercase tracking-widest flex items-center gap-2">
                                 <span class="material-symbols-rounded text-base">badge</span> Identity
                             </h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="md:col-span-2">
-                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Display Name</label>
-                                    <input type="text" id="displayName" disabled class="m3-input p-3 text-sm font-medium" placeholder="Name on ID Card">
+                                    <label
+                                        class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Display
+                                        Name</label>
+                                    <input type="text" id="displayName" disabled
+                                        class="m3-input p-3 text-sm font-medium" placeholder="Name on ID Card">
                                 </div>
                                 <div class="md:col-span-2">
-                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Full Name</label>
+                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Full
+                                        Name</label>
                                     <input type="text" id="fullName" disabled class="m3-input p-3 text-sm font-medium">
                                 </div>
                                 <div>
-                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">NIC Number</label>
-                                    <input type="text" id="nic" disabled class="m3-input p-3 text-sm font-medium font-mono">
+                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">NIC
+                                        Number</label>
+                                    <input type="text" id="nic" disabled
+                                        class="m3-input p-3 text-sm font-medium font-mono">
                                 </div>
                                 <div>
-                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Date of Birth</label>
-                                    <input type="date" id="dob" disabled class="m3-input p-3 text-sm font-medium text-[#C4C7C5]">
+                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Date
+                                        of Birth</label>
+                                    <input type="date" id="dob" disabled
+                                        class="m3-input p-3 text-sm font-medium text-[#C4C7C5]">
                                 </div>
                             </div>
                         </div>
 
                         <div class="space-y-4 pt-4 border-t border-[#353539]">
-                            <h3 class="text-xs font-bold text-secondary uppercase tracking-widest flex items-center gap-2">
+                            <h3
+                                class="text-xs font-bold text-secondary uppercase tracking-widest flex items-center gap-2">
                                 <span class="material-symbols-rounded text-base">contact_phone</span> Contact Info
                             </h3>
-                            
-                            <div id="emailContainer" class="bg-[#252529]/50 rounded-xl p-4 border border-[#353539] flex items-center justify-between">
+
+                            <div id="emailContainer"
+                                class="bg-[#252529]/50 rounded-xl p-4 border border-[#353539] flex items-center justify-between">
                                 <div>
-                                    <label class="text-[10px] font-bold text-[#C4C7C5] uppercase tracking-widest mb-1 block">Primary Email</label>
-                                    <div id="email" class="text-[#E3E3E3] font-mono text-sm break-all flex items-center gap-2">
+                                    <label
+                                        class="text-[10px] font-bold text-[#C4C7C5] uppercase tracking-widest mb-1 block">Primary
+                                        Email</label>
+                                    <div id="email"
+                                        class="text-[#E3E3E3] font-mono text-sm break-all flex items-center gap-2">
                                         Loading...
                                     </div>
                                 </div>
@@ -245,42 +300,58 @@
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">WhatsApp</label>
-                                    <input type="text" id="whatsapp" disabled class="m3-input p-3 text-sm font-medium font-mono" placeholder="07x xxxxxxx">
+                                    <label
+                                        class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">WhatsApp</label>
+                                    <input type="text" id="whatsapp" disabled
+                                        class="m3-input p-3 text-sm font-medium font-mono" placeholder="07x xxxxxxx">
                                 </div>
                                 <div>
-                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Phone Number</label>
-                                    <input type="text" id="phone" disabled class="m3-input p-3 text-sm font-medium font-mono" placeholder="07x xxxxxxx">
+                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Phone
+                                        Number</label>
+                                    <input type="text" id="phone" disabled
+                                        class="m3-input p-3 text-sm font-medium font-mono" placeholder="07x xxxxxxx">
                                 </div>
                                 <div class="md:col-span-2">
-                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Residential Address</label>
-                                    <textarea id="address" rows="2" disabled class="m3-input p-3 text-sm font-medium" placeholder="No, Street, City..."></textarea>
+                                    <label
+                                        class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Residential
+                                        Address</label>
+                                    <textarea id="address" rows="2" disabled class="m3-input p-3 text-sm font-medium"
+                                        placeholder="No, Street, City..."></textarea>
                                 </div>
                             </div>
                         </div>
 
                         <div class="space-y-4 pt-4 border-t border-[#353539]">
-                            <h3 class="text-xs font-bold text-tertiary uppercase tracking-widest flex items-center gap-2">
+                            <h3
+                                class="text-xs font-bold text-tertiary uppercase tracking-widest flex items-center gap-2">
                                 <span class="material-symbols-rounded text-base">school</span> Professional & Skills
                             </h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="md:col-span-2">
-                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Job / Profession</label>
-                                    <input type="text" id="job" disabled class="m3-input p-3 text-sm font-medium" placeholder="Student / Engineer / etc.">
+                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Job /
+                                        Profession</label>
+                                    <input type="text" id="job" disabled class="m3-input p-3 text-sm font-medium"
+                                        placeholder="Student / Engineer / etc.">
                                 </div>
                                 <div>
-                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Sports Skills</label>
-                                    <textarea id="sports" rows="2" disabled class="m3-input p-3 text-sm font-medium" placeholder="Cricket, Volleyball, etc."></textarea>
+                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Sports
+                                        Skills</label>
+                                    <textarea id="sports" rows="2" disabled class="m3-input p-3 text-sm font-medium"
+                                        placeholder="Cricket, Volleyball, etc."></textarea>
                                 </div>
                                 <div>
-                                    <label class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Aesthetic Skills</label>
-                                    <textarea id="aesthetic" rows="2" disabled class="m3-input p-3 text-sm font-medium" placeholder="Dancing, Singing, etc."></textarea>
+                                    <label
+                                        class="text-[10px] font-bold text-[#8e918f] uppercase ml-1 mb-1 block">Aesthetic
+                                        Skills</label>
+                                    <textarea id="aesthetic" rows="2" disabled class="m3-input p-3 text-sm font-medium"
+                                        placeholder="Dancing, Singing, etc."></textarea>
                                 </div>
                             </div>
                         </div>
 
                         <div id="saveBtnContainer" class="text-right pt-6 border-t border-[#353539] hidden">
-                            <button type="submit" id="saveBtn" class="bg-primary hover:bg-[#b1fcc5] text-[#003915] font-medium py-3 px-8 rounded-full shadow-lg transition flex items-center justify-center gap-2 ml-auto text-sm">
+                            <button type="submit" id="saveBtn"
+                                class="bg-primary hover:bg-[#b1fcc5] text-[#003915] font-medium py-3 px-8 rounded-full shadow-lg transition flex items-center justify-center gap-2 ml-auto text-sm">
                                 <span class="material-symbols-rounded text-[20px]">save</span> Save Changes
                             </button>
                         </div>
@@ -319,13 +390,17 @@
                     <p class="text-[10px] text-[#C4C7C5]">Please review your updates before saving.</p>
                 </div>
             </div>
-            
-            <div class="space-y-3 mb-6 bg-[#1E1E1E] p-4 rounded-xl border border-[#353539] max-h-60 overflow-y-auto custom-scrollbar" id="changesSummary">
-                </div>
+
+            <div class="space-y-3 mb-6 bg-[#1E1E1E] p-4 rounded-xl border border-[#353539] max-h-60 overflow-y-auto custom-scrollbar"
+                id="changesSummary">
+            </div>
 
             <div class="flex gap-3 justify-end">
-                <button onclick="closeConfirmModal()" class="px-5 py-2.5 rounded-full text-error font-bold text-xs hover:bg-[#3c2525] border border-transparent hover:border-error/30 transition">Discard Changes</button>
-                <button id="confirmSaveBtn" class="px-5 py-2.5 rounded-full bg-primary text-[#003915] font-bold text-xs hover:bg-[#b1fcc5] transition flex items-center gap-2">
+                <button onclick="closeConfirmModal()"
+                    class="px-5 py-2.5 rounded-full text-error font-bold text-xs hover:bg-[#3c2525] border border-transparent hover:border-error/30 transition">Discard
+                    Changes</button>
+                <button id="confirmSaveBtn"
+                    class="px-5 py-2.5 rounded-full bg-primary text-[#003915] font-bold text-xs hover:bg-[#b1fcc5] transition flex items-center gap-2">
                     <span class="material-symbols-rounded text-[16px]">check_circle</span> Confirm
                 </button>
             </div>
@@ -335,10 +410,10 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="../js/supabase.js"></script>
     <script src="../js/ui.js"></script>
-    
+
     <script>
         AOS.init();
-        
+
         let userId = null;
         let originalData = {};
         let pendingUpdates = {};
@@ -370,28 +445,18 @@
 
             // Check Session
             const { data: { session } } = await _supabase.auth.getSession();
-            if (!session) return window.location.href = '../login.html';
+            if (!session) return window.location.href = '../up and in/login.html';
             userId = session.user.id;
 
             // Fetch Profile
             const { data: profile } = await _supabase.from('profiles').select('*').eq('id', userId).single();
-            
+
             if (profile) {
                 originalData = { ...profile };
-
-                // 1. Populate Avatar & Info
-                const avatar = (profile.avatar_url && profile.avatar_url.trim() !== "") ? profile.avatar_url : DEFAULT_AVATAR;
-                document.getElementById('cardAvatar').src = avatar;
-                if(document.getElementById('navAvatar')) document.getElementById('navAvatar').src = avatar;
-                
-                const nameToShow = profile.display_name || profile.full_name;
-                document.getElementById('cardName').innerText = nameToShow;
-                document.getElementById('cardId').innerText = profile.member_id || 'PENDING';
-                
-                // 2. Google Binding Logic
+                loadProfilePopupData(); // Shared logic from ui.js
                 const email = profile.email || 'No Email Linked';
                 const isGoogle = email.includes('@gmail.com') || (session.user.app_metadata.provider === 'google');
-                
+
                 if (isGoogle) {
                     document.getElementById('email').innerHTML = `
                         <div class="flex items-center gap-2 bg-white/10 px-2 py-1 rounded-md">
@@ -422,13 +487,13 @@
 
         function toggleEditMode() {
             const isCurrentlyDisabled = document.getElementById('displayName').disabled;
-            
+
             if (isCurrentlyDisabled) {
                 // UNLOCK
                 inputs.forEach(input => {
                     input.disabled = false;
                     const label = input.previousElementSibling;
-                    if(label) label.classList.replace('text-[#8e918f]', 'text-primary');
+                    if (label) label.classList.replace('text-[#8e918f]', 'text-primary');
                 });
 
                 // Show Actions
@@ -446,7 +511,7 @@
             } else {
                 // LOCK
                 lockForm();
-                
+
                 // Button Style
                 editModeBtn.classList.replace('border-primary', 'border-[#353539]');
                 editModeBtn.innerHTML = `
@@ -460,7 +525,7 @@
             inputs.forEach(input => {
                 input.disabled = true;
                 const label = input.previousElementSibling;
-                if(label) label.classList.replace('text-primary', 'text-[#8e918f]');
+                if (label) label.classList.replace('text-primary', 'text-[#8e918f]');
             });
             photoActions.classList.add('hidden');
             photoHelpText.classList.remove('hidden');
@@ -472,10 +537,10 @@
         function handleFileUpload(file) {
             if (!file) return;
             const fileName = `${userId}-${Date.now()}`;
-            
+
             // Simple visual feedback
-            const btn = document.querySelector('.action-btn'); 
-            
+            const btn = document.querySelector('.action-btn');
+
             _supabase.storage.from('avatars').upload(fileName, file)
                 .then(({ error }) => {
                     if (error) throw error;
@@ -499,7 +564,7 @@
 
         async function saveAvatarLink() {
             const url = document.getElementById('avatarLink').value;
-            if(url) {
+            if (url) {
                 await updateAvatarUrl(url);
                 document.getElementById('linkInputArea').classList.add('hidden');
             }
@@ -507,21 +572,21 @@
 
         // 4. Remove Logic
         async function removeAvatar() {
-            if(confirm("Remove profile photo and reset to default?")) {
+            if (confirm("Remove profile photo and reset to default?")) {
                 await updateAvatarUrl("");
             }
         }
 
         async function updateAvatarUrl(url) {
-            const finalUrl = url || ""; 
+            const finalUrl = url || "";
             const { error } = await _supabase.from('profiles').update({ avatar_url: finalUrl }).eq('id', userId);
-            
+
             if (!error) {
                 const displayUrl = finalUrl || DEFAULT_AVATAR;
                 document.getElementById('cardAvatar').src = displayUrl;
-                if(document.getElementById('navAvatar')) document.getElementById('navAvatar').src = displayUrl;
+                if (document.getElementById('navAvatar')) document.getElementById('navAvatar').src = displayUrl;
                 // Optional: Update original data to reflect image change immediately
-                if(originalData) originalData.avatar_url = finalUrl;
+                if (originalData) originalData.avatar_url = finalUrl;
             } else {
                 alert('Error updating photo.');
             }
@@ -530,7 +595,7 @@
         // --- FORM SAVE LOGIC WITH DIFF ---
         document.getElementById('profileForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            
+
             const updates = {
                 display_name: document.getElementById('displayName').value,
                 full_name: document.getElementById('fullName').value,
@@ -548,7 +613,7 @@
             for (const key in updates) {
                 const originalVal = originalData[key] || '';
                 const newVal = updates[key] || '';
-                
+
                 if (originalVal !== newVal) {
                     changedFields.push({
                         label: fieldLabels[key],
@@ -568,7 +633,7 @@
             // Populate Modal with Diff
             const summaryDiv = document.getElementById('changesSummary');
             summaryDiv.innerHTML = '';
-            
+
             changedFields.forEach(field => {
                 summaryDiv.innerHTML += `
                     <div class="mb-3 pb-3 border-b border-[#353539] last:border-0 last:mb-0 last:pb-0">
@@ -589,31 +654,31 @@
         });
 
         // "Discard" action simply closes the modal without saving
-        function closeConfirmModal() { 
-            document.getElementById('confirmModal').classList.add('hidden'); 
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.add('hidden');
         }
 
         document.getElementById('confirmSaveBtn').addEventListener('click', async () => {
             const btn = document.getElementById('confirmSaveBtn');
             const originalHTML = btn.innerHTML;
-            
+
             btn.innerHTML = '<span class="material-symbols-rounded animate-spin">refresh</span> Saving...';
             btn.disabled = true;
 
             const { error } = await _supabase.from('profiles').update(pendingUpdates).eq('id', userId);
-            
+
             if (!error) {
                 // Update local originalData
                 originalData = { ...originalData, ...pendingUpdates };
-                
+
                 const nameToShow = pendingUpdates.display_name || pendingUpdates.full_name;
                 document.getElementById('cardName').innerText = nameToShow;
-                
+
                 closeConfirmModal();
                 toggleEditMode(); // Lock form again
-                
+
                 // Show success feedback (toast-like) could be added here
-                alert('Profile updated successfully!'); 
+                alert('Profile updated successfully!');
             } else {
                 alert('Error saving: ' + error.message);
             }
@@ -626,4 +691,5 @@
     <div id="global-footer-placeholder"></div>
     <script src="../js/footer-loader.js"></script>
 </body>
+
 </html>
