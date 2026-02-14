@@ -1,153 +1,231 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DMYSC - Member Management</title>
-    <link rel="icon" type="image/png" href="../assets/logo_1.png">
+    <link rel="icon" type="image/png" href="../assets/images/logo_1.png">
+
+    <!-- External Admin CSS -->
+    <link rel="stylesheet" href="../assets/css/admin-style.css">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: { green: '#16a34a', dark: '#020617' } }, fontFamily: { poppins: ['Poppins', 'sans-serif'] } } } }
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#121212',
+                        surface: '#1E1E1E',
+                        'surface-container': '#252529',
+                        'surface-bright': '#3b3b3f',
+                        primary: '#a6f7bd',
+                        'on-primary': '#003915',
+                        secondary: '#c2c9bd',
+                        tertiary: '#a0cfd0',
+                        error: '#ffb4ab',
+                        outline: '#8e918f'
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif']
+                    }
+                }
+            }
+        }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Chart Library -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <style>
-        body { font-family: 'Poppins', sans-serif; }
-        .glass-panel { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
-        .input-glass { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); color: white; }
-        .input-disabled { background: rgba(15, 23, 42, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); color: #94a3b8; cursor: not-allowed; }
-        
-        .tab-btn { transition: all 0.3s ease; border-bottom: 2px solid transparent; opacity: 0.6; }
-        .tab-btn.active { opacity: 1; border-bottom-color: #16a34a; color: #16a34a; font-weight: bold; background: rgba(22, 163, 74, 0.1); }
-        
-        #sidebar { transition: transform 0.3s ease-in-out; }
-        .sidebar-open { transform: translateX(0) !important; }
-        .sidebar-closed { transform: translateX(-100%); }
-        @media (min-width: 768px) { .sidebar-closed { transform: translateX(0); } }
-        
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
 
-        /* Delete Animation */
-        @keyframes countdown {
-            from { width: 100%; }
-            to { width: 0%; }
-        }
-        .countdown-bar {
-            animation: countdown 5s linear forwards;
-        }
-    </style>
+
 </head>
-<body class="bg-[#0b1121] text-slate-100 min-h-screen font-poppins overflow-hidden">
 
-    <div class="flex h-screen relative">
-        <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/80 z-40 hidden md:hidden backdrop-blur-sm"></div>
+<body class="bg-background text-slate-100 min-h-screen font-poppins overflow-hidden">
 
-        <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-slate-900 border-r border-slate-800 flex flex-col z-50 sidebar-closed md:relative md:translate-x-0 shadow-2xl md:shadow-none">
-             <div class="p-6 flex items-center justify-between border-b border-slate-800 h-24">
+    <div class="flex h-screen relative bg-background">
+
+        <div id="overlay" onclick="toggleSidebar()"
+            class="fixed inset-0 bg-black/60 z-40 hidden md:hidden backdrop-blur-sm"></div>
+
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 w-[300px] m3-drawer flex flex-col z-50 sidebar-closed md:relative md:translate-x-0 shadow-xl md:shadow-none pr-3">
+            <div class="p-6 pl-8 flex items-center justify-between h-20">
                 <div class="flex items-center gap-3">
-                    <img src="../assets/logo.png" class="h-10 w-10 object-contain">
-                    <div><h2 class="font-black text-lg text-white">ADMIN</h2><p class="text-[10px] text-brand-green font-bold">Control Panel</p></div>
+                    <img src="../assets/images/logo.png" class="h-8 w-8 object-contain">
+                    <div>
+                        <h2 class="font-display font-bold text-lg text-[#E3E3E3] tracking-tight">Admin<span
+                                class="text-primary">Panel</span></h2>
+                    </div>
                 </div>
-                <button onclick="toggleSidebar()" class="md:hidden text-slate-400"><i class="ph-bold ph-x text-xl"></i></button>
+                <button onclick="toggleSidebar()" class="md:hidden text-[#C4C7C5] hover:text-white"><span
+                        class="material-symbols-rounded">close</span></button>
             </div>
-            <nav class="flex-1 p-4 space-y-2 mt-4 overflow-y-auto">
-                <a href="index.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-squares-four text-xl"></i> Dashboard</a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 bg-brand-green text-white shadow-lg shadow-brand-green/20 rounded-xl font-bold"><i class="ph-bold ph-users text-xl"></i> Member Manage</a>
-                <a href="events.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-calendar-plus text-xl"></i> Event Manage</a>
-                <a href="sports.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-trophy text-xl"></i> Sport Manage</a>
-                <a href="notifications.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-bell-ringing text-xl"></i> Notifications</a>
-                <a href="quick_links.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-link text-xl"></i> Quick Links</a>
-                <a href="committee.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-users-three text-xl"></i> Committee</a>
-                <a href="payment.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-coins text-xl"></i> Payments</a>
-                <a href="about.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-info text-xl"></i> About Info</a>
-                <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium"><i class="ph-bold ph-gear text-xl"></i> Page Settings</a>
+
+            <nav class="flex-1 px-3 space-y-1 mt-2 overflow-y-auto custom-scrollbar">
+                <a href="index.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">dashboard</span> Dashboard
+                </a>
+                <a href="#" class="m3-nav-item active flex items-center gap-4 px-6 py-3.5 text-sm font-medium">
+                    <span class="material-symbols-rounded text-[20px]">group</span> Members
+                </a>
+                <a href="events.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">event</span> Events
+                </a>
+                <a href="sports.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">emoji_events</span> Sports
+                </a>
+                <a href="notifications.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">notifications</span> Notifications
+                </a>
+                <a href="quick_links.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">link</span> Quick Links
+                </a>
+                <a href="committee.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">diversity_3</span> Committee
+                </a>
+                <a href="payment.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">payments</span> Payments
+                </a>
+                <a href="about.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">info</span> About Info
+                </a>
+                <a href="settings.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">settings</span> Page Settings
+                </a>
             </nav>
-            <div class="p-4 border-t border-slate-800 bg-slate-900/50">
-                <button onclick="logout()" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl transition duration-300 border border-red-500/20 font-bold shadow-sm"><i class="ph-bold ph-sign-out"></i> Logout</button>
+
+            <div class="p-6 border-t border-[#353539]">
+                <button onclick="logout()"
+                    class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#3c2525] text-[#ffb4ab] hover:bg-[#533535] hover:text-white rounded-full transition duration-300 font-medium text-sm">
+                    <span class="material-symbols-rounded text-[20px]">logout</span> Logout
+                </button>
             </div>
         </aside>
 
-        <main class="flex-1 overflow-y-auto relative bg-[#0b1121]">
-            <button onclick="toggleSidebar()" class="md:hidden absolute top-6 right-6 z-40 bg-slate-800 backdrop-blur-md p-2 rounded-lg text-white border border-white/10 shadow-lg"><i class="ph-bold ph-list text-2xl"></i></button>
+        <main class="flex-1 overflow-y-auto relative bg-[#121212]">
+            <button onclick="toggleSidebar()"
+                class="md:hidden absolute top-6 right-6 z-40 bg-[#1E1E1E] p-2 rounded-full text-[#E3E3E3] border border-white/10 shadow-lg"><span
+                    class="material-symbols-rounded text-2xl">menu</span></button>
 
-            <div class="relative h-80 shrink-0 overflow-hidden bg-slate-900">
-                <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070')] bg-cover bg-center opacity-30"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-[#0b1121] via-slate-900/90 to-transparent"></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-[#0b1121] via-transparent to-transparent"></div>
-                
-                <div class="absolute bottom-24 left-6 md:left-12 z-10" data-aos="fade-right">
-                    <h1 class="text-3xl md:text-5xl font-black text-white flex items-center gap-3 drop-shadow-lg">
-                        <i class="ph-duotone ph-users-three"></i> Member Management
-                    </h1>
-                    <p class="text-green-200 text-sm font-bold mt-2 opacity-90 tracking-wide uppercase">Approve & Manage Members</p>
+            <!-- M3 Header Section -->
+            <div class="relative px-6 md:px-12 pt-12 pb-8">
+                <div class="flex items-end justify-between" data-aos="fade-up">
+                    <div>
+                        <h1
+                            class="text-3xl md:text-5xl font-display font-medium text-[#E3E3E3] flex items-center gap-3">
+                            <span class="material-symbols-rounded text-4xl md:text-5xl text-primary">groups</span>
+                            Member
+                            Management
+                        </h1>
+                        <p class="text-[#a6f7bd] text-sm font-medium mt-2 opacity-90 tracking-wide uppercase">Approve &
+                            Manage Members</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="max-w-7xl mx-auto px-4 lg:px-8 -mt-20 relative z-10 pb-12">
-                
-                <div class="glass-panel p-2 rounded-[1.5rem] mb-6 shadow-lg flex flex-col gap-4" data-aos="fade-up">
-                    
-                    <!-- Tabs -->
-                    <div class="flex p-1 bg-slate-800/50 rounded-xl overflow-x-auto">
-                        <button onclick="switchTab('admins')" id="tab-admins" class="tab-btn flex-1 py-3 px-6 rounded-lg text-sm flex items-center justify-center gap-2 whitespace-nowrap">
-                            <i class="ph-bold ph-shield-check text-purple-400"></i> Admins <span id="count-admins" class="bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-md text-xs">0</span>
+            <div class="max-w-7xl mx-auto px-4 lg:px-8 relative z-10 pb-12">
+
+                <div class="m3-card p-4 rounded-[24px] mb-6 bg-[#1E1E1E] border border-white/5 flex flex-col gap-6"
+                    data-aos="fade-up">
+
+                    <!-- M3 Tabs -->
+                    <div class="flex border-b border-[#353539] w-full overflow-x-auto">
+                        <button onclick="switchTab('admins')" id="tab-admins"
+                            class="tab-btn flex-1 py-4 text-sm font-medium flex items-center justify-center gap-2 whitespace-nowrap">
+                            <span class="material-symbols-rounded text-lg">shield_person</span> Admins <span
+                                id="count-admins"
+                                class="bg-[#353539] text-[#C4C7C5] px-2 py-0.5 rounded-full text-[10px]">0</span>
                         </button>
-                        <button onclick="switchTab('total')" id="tab-total" class="tab-btn active flex-1 py-3 px-6 rounded-lg text-sm flex items-center justify-center gap-2 whitespace-nowrap">
-                            <i class="ph-bold ph-users"></i> Members <span id="count-total" class="bg-slate-700 text-white px-2 py-0.5 rounded-md text-xs">0</span>
+                        <button onclick="switchTab('total')" id="tab-total"
+                            class="tab-btn active flex-1 py-4 text-sm font-medium flex items-center justify-center gap-2 whitespace-nowrap">
+                            <span class="material-symbols-rounded text-lg">group</span> Members <span id="count-total"
+                                class="bg-[#353539] text-[#C4C7C5] px-2 py-0.5 rounded-full text-[10px]">0</span>
                         </button>
-                        <button onclick="switchTab('pending')" id="tab-pending" class="tab-btn flex-1 py-3 px-6 rounded-lg text-sm flex items-center justify-center gap-2 whitespace-nowrap">
-                            <i class="ph-bold ph-clock"></i> Pending <span id="count-pending" class="bg-orange-500/20 text-orange-500 px-2 py-0.5 rounded-md text-xs">0</span>
+                        <button onclick="switchTab('pending')" id="tab-pending"
+                            class="tab-btn flex-1 py-4 text-sm font-medium flex items-center justify-center gap-2 whitespace-nowrap">
+                            <span class="material-symbols-rounded text-lg">hourglass_empty</span> Pending <span
+                                id="count-pending"
+                                class="bg-[#3c2525] text-[#ffb4ab] px-2 py-0.5 rounded-full text-[10px]">0</span>
                         </button>
-                        <button onclick="switchTab('active')" id="tab-active" class="tab-btn flex-1 py-3 px-6 rounded-lg text-sm flex items-center justify-center gap-2 whitespace-nowrap">
-                            <i class="ph-bold ph-check-circle"></i> Active <span id="count-active" class="bg-green-500/20 text-green-500 px-2 py-0.5 rounded-md text-xs">0</span>
+                        <button onclick="switchTab('active')" id="tab-active"
+                            class="tab-btn flex-1 py-4 text-sm font-medium flex items-center justify-center gap-2 whitespace-nowrap">
+                            <span class="material-symbols-rounded text-lg">check_circle</span> Active <span
+                                id="count-active"
+                                class="bg-[#003915] text-[#a6f7bd] px-2 py-0.5 rounded-full text-[10px]">0</span>
                         </button>
                     </div>
 
                     <!-- Search and Actions -->
-                    <div class="flex flex-col md:flex-row gap-3 px-2 pb-2">
+                    <div class="flex flex-col md:flex-row gap-4 px-2 pb-4">
                         <div class="relative w-full">
-                            <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                            <input type="text" id="searchInput" onkeyup="runFilters()" placeholder="Search by Name or NIC..." class="w-full pl-10 pr-4 py-2.5 rounded-xl input-glass text-sm font-medium transition focus:ring-2 focus:ring-brand-green/50 placeholder-slate-500">
+                            <span
+                                class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-[#8e918f]">search</span>
+                            <input type="text" id="searchInput" onkeyup="runFilters()"
+                                placeholder="Search by Name or NIC..."
+                                class="w-full pl-10 pr-4 py-3 rounded m3-input text-sm font-medium text-[#E3E3E3] placeholder-[#8e918f]">
                         </div>
                         <div class="relative w-full md:w-64">
-                            <i class="ph-bold ph-funnel absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                            <select id="sortSelect" onchange="runFilters()" class="w-full pl-10 pr-4 py-2.5 rounded-xl input-glass text-sm font-medium transition focus:ring-2 focus:ring-brand-green/50 text-slate-300 appearance-none cursor-pointer">
-                                <option value="newest" class="bg-slate-900">Newest Joined</option>
-                                <option value="name_asc" class="bg-slate-900">Name (A-Z)</option>
-                                <option value="age_young" class="bg-slate-900">Age (Youngest)</option>
-                                <option value="age_old" class="bg-slate-900">Age (Oldest)</option>
+                            <span
+                                class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-[#8e918f]">filter_list</span>
+                            <select id="sortSelect" onchange="runFilters()"
+                                class="w-full pl-10 pr-4 py-3 rounded m3-input text-sm font-medium text-[#E3E3E3] appearance-none cursor-pointer">
+                                <option value="newest" class="bg-[#252529]">Newest Joined</option>
+                                <option value="name_asc" class="bg-[#252529]">Name (A-Z)</option>
+                                <option value="age_young" class="bg-[#252529]">Age (Youngest)</option>
+                                <option value="age_old" class="bg-[#252529]">Age (Oldest)</option>
                             </select>
                         </div>
                         <!-- Download PDF Button -->
-                        <button onclick="generatePDF()" class="w-full md:w-auto px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-sm shadow-lg transition flex items-center justify-center gap-2">
-                            <i class="ph-bold ph-file-pdf"></i> Download PDF
+                        <button onclick="generatePDF()"
+                            class="w-full md:w-auto px-6 py-3 rounded-full bg-[#3c2525] hover:bg-[#533535] text-[#ffb4ab] hover:text-white font-medium text-sm shadow-lg transition flex items-center justify-center gap-2">
+                            <span class="material-symbols-rounded">picture_as_pdf</span> Download PDF
                         </button>
                     </div>
                 </div>
 
                 <!-- Members Table -->
-                <div class="bg-slate-900 rounded-[2rem] shadow-xl border border-slate-800 overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                <div class="bg-[#1E1E1E] rounded-[24px] shadow-xl border border-white/5 overflow-hidden"
+                    data-aos="fade-up" data-aos-delay="100">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse min-w-[800px]">
                             <thead>
-                                <tr class="bg-slate-800/50 border-b border-slate-800 text-xs uppercase tracking-wider text-slate-400">
-                                    <th class="p-6 font-bold w-12 text-center">
-                                        <input type="checkbox" id="selectAll" onclick="toggleSelectAll()" class="rounded bg-slate-700 border-slate-600 text-brand-green focus:ring-brand-green">
+                                <tr
+                                    class="bg-[#252529] border-b border-[#353539] text-xs uppercase tracking-wider text-[#C4C7C5]">
+                                    <th class="p-6 font-medium w-12 text-center">
+                                        <input type="checkbox" id="selectAll" onclick="toggleSelectAll()"
+                                            class="rounded bg-[#1E1E1E] border-[#8e918f] text-primary focus:ring-primary">
                                     </th>
-                                    <th class="p-6 font-bold">Profile Info</th>
-                                    <th class="p-6 font-bold">Details</th>
-                                    <th class="p-6 font-bold">Status</th>
-                                    <th class="p-6 font-bold text-right">Actions</th>
+                                    <th class="p-6 font-medium">Profile Info</th>
+                                    <th class="p-6 font-medium">Details</th>
+                                    <th class="p-6 font-medium">Status</th>
+                                    <th class="p-6 font-medium text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="membersTable" class="text-sm font-medium divide-y divide-slate-800 text-slate-300">
-                                <tr><td colspan="5" class="p-10 text-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-green mx-auto"></div></td></tr>
+                            <tbody id="membersTable"
+                                class="text-sm font-medium divide-y divide-[#353539] text-[#E3E3E3]">
+                                <tr>
+                                    <td colspan="5" class="p-10 text-center">
+                                        <div
+                                            class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto">
+                                        </div>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -159,74 +237,117 @@
     <!-- Edit Modal -->
     <div id="editModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl p-4 max-h-[90vh] overflow-y-auto">
-             <div class="bg-slate-900 rounded-[2rem] shadow-2xl border border-slate-700 overflow-hidden">
-                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-800/50 sticky top-0 z-10 backdrop-blur-md">
-                    <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="ph-duotone ph-pencil-simple text-brand-green"></i> Edit Profile Details</h3>
-                    <button onclick="closeModal()" class="text-slate-400 hover:text-red-500 transition"><i class="ph-bold ph-x text-xl"></i></button>
+        <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl p-4 max-h-[90vh] overflow-y-auto">
+            <div class="bg-[#1E1E1E] rounded-[28px] shadow-2xl border border-white/5 overflow-hidden">
+                <div
+                    class="p-6 border-b border-[#353539] flex justify-between items-center bg-[#252529] sticky top-0 z-10 backdrop-blur-md">
+                    <h3 class="text-lg font-display font-medium text-[#E3E3E3] flex items-center gap-2"><span
+                            class="material-symbols-rounded text-primary">edit</span> Edit Profile Details</h3>
+                    <button onclick="closeModal()" class="text-[#8e918f] hover:text-error transition"><span
+                            class="material-symbols-rounded text-2xl">close</span></button>
                 </div>
                 <form id="editForm" class="p-6 space-y-4">
                     <input type="hidden" id="editId">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-                        <div><label class="text-[10px] font-bold uppercase text-slate-500 mb-1 block">Member ID</label><input type="text" id="editMemberId" disabled class="w-full input-disabled rounded-lg p-2.5 text-xs"></div>
-                        <div><label class="text-[10px] font-bold uppercase text-slate-500 mb-1 block">Email</label><input type="text" id="editEmail" disabled class="w-full input-disabled rounded-lg p-2.5 text-xs"></div>
+                    <div
+                        class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-[#252529] p-4 rounded-xl border border-white/5">
+                        <div><label class="text-[10px] font-bold uppercase text-[#8e918f] mb-1 block">Member
+                                ID</label><input type="text" id="editMemberId" disabled
+                                class="w-full bg-[#1E1E1E] border border-white/5 text-[#C4C7C5] rounded-lg p-2.5 text-xs">
+                        </div>
+                        <div><label
+                                class="text-[10px] font-bold uppercase text-[#8e918f] mb-1 block">Email</label><input
+                                type="text" id="editEmail" disabled
+                                class="w-full bg-[#1E1E1E] border border-white/5 text-[#C4C7C5] rounded-lg p-2.5 text-xs">
+                        </div>
                     </div>
-                    <div><label class="text-xs font-bold uppercase text-slate-500 mb-1 block">Full Name</label><input type="text" id="editName" required class="w-full input-glass rounded-xl p-3"></div>
+                    <div><label class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">Full Name</label><input
+                            type="text" id="editName" required class="w-full m3-input p-3 text-[#E3E3E3]"></div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div><label class="text-xs font-bold uppercase text-slate-500 mb-1 block">NIC Number</label><input type="text" id="editNic" class="w-full input-glass rounded-xl p-3"></div>
-                        <div><label class="text-xs font-bold uppercase text-slate-500 mb-1 block">Date of Birth</label><input type="date" id="editDob" class="w-full input-glass rounded-xl p-3 text-slate-300"></div>
+                        <div><label class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">NIC
+                                Number</label><input type="text" id="editNic"
+                                class="w-full m3-input p-3 text-[#E3E3E3]"></div>
+                        <div><label class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">Date of
+                                Birth</label><input type="date" id="editDob" class="w-full m3-input p-3 text-[#E3E3E3]">
+                        </div>
                     </div>
-                    <div><label class="text-xs font-bold uppercase text-slate-500 mb-1 block">Address</label><input type="text" id="editAddress" class="w-full input-glass rounded-xl p-3"></div>
+                    <div><label class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">Address</label><input
+                            type="text" id="editAddress" class="w-full m3-input p-3 text-[#E3E3E3]"></div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div><label class="text-xs font-bold uppercase text-slate-500 mb-1 block">Phone</label><input type="text" id="editPhone" class="w-full input-glass rounded-xl p-3"></div>
-                        <div><label class="text-xs font-bold uppercase text-slate-500 mb-1 block">WhatsApp</label><input type="text" id="editWhatsapp" class="w-full input-glass rounded-xl p-3"></div>
+                        <div><label class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">Phone</label><input
+                                type="text" id="editPhone" class="w-full m3-input p-3 text-[#E3E3E3]"></div>
+                        <div><label class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">WhatsApp</label><input
+                                type="text" id="editWhatsapp" class="w-full m3-input p-3 text-[#E3E3E3]"></div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div><label class="text-xs font-bold uppercase text-slate-500 mb-1 block">Gender</label><select id="editGender" class="w-full input-glass rounded-xl p-3 bg-slate-800"><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div>
-                        <div><label class="text-xs font-bold uppercase text-slate-500 mb-1 block">Job / Profession</label><input type="text" id="editJob" class="w-full input-glass rounded-xl p-3"></div>
+                        <div><label class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">Gender</label><select
+                                id="editGender" class="w-full m3-input p-3 text-[#E3E3E3]">
+                                <option value="Male" class="bg-[#252529]">Male</option>
+                                <option value="Female" class="bg-[#252529]">Female</option>
+                                <option value="Other" class="bg-[#252529]">Other</option>
+                            </select></div>
+                        <div><label class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">Job /
+                                Profession</label><input type="text" id="editJob"
+                                class="w-full m3-input p-3 text-[#E3E3E3]"></div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div><label class="text-xs font-bold uppercase text-slate-500 mb-1 block">Sports Skills</label><textarea id="editSports" rows="2" class="w-full input-glass rounded-xl p-3"></textarea></div>
-                        <div><label class="text-xs font-bold uppercase text-slate-500 mb-1 block">Aesthetic Skills</label><textarea id="editAesthetic" rows="2" class="w-full input-glass rounded-xl p-3"></textarea></div>
+                        <div><label class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">Sports
+                                Skills</label><textarea id="editSports" rows="2"
+                                class="w-full m3-input p-3 text-[#E3E3E3]"></textarea></div>
+                        <div><label class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">Aesthetic
+                                Skills</label><textarea id="editAesthetic" rows="2"
+                                class="w-full m3-input p-3 text-[#E3E3E3]"></textarea></div>
                     </div>
-                    <div class="bg-purple-900/20 p-4 rounded-xl border border-purple-500/20">
+                    <div class="bg-purple-900/10 p-4 rounded-xl border border-purple-500/20">
                         <label class="text-xs font-bold uppercase text-purple-300 mb-1 block">System Role</label>
-                        <select id="editRole" class="w-full input-glass rounded-xl p-3 bg-slate-900 text-purple-300 font-bold"><option value="member">Member</option><option value="admin">Admin</option></select>
+                        <select id="editRole" class="w-full m3-input p-3 bg-[#1E1E1E] text-purple-300 font-bold">
+                            <option value="member" class="bg-[#252529]">Member</option>
+                            <option value="admin" class="bg-[#252529]">Admin</option>
+                        </select>
                     </div>
-                    <button type="submit" class="w-full bg-brand-green text-white py-3.5 rounded-xl font-bold mt-4 hover:bg-green-600 transition shadow-lg">Save All Changes</button>
+                    <button type="submit"
+                        class="w-full bg-[#003915] text-[#a6f7bd] hover:text-white hover:bg-primary py-3.5 rounded-full font-bold mt-4 transition shadow-lg">Save
+                        All Changes</button>
                 </form>
             </div>
         </div>
     </div>
 
     <!-- Delete Confirmation Popup -->
-    <div id="deletePopup" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/90 backdrop-blur-sm">
-        <div class="bg-slate-900 border border-red-500/30 p-8 rounded-[2rem] shadow-2xl max-w-sm w-full text-center relative overflow-hidden">
+    <div id="deletePopup"
+        class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div
+            class="bg-[#1E1E1E] border border-white/10 p-8 rounded-[28px] shadow-2xl max-w-sm w-full text-center relative overflow-hidden">
             <!-- Countdown Bar -->
-            <div class="absolute top-0 left-0 h-1 bg-red-500 countdown-bar w-full"></div>
-            
-            <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="ph-bold ph-warning text-3xl text-red-500 animate-pulse"></i>
+            <div class="absolute top-0 left-0 h-1 bg-red-400 countdown-bar w-full"></div>
+
+            <div class="w-16 h-16 bg-[#3c2525] rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="material-symbols-rounded text-3xl text-red-400 animate-pulse">warning</span>
             </div>
-            <h3 class="text-xl font-bold text-white mb-2">Delete Member?</h3>
-            <p class="text-slate-400 text-sm mb-6">This action cannot be undone. Are you sure you want to permanently delete this member?</p>
-            
+            <h3 class="text-xl font-display font-medium text-[#E3E3E3] mb-2">Delete Member?</h3>
+            <p class="text-[#8e918f] text-sm mb-6">This action cannot be undone. Are you sure you want to permanently
+                delete this member?</p>
+
             <div class="flex gap-3">
-                <button onclick="cancelDelete()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold transition">Cancel</button>
-                <button onclick="confirmDelete()" class="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold transition shadow-lg shadow-red-900/30">Delete</button>
+                <button onclick="cancelDelete()"
+                    class="flex-1 py-3 rounded-full bg-[#252529] hover:bg-[#303036] text-[#E3E3E3] font-medium transition">Cancel</button>
+                <button onclick="confirmDelete()"
+                    class="flex-1 py-3 rounded-full bg-[#3c2525] hover:bg-[#533535] text-[#ffb4ab] font-medium transition shadow-lg">Delete</button>
             </div>
         </div>
     </div>
 
     <!-- Success Popup -->
-    <div id="successPopup" class="fixed inset-0 z-[70] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
-        <div class="bg-slate-900 border border-green-500/30 p-8 rounded-[2rem] shadow-2xl max-w-sm w-full text-center">
-            <div class="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="ph-bold ph-check-circle text-3xl text-green-500"></i>
+    <div id="successPopup"
+        class="fixed inset-0 z-[70] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="bg-[#1E1E1E] border border-white/10 p-8 rounded-[28px] shadow-2xl max-w-sm w-full text-center">
+            <div class="w-16 h-16 bg-[#003915] rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="material-symbols-rounded text-3xl text-primary">check_circle</span>
             </div>
-            <h3 class="text-xl font-bold text-white mb-2">Success!</h3>
-            <p class="text-slate-400 text-sm mb-6">Member deleted successfully.</p>
-            <button onclick="closeSuccess()" class="w-full py-3 rounded-xl bg-green-600 hover:bg-green-500 text-white font-bold transition shadow-lg shadow-green-900/30">Close</button>
+            <h3 class="text-xl font-display font-medium text-[#E3E3E3] mb-2">Success!</h3>
+            <p class="text-[#8e918f] text-sm mb-6">Member deleted successfully.</p>
+            <button onclick="closeSuccess()"
+                class="w-full py-3 rounded-full bg-[#003915] hover:bg-primary hover:text-black text-[#a6f7bd] font-medium transition shadow-lg">Close</button>
         </div>
     </div>
 
@@ -234,7 +355,7 @@
     <script src="../js/supabase.js"></script>
     <script>
         AOS.init();
-        
+
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
@@ -244,14 +365,14 @@
         }
 
         async function logout() {
-            if(confirm("Are you sure you want to logout?")) {
+            if (confirm("Are you sure you want to logout?")) {
                 if (typeof _supabase !== 'undefined') await _supabase.auth.signOut();
                 window.location.href = '../login.html';
             }
         }
 
         let allProfiles = [];
-        let currentTab = 'total'; 
+        let currentTab = 'total';
         let filteredMembers = [];
         let deleteTimeout;
         let memberToDelete = null;
@@ -268,7 +389,7 @@
             if (!error) {
                 allProfiles = data;
                 updateTabCounts();
-                runFilters(); 
+                runFilters();
             } else {
                 console.error("Fetch Error:", error);
             }
@@ -294,7 +415,7 @@
             if (!dobString) return 'N/A';
             const dob = new Date(dobString);
             const diff_ms = Date.now() - dob.getTime();
-            const age_dt = new Date(diff_ms); 
+            const age_dt = new Date(diff_ms);
             return Math.abs(age_dt.getUTCFullYear() - 1970);
         }
 
@@ -329,53 +450,53 @@
         function renderMembers(data) {
             const tbody = document.getElementById('membersTable');
             tbody.innerHTML = '';
-            
+
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-500">No records found.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-[#8e918f]">No records found.</td></tr>';
                 return;
             }
 
             data.forEach(m => {
                 const isApproved = m.is_approved;
                 const age = calculateAge(m.dob);
-                let badge = m.role === 'admin' ? 
-                    `<span class="bg-purple-500/10 text-purple-400 px-3 py-1 rounded-lg text-xs font-bold border border-purple-500/20">Admin</span>` :
-                    (isApproved ? `<span class="bg-green-500/10 text-green-400 px-3 py-1 rounded-lg text-xs font-bold border border-green-500/20">Active</span>` : 
-                    `<span class="bg-orange-500/10 text-orange-400 px-3 py-1 rounded-lg text-xs font-bold animate-pulse border border-orange-500/20">Pending</span>`);
+                let badge = m.role === 'admin' ?
+                    `<span class="bg-purple-900/20 text-purple-300 px-3 py-1 rounded-lg text-xs font-bold border border-purple-500/20">Admin</span>` :
+                    (isApproved ? `<span class="bg-[#003915] text-[#a6f7bd] px-3 py-1 rounded-lg text-xs font-bold border border-[#a6f7bd]/20">Active</span>` :
+                        `<span class="bg-[#3c2525] text-[#ffb4ab] px-3 py-1 rounded-lg text-xs font-bold animate-pulse border border-[#ffb4ab]/20">Pending</span>`);
 
                 tbody.innerHTML += `
-                    <tr class="hover:bg-slate-800/50 transition duration-200 group">
+                    <tr class="hover:bg-[#252529] transition duration-200 group">
                         <td class="p-6 text-center">
-                            <input type="checkbox" class="member-checkbox rounded bg-slate-700 border-slate-600 text-brand-green focus:ring-brand-green" value="${m.id}">
+                            <input type="checkbox" class="member-checkbox rounded bg-[#1E1E1E] border-[#8e918f] text-primary focus:ring-primary" value="${m.id}">
                         </td>
                         <td class="p-6">
                             <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center font-bold text-white border border-slate-700 overflow-hidden">
+                                <div class="w-12 h-12 rounded-full bg-[#353539] flex items-center justify-center font-bold text-[#E3E3E3] border border-white/5 overflow-hidden">
                                     ${m.avatar_url ? `<img src="${m.avatar_url}" class="w-full h-full object-cover">` : m.full_name.charAt(0)}
                                 </div>
                                 <div>
-                                    <div class="font-bold text-white text-base">${m.full_name}</div>
-                                    <div class="text-xs text-slate-400 font-mono">ID: ${m.member_id || '-'} | Age: ${age}</div>
+                                    <div class="font-medium text-[#E3E3E3] text-base">${m.full_name}</div>
+                                    <div class="text-xs text-[#8e918f] font-mono">ID: ${m.member_id || '-'} | Age: ${age}</div>
                                 </div>
                             </div>
                         </td>
                         <td class="p-6">
-                            <div class="text-xs space-y-1.5 text-slate-400">
-                                <div class="flex items-center gap-2"><i class="ph-bold ph-phone text-brand-green"></i> ${m.phone||'-'}</div>
-                                <div class="flex items-center gap-2"><i class="ph-bold ph-identification-card text-blue-500"></i> ${m.nic||'-'}</div>
+                            <div class="text-xs space-y-1.5 text-[#C4C7C5]">
+                                <div class="flex items-center gap-2"><span class="material-symbols-rounded text-primary text-sm">call</span> ${m.phone || '-'}</div>
+                                <div class="flex items-center gap-2"><span class="material-symbols-rounded text-blue-400 text-sm">badge</span> ${m.nic || '-'}</div>
                             </div>
                         </td>
                         <td class="p-6">${badge}</td>
                         <td class="p-6 text-right">
                              <div class="flex items-center justify-end gap-2 opacity-100">
-                                <button onclick="toggleStatus('${m.id}', ${!isApproved})" title="${isApproved ? 'Deactivate' : 'Activate'}" class="h-10 w-10 flex items-center justify-center rounded-xl transition ${isApproved ? 'bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-white' : 'bg-green-500/10 text-green-500 hover:bg-green-500 hover:text-white'}">
-                                    <i class="ph-bold ${isApproved ? 'ph-prohibit' : 'ph-check'} text-lg"></i>
+                                <button onclick="toggleStatus('${m.id}', ${!isApproved})" title="${isApproved ? 'Deactivate' : 'Activate'}" class="h-10 w-10 flex items-center justify-center rounded-full transition ${isApproved ? 'bg-[#3c2525] text-[#ffb4ab] hover:bg-[#ffb4ab] hover:text-[#3c2525]' : 'bg-[#003915] text-[#a6f7bd] hover:bg-[#a6f7bd] hover:text-[#003915]'}">
+                                    <span class="material-symbols-rounded text-lg">${isApproved ? 'block' : 'check'}</span>
                                 </button>
-                                <button onclick="openEditModal('${m.id}')" title="Edit Full Profile" class="h-10 w-10 flex items-center justify-center rounded-xl bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition">
-                                    <i class="ph-bold ph-pencil-simple text-lg"></i>
+                                <button onclick="openEditModal('${m.id}')" title="Edit Full Profile" class="h-10 w-10 flex items-center justify-center rounded-full bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition">
+                                    <span class="material-symbols-rounded text-lg">edit</span>
                                 </button>
-                                <button onclick="initDelete('${m.id}')" title="Delete Member" class="h-10 w-10 flex items-center justify-center rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition">
-                                    <i class="ph-bold ph-trash text-lg"></i>
+                                <button onclick="initDelete('${m.id}')" title="Delete Member" class="h-10 w-10 flex items-center justify-center rounded-full bg-[#3c2525] text-[#ffb4ab] hover:bg-[#ffb4ab] hover:text-[#3c2525] transition">
+                                    <span class="material-symbols-rounded text-lg">delete</span>
                                 </button>
                             </div>
                         </td>
@@ -384,7 +505,7 @@
         }
 
         async function toggleStatus(id, status) {
-            if(confirm(status ? "Activate this account?" : "Deactivate this account?")) {
+            if (confirm(status ? "Activate this account?" : "Deactivate this account?")) {
                 const { error } = await _supabase.from('profiles').update({ is_approved: status }).eq('id', id);
                 if (error) alert("Error: " + error.message);
                 else fetchMembers();
@@ -396,7 +517,7 @@
             memberToDelete = id;
             const popup = document.getElementById('deletePopup');
             popup.classList.remove('hidden');
-            
+
             // Start Countdown Timer
             deleteTimeout = setTimeout(() => {
                 cancelDelete(); // Auto close after 5s
@@ -412,12 +533,12 @@
         async function confirmDelete() {
             clearTimeout(deleteTimeout);
             if (!memberToDelete) return;
-            
+
             // Perform Delete
             const { error } = await _supabase.from('profiles').delete().eq('id', memberToDelete);
-            
+
             document.getElementById('deletePopup').classList.add('hidden');
-            
+
             if (error) {
                 alert("Error deleting member: " + error.message);
             } else {
@@ -456,25 +577,25 @@
                 dataToPrint = filteredMembers;
             }
 
-            if(dataToPrint.length === 0) { alert("No data to print."); return; }
+            if (dataToPrint.length === 0) { alert("No data to print."); return; }
 
             // 2. Load Logo (Base64)
-            const logoUrl = "../assets/logo.png";
+            const logoUrl = "../assets/images/logo.png";
             const logoBase64 = await getBase64ImageFromURL(logoUrl);
 
             // 3. Header Design
-            doc.setFillColor(22, 163, 74); // Brand Green
+            doc.setFillColor(30, 30, 30); // Dark M3 Background
             doc.rect(0, 0, 297, 30, 'F'); // Header Bar
 
-            if(logoBase64) {
+            if (logoBase64) {
                 doc.addImage(logoBase64, 'PNG', 14, 5, 20, 20);
             }
 
             doc.setFontSize(22);
-            doc.setTextColor(255, 255, 255);
+            doc.setTextColor(227, 227, 227); // M3 Text Color
             doc.setFont("helvetica", "bold");
             doc.text("Dream Makers Youth & Sports Club", 40, 18);
-            
+
             doc.setFontSize(10);
             doc.setFont("helvetica", "normal");
             doc.text("Member Details Report", 40, 24);
@@ -499,14 +620,14 @@
                 body: tableBody,
                 theme: 'grid',
                 styles: { fontSize: 8, cellPadding: 3 },
-                headStyles: { fillColor: [11, 17, 33], textColor: [255, 255, 255] }, // Dark Blue Header
-                alternateRowStyles: { fillColor: [240, 253, 244] }, // Light Green stripe
-                columnStyles: { 0: {cellWidth: 10}, 6: {cellWidth: 50} }
+                headStyles: { fillColor: [30, 30, 30], textColor: [255, 255, 255] }, // Dark Header
+                alternateRowStyles: { fillColor: [240, 240, 240] }, // Light stripe
+                columnStyles: { 0: { cellWidth: 10 }, 6: { cellWidth: 50 } }
             });
 
             // 6. Footer
             const pageCount = doc.internal.getNumberOfPages();
-            for(let i = 1; i <= pageCount; i++) {
+            for (let i = 1; i <= pageCount; i++) {
                 doc.setPage(i);
                 doc.setFontSize(8);
                 doc.setTextColor(150);
@@ -538,7 +659,7 @@
         // --- Edit Modal Logic (Existing) ---
         function openEditModal(id) {
             const m = allProfiles.find(x => x.id === id);
-            if(m) {
+            if (m) {
                 document.getElementById('editId').value = id;
                 document.getElementById('editMemberId').value = m.member_id || '';
                 document.getElementById('editEmail').value = m.email || '';
@@ -557,8 +678,8 @@
             }
         }
         function closeModal() { document.getElementById('editModal').classList.add('hidden'); }
-        
-        document.getElementById('editForm').addEventListener('submit', async(e) => {
+
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const updates = {
                 full_name: document.getElementById('editName').value,
@@ -575,11 +696,12 @@
             };
             const id = document.getElementById('editId').value;
             const { error } = await _supabase.from('profiles').update(updates).eq('id', id);
-            if(error) alert("Error Updating: " + error.message);
+            if (error) alert("Error Updating: " + error.message);
             else { alert("Updated successfully!"); closeModal(); fetchMembers(); }
         });
 
         init();
     </script>
 </body>
+
 </html>

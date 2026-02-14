@@ -1,26 +1,42 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DMYSC - Admin Dashboard</title>
-    <link rel="icon" type="image/png" href="../assets/logo_1.png">
-    
+    <link rel="icon" type="image/png" href="../assets/images/logo_1.png">
+
+    <!-- External Admin CSS -->
+    <link rel="stylesheet" href="../assets/css/admin-style.css">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { 
-            darkMode: 'class', 
-            theme: { 
-                extend: { 
-                    colors: { brand: { green: '#16a34a', dark: '#020617' } },
-                    fontFamily: { poppins: ['Poppins', 'sans-serif'] } 
-                } 
-            } 
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#121212',
+                        surface: '#1E1E1E',
+                        'surface-container': '#252529',
+                        'surface-bright': '#3b3b3f',
+                        primary: '#a6f7bd',
+                        'on-primary': '#003915',
+                        secondary: '#c2c9bd',
+                        tertiary: '#a0cfd0',
+                        error: '#ffb4ab',
+                        outline: '#8e918f'
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif']
+                    }
+                }
+            }
         }
     </script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -31,199 +47,222 @@
     <!-- Chart Library -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-    <style>
-        body { font-family: 'Poppins', sans-serif; }
-        .glass-panel { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
-        #sidebar { transition: transform 0.3s ease-in-out; }
-        .sidebar-open { transform: translateX(0) !important; }
-        .sidebar-closed { transform: translateX(-100%); }
-        @media (min-width: 768px) { .sidebar-closed { transform: translateX(0); } }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
 
-        /* ID Card Styles copied from club_id.html for accurate rendering */
-        .id-card-container {
-            font-family: 'Poppins', sans-serif;
-        }
-        .glass-card {
-            background: rgba(30, 41, 59, 0.95); /* Slightly more opaque for download clarity */
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .bg-pattern {
-            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-            opacity: 0.2;
-        }
-    </style>
 </head>
-<body class="bg-[#0b1121] text-slate-100 min-h-screen font-poppins overflow-hidden">
 
-    <div class="flex h-screen relative">
-        
-        <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/80 z-40 hidden md:hidden backdrop-blur-sm"></div>
+<body class="bg-background text-slate-100 min-h-screen font-poppins overflow-hidden">
 
-        <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-slate-900 border-r border-slate-800 flex flex-col z-50 sidebar-closed md:relative md:translate-x-0 shadow-2xl md:shadow-none">
-            <div class="p-6 flex items-center justify-between border-b border-slate-800 h-24">
+    <div class="flex h-screen relative bg-background">
+
+        <div id="overlay" onclick="toggleSidebar()"
+            class="fixed inset-0 bg-black/60 z-40 hidden md:hidden backdrop-blur-sm"></div>
+
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 w-[300px] m3-drawer flex flex-col z-50 sidebar-closed md:relative md:translate-x-0 shadow-xl md:shadow-none pr-3">
+            <div class="p-6 pl-8 flex items-center justify-between h-20">
                 <div class="flex items-center gap-3">
-                    <img src="../assets/logo.png" class="h-10 w-10 object-contain">
+                    <img src="../assets/images/logo.png" class="h-8 w-8 object-contain">
                     <div>
-                        <h2 class="font-black text-lg text-white tracking-wide">ADMIN</h2>
-                        <p class="text-[10px] text-brand-green font-bold uppercase">Control Panel</p>
+                        <h2 class="font-display font-bold text-lg text-[#E3E3E3] tracking-tight">Admin<span
+                                class="text-primary">Panel</span></h2>
                     </div>
                 </div>
-                <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-red-500"><i class="ph-bold ph-x text-xl"></i></button>
+                <button onclick="toggleSidebar()" class="md:hidden text-[#C4C7C5] hover:text-white"><span
+                        class="material-symbols-rounded">close</span></button>
             </div>
-            
-            <nav class="flex-1 p-4 space-y-2 mt-4 overflow-y-auto">
-                <a href="#" class="flex items-center gap-3 px-4 py-3 bg-brand-green text-white shadow-lg shadow-brand-green/20 rounded-xl font-bold">
-                    <i class="ph-bold ph-squares-four text-xl"></i> Dashboard
+
+            <nav class="flex-1 px-3 space-y-1 mt-2 overflow-y-auto custom-scrollbar">
+                <a href="#" class="m3-nav-item active flex items-center gap-4 px-6 py-3.5 text-sm font-medium">
+                    <span class="material-symbols-rounded text-[20px]">dashboard</span> Dashboard
                 </a>
-                <a href="members.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
-                    <i class="ph-bold ph-users text-xl"></i> Members
+                <a href="members.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">group</span> Members
                 </a>
-                <a href="events.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
-                    <i class="ph-bold ph-calendar-plus text-xl"></i> Events
+                <a href="events.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">event</span> Events
                 </a>
-                <a href="sports.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
-                    <i class="ph-bold ph-trophy text-xl"></i> Sports
+                <a href="sports.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">emoji_events</span> Sports
                 </a>
-                <a href="notifications.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
-                    <i class="ph-bold ph-bell-ringing text-xl"></i> Notifications
+                <a href="notifications.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">notifications</span> Notifications
                 </a>
-                <a href="quick_links.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
-                    <i class="ph-bold ph-link text-xl"></i> Quick Links
+                <a href="quick_links.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">link</span> Quick Links
                 </a>
-                <a href="committee.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
-                    <i class="ph-bold ph-users-three text-xl"></i> Committee
+                <a href="committee.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">diversity_3</span> Committee
                 </a>
-                <a href="payment.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
-                    <i class="ph-bold ph-coins text-xl"></i> Payments
+                <a href="payment.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">payments</span> Payments
                 </a>
-                <a href="about.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
-                    <i class="ph-bold ph-info text-xl"></i> About Info
+                <a href="about.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">info</span> About Info
                 </a>
-                <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-xl transition font-medium">
-                    <i class="ph-bold ph-gear text-xl"></i> Page Settings
+                <a href="settings.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">settings</span> Page Settings
                 </a>
             </nav>
 
-            <div class="p-4 border-t border-slate-800 bg-slate-900/50">
-                <button onclick="logout()" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl transition duration-300 border border-red-500/20 font-bold shadow-sm">
-                    <i class="ph-bold ph-sign-out"></i> Logout
+            <div class="p-6 border-t border-[#353539]">
+                <button onclick="logout()"
+                    class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#3c2525] text-[#ffb4ab] hover:bg-[#533535] hover:text-white rounded-full transition duration-300 font-medium text-sm">
+                    <span class="material-symbols-rounded text-[20px]">logout</span> Logout
                 </button>
             </div>
         </aside>
 
-        <main class="flex-1 overflow-y-auto relative bg-[#0b1121] scroll-smooth">
-            
-            <button onclick="toggleSidebar()" class="md:hidden absolute top-6 right-6 z-40 bg-slate-800 backdrop-blur-md p-2 rounded-lg text-white border border-white/10 shadow-lg hover:bg-brand-green transition">
-                <i class="ph-bold ph-list text-2xl"></i>
+        <main class="flex-1 overflow-y-auto relative bg-[#121212] scroll-smooth">
+
+            <button onclick="toggleSidebar()"
+                class="md:hidden absolute top-6 right-6 z-40 bg-[#1E1E1E] p-2 rounded-full text-[#E3E3E3] border border-white/10 shadow-lg">
+                <span class="material-symbols-rounded text-2xl">menu</span>
             </button>
 
-            <div class="relative h-80 shrink-0 overflow-hidden bg-slate-900">
-                <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=2070')] bg-cover bg-center opacity-30"></div>
-                
-                <div class="absolute inset-0 bg-gradient-to-r from-[#0b1121] via-slate-900/90 to-transparent"></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-[#0b1121] via-transparent to-transparent"></div>
-                
-                <div class="absolute bottom-24 left-6 md:left-12 z-10" data-aos="fade-right">
-                    <div class="flex items-center gap-3 mb-3">
-                        <span class="bg-brand-green text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-lg shadow-green-500/30">Admin Panel</span>
-                        <span class="text-slate-400 text-xs font-bold uppercase tracking-widest" id="dateDisplay">Loading...</span>
+            <!-- M3 Header Section (Simplified) -->
+            <div class="relative px-6 md:px-12 pt-12 pb-8">
+                <div class="flex items-end justify-between" data-aos="fade-up">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-primary text-xs font-bold uppercase tracking-widest"
+                                id="dateDisplay">Loading...</span>
+                        </div>
+                        <h1 class="text-3xl md:text-5xl font-display font-medium text-[#E3E3E3]">
+                            Welcome, <span id="adminName" class="text-primary">Admin</span>
+                        </h1>
                     </div>
-                    <h1 class="text-4xl md:text-6xl font-black text-white flex flex-col md:flex-row md:items-center gap-2 drop-shadow-lg">
-                        <span>Welcome,</span> 
-                        <span id="adminName" class="text-transparent bg-clip-text bg-gradient-to-r from-brand-green to-emerald-300">Admin</span> 👋
-                    </h1>
+                    <div class="hidden md:block">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            <span class="material-symbols-rounded">manage_accounts</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="max-w-7xl mx-auto px-6 md:px-12 -mt-20 relative z-10 pb-12">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                    <!-- Total Members (Clickable Link) -->
-                    <div onclick="window.location.href='members.html'" class="cursor-pointer glass-panel p-6 rounded-[2rem] shadow-2xl relative overflow-hidden group hover:-translate-y-2 transition duration-300 border border-transparent hover:border-brand-green/30" data-aos="fade-up">
-                        <div class="absolute right-0 top-0 w-24 h-24 bg-brand-green/10 rounded-bl-full group-hover:scale-110 transition"></div>
-                        <div class="w-12 h-12 bg-slate-800 text-brand-green rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-inner border border-slate-700">
-                            <i class="ph-duotone ph-users"></i>
+            <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10 pb-12">
+
+                <!-- Stats Grid (M3 Cards) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <!-- Total Members -->
+                    <div onclick="window.location.href='members.html'"
+                        class="cursor-pointer m3-card p-6 relative overflow-hidden group hover:bg-[#252529] transition"
+                        data-aos="fade-up">
+                        <div
+                            class="mb-4 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            <span class="material-symbols-rounded text-[24px]">group</span>
                         </div>
-                        <h3 class="text-4xl font-black text-white mb-1" id="totalMembers">...</h3>
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest group-hover:text-brand-green transition">Total Members <i class="ph-bold ph-arrow-right"></i></p>
+                        <h3 class="text-4xl font-display font-medium text-[#E3E3E3] mb-1" id="totalMembers">...</h3>
+                        <p class="text-xs font-medium text-[#C4C7C5] uppercase tracking-wide">Total Members</p>
+                        <span
+                            class="material-symbols-rounded absolute top-6 right-6 text-[#353539] text-[40px] opacity-20 group-hover:scale-110 transition">arrow_forward</span>
                     </div>
 
-                    <!-- Pending Members (Clickable Popup) -->
-                    <div onclick="openPendingModal()" class="cursor-pointer glass-panel p-6 rounded-[2rem] shadow-2xl relative overflow-hidden group hover:-translate-y-2 transition duration-300 border-l-4 border-orange-500 hover:bg-slate-800/80" data-aos="fade-up" data-aos-delay="100">
-                        <div class="absolute right-0 top-0 w-24 h-24 bg-orange-500/10 rounded-bl-full group-hover:scale-110 transition"></div>
-                        <div class="w-12 h-12 bg-slate-800 text-orange-500 rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-inner border border-slate-700 animate-pulse">
-                            <i class="ph-duotone ph-user-plus"></i>
+                    <!-- Pending -->
+                    <div onclick="openPendingModal()"
+                        class="cursor-pointer m3-card p-6 relative overflow-hidden group hover:bg-[#252529] transition"
+                        data-aos="fade-up" data-aos-delay="50">
+                        <div
+                            class="mb-4 w-12 h-12 rounded-full bg-[#3c2525] flex items-center justify-center text-[#ffb4ab]">
+                            <span class="material-symbols-rounded text-[24px]">person_add</span>
                         </div>
-                        <h3 class="text-4xl font-black text-white mb-1" id="pendingMembers">...</h3>
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest group-hover:text-orange-400 transition">Pending Req. <i class="ph-bold ph-hand-tap"></i></p>
+                        <h3 class="text-4xl font-display font-medium text-[#E3E3E3] mb-1" id="pendingMembers">...</h3>
+                        <p class="text-xs font-medium text-[#C4C7C5] uppercase tracking-wide">Pending</p>
+                        <div
+                            class="absolute right-0 top-0 w-2 h-full bg-[#ffb4ab] opacity-0 group-hover:opacity-100 transition">
+                        </div>
                     </div>
 
-                    <!-- Active Events (Clickable Link) -->
-                    <div onclick="window.location.href='events.html'" class="cursor-pointer glass-panel p-6 rounded-[2rem] shadow-2xl relative overflow-hidden group hover:-translate-y-2 transition duration-300 border border-transparent hover:border-blue-500/30" data-aos="fade-up" data-aos-delay="200">
-                        <div class="absolute right-0 top-0 w-24 h-24 bg-blue-500/10 rounded-bl-full group-hover:scale-110 transition"></div>
-                        <div class="w-12 h-12 bg-slate-800 text-blue-500 rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-inner border border-slate-700">
-                            <i class="ph-duotone ph-calendar-check"></i>
+                    <!-- Events -->
+                    <div onclick="window.location.href='events.html'"
+                        class="cursor-pointer m3-card p-6 relative overflow-hidden group hover:bg-[#252529] transition"
+                        data-aos="fade-up" data-aos-delay="100">
+                        <div
+                            class="mb-4 w-12 h-12 rounded-full bg-[#1b2e2b] flex items-center justify-center text-[#a0cfd0]">
+                            <span class="material-symbols-rounded text-[24px]">event_available</span>
                         </div>
-                        <h3 class="text-4xl font-black text-white mb-1" id="eventCount">...</h3>
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest group-hover:text-blue-400 transition">Active Events <i class="ph-bold ph-arrow-right"></i></p>
+                        <h3 class="text-4xl font-display font-medium text-[#E3E3E3] mb-1" id="eventCount">...</h3>
+                        <p class="text-xs font-medium text-[#C4C7C5] uppercase tracking-wide">Active Events</p>
                     </div>
 
-                    <!-- Online Status (New: Clickable System Status) -->
-                    <div onclick="openSystemStatus()" class="cursor-pointer glass-panel p-6 rounded-[2rem] shadow-2xl relative overflow-hidden group hover:-translate-y-2 transition duration-300 border border-transparent hover:border-green-500/30" data-aos="fade-up" data-aos-delay="300">
-                        <div class="absolute right-0 top-0 w-24 h-24 bg-green-500/10 rounded-bl-full group-hover:scale-110 transition"></div>
-                        <div class="w-12 h-12 bg-slate-800 text-green-500 rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-inner border border-slate-700">
-                            <i class="ph-duotone ph-wifi-high"></i>
+                    <!-- System Status -->
+                    <div onclick="openSystemStatus()"
+                        class="cursor-pointer m3-card p-6 bg-[#00210b] relative overflow-hidden group border border-[#003915] transition"
+                        data-aos="fade-up" data-aos-delay="150">
+                        <div
+                            class="mb-4 w-12 h-12 rounded-full bg-[#003915] flex items-center justify-center text-primary">
+                            <span class="material-symbols-rounded text-[24px]">wifi</span>
                         </div>
-                        <h3 class="text-xl font-black text-green-500 mb-1">ONLINE</h3>
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest group-hover:text-green-400 transition">System Status <i class="ph-bold ph-info"></i></p>
+                        <h3 class="text-xl font-display font-bold text-primary mb-1">ONLINE</h3>
+                        <p class="text-xs font-medium text-[#a6f7bd] opacity-70 uppercase tracking-wide">System Status
+                        </p>
                     </div>
                 </div>
 
                 <!-- Member Growth Chart (WEEKLY) -->
-                <div class="glass-panel p-6 rounded-[2rem] shadow-xl mb-8" data-aos="fade-up">
+                <!-- Member Growth Chart (WEEKLY) -->
+                <div class="m3-card p-6 mb-8 bg-[#1E1E1E] border border-white/5" data-aos="fade-up">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                            <span class="bg-brand-green/10 text-brand-green p-1.5 rounded-lg"><i class="ph-bold ph-chart-bar"></i></span>
+                        <h3 class="text-lg font-display font-medium text-[#E3E3E3] flex items-center gap-2">
+                            <span class="bg-primary/10 text-primary p-1.5 rounded-full"><span
+                                    class="material-symbols-rounded">bar_chart</span></span>
                             Weekly Member Registration
                         </h3>
-                        <p class="text-xs text-slate-400 font-mono">Click on bars to view details</p>
+                        <p class="text-xs text-[#8e918f] font-mono">Click on bars to view details</p>
                     </div>
                     <div id="growthChart" class="w-full h-72"></div>
                 </div>
 
                 <!-- Quick Actions Section (Removed AOS to fix visibility) -->
-                <div class="bg-slate-900 rounded-[2.5rem] p-8 shadow-xl border border-slate-800 mb-8">
-                    <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                        <span class="bg-yellow-500/10 text-yellow-500 p-2 rounded-lg"><i class="ph-fill ph-lightning"></i></span> 
+                <!-- Quick Actions Section -->
+                <div class="m3-card p-8 mb-8 bg-[#1E1E1E] border border-white/5">
+                    <h3 class="text-lg font-display font-medium text-[#E3E3E3] mb-6 flex items-center gap-2">
+                        <span
+                            class="bg-yellow-500/10 text-yellow-500 p-2 rounded-full flex items-center justify-center"><span
+                                class="material-symbols-rounded">bolt</span></span>
                         Quick Actions
                     </h3>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <a href="members.html" class="flex items-center gap-4 p-4 rounded-2xl bg-slate-800 hover:bg-slate-700 hover:shadow-lg transition group border border-slate-700">
-                            <div class="w-12 h-12 rounded-xl bg-brand-green/10 text-brand-green flex items-center justify-center text-2xl group-hover:scale-110 transition"><i class="ph-bold ph-users"></i></div>
+                        <a href="members.html"
+                            class="flex items-center gap-4 p-4 rounded-2xl bg-[#252529] hover:bg-[#303036] hover:shadow-lg transition group border border-white/5">
+                            <div
+                                class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition">
+                                <span class="material-symbols-rounded text-2xl">person_add</span>
+                            </div>
                             <div>
-                                <h4 class="font-bold text-white">Manage Members</h4>
-                                <p class="text-[10px] text-slate-400 uppercase font-bold">Review & Approve</p>
+                                <h4 class="font-bold text-[#E3E3E3] text-sm">Manage Members</h4>
+                                <p class="text-[10px] text-[#8e918f] uppercase font-bold">Review & Approve</p>
                             </div>
                         </a>
-                         <a href="notifications.html" class="flex items-center gap-4 p-4 rounded-2xl bg-slate-800 hover:bg-slate-700 hover:shadow-lg transition group border border-slate-700">
-                            <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center text-2xl group-hover:scale-110 transition"><i class="ph-bold ph-paper-plane-tilt"></i></div>
+                        <a href="notifications.html"
+                            class="flex items-center gap-4 p-4 rounded-2xl bg-[#252529] hover:bg-[#303036] hover:shadow-lg transition group border border-white/5">
+                            <div
+                                class="w-12 h-12 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center group-hover:scale-110 transition">
+                                <span class="material-symbols-rounded text-2xl">send</span>
+                            </div>
                             <div>
-                                <h4 class="font-bold text-white">Send Alert</h4>
-                                <p class="text-[10px] text-slate-400 uppercase font-bold">Notify Everyone</p>
+                                <h4 class="font-bold text-[#E3E3E3] text-sm">Send Alert</h4>
+                                <p class="text-[10px] text-[#8e918f] uppercase font-bold">Notify Everyone</p>
                             </div>
                         </a>
-                        <a href="events.html" class="flex items-center gap-4 p-4 rounded-2xl bg-slate-800 hover:bg-slate-700 hover:shadow-lg transition group border border-slate-700">
-                            <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center text-2xl group-hover:scale-110 transition"><i class="ph-bold ph-calendar-plus"></i></div>
+                        <a href="events.html"
+                            class="flex items-center gap-4 p-4 rounded-2xl bg-[#252529] hover:bg-[#303036] hover:shadow-lg transition group border border-white/5">
+                            <div
+                                class="w-12 h-12 rounded-full bg-purple-500/10 text-purple-500 flex items-center justify-center group-hover:scale-110 transition">
+                                <span class="material-symbols-rounded text-2xl">event_note</span>
+                            </div>
                             <div>
-                                <h4 class="font-bold text-white">New Event</h4>
-                                <p class="text-[10px] text-slate-400 uppercase font-bold">Schedule Activity</p>
+                                <h4 class="font-bold text-[#E3E3E3] text-sm">New Event</h4>
+                                <p class="text-[10px] text-[#8e918f] uppercase font-bold">Schedule Activity</p>
                             </div>
                         </a>
                     </div>
@@ -231,70 +270,92 @@
 
                 <!-- Combined Reports & ID Cards Section -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                    <!-- Member Reports Section (Removed AOS to fix visibility) -->
-                    <div class="glass-panel p-8 rounded-[2rem] shadow-xl border border-slate-800">
+                    <!-- Member Reports Section -->
+                    <div class="m3-card p-8 bg-[#1E1E1E] border border-white/5">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                             <div>
-                                <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                                    <i class="ph-duotone ph-file-pdf text-red-500"></i> Reports
+                                <h3 class="text-lg font-display font-medium text-[#E3E3E3] flex items-center gap-2">
+                                    <span class="material-symbols-rounded text-red-400">picture_as_pdf</span> Reports
                                 </h3>
-                                <p class="text-xs text-slate-400 mt-1">Generate member PDF reports</p>
+                                <p class="text-xs text-[#8e918f] mt-1">Generate member PDF reports</p>
                             </div>
-                            <button onclick="downloadPDF()" class="bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg shadow-red-500/20 transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
-                                <i class="ph-bold ph-download-simple"></i> Download
+                            <button onclick="downloadPDF()"
+                                class="bg-[#3c2525] hover:bg-[#533535] text-[#ffb4ab] hover:text-white font-medium py-2.5 px-6 rounded-full shadow-lg transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
+                                <span class="material-symbols-rounded text-lg">download</span> Download
                             </button>
                         </div>
 
-                        <div class="overflow-x-auto rounded-xl border border-slate-700 max-h-[350px] overflow-y-auto custom-scrollbar">
-                            <table class="w-full text-left text-sm text-slate-400">
-                                <thead class="bg-slate-800 text-xs uppercase font-bold text-slate-200 sticky top-0 z-10">
+                        <div
+                            class="overflow-x-auto rounded-xl border border-[#353539] max-h-[350px] overflow-y-auto custom-scrollbar">
+                            <table class="w-full text-left text-sm text-[#C4C7C5]">
+                                <thead
+                                    class="bg-[#252529] text-xs uppercase font-bold text-[#E3E3E3] sticky top-0 z-10">
                                     <tr>
                                         <th class="p-4 w-10">
-                                            <input type="checkbox" id="selectAll" onclick="toggleSelectAll()" class="rounded border-slate-600 bg-slate-700 text-brand-green focus:ring-offset-slate-900">
+                                            <input type="checkbox" id="selectAll" onclick="toggleSelectAll()"
+                                                class="rounded border-[#353539] bg-[#1E1E1E] text-primary focus:ring-primary">
                                         </th>
                                         <th class="p-4">Name</th>
                                         <th class="p-4 text-center">Status</th>
                                     </tr>
                                 </thead>
-                                <tbody id="dashboardMemberTable" class="divide-y divide-slate-700 bg-slate-900/50">
-                                    <tr><td colspan="3" class="p-8 text-center"><div class="animate-spin rounded-full h-6 w-6 border-b-2 border-brand-green mx-auto"></div></td></tr>
+                                <tbody id="dashboardMemberTable" class="divide-y divide-[#353539] bg-[#1E1E1E]">
+                                    <tr>
+                                        <td colspan="3" class="p-8 text-center">
+                                            <div
+                                                class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto">
+                                            </div>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- Club Identity Cards Section (Removed AOS to fix visibility) -->
-                    <div class="glass-panel p-8 rounded-[2rem] shadow-xl border border-slate-800">
+                    <!-- Club Identity Cards Section -->
+                    <div class="m3-card p-8 bg-[#1E1E1E] border border-white/5">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                             <div>
-                                <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                                    <i class="ph-fill ph-identification-card text-blue-400"></i> ID Cards
+                                <h3 class="text-lg font-display font-medium text-[#E3E3E3] flex items-center gap-2">
+                                    <span class="material-symbols-rounded text-blue-400">badge</span> ID Cards
                                 </h3>
-                                <p class="text-xs text-slate-400 mt-1">Manage active member IDs</p>
+                                <p class="text-xs text-[#8e918f] mt-1">Manage active member IDs</p>
                             </div>
-                            <button onclick="downloadSelectedCards()" id="downloadCardsBtn" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg shadow-blue-500/20 transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
-                                <i class="ph-bold ph-download-simple"></i> Download
+                            <button onclick="downloadSelectedCards()" id="downloadCardsBtn"
+                                class="bg-[#1e2b3c] hover:bg-[#25364d] text-blue-300 hover:text-white font-medium py-2.5 px-6 rounded-full shadow-lg transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
+                                <span class="material-symbols-rounded text-lg">download</span> Download
                             </button>
                         </div>
 
                         <!-- Search Box -->
                         <div class="mb-4">
-                            <input type="text" id="cardSearch" onkeyup="filterCardList()" placeholder="Search members..." class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
+                            <div class="relative">
+                                <span
+                                    class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-[#8e918f]">search</span>
+                                <input type="text" id="cardSearch" onkeyup="filterCardList()"
+                                    placeholder="Search members..."
+                                    class="w-full bg-[#252529] border border-[#353539] rounded-xl pl-11 pr-4 py-3 text-sm text-[#E3E3E3] focus:outline-none focus:border-primary placeholder-[#444746]">
+                            </div>
                         </div>
 
-                        <div class="overflow-x-auto rounded-xl border border-slate-700 max-h-[280px] overflow-y-auto custom-scrollbar">
-                            <table class="w-full text-left text-sm text-slate-400">
-                                <thead class="bg-slate-800 text-xs uppercase font-bold text-slate-200 sticky top-0 z-10">
+                        <div
+                            class="overflow-x-auto rounded-xl border border-[#353539] max-h-[280px] overflow-y-auto custom-scrollbar">
+                            <table class="w-full text-left text-sm text-[#C4C7C5]">
+                                <thead
+                                    class="bg-[#252529] text-xs uppercase font-bold text-[#E3E3E3] sticky top-0 z-10">
                                     <tr>
                                         <th class="p-4 w-10">
-                                            <input type="checkbox" id="selectAllCards" onclick="toggleSelectAllCards()" class="rounded border-slate-600 bg-slate-700 text-blue-500 focus:ring-offset-slate-900">
+                                            <input type="checkbox" id="selectAllCards" onclick="toggleSelectAllCards()"
+                                                class="rounded border-[#353539] bg-[#1E1E1E] text-blue-500 focus:ring-blue-500">
                                         </th>
                                         <th class="p-4">Member Name</th>
                                         <th class="p-4 text-center">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="idCardListTable" class="divide-y divide-slate-700 bg-slate-900/50">
-                                    <tr><td colspan="3" class="p-8 text-center text-xs">Loading Active Members...</td></tr>
+                                <tbody id="idCardListTable" class="divide-y divide-[#353539] bg-[#1E1E1E]">
+                                    <tr>
+                                        <td colspan="3" class="p-8 text-center text-xs">Loading Active Members...</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -306,15 +367,19 @@
     </div>
 
     <!-- Pending Popup Modal -->
-    <div id="pendingModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/90 backdrop-blur-sm">
-        <div class="bg-slate-900 border border-orange-500/30 p-6 rounded-[2rem] shadow-2xl max-w-lg w-full relative transform transition-all scale-100">
+    <div id="pendingModal"
+        class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity">
+        <div
+            class="bg-[#252529] border border-white/10 p-6 rounded-[28px] shadow-2xl max-w-lg w-full relative transform transition-all scale-100">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                    <i class="ph-fill ph-user-plus text-orange-500"></i> Pending Approvals
+                <h3 class="text-xl font-display font-medium text-[#E3E3E3] flex items-center gap-2">
+                    <span class="material-symbols-rounded text-[#ffb4ab]">person_add</span> Pending Approvals
                 </h3>
-                <button onclick="closePendingModal()" class="text-slate-400 hover:text-white p-2 hover:bg-slate-800 rounded-full transition"><i class="ph-bold ph-x text-lg"></i></button>
+                <button onclick="closePendingModal()"
+                    class="text-[#8e918f] hover:text-[#E3E3E3] p-2 hover:bg-white/5 rounded-full transition"><span
+                        class="material-symbols-rounded">close</span></button>
             </div>
-            
+
             <div id="pendingList" class="space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
                 <!-- Pending Items Will Be Injected Here -->
             </div>
@@ -322,76 +387,95 @@
     </div>
 
     <!-- Chart Details Modal -->
-    <div id="chartDetailsModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/90 backdrop-blur-md">
-        <div class="bg-slate-900 border border-brand-green/30 p-6 rounded-[2rem] shadow-2xl max-w-md w-full relative transform transition-all scale-100">
+    <div id="chartDetailsModal"
+        class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div
+            class="bg-[#252529] border border-white/10 p-6 rounded-[28px] shadow-2xl max-w-md w-full relative transform transition-all scale-100">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                    <i class="ph-fill ph-calendar-check text-brand-green"></i> 
+                <h3 class="text-xl font-display font-medium text-[#E3E3E3] flex items-center gap-2">
+                    <span class="material-symbols-rounded text-primary">event_available</span>
                     <span id="chartModalTitle">Week Details</span>
                 </h3>
-                <button onclick="closeChartModal()" class="text-slate-400 hover:text-white p-2 hover:bg-slate-800 rounded-full transition"><i class="ph-bold ph-x text-lg"></i></button>
+                <button onclick="closeChartModal()"
+                    class="text-[#8e918f] hover:text-[#E3E3E3] p-2 hover:bg-white/5 rounded-full transition"><span
+                        class="material-symbols-rounded">close</span></button>
             </div>
-            
+
             <div id="chartModalList" class="space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
                 <!-- Items Injected Here -->
             </div>
         </div>
     </div>
 
-    <!-- UPDATED: System Status Modal (Larger for Table) -->
-    <div id="systemStatusModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/95 backdrop-blur-md">
-        <div class="bg-slate-900 border border-green-500/30 p-8 rounded-[2rem] shadow-2xl max-w-5xl w-full relative transform transition-all scale-100 max-h-[85vh] flex flex-col">
+    <!-- System Status Modal -->
+    <div id="systemStatusModal"
+        class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div
+            class="bg-[#252529] border border-white/10 p-8 rounded-[28px] shadow-2xl max-w-5xl w-full relative transform transition-all scale-100 max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center mb-6 shrink-0">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                    <i class="ph-fill ph-shield-check text-green-500"></i> System Logs & Status
+                <h3 class="text-xl font-display font-medium text-[#E3E3E3] flex items-center gap-2">
+                    <span class="material-symbols-rounded text-primary">shield</span> System Logs & Status
                 </h3>
                 <div class="flex items-center gap-3">
-                    <button onclick="logout()" class="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition border border-red-500/20">
-                        <i class="ph-bold ph-sign-out"></i> Logout
+                    <button onclick="logout()"
+                        class="bg-[#3c2525] hover:bg-[#533535] text-[#ffb4ab] hover:text-white px-4 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1">
+                        <span class="material-symbols-rounded text-sm">logout</span> Logout
                     </button>
-                    <button onclick="closeSystemStatus()" class="text-slate-400 hover:text-white p-2 hover:bg-slate-800 rounded-full transition"><i class="ph-bold ph-x text-lg"></i></button>
+                    <button onclick="closeSystemStatus()"
+                        class="text-[#8e918f] hover:text-[#E3E3E3] p-2 hover:bg-white/5 rounded-full transition"><span
+                            class="material-symbols-rounded">close</span></button>
                 </div>
             </div>
 
             <div id="systemStatusContent" class="overflow-y-auto custom-scrollbar flex-1 pr-2">
-                <div class="text-center py-8"><i class="ph-bold ph-spinner animate-spin text-3xl text-brand-green"></i></div>
+                <div class="text-center py-8"><span
+                        class="material-symbols-rounded animate-spin text-3xl text-primary">progress_activity</span>
+                </div>
             </div>
-            
-            <div class="mt-4 pt-4 border-t border-slate-800 shrink-0 text-center">
-                <button onclick="logout()" class="w-full md:w-auto px-8 py-3 bg-red-600 hover:bg-red-500 text-white rounded-xl transition font-bold shadow-lg shadow-red-900/20">
-                    <i class="ph-bold ph-power"></i> End Current Session
+
+            <div class="mt-4 pt-4 border-t border-[#353539] shrink-0 text-center">
+                <button onclick="logout()"
+                    class="w-full md:w-auto px-8 py-3 bg-[#3c2525] hover:bg-[#533535] text-[#ffb4ab] hover:text-white rounded-full transition font-bold shadow-lg flex items-center justify-center gap-2 mx-auto">
+                    <span class="material-symbols-rounded">power_settings_new</span> End Current Session
                 </button>
             </div>
         </div>
     </div>
 
     <!-- ID Card Preview Modal -->
-    <div id="idCardModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/95 backdrop-blur-md">
+    <div id="idCardModal"
+        class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
         <div class="relative w-full max-w-sm p-4">
-            <button onclick="closeIdCardModal()" class="absolute -top-10 right-0 text-white hover:text-red-500 transition"><i class="ph-bold ph-x text-2xl"></i></button>
-            
+            <button onclick="closeIdCardModal()"
+                class="absolute -top-10 right-0 text-[#C4C7C5] hover:text-error transition"><span
+                    class="material-symbols-rounded text-3xl">close</span></button>
+
             <!-- Card Container (Visual Only) -->
             <div id="cardPreviewContainer" class="w-full relative group transform transition hover:scale-[1.02]">
                 <!-- Glow Effect -->
-                <div class="absolute -inset-1 bg-gradient-to-r from-brand-green to-blue-600 rounded-[2rem] blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                <div
+                    class="absolute -inset-1 bg-gradient-to-r from-brand-green to-blue-600 rounded-[2rem] blur opacity-25 group-hover:opacity-50 transition duration-1000">
+                </div>
 
                 <div class="relative glass-card rounded-[1.8rem] overflow-hidden shadow-2xl">
                     <!-- Header Banner -->
                     <div class="relative h-32 bg-gradient-to-r from-green-900 to-slate-900">
                         <div class="absolute inset-0 bg-pattern"></div>
                         <div class="absolute inset-0 bg-gradient-to-t from-[#1e293b] to-transparent"></div>
-                        
+
                         <div class="absolute top-5 left-5 flex items-center gap-3">
-                            <img src="../assets/logo.png" class="h-10 w-10 object-contain drop-shadow-md">
+                            <img src="../assets/images/logo.png" class="h-10 w-10 object-contain drop-shadow-md">
                             <div>
                                 <h4 class="text-white font-bold text-sm leading-tight">Dream Makers</h4>
-                                <p class="text-[9px] text-green-400 uppercase font-bold tracking-wider">Youth & Sports Club</p>
+                                <p class="text-[9px] text-green-400 uppercase font-bold tracking-wider">Youth & Sports
+                                    Club</p>
                             </div>
                         </div>
 
                         <!-- Status Badge -->
                         <div class="absolute top-5 right-5">
-                            <span class="bg-green-500 text-white text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded shadow-lg shadow-green-500/20">
+                            <span
+                                class="bg-green-500 text-white text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded shadow-lg shadow-green-500/20">
                                 VERIFIED
                             </span>
                         </div>
@@ -399,11 +483,14 @@
 
                     <!-- Profile Image Area -->
                     <div class="relative px-6 -mt-16 flex flex-col items-center">
-                        <div class="w-32 h-32 p-1 bg-gradient-to-br from-brand-green to-slate-700 rounded-full shadow-xl">
-                            <img id="cardProfileImg" src="" class="w-full h-full rounded-full object-cover bg-slate-900 border-4 border-[#1e293b]">
+                        <div
+                            class="w-32 h-32 p-1 bg-gradient-to-br from-brand-green to-slate-700 rounded-full shadow-xl">
+                            <img id="cardProfileImg" src=""
+                                class="w-full h-full rounded-full object-cover bg-slate-900 border-4 border-[#1e293b]">
                         </div>
-                        
-                        <h2 id="cardDisplayName" class="mt-4 text-2xl font-black text-white text-center leading-tight">...</h2>
+
+                        <h2 id="cardDisplayName" class="mt-4 text-2xl font-black text-white text-center leading-tight">
+                            ...</h2>
                         <p id="cardFullName" class="text-xs text-slate-400 font-medium text-center px-4 mt-1">...</p>
 
                         <!-- Roles Container -->
@@ -414,7 +501,7 @@
 
                     <!-- Details Grid -->
                     <div class="p-6 space-y-4 mt-2">
-                        
+
                         <div class="grid grid-cols-2 gap-4">
                             <!-- Age Display -->
                             <div class="bg-slate-800/50 p-3 rounded-xl border border-white/5">
@@ -429,7 +516,10 @@
 
                         <div class="bg-slate-800/50 p-3 rounded-xl border border-white/5">
                             <div class="flex items-center gap-3 mb-2">
-                                <div class="w-6 h-6 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400"><i class="ph-fill ph-envelope-simple"></i></div>
+                                <div
+                                    class="w-6 h-6 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400">
+                                    <span class="material-symbols-rounded text-sm">mail</span>
+                                </div>
                                 <div>
                                     <p class="text-[9px] text-slate-500 uppercase font-bold">Email Address</p>
                                     <p id="cardEmail" class="text-xs font-bold text-white truncate w-48">...</p>
@@ -437,7 +527,10 @@
                             </div>
                             <div class="w-full h-[1px] bg-white/5 my-2"></div>
                             <div class="flex items-center gap-3">
-                                <div class="w-6 h-6 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400"><i class="ph-fill ph-phone"></i></div>
+                                <div
+                                    class="w-6 h-6 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+                                    <span class="material-symbols-rounded text-sm">call</span>
+                                </div>
                                 <div>
                                     <p class="text-[9px] text-slate-500 uppercase font-bold">Contact Number</p>
                                     <p id="cardPhone" class="text-xs font-bold text-white">...</p>
@@ -454,18 +547,19 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </div>
 
     <!-- Hidden Container for Bulk PDF Generation -->
-    <div id="hiddenPDFContainer" class="absolute top-[-9999px] left-[-9999px] flex flex-wrap gap-4 bg-[#0b1121] p-4 w-[800px]">
+    <div id="hiddenPDFContainer"
+        class="absolute top-[-9999px] left-[-9999px] flex flex-wrap gap-4 bg-[#0b1121] p-4 w-[800px]">
         <!-- Cards will be rendered here for html2canvas -->
     </div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="../js/supabase.js"></script> 
-    
+    <script src="../js/supabase.js"></script>
+
     <script>
         // FIXED: AOS Initialization to prevent hidden elements
         // This ensures elements are shown even if not fully scrolled to
@@ -482,7 +576,7 @@
                 AOS.refresh();
             }, 500);
         });
-        
+
         // Date Display
         document.getElementById('dateDisplay').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
@@ -501,9 +595,9 @@
                 alert("Error: Database connection not found. Please check system paths.");
                 return;
             }
-            if(confirm("Are you sure you want to logout?")) {
+            if (confirm("Are you sure you want to logout?")) {
                 await _supabase.auth.signOut();
-                window.location.href = '../login.html'; 
+                window.location.href = '../up and in/login.html';
             }
         }
 
@@ -522,14 +616,14 @@
                 }
 
                 const { data: { session } } = await _supabase.auth.getSession();
-                if (!session) return window.location.href = '../login.html'; 
+                if (!session) return window.location.href = '../up and in/login.html';
 
                 const { data: profile } = await _supabase.from('profiles').select('full_name, role').eq('id', session.user.id).single();
-                
-                if (profile?.role !== 'admin') return window.location.href = '../user/index.html'; 
+
+                if (profile?.role !== 'admin') return window.location.href = '../user/index.html';
 
                 document.getElementById('adminName').textContent = profile.full_name ? profile.full_name.split(' ')[0] : 'Admin';
-                
+
                 loadStatsAndChart(); // Load stats and graph
                 loadDashboardMembers(); // Load table
                 loadActiveMembersForCards(); // NEW: Load active members for ID Cards
@@ -540,17 +634,17 @@
         async function loadStatsAndChart() {
             try {
                 if (typeof _supabase === 'undefined') return;
-                
+
                 // Fetch profiles for stats & chart
                 const { data: profiles, error } = await _supabase.from('profiles').select('id, role, is_approved, created_at, full_name, member_id');
                 const { count: e } = await _supabase.from('events').select('*', { count: 'exact', head: true });
 
                 if (!error && profiles) {
-                    allProfilesCache = profiles; 
-                    
+                    allProfilesCache = profiles;
+
                     const m = profiles.filter(p => p.role === 'member').length;
                     const p = profiles.filter(p => p.is_approved === false).length;
-                    
+
                     document.getElementById('totalMembers').innerText = m || 0;
                     document.getElementById('pendingMembers').innerText = p || 0;
                     document.getElementById('eventCount').innerText = e || 0;
@@ -573,12 +667,12 @@
                 const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
                 const dayOfWeek = firstDayOfMonth.getDay(); // 0-6
                 const dayOfMonth = date.getDate();
-                
+
                 // Calculate week number in month (approx)
                 const weekNum = Math.ceil((dayOfMonth + dayOfWeek) / 7);
                 const month = date.toLocaleString('default', { month: 'short' });
                 const year = date.getFullYear();
-                
+
                 return `Week ${weekNum} - ${month} ${year}`;
             }
 
@@ -601,34 +695,34 @@
 
             var options = {
                 series: [{ name: 'New Members', data: values }],
-                chart: { 
-                    type: 'bar', 
-                    height: 300, 
-                    toolbar: { show: false }, 
-                    background: 'transparent', 
-                    fontFamily: 'Poppins, sans-serif',
+                chart: {
+                    type: 'bar',
+                    height: 300,
+                    toolbar: { show: false },
+                    background: 'transparent',
+                    fontFamily: 'Roboto, sans-serif',
                     events: {
                         // Click Event for Chart Columns
-                        dataPointSelection: function(event, chartContext, config) {
+                        dataPointSelection: function (event, chartContext, config) {
                             const selectedIndex = config.dataPointIndex;
                             const weekLabel = keys[selectedIndex];
                             showChartDetails(weekLabel);
                         }
                     }
                 },
-                colors: ['#16a34a'],
+                colors: ['#a6f7bd'],
                 plotOptions: {
                     bar: { borderRadius: 4, columnWidth: '40%', distributed: true }
                 },
                 dataLabels: { enabled: false },
-                xaxis: { 
-                    categories: keys, 
-                    labels: { style: { colors: '#94a3b8', fontSize: '10px' }, rotate: -45 }, 
-                    axisBorder: { show: false }, 
-                    axisTicks: { show: false } 
+                xaxis: {
+                    categories: keys,
+                    labels: { style: { colors: '#8e918f', fontSize: '10px' }, rotate: -45 },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
                 },
-                yaxis: { labels: { style: { colors: '#94a3b8' } } },
-                grid: { borderColor: '#334155', strokeDashArray: 4 },
+                yaxis: { labels: { style: { colors: '#8e918f' } } },
+                grid: { borderColor: '#353539', strokeDashArray: 4 },
                 theme: { mode: 'dark' },
                 tooltip: { theme: 'dark', y: { formatter: function (val) { return val + " members" } } },
                 legend: { show: false }
@@ -643,7 +737,7 @@
         // Show Weekly Details Modal
         function showChartDetails(weekLabel) {
             const members = weeklyMemberData[weekLabel];
-            if(!members) return;
+            if (!members) return;
 
             document.getElementById('chartModalTitle').innerText = weekLabel;
             const list = document.getElementById('chartModalList');
@@ -651,17 +745,17 @@
 
             members.forEach(m => {
                 list.innerHTML += `
-                    <div class="flex items-center justify-between bg-slate-800/50 p-3 rounded-xl border border-white/5 animate-fade-in-up">
+                    <div class="flex items-center justify-between bg-[#1E1E1E] p-3 rounded-2xl border border-white/5 animate-fade-in-up">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-brand-green/20 text-brand-green flex items-center justify-center font-bold text-xs">
+                            <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs">
                                 ${m.full_name.charAt(0)}
                             </div>
                             <div>
-                                <h4 class="text-white text-sm font-bold">${m.full_name}</h4>
-                                <p class="text-[10px] text-slate-400">Registered: ${new Date(m.created_at).toLocaleDateString()}</p>
+                                <h4 class="text-[#E3E3E3] text-sm font-bold">${m.full_name}</h4>
+                                <p class="text-[10px] text-[#8e918f]">Registered: ${new Date(m.created_at).toLocaleDateString()}</p>
                             </div>
                         </div>
-                        <span class="bg-slate-700 text-white text-[10px] px-2 py-1 rounded font-mono">${m.member_id || 'No ID'}</span>
+                        <span class="bg-[#252529] text-[#C4C7C5] text-[10px] px-2 py-1 rounded font-mono">${m.member_id || 'No ID'}</span>
                     </div>
                 `;
             });
@@ -680,8 +774,8 @@
             const modal = document.getElementById('systemStatusModal');
             const content = document.getElementById('systemStatusContent');
             modal.classList.remove('hidden');
-            
-            content.innerHTML = '<div class="text-center py-8"><i class="ph-bold ph-spinner animate-spin text-3xl text-green-500"></i><p class="text-xs mt-2 text-slate-400">Fetching System Logs...</p></div>';
+
+            content.innerHTML = '<div class="text-center py-8"><span class="material-symbols-rounded animate-spin text-3xl text-primary">progress_activity</span><p class="text-xs mt-2 text-[#8e918f]">Fetching System Logs...</p></div>';
 
             try {
                 // Fetch All Profiles with required fields
@@ -705,9 +799,9 @@
                 };
 
                 let tableHTML = `
-                    <div class="overflow-x-auto rounded-xl border border-slate-800">
-                        <table class="w-full text-left text-sm text-slate-400">
-                            <thead class="bg-slate-800 text-xs uppercase font-bold text-slate-200 sticky top-0 z-10">
+                    <div class="overflow-x-auto rounded-2xl border border-[#353539]">
+                        <table class="w-full text-left text-sm text-[#C4C7C5]">
+                            <thead class="bg-[#252529] text-xs uppercase font-bold text-[#E3E3E3] sticky top-0 z-10">
                                 <tr>
                                     <th class="p-4">User</th>
                                     <th class="p-4">Auth / Email</th>
@@ -715,7 +809,7 @@
                                     <th class="p-4">Last Login</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-800 bg-slate-900/50">
+                            <tbody class="divide-y divide-[#353539] bg-[#1E1E1E]">
                 `;
 
                 if (!users || users.length === 0) {
@@ -723,8 +817,8 @@
                 } else {
                     users.forEach(u => {
                         // Avatar Logic
-                        const avatar = u.avatar_url 
-                            ? `<img src="${u.avatar_url}" class="w-8 h-8 rounded-full object-cover">` 
+                        const avatar = u.avatar_url
+                            ? `<img src="${u.avatar_url}" class="w-8 h-8 rounded-full object-cover">`
                             : `<div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-white text-xs font-bold">${u.full_name ? u.full_name.charAt(0) : '?'}</div>`;
 
                         // Status Dot
@@ -733,7 +827,7 @@
                         // Auth Method - Try to deduce or show email
                         // If 'last_sign_in_at' is missing in public table, we show 'N/A'
                         const lastLoginDisplay = u.last_sign_in_at ? formatTime(u.last_sign_in_at) : '<span class="text-[10px] text-slate-600 italic">Data not synced</span>';
-                        
+
                         tableHTML += `
                             <tr class="hover:bg-slate-800/50 transition">
                                 <td class="p-4">
@@ -794,23 +888,25 @@
 
             list.innerHTML = "";
             if (!pending || pending.length === 0) {
-                list.innerHTML = "<div class='text-slate-500 text-center py-4'>No pending requests.</div>";
+                list.innerHTML = "<div class='text-[#8e918f] text-center py-4'>No pending requests.</div>";
             } else {
                 pending.forEach(m => {
                     list.innerHTML += `
-                        <div class="flex items-center justify-between bg-slate-800/50 p-4 rounded-xl border border-white/5 hover:bg-slate-800 transition">
+                        <div class="flex items-center justify-between bg-[#1E1E1E] p-4 rounded-2xl border border-white/5 hover:bg-[#252529] transition">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-white font-bold">
+                                <div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm">
                                     ${m.full_name.charAt(0)}
                                 </div>
                                 <div>
-                                    <h4 class="text-white text-sm font-bold">${m.full_name}</h4>
-                                    <p class="text-[10px] text-slate-500 font-mono">${m.nic || 'No NIC'}</p>
+                                    <h4 class="text-[#E3E3E3] text-sm font-bold">${m.full_name}</h4>
+                                    <p class="text-[10px] text-[#8e918f]">${m.email}</p>
                                 </div>
                             </div>
-                            <button onclick="approveMember('${m.id}')" class="bg-green-600 hover:bg-green-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-lg shadow-green-900/20">
-                                Approve
-                            </button>
+                            <div class="flex gap-2">
+                                <button onclick="window.location.href='members.html?filter=pending'" class="w-8 h-8 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-black flex items-center justify-center transition">
+                                    <span class="material-symbols-rounded text-lg">arrow_forward</span>
+                                </button>
+                            </div>
                         </div>
                     `;
                 });
@@ -822,10 +918,10 @@
         }
 
         async function approveMember(id) {
-            if(!confirm("Approve this member?")) return;
-            
+            if (!confirm("Approve this member?")) return;
+
             const { error } = await _supabase.from('profiles').update({ is_approved: true }).eq('id', id);
-            
+
             if (error) {
                 alert("Error: " + error.message);
             } else {
@@ -846,7 +942,7 @@
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
-                
+
                 memberDataCache = data;
                 const tbody = document.getElementById('dashboardMemberTable');
                 tbody.innerHTML = '';
@@ -858,7 +954,7 @@
 
                 data.forEach(m => {
                     const isApproved = m.is_approved;
-                    const statusBadge = isApproved 
+                    const statusBadge = isApproved
                         ? `<span class="bg-green-500/10 text-green-400 px-2 py-1 rounded text-[10px] font-bold border border-green-500/20">Active</span>`
                         : `<span class="bg-orange-500/10 text-orange-400 px-2 py-1 rounded text-[10px] font-bold border border-orange-500/20">Pending</span>`;
 
@@ -878,7 +974,7 @@
                         </tr>
                     `;
                 });
-                
+
                 // IMPORTANT: Refresh AOS after data loads to catch new elements
                 setTimeout(() => AOS.refresh(), 100);
 
@@ -923,9 +1019,9 @@
             const doc = new jsPDF('landscape');
 
             try {
-                const logoData = await getBase64ImageFromURL('../assets/logo.png'); 
-                
-                doc.setFillColor(22, 163, 74); 
+                const logoData = await getBase64ImageFromURL('../assets/images/logo.png');
+
+                doc.setFillColor(22, 163, 74);
                 doc.rect(0, 0, 297, 35, 'F');
 
                 if (logoData) {
@@ -936,7 +1032,7 @@
                 doc.setTextColor(255, 255, 255);
                 doc.setFont("helvetica", "bold");
                 doc.text("Dream Makers Youth & Sports Club", 45, 18);
-                
+
                 doc.setFontSize(12);
                 doc.setFont("helvetica", "normal");
                 doc.text("Detailed Member Report", 45, 26);
@@ -999,7 +1095,7 @@
                     .order('full_name', { ascending: true });
 
                 if (error) throw error;
-                
+
                 activeMembersCache = members;
                 tbody.innerHTML = '';
 
@@ -1017,10 +1113,10 @@
                             <td class="p-4">
                                 <div class="flex items-center gap-3">
                                     <div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center overflow-hidden">
-                                        ${m.avatar_url 
-                                            ? `<img src="${m.avatar_url}" class="w-full h-full object-cover">` 
-                                            : `<span class="text-xs font-bold text-white">${m.full_name.charAt(0)}</span>`
-                                        }
+                                        ${m.avatar_url
+                            ? `<img src="${m.avatar_url}" class="w-full h-full object-cover">`
+                            : `<span class="text-xs font-bold text-white">${m.full_name.charAt(0)}</span>`
+                        }
                                     </div>
                                     <span class="text-white text-sm font-medium">${m.full_name}</span>
                                 </div>
@@ -1034,7 +1130,7 @@
                         </tr>
                     `;
                 });
-                
+
                 // IMPORTANT: Refresh AOS after data loads to catch new elements
                 setTimeout(() => AOS.refresh(), 100);
 
@@ -1055,7 +1151,7 @@
         function filterCardList() {
             const input = document.getElementById('cardSearch').value.toLowerCase();
             const rows = document.getElementById('idCardListTable').getElementsByTagName('tr');
-            
+
             for (let i = 0; i < rows.length; i++) {
                 const nameCell = rows[i].getElementsByTagName('td')[1];
                 if (nameCell) {
@@ -1089,7 +1185,7 @@
         // Helper to Populate Card Elements (Reusable)
         function populateCardHTML(profile, execData, sportsData, prefix) {
             const DEFAULT_AVATAR = "https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg";
-            
+
             // Basic Info
             document.getElementById(prefix + 'ProfileImg').src = profile.avatar_url || DEFAULT_AVATAR;
             document.getElementById(prefix + 'DisplayName').innerText = profile.display_name || profile.full_name.split(' ')[0];
@@ -1107,7 +1203,7 @@
             if (execData) {
                 const badge = document.createElement('div');
                 badge.className = "px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-[0_0_10px_rgba(234,179,8,0.2)]";
-                badge.innerHTML = `<i class="ph-fill ph-crown"></i> ${execData.term_period || 'Executive'}`; 
+                badge.innerHTML = `<i class="ph-fill ph-crown"></i> ${execData.term_period || 'Executive'}`;
                 rolesContainer.appendChild(badge);
             }
 
@@ -1163,7 +1259,7 @@
             const pdf = new jsPDF('p', 'mm', 'a4');
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
-            
+
             let yOffset = 10;
             let xOffset = 10;
             const cardW = 85; // Standard ID Card width in mm roughly (credit card size)
@@ -1176,14 +1272,14 @@
                 for (let i = 0; i < selectedIds.length; i++) {
                     const memberId = selectedIds[i];
                     const member = activeMembersCache.find(m => m.id === memberId);
-                    
+
                     // Fetch Roles for accurate card
                     const { data: execData } = await _supabase.from('executive_committee').select('*').eq('profile_id', member.id).single();
                     const { data: sportsData } = await _supabase.from('sports').select('name').eq('captain_id', member.id);
 
                     // Create a DOM element for the card (clone the structure of preview)
                     const cardClone = document.getElementById('cardPreviewContainer').querySelector('.glass-card').cloneNode(true);
-                    
+
                     // Populate clone data manually (IDs are duplicated so querySelector inside clone is safer)
                     // Basic replacements for clone
                     const DEFAULT_AVATAR = "https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg";
@@ -1194,7 +1290,7 @@
                     cardClone.querySelector('#cardMemberId').innerText = member.member_id || 'N/A';
                     cardClone.querySelector('#cardEmail').innerText = member.email || 'N/A';
                     cardClone.querySelector('#cardPhone').innerText = member.phone || 'N/A';
-                    
+
                     // FIXED: Ensure Text is visible (Remove Truncate)
                     const emailEl = cardClone.querySelector('#cardEmail');
                     const phoneEl = cardClone.querySelector('#cardPhone');
@@ -1214,9 +1310,9 @@
                     cardClone.style.background = '#0f172a'; // Solid bg for PDF
                     cardClone.style.width = '350px'; // Fixed width
                     cardClone.style.margin = '20px';
-                    
+
                     hiddenContainer.appendChild(cardClone);
-                    
+
                     // Capture
                     const canvas = await html2canvas(cardClone, { scale: 2, useCORS: true, backgroundColor: '#0b1121' });
                     const imgData = canvas.toDataURL('image/png');
@@ -1231,9 +1327,9 @@
                         pdf.addPage();
                         yOffset = 10;
                     }
-                    
+
                     pdf.addImage(imgData, 'PNG', xOffset, yOffset, pdfImgWidth, pdfImgHeight);
-                    
+
                     // Grid logic (next position)
                     xOffset += pdfImgWidth + 10;
                     if (xOffset + pdfImgWidth > pdfWidth) {
@@ -1257,4 +1353,5 @@
         initAdmin();
     </script>
 </body>
+
 </html>
