@@ -41,30 +41,53 @@
     class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-500 no-tap-highlight">
 
     <div
+        class="absolute inset-0 bg-[url('https://tnrqasiiywcvtwkwytqe.supabase.co/storage/v1/object/public/slides/DSC03348.jpg')] bg-cover bg-center opacity-20 fixed">
+    </div>
+    <div class="absolute inset-0 fixed"
+        style="background: linear-gradient(to top, var(--color-background), color-mix(in srgb, var(--color-background), transparent 5%), color-mix(in srgb, var(--color-background), transparent 20%));">
+    </div>
+
+    <div
         class="absolute top-0 left-0 w-96 h-96 bg-primary opacity-5 rounded-full blur-[80px] animate-pulse pointer-events-none">
     </div>
     <div
         class="absolute bottom-0 right-0 w-96 h-96 bg-secondary opacity-5 rounded-full blur-[80px] animate-pulse pointer-events-none">
     </div>
 
+    <!-- Glass Container -->
+    <!-- Mobile: Full width, stacked (w-full max-w-[90%]) -->
+    <!-- PC (1920x1080): Fixed width centered (md:w-[480px] md:max-w-none) -->
     <div
-        class="bg-[#1E1E1E] border border-white/5 shadow-2xl rounded-[32px] w-full max-w-sm overflow-hidden relative z-10 transform transition-all">
+        class="relative z-10 w-full max-w-[90%] md:w-[480px] md:max-w-none bg-[#1E1E1E]/40 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] rounded-[32px] overflow-hidden transform transition-all hover:shadow-[0_8px_32px_0_rgba(166,247,189,0.1)]">
 
-        <div class="h-28 bg-[#252529] p-8 flex items-end relative overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-            <div class="relative z-10">
-                <h2 class="text-2xl font-display font-bold text-[#E3E3E3] leading-none">Reset Password</h2>
-                <p class="text-primary text-xs font-bold mt-1 uppercase tracking-wide">Secure Account Recovery</p>
-            </div>
-            <span
-                class="material-symbols-rounded absolute top-6 right-6 text-4xl text-[#E3E3E3] opacity-20">lock_reset</span>
+        <!-- PC: Glow effects -->
+        <div
+            class="absolute -top-20 -left-20 w-40 h-40 bg-primary/20 rounded-full blur-[60px] pointer-events-none hidden md:block">
+        </div>
+        <div
+            class="absolute -bottom-20 -right-20 w-40 h-40 bg-secondary/20 rounded-full blur-[60px] pointer-events-none hidden md:block">
         </div>
 
-        <div class="p-8">
+        <div
+            class="h-28 md:h-32 bg-gradient-to-br from-white/5 to-transparent p-6 md:p-8 flex items-end relative overflow-hidden border-b border-white/5">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            <div class="relative z-10">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-[#E3E3E3] leading-none drop-shadow-md">Reset
+                    Password</h2>
+                <p class="text-primary text-xs md:text-sm font-bold mt-1 uppercase tracking-wide drop-shadow-sm">Secure
+                    Account Recovery</p>
+            </div>
+            <span
+                class="material-symbols-rounded absolute top-6 right-6 text-4xl text-[#E3E3E3] opacity-50 drop-shadow-lg">lock_reset</span>
+        </div>
+
+        <div class="p-6 md:p-8">
             <form id="resetRequestForm" class="space-y-6">
-                <p class="text-xs text-[#8e918f] font-medium leading-relaxed">
+                <p
+                    class="text-xs text-[#C4C7C5] font-medium leading-relaxed bg-black/20 p-3 rounded-xl border border-white/5 backdrop-blur-sm">
                     Enter your email to receive a password reset link.<br>
-                    <span class="text-[10px] opacity-70">ඔබගේ ඊමේල් ලිපිනය ඇතුලත් කරන්න. අප ඔබට පාස්වර්ඩ් වෙනස් කිරීමේ
+                    <span class="text-[10px] opacity-70 block mt-1">ඔබගේ ඊමේල් ලිපිනය ඇතුලත් කරන්න. අප ඔබට පාස්වර්ඩ්
+                        වෙනස් කිරීමේ
                         ලින්ක් එකක් එවන්නෙමු.</span>
                 </p>
 
@@ -74,21 +97,22 @@
                         <span
                             class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-[#8e918f] group-focus-within:text-primary transition">mail</span>
                         <input type="email" id="email" required
-                            class="w-full pl-11 pr-4 py-3 rounded-2xl bg-[#252529] border border-[#353539] focus:border-primary outline-none text-[#E3E3E3] transition font-medium text-sm placeholder-[#444746] shadow-sm"
+                            class="w-full pl-11 pr-4 py-3 rounded-2xl bg-black/20 border border-white/10 focus:border-primary/50 focus:bg-black/40 outline-none text-[#E3E3E3] transition font-medium text-sm placeholder-white/20 shadow-inner backdrop-blur-sm"
                             placeholder="you@example.com">
                     </div>
                 </div>
 
                 <button type="submit" id="sendLinkBtn"
-                    class="w-full bg-primary text-[#003915] py-4 rounded-full font-bold text-sm shadow-lg shadow-primary/20 hover:bg-[#b1fcc5] active:scale-[0.98] transition transform flex justify-center items-center gap-2 mt-4">
+                    class="w-full bg-primary text-[#003915] py-4 rounded-full font-bold text-sm shadow-lg shadow-primary/20 hover:bg-[#b1fcc5] active:scale-[0.98] transition transform flex justify-center items-center gap-2 mt-4 uppercase tracking-wider">
                     <span class="material-symbols-rounded">send</span> Send Reset Link
                 </button>
             </form>
 
             <form id="updatePassForm" class="space-y-6 hidden">
-                <p class="text-xs text-[#8e918f] font-medium leading-relaxed">
+                <p
+                    class="text-xs text-[#C4C7C5] font-medium leading-relaxed bg-black/20 p-3 rounded-xl border border-white/5 backdrop-blur-sm">
                     Enter your new password below.<br>
-                    <span class="text-[10px] opacity-70">ඔබගේ නව මුරපදය පහතින් ඇතුලත් කරන්න.</span>
+                    <span class="text-[10px] opacity-70 block mt-1">ඔබගේ නව මුරපදය පහතින් ඇතුලත් කරන්න.</span>
                 </p>
 
                 <div class="space-y-1">
@@ -98,13 +122,13 @@
                         <span
                             class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-[#8e918f] group-focus-within:text-primary transition">lock</span>
                         <input type="password" id="newPassword" required minlength="6"
-                            class="w-full pl-11 pr-4 py-3 rounded-2xl bg-[#252529] border border-[#353539] focus:border-primary outline-none text-[#E3E3E3] transition font-medium text-sm placeholder-[#444746] shadow-sm"
+                            class="w-full pl-11 pr-4 py-3 rounded-2xl bg-black/20 border border-white/10 focus:border-primary/50 focus:bg-black/40 outline-none text-[#E3E3E3] transition font-medium text-sm placeholder-white/20 shadow-inner backdrop-blur-sm"
                             placeholder="New Password">
                     </div>
                 </div>
 
                 <button type="submit" id="updateBtn"
-                    class="w-full bg-primary text-[#003915] py-4 rounded-full font-bold text-sm shadow-lg shadow-primary/20 hover:bg-[#b1fcc5] active:scale-[0.98] transition transform flex justify-center items-center gap-2 mt-4">
+                    class="w-full bg-primary text-[#003915] py-4 rounded-full font-bold text-sm shadow-lg shadow-primary/20 hover:bg-[#b1fcc5] active:scale-[0.98] transition transform flex justify-center items-center gap-2 mt-4 uppercase tracking-wider">
                     <span class="material-symbols-rounded">save</span> Update Password
                 </button>
             </form>

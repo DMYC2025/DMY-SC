@@ -54,9 +54,27 @@
 <body class="min-h-screen flex items-center justify-center p-3 md:p-4 overflow-x-hidden relative no-tap-highlight">
 
     <div
-        class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=2070')] bg-cover bg-center opacity-5 fixed">
+        class="absolute inset-0 bg-[url('https://tnrqasiiywcvtwkwytqe.supabase.co/storage/v1/object/public/slides/DSC03348.jpg')] bg-cover bg-center opacity-20 fixed">
     </div>
-    <div class="absolute inset-0 fixed" style="background: linear-gradient(to top, var(--color-background), color-mix(in srgb, var(--color-background), transparent 5%), color-mix(in srgb, var(--color-background), transparent 20%));"></div>
+    <div class="absolute inset-0 fixed"
+        style="background: linear-gradient(to top, var(--color-background), color-mix(in srgb, var(--color-background), transparent 5%), color-mix(in srgb, var(--color-background), transparent 20%));">
+    </div>
+
+    <div class="fixed top-4 right-4 md:top-6 md:right-6 flex gap-2 z-50">
+        <button onclick="openIssueModal()" type="button"
+            class="group flex items-center gap-2 px-3 md:px-4 h-10 rounded-full bg-error/10 border border-error/20 hover:bg-error/20 active:scale-95 transition backdrop-blur-md shadow-lg">
+            <span class="material-symbols-rounded text-error text-lg">report_problem</span>
+            <span class="hidden md:block text-[10px] font-bold text-error uppercase tracking-wider">Report</span>
+        </button>
+        <button id="showInstructionsBtn" type="button"
+            class="group flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 border border-primary/20 hover:bg-primary/20 active:scale-95 transition backdrop-blur-md shadow-lg">
+            <span class="material-symbols-rounded text-primary text-lg">info</span>
+        </button>
+        <button id="toggleHelpBtn" type="button"
+            class="group flex items-center justify-center w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 active:scale-95 transition backdrop-blur-md shadow-lg">
+            <span class="material-symbols-rounded text-primary text-lg">help</span>
+        </button>
+    </div>
 
     <div class="relative z-10 w-full max-w-3xl" data-aos="fade-up" data-aos-duration="600">
 
@@ -73,42 +91,41 @@
                 Youth & Sports Club</p>
         </div>
 
-        <div class="bg-[#1E1E1E] border border-white/5 shadow-2xl rounded-[32px] overflow-hidden p-6 md:p-10 relative">
+        <!-- High-Performance Glass Container -->
+        <!-- PC (1920x1080): Fixed width (md:w-[800px]), centered -->
+        <div
+            class="w-full md:w-[800px] md:max-w-none bg-[#1E1E1E]/40 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] rounded-[32px] overflow-hidden p-6 md:p-10 relative transform transition-all hover:shadow-[0_8px_32px_0_rgba(166,247,189,0.1)]">
+
+            <!-- PC: Glow effects -->
+            <div
+                class="absolute -top-32 -left-32 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none hidden md:block">
+            </div>
+            <div
+                class="absolute -bottom-32 -right-32 w-64 h-64 bg-secondary/10 rounded-full blur-[80px] pointer-events-none hidden md:block">
+            </div>
 
             <div
-                class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-60">
+                class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-60">
             </div>
 
-            <div class="flex justify-end gap-2 mb-4">
-                <button id="showInstructionsBtn" type="button"
-                    class="group flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 active:bg-primary/20 transition">
-                    <span class="material-symbols-rounded text-primary text-sm">info</span>
-                    <span class="text-[10px] font-bold text-primary uppercase tracking-wider">Instructions</span>
-                </button>
-                <button id="toggleHelpBtn" type="button"
-                    class="group flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#252529] border border-white/5 active:bg-[#353539] transition">
-                    <span class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider">Help?</span>
-                    <span
-                        class="material-symbols-rounded text-primary text-sm group-hover:text-white transition">expand_more</span>
-                </button>
-            </div>
+
 
             <div id="videoSection"
-                class="hidden mb-6 bg-[#121212] rounded-[24px] p-4 border border-white/5 transition-all duration-300 origin-top">
+                class="hidden mb-6 bg-black/40 rounded-[24px] p-4 border border-white/10 transition-all duration-300 origin-top backdrop-blur-md">
                 <h3 class="text-[#E3E3E3] font-bold text-xs flex items-center gap-2 mb-3 uppercase tracking-wider">
                     <span class="material-symbols-rounded text-primary">play_circle</span> Guides
                 </h3>
                 <div class="grid grid-cols-2 gap-3">
                     <div class="space-y-1">
                         <p class="text-[9px] text-[#8e918f] uppercase font-bold">Sinhala</p>
-                        <div class="aspect-video rounded-xl overflow-hidden border border-[#353539] bg-black">
+                        <div class="aspect-video rounded-xl overflow-hidden border border-white/10 bg-black shadow-lg">
                             <iframe class="w-full h-full" src="https://www.youtube.com/embed/CRga7nRT62s"
                                 frameborder="0" allowfullscreen></iframe>
                         </div>
                     </div>
                     <div class="space-y-1">
                         <p class="text-[9px] text-[#8e918f] uppercase font-bold">English</p>
-                        <div class="aspect-video rounded-xl overflow-hidden border border-[#353539] bg-black">
+                        <div class="aspect-video rounded-xl overflow-hidden border border-white/10 bg-black shadow-lg">
                             <iframe class="w-full h-full" src="https://www.youtube.com/embed/6s38pjPonRI"
                                 frameborder="0" allowfullscreen></iframe>
                         </div>
@@ -130,7 +147,7 @@
                                 class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Name
                                 with Initials</label>
                             <input type="text" id="fullName" required placeholder="e.g. A.B. Perera"
-                                class="w-full px-4 py-3 rounded-xl bg-[#252529] border border-[#353539] text-[#E3E3E3] placeholder-[#444746] focus:border-primary outline-none transition font-medium text-xs md:text-sm">
+                                class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] placeholder-white/20 focus:border-primary/50 focus:bg-black/40 outline-none transition font-medium text-xs md:text-sm backdrop-blur-sm shadow-inner">
                         </div>
 
                         <div class="group">
@@ -138,7 +155,7 @@
                                 class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Birth
                                 Date</label>
                             <input type="date" id="dob" required
-                                class="w-full px-4 py-3 rounded-xl bg-[#252529] border border-[#353539] text-[#E3E3E3] focus:border-primary outline-none transition font-medium text-xs md:text-sm text-[#8e918f] focus:text-[#E3E3E3]">
+                                class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] focus:border-primary/50 focus:bg-black/40 outline-none transition font-medium text-xs md:text-sm text-[#8e918f] focus:text-[#E3E3E3] backdrop-blur-sm shadow-inner">
                         </div>
 
                         <div class="group">
@@ -146,17 +163,17 @@
                                 class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">NIC
                                 No</label>
                             <input type="text" id="nic" required placeholder="NIC Number"
-                                class="w-full px-4 py-3 rounded-xl bg-[#252529] border border-[#353539] text-[#E3E3E3] placeholder-[#444746] focus:border-primary outline-none transition font-medium text-xs md:text-sm">
+                                class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] placeholder-white/20 focus:border-primary/50 focus:bg-black/40 outline-none transition font-medium text-xs md:text-sm backdrop-blur-sm shadow-inner">
                         </div>
 
                         <div class="group">
                             <label
                                 class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Gender</label>
                             <select id="gender" required
-                                class="w-full px-4 py-3 rounded-xl bg-[#252529] border border-[#353539] text-[#E3E3E3] focus:border-primary outline-none transition font-medium text-xs md:text-sm appearance-none">
-                                <option value="" class="bg-[#252529] text-[#8e918f]">Select</option>
-                                <option value="Male" class="bg-[#252529]">Male</option>
-                                <option value="Female" class="bg-[#252529]">Female</option>
+                                class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] focus:border-primary/50 focus:bg-black/40 outline-none transition font-medium text-xs md:text-sm appearance-none backdrop-blur-sm shadow-inner">
+                                <option value="" class="bg-[#1E1E1E] text-[#8e918f]">Select</option>
+                                <option value="Male" class="bg-[#1E1E1E]">Male</option>
+                                <option value="Female" class="bg-[#1E1E1E]">Female</option>
                             </select>
                         </div>
 
@@ -165,14 +182,14 @@
                                 class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Phone
                                 No</label>
                             <input type="tel" id="phone" required placeholder="07x xxxxxxx"
-                                class="w-full px-4 py-3 rounded-xl bg-[#252529] border border-[#353539] text-[#E3E3E3] placeholder-[#444746] focus:border-primary outline-none transition font-medium text-xs md:text-sm">
+                                class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] placeholder-white/20 focus:border-primary/50 focus:bg-black/40 outline-none transition font-medium text-xs md:text-sm backdrop-blur-sm shadow-inner">
                         </div>
 
                         <div class="md:col-span-2 group">
                             <label
                                 class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Address</label>
                             <textarea id="address" rows="2" required placeholder="Full Address"
-                                class="w-full px-4 py-3 rounded-xl bg-[#252529] border border-[#353539] text-[#E3E3E3] placeholder-[#444746] focus:border-primary outline-none transition font-medium text-xs md:text-sm resize-none"></textarea>
+                                class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] placeholder-white/20 focus:border-primary/50 focus:bg-black/40 outline-none transition font-medium text-xs md:text-sm resize-none backdrop-blur-sm shadow-inner"></textarea>
                         </div>
                     </div>
                 </div>
@@ -188,14 +205,14 @@
                             <label
                                 class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Email</label>
                             <input type="email" id="email" required placeholder="you@mail.com"
-                                class="w-full px-4 py-3 rounded-xl bg-[#252529] border border-[#353539] text-[#E3E3E3] placeholder-[#444746] focus:border-primary outline-none transition font-medium text-xs md:text-sm">
+                                class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] placeholder-white/20 focus:border-primary/50 focus:bg-black/40 outline-none transition font-medium text-xs md:text-sm backdrop-blur-sm shadow-inner">
                         </div>
 
                         <div class="group">
                             <label
                                 class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Password</label>
                             <input type="password" id="password" required minlength="6" placeholder="******"
-                                class="w-full px-4 py-3 rounded-xl bg-[#252529] border border-[#353539] text-[#E3E3E3] placeholder-[#444746] focus:border-primary outline-none transition font-medium text-xs md:text-sm">
+                                class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] placeholder-white/20 focus:border-primary/50 focus:bg-black/40 outline-none transition font-medium text-xs md:text-sm backdrop-blur-sm shadow-inner">
                         </div>
                     </div>
                 </div>
@@ -691,6 +708,107 @@
                 submitBtn.classList.remove('opacity-50');
                 submitBtn.innerHTML = '<span class="material-symbols-rounded">send</span> Register';
                 loadingText.classList.add('hidden');
+            }
+        });
+    </script>
+    <!-- Issue Reporting Modal -->
+    <div id="issueModal"
+        class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-all duration-300 opacity-0">
+        <div
+            class="bg-[#1E1E1E] border border-white/5 rounded-[28px] shadow-2xl w-full max-w-md relative transform scale-95 transition-all duration-300">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-display font-medium text-[#E3E3E3] flex items-center gap-2">
+                        <span class="material-symbols-rounded text-error">report_problem</span> Report Issue
+                    </h3>
+                    <button onclick="closeIssueModal()" class="text-[#8e918f] hover:text-white transition"><span
+                            class="material-symbols-rounded">close</span></button>
+                </div>
+                <form id="issueForm" class="space-y-4">
+                    <div>
+                        <label class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Full
+                            Name</label>
+                        <input type="text" id="issueName" required
+                            class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] focus:border-error/50 outline-none transition">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Club ID
+                            (Optional)</label>
+                        <input type="text" id="issueClubId"
+                            class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] focus:border-error/50 outline-none transition">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label
+                                class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Email</label>
+                            <input type="email" id="issueEmail" required
+                                class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] focus:border-error/50 outline-none transition">
+                        </div>
+                        <div>
+                            <label
+                                class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">WhatsApp</label>
+                            <input type="tel" id="issueWhatsapp" required
+                                class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] focus:border-error/50 outline-none transition">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Issue
+                            Description</label>
+                        <textarea id="issueDesc" rows="3" required placeholder="Describe the error you are facing..."
+                            class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] focus:border-error/50 outline-none transition"></textarea>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-[#3c2525] hover:bg-[#533535] text-[#ffb4ab] hover:text-white font-bold py-3 rounded-full transition shadow-lg flex items-center justify-center gap-2">
+                        <span class="material-symbols-rounded">send</span> Submit Report
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Issue Modal Logic
+        const issueModal = document.getElementById('issueModal');
+        function openIssueModal() {
+            issueModal.classList.remove('hidden');
+            setTimeout(() => {
+                issueModal.classList.remove('opacity-0');
+                issueModal.querySelector('div').classList.remove('scale-95');
+                issueModal.querySelector('div').classList.add('scale-100');
+            }, 10);
+        }
+        function closeIssueModal() {
+            issueModal.classList.add('opacity-0');
+            issueModal.querySelector('div').classList.remove('scale-100');
+            issueModal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => issueModal.classList.add('hidden'), 300);
+        }
+
+        document.getElementById('issueForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-rounded animate-spin">progress_activity</span> Sending...';
+            btn.disabled = true;
+
+            const { error } = await _supabase.from('login_issues').insert({
+                full_name: document.getElementById('issueName').value,
+                club_id: document.getElementById('issueClubId').value || null,
+                email: document.getElementById('issueEmail').value,
+                whatsapp_number: document.getElementById('issueWhatsapp').value,
+                description: document.getElementById('issueDesc').value
+            });
+
+            if (error) {
+                alert("Error submitting report: " + error.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            } else {
+                alert("Report submitted successfully! The admin will check it soon.");
+                closeIssueModal();
+                e.target.reset();
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
         });
     </script>

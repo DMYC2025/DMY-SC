@@ -177,6 +177,10 @@
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">notifications</span> Notifications
                 </a>
+                <a href="issues.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">report_problem</span> Support Issues
+                </a>
                 <a href="quick_links.html"
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">link</span> Quick Links
@@ -370,7 +374,11 @@
 
         async function logout() {
             if (confirm("Are you sure you want to logout?")) {
-                if (typeof _supabase !== 'undefined') await _supabase.auth.signOut();
+                try {
+                    if (typeof _supabase !== 'undefined') await _supabase.auth.signOut();
+                } catch (error) {
+                    console.error("Logout Error:", error);
+                }
                 window.location.href = '../up and in/login.html';
             }
         }

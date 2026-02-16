@@ -153,8 +153,14 @@ document.addEventListener('click', function (event) {
 // 8. Global Logout
 async function logout() {
     if (confirm("Are you sure you want to logout?")) {
-        if (typeof _supabase === 'undefined') return;
-        await _supabase.auth.signOut();
+        try {
+            if (typeof _supabase !== 'undefined') {
+                await _supabase.auth.signOut();
+            }
+        } catch (err) {
+            console.error("Logout Error:", err);
+        }
+        // Always redirect, even if sign out failed (clears UI state)
         window.location.href = '../up and in/login.html';
     }
 }

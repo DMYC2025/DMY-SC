@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DMYSC - Notifications</title>
+    <title>DMYSC - Support Issues</title>
     <link rel="icon" type="image/png" href="../assets/images/logo_1.png">
 
     <!-- External Admin CSS -->
@@ -36,11 +36,8 @@
             }
         }
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-
 </head>
 
 <body class="bg-[#121212] text-slate-100 min-h-screen font-sans overflow-hidden">
@@ -80,11 +77,11 @@
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">emoji_events</span> Sports
                 </a>
-                <a href="#" class="m3-nav-item active flex items-center gap-4 px-6 py-3.5 text-sm font-medium">
+                <a href="notifications.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">notifications</span> Notifications
                 </a>
-                <a href="issues.html"
-                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                <a href="#" class="m3-nav-item active flex items-center gap-4 px-6 py-3.5 text-sm font-medium">
                     <span class="material-symbols-rounded text-[20px]">report_problem</span> Support Issues
                 </a>
                 <a href="quick_links.html"
@@ -116,81 +113,59 @@
             </div>
         </aside>
 
-        <main class="flex-1 overflow-y-auto relative bg-[#121212]">
+        <main class="flex-1 overflow-y-auto relative bg-[#121212] scroll-smooth">
             <button onclick="toggleSidebar()"
                 class="md:hidden absolute top-6 right-6 z-40 bg-[#1E1E1E] p-2 rounded-full text-[#E3E3E3] border border-white/10 shadow-lg"><span
                     class="material-symbols-rounded text-2xl">menu</span></button>
 
-            <!-- M3 Header Section -->
+            <!-- Header -->
             <div class="relative px-6 md:px-12 pt-12 pb-8">
                 <div class="flex items-end justify-between" data-aos="fade-up">
                     <div>
                         <h1
                             class="text-3xl md:text-5xl font-display font-medium text-[#E3E3E3] flex items-center gap-3">
-                            <span class="material-symbols-rounded text-4xl md:text-5xl text-error">campaign</span>
-                            Notify Manager
+                            <span class="material-symbols-rounded text-4xl md:text-5xl text-error">report_problem</span>
+                            Support Issues
                         </h1>
-                        <p class="text-[#ffb4ab] text-sm font-medium mt-2 opacity-90 tracking-wide uppercase">Send
-                            Alerts & News</p>
+                        <p class="text-[#c2c9bd] text-sm font-medium mt-2 opacity-90 tracking-wide uppercase">
+                            View reported login/registration problems
+                        </p>
                     </div>
+                    <button onclick="loadIssues()" class="p-2 rounded-full hover:bg-white/10 transition text-primary">
+                        <span class="material-symbols-rounded">refresh</span>
+                    </button>
                 </div>
             </div>
 
-            <div class="max-w-7xl mx-auto px-4 lg:px-8 relative z-10 pb-12">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-                    <div class="lg:col-span-1">
-                        <div class="m3-card p-6 bg-[#1E1E1E] border border-white/5 sticky top-8" data-aos="fade-up">
-                            <h3 class="text-xl font-display font-medium text-[#E3E3E3] mb-6 flex items-center gap-2">
-                                <span class="bg-[#3c2525] text-[#ffb4ab] p-2 rounded-full"><span
-                                        class="material-symbols-rounded">send</span></span> Compose
-                            </h3>
-                            <form id="notifyForm" class="space-y-4">
-                                <div><label
-                                        class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">Title</label><input
-                                        type="text" id="title" required class="w-full m3-input p-3 text-[#E3E3E3]">
-                                </div>
-                                <div><label
-                                        class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">Message</label><textarea
-                                        id="message" rows="4" required
-                                        class="w-full m3-input p-3 text-[#E3E3E3]"></textarea></div>
-                                <div>
-                                    <label
-                                        class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">Priority</label>
-                                    <select id="priority" class="w-full m3-input p-3 text-[#E3E3E3]">
-                                        <option value="normal" class="bg-[#252529]">🔵 Normal</option>
-                                        <option value="urgent" class="bg-[#252529]">🔴 Urgent</option>
-                                    </select>
-                                </div>
-                                <button type="submit"
-                                    class="w-full bg-[#3c2525] hover:bg-[#533535] text-[#ffb4ab] hover:text-white font-bold py-3.5 rounded-full shadow-lg transition transform hover:-translate-y-1">Publish
-                                    Now</button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="lg:col-span-2">
-                        <div class="m3-card p-6 bg-[#1E1E1E] border border-white/5" data-aos="fade-up"
-                            data-aos-delay="100">
-                            <h3
-                                class="text-sm font-bold text-[#8e918f] uppercase mb-6 tracking-widest flex justify-between items-center">
-                                Sent History <button onclick="fetchNotifications()"
-                                    class="text-error hover:rotate-180 transition duration-500"><span
-                                        class="material-symbols-rounded">refresh</span></button>
-                            </h3>
-                            <div id="historyList" class="space-y-4">
-                                <div class="text-center py-10">
-                                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-error mx-auto">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <!-- Content -->
+            <div class="px-6 md:px-12 pb-12">
+                <div class="m3-card p-6 bg-[#1E1E1E] border border-white/5 rounded-2xl overflow-hidden shadow-xl"
+                    data-aos="fade-up">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-[#E3E3E3]">
+                            <thead class="bg-[#252529] text-xs uppercase font-bold text-[#8e918f]">
+                                <tr>
+                                    <th class="p-4">Date</th>
+                                    <th class="p-4">User Details</th>
+                                    <th class="p-4">Contact</th>
+                                    <th class="p-4">Description</th>
+                                    <th class="p-4 text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="issuesList" class="divide-y divide-white/5">
+                                <tr>
+                                    <td colspan="5" class="p-8 text-center text-[#8e918f] animate-pulse">Loading
+                                        issues...</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
+    <!-- Script -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="../js/supabase.js"></script>
     <script>
@@ -207,9 +182,7 @@
         async function logout() {
             if (confirm("Are you sure you want to logout?")) {
                 try {
-                    if (typeof _supabase !== 'undefined') {
-                        await _supabase.auth.signOut();
-                    }
+                    if (typeof _supabase !== 'undefined') await _supabase.auth.signOut();
                 } catch (error) {
                     console.error("Logout Error:", error);
                 }
@@ -224,59 +197,64 @@
             }
             const { data: { session } } = await _supabase.auth.getSession();
             if (!session) return window.location.href = '../up and in/login.html';
-            fetchNotifications();
+            loadIssues();
         }
 
-        async function fetchNotifications() {
-            const { data } = await _supabase.from('notifications').select('*').order('created_at', { ascending: false });
-            const list = document.getElementById('historyList');
-            list.innerHTML = '';
+        async function loadIssues() {
+            const list = document.getElementById('issuesList');
+            const { data, error } = await _supabase
+                .from('login_issues')
+                .select('*')
+                .order('created_at', { ascending: false });
 
-            if (data && data.length > 0) {
-                data.forEach(n => {
-                    const isUrgent = n.priority === 'urgent';
-                    const border = isUrgent ? 'border-error' : 'border-primary';
-                    const bgIcon = isUrgent ? 'bg-[#3c2525] text-[#ffb4ab]' : 'bg-[#003915] text-[#a6f7bd]';
-                    const icon = isUrgent ? 'priority_high' : 'info';
+            if (error) {
+                console.error("Error fetching issues:", error);
+                list.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-error">Failed to load issues: ${error.message}</td></tr>`;
+                return;
+            }
 
-                    list.innerHTML += `
-                        <div class="bg-[#252529] p-5 rounded-2xl border border-white/5 border-l-4 ${border} relative group hover:bg-[#303036] transition">
-                            <div class="flex justify-between items-start gap-4">
-                                <div class="flex gap-4">
-                                    <div class="w-10 h-10 rounded-full ${bgIcon} flex items-center justify-center shrink-0"><span class="material-symbols-rounded text-xl">${icon}</span></div>
-                                    <div>
-                                        <h4 class="font-display font-medium text-[#E3E3E3]">${n.title}</h4>
-                                        <p class="text-sm text-[#C4C7C5] mt-1">${n.message}</p>
-                                        <p class="text-[10px] text-[#8e918f] font-mono mt-2">${new Date(n.created_at).toLocaleString()}</p>
-                                    </div>
-                                </div>
-                                <button onclick="deleteNote('${n.id}')" class="text-[#8e918f] hover:text-error p-2 transition"><span class="material-symbols-rounded">delete</span></button>
-                            </div>
-                        </div>`;
-                });
-            } else {
-                list.innerHTML = `<div class="text-center py-10 text-[#8e918f]">No notifications sent yet.</div>`;
+            if (!data || data.length === 0) {
+                list.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-[#8e918f] italic">No issues reported yet.</td></tr>`;
+                return;
+            }
+
+            list.innerHTML = data.map(issue => `
+                <tr class="hover:bg-white/5 transition group">
+                    <td class="p-4 whitespace-nowrap text-[#8e918f] font-mono text-xs">
+                        ${new Date(issue.created_at).toLocaleString()}
+                    </td>
+                    <td class="p-4">
+                        <div class="font-bold text-[#E3E3E3]">${issue.full_name}</div>
+                        ${issue.club_id ? `<div class="text-xs text-primary font-mono bg-primary/10 px-1.5 py-0.5 rounded w-fit mt-1">ID: ${issue.club_id}</div>` : ''}
+                    </td>
+                    <td class="p-4">
+                        <div class="flex flex-col gap-1 text-xs">
+                            <a href="mailto:${issue.email}" class="flex items-center gap-1 hover:text-primary transition"><span class="material-symbols-rounded text-sm">mail</span> ${issue.email}</a>
+                            <a href="https://wa.me/${issue.whatsapp_number.replace(/[^0-9]/g, '')}" target="_blank" class="flex items-center gap-1 hover:text-[#25D366] transition"><span class="material-symbols-rounded text-sm">chat</span> ${issue.whatsapp_number}</a>
+                        </div>
+                    </td>
+                    <td class="p-4">
+                        <div class="text-sm text-[#E3E3E3] bg-[#252529] p-3 rounded-lg border border-white/5 max-h-32 overflow-y-auto custom-scrollbar">
+                            ${issue.description}
+                        </div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <button onclick="deleteIssue('${issue.id}')" class="p-2 rounded-full text-[#8e918f] hover:text-error hover:bg-error/10 transition" title="Delete Issue">
+                            <span class="material-symbols-rounded">delete</span>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function deleteIssue(id) {
+            if (confirm("Are you sure you want to delete this report?")) {
+                const { error } = await _supabase.from('login_issues').delete().eq('id', id);
+                if (error) alert("Error deleting: " + error.message);
+                else loadIssues();
             }
         }
 
-        document.getElementById('notifyForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const { error } = await _supabase.from('notifications').insert({
-                title: document.getElementById('title').value,
-                message: document.getElementById('message').value,
-                priority: document.getElementById('priority').value
-            });
-
-            if (error) alert("Error: " + error.message);
-            else { e.target.reset(); fetchNotifications(); }
-        });
-
-        async function deleteNote(id) {
-            if (confirm("Are you sure you want to delete this notification?")) {
-                await _supabase.from('notifications').delete().eq('id', id);
-                fetchNotifications();
-            }
-        }
         init();
     </script>
 </body>

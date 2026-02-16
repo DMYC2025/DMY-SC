@@ -113,22 +113,7 @@
                 min-height: 44px;
             }
 
-            /* Mobile: Bottom sheet style modals */
-            #quickModal .transform {
-                animation: slideUpMobile 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            }
 
-            @keyframes slideUpMobile {
-                from {
-                    transform: translateY(100%);
-                    opacity: 0;
-                }
-
-                to {
-                    transform: translateY(0);
-                    opacity: 1;
-                }
-            }
 
             /* Mobile: Compact spacing */
             .login-container {
@@ -160,19 +145,7 @@
                 }
             }
 
-            /* Mobile: Swipe indicator for modals */
-            #quickModal::before {
-                content: '';
-                position: absolute;
-                top: 8px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 40px;
-                height: 4px;
-                background: rgba(255, 255, 255, 0.3);
-                border-radius: 2px;
-                z-index: 1000;
-            }
+
 
             /* Mobile: Optimized input focus */
             input:focus {
@@ -256,22 +229,7 @@
                     0 8px 16px rgba(0, 0, 0, 0.2);
             }
 
-            /* Desktop: Modal slide from center */
-            #quickModal .transform {
-                animation: zoomInDesktop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            }
 
-            @keyframes zoomInDesktop {
-                from {
-                    opacity: 0;
-                    transform: scale(0.9);
-                }
-
-                to {
-                    opacity: 1;
-                    transform: scale(1);
-                }
-            }
 
             /* Desktop: Parallax effect on scroll */
             .login-container {
@@ -485,37 +443,59 @@
     class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-500 no-tap-highlight">
 
     <div
+        class="absolute inset-0 bg-[url('https://tnrqasiiywcvtwkwytqe.supabase.co/storage/v1/object/public/slides/DSC03348.jpg')] bg-cover bg-center opacity-20 fixed">
+    </div>
+    <div class="absolute inset-0 fixed"
+        style="background: linear-gradient(to top, var(--color-background), color-mix(in srgb, var(--color-background), transparent 5%), color-mix(in srgb, var(--color-background), transparent 20%));">
+    </div>
+
+    <div
         class="absolute top-0 left-0 w-96 h-96 bg-primary opacity-5 rounded-full blur-[80px] animate-pulse pointer-events-none">
     </div>
     <div
         class="absolute bottom-0 right-0 w-96 h-96 bg-secondary opacity-5 rounded-full blur-[80px] animate-pulse pointer-events-none">
     </div>
 
-    <div class="absolute top-4 right-4 md:top-6 md:right-6 flex gap-2 z-50">
-        <button id="showLoginInstructionsBtn" type="button"
-            class="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 shadow-lg flex items-center justify-center text-primary transition active:scale-90 hover:bg-primary/20">
-            <span class="material-symbols-rounded">info</span>
+    <div class="fixed top-4 left-4 md:top-6 md:left-6 flex gap-2 z-50">
+        <button onclick="openIssueModal()" type="button"
+            class="group h-10 px-3 md:px-4 rounded-full bg-error/10 border border-error/20 shadow-lg flex items-center justify-center gap-2 text-error transition active:scale-90 hover:bg-error/20 backdrop-blur-md">
+            <span class="material-symbols-rounded text-lg">report_problem</span>
+            <span class="hidden md:block text-[10px] font-bold uppercase tracking-wider">Report Issue</span>
         </button>
-        <button onclick="toggleTheme()"
-            class="w-10 h-10 rounded-full bg-[#1E1E1E] border border-white/5 shadow-lg flex items-center justify-center text-[#C4C7C5] transition active:scale-90 hover:text-white">
-            <span class="material-symbols-rounded">dark_mode</span>
+        <button id="showLoginInstructionsBtn" type="button"
+            class="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 shadow-lg flex items-center justify-center text-primary transition active:scale-90 hover:bg-primary/20 backdrop-blur-md">
+            <span class="material-symbols-rounded">info</span>
         </button>
     </div>
 
+    <!-- Glass Container -->
+    <!-- Mobile: Full width, stacked (w-full max-w-[90%]) -->
+    <!-- PC (1920x1080): Fixed width centered (md:w-[450px] md:max-w-none) -->
     <div
-        class="bg-[#1E1E1E] border border-white/5 shadow-2xl rounded-[32px] w-full max-w-sm overflow-hidden relative z-10 transform transition-all">
+        class="relative z-10 w-full max-w-[90%] md:w-[480px] md:max-w-none bg-[#1E1E1E]/40 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] rounded-[32px] overflow-hidden transform transition-all hover:shadow-[0_8px_32px_0_rgba(166,247,189,0.1)]">
 
-        <div class="h-28 bg-[#252529] p-8 flex items-end relative overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-            <div class="relative z-10">
-                <h2 class="text-3xl font-display font-bold text-[#E3E3E3] leading-none">Login</h2>
-                <p class="text-primary text-xs font-bold mt-1 uppercase tracking-wide">Welcome Back Member</p>
-            </div>
-            <img src="../assets/images/logo.png"
-                class="absolute top-4 right-4 h-16 w-16 opacity-80 drop-shadow-md grayscale hover:grayscale-0 transition duration-500">
+        <!-- PC: Glow effects -->
+        <div
+            class="absolute -top-20 -left-20 w-40 h-40 bg-primary/20 rounded-full blur-[60px] pointer-events-none hidden md:block">
+        </div>
+        <div
+            class="absolute -bottom-20 -right-20 w-40 h-40 bg-secondary/20 rounded-full blur-[60px] pointer-events-none hidden md:block">
         </div>
 
-        <div class="p-8">
+        <div
+            class="h-28 md:h-32 bg-gradient-to-br from-white/5 to-transparent p-6 md:p-8 flex items-end relative overflow-hidden border-b border-white/5">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            <div class="relative z-10">
+                <h2 class="text-3xl md:text-4xl font-display font-bold text-[#E3E3E3] leading-none drop-shadow-md">Login
+                </h2>
+                <p class="text-primary text-xs md:text-sm font-bold mt-1 uppercase tracking-wide drop-shadow-sm">Welcome
+                    Back Member</p>
+            </div>
+            <img src="../assets/images/logo.png"
+                class="absolute top-4 right-4 h-16 w-16 md:h-20 md:w-20 opacity-90 drop-shadow-lg grayscale-0 transition duration-500 hover:scale-105">
+        </div>
+
+        <div class="p-6 md:p-8">
             <form id="loginForm" class="space-y-5">
 
                 <div class="space-y-1">
@@ -524,7 +504,7 @@
                         <span
                             class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-[#8e918f] group-focus-within:text-primary transition">mail</span>
                         <input type="email" id="email" required
-                            class="w-full pl-11 pr-4 py-3 rounded-2xl bg-[#252529] border border-[#353539] focus:border-primary outline-none text-[#E3E3E3] transition font-medium text-sm placeholder-[#444746] shadow-sm"
+                            class="w-full pl-11 pr-4 py-3 rounded-2xl bg-black/20 border border-white/10 focus:border-primary/50 focus:bg-black/40 outline-none text-[#E3E3E3] transition font-medium text-sm placeholder-white/20 shadow-inner backdrop-blur-sm"
                             placeholder="you@example.com">
                     </div>
                 </div>
@@ -535,7 +515,7 @@
                         <span
                             class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-[#8e918f] group-focus-within:text-primary transition">lock</span>
                         <input type="password" id="password"
-                            class="w-full pl-11 pr-4 py-3 rounded-2xl bg-[#252529] border border-[#353539] focus:border-primary outline-none text-[#E3E3E3] transition font-medium text-sm placeholder-[#444746] shadow-sm"
+                            class="w-full pl-11 pr-4 py-3 rounded-2xl bg-black/20 border border-white/10 focus:border-primary/50 focus:bg-black/40 outline-none text-[#E3E3E3] transition font-medium text-sm placeholder-white/20 shadow-inner backdrop-blur-sm"
                             placeholder="••••••••">
                     </div>
                     <div class="text-right pt-1">
@@ -550,13 +530,7 @@
                     <span class="material-symbols-rounded">login</span> Access Account
                 </button>
 
-                <button type="button" onclick="openQuickModal()"
-                    class="w-full py-3.5 rounded-full border border-primary/30 text-primary bg-primary/5 hover:bg-primary/10 active:scale-[0.98] transition font-bold text-xs uppercase tracking-wider flex justify-center items-center gap-2 group">
-                    <span class="material-symbols-rounded text-xl group-hover:scale-110 transition">rocket_launch</span>
-                    <span>Quick Login Options</span>
-                </button>
-                <p class="text-center text-[9px] text-[#8e918f] -mt-3 pb-2 opacity-60">(No password needed / පාස්වර්ඩ්
-                    අවශ්‍ය නොවේ)</p>
+
 
                 <p id="statusMsg"
                     class="text-center text-[10px] font-bold mt-2 hidden whitespace-pre-line leading-tight"></p>
@@ -567,7 +541,7 @@
                     <div class="flex-1 h-px bg-[#353539]"></div>
                 </div>
 
-                <button onclick="signInWithGoogle()" type="button"
+                <button id="googleLoginBtn" onclick="signInWithGoogle()" type="button"
                     class="w-full py-3 bg-[#252529] border border-[#353539] rounded-full font-medium text-[#C4C7C5] hover:bg-[#353539] hover:text-white active:scale-[0.98] transition flex items-center justify-center gap-2 text-sm">
                     <img src="../assets/images/google_logo.svg" class="h-5 w-5" alt="Google">
                     <span>Continue with Google</span>
@@ -585,151 +559,7 @@
         </div>
     </div>
 
-    <div id="quickModal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity opacity-0" id="quickModalBackdrop"
-            onclick="closeQuickModal()"></div>
 
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div id="quickModalContent"
-                class="bg-[#1E1E1E] border border-white/10 w-full max-w-sm rounded-[32px] p-6 shadow-2xl relative transform scale-95 opacity-0 transition-all duration-300">
-
-                <button onclick="closeQuickModal()"
-                    class="absolute top-4 right-4 text-[#8e918f] hover:text-white transition z-20">
-                    <span class="material-symbols-rounded">close</span>
-                </button>
-
-                <div id="viewSelection">
-                    <h3 class="text-xl font-display font-bold text-[#E3E3E3] text-center mb-2">Select Login Method</h3>
-                    <p class="text-xs text-[#8e918f] text-center mb-6">Choose how you want to sign in.</p>
-
-                    <div class="space-y-3">
-                        <button onclick="switchView('viewMagic')"
-                            class="option-card w-full p-4 rounded-2xl bg-[#252529] border border-[#353539] flex items-center gap-4 transition group text-left">
-                            <div
-                                class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-                                <span class="material-symbols-rounded">mark_email_unread</span>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-[#E3E3E3] group-hover:text-primary transition">Magic
-                                    Link</h4>
-                                <p class="text-[10px] text-[#8e918f]">Login via email link</p>
-                            </div>
-                            <span
-                                class="material-symbols-rounded ml-auto text-[#8e918f] group-hover:text-primary">arrow_forward_ios</span>
-                        </button>
-
-                        <button onclick="switchView('viewOtp')"
-                            class="option-card w-full p-4 rounded-2xl bg-[#252529] border border-[#353539] flex items-center gap-4 transition group text-left">
-                            <div
-                                class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-                                <span class="material-symbols-rounded">password</span>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-[#E3E3E3] group-hover:text-primary transition">OTP
-                                    Code</h4>
-                                <p class="text-[10px] text-[#8e918f]">Login via 6-digit code</p>
-                            </div>
-                            <span
-                                class="material-symbols-rounded ml-auto text-[#8e918f] group-hover:text-primary">arrow_forward_ios</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div id="viewMagic" class="hidden">
-                    <button onclick="switchView('viewSelection')"
-                        class="flex items-center gap-1 text-[10px] font-bold text-[#8e918f] mb-4 hover:text-[#E3E3E3]">
-                        <span class="material-symbols-rounded text-sm">arrow_back</span> Back
-                    </button>
-
-                    <div
-                        class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3 border border-primary/20">
-                        <span class="material-symbols-rounded text-2xl text-primary">mark_email_unread</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-[#E3E3E3] text-center mb-1">Magic Link</h3>
-                    <p class="text-xs text-[#8e918f] text-center mb-6">We'll send a secure login link to your email.</p>
-
-                    <form onsubmit="handleMagicSubmit(event)" class="space-y-4">
-                        <div class="relative group">
-                            <span
-                                class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-[#8e918f] group-focus-within:text-primary transition">mail</span>
-                            <input type="email" id="magicEmail" required
-                                class="w-full pl-11 pr-4 py-3 rounded-2xl bg-[#252529] border border-[#353539] focus:border-primary outline-none text-[#E3E3E3] transition font-medium text-sm placeholder-[#444746]"
-                                placeholder="name@example.com">
-                        </div>
-                        <button type="submit" id="sendMagicBtn"
-                            class="w-full bg-primary text-[#003915] py-3.5 rounded-full font-bold text-sm shadow-lg shadow-primary/20 hover:bg-[#b1fcc5] active:scale-[0.98] transition transform flex justify-center items-center gap-2">
-                            <span class="material-symbols-rounded">send</span> Send Link
-                        </button>
-                        <p id="magicCountdown" class="text-center text-xs text-[#8e918f] mt-2 hidden"></p>
-                        <button type="button" id="resendMagicBtn" onclick="resendMagicLink()"
-                            class="w-full bg-[#252529] border border-primary/30 text-primary py-3.5 rounded-full font-bold text-sm hover:bg-primary/10 active:scale-[0.98] transition transform hidden flex justify-center items-center gap-2">
-                            <span class="material-symbols-rounded">refresh</span> Resend Link / නැවත යවන්න
-                        </button>
-                    </form>
-                </div>
-
-                <div id="viewOtp" class="hidden">
-                    <button onclick="switchView('viewSelection')"
-                        class="flex items-center gap-1 text-[10px] font-bold text-[#8e918f] mb-4 hover:text-[#E3E3E3]">
-                        <span class="material-symbols-rounded text-sm">arrow_back</span> Back
-                    </button>
-
-                    <div
-                        class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3 border border-primary/20">
-                        <span class="material-symbols-rounded text-2xl text-primary">password</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-[#E3E3E3] text-center mb-1">OTP Login</h3>
-
-                    <div id="otpStep1">
-                        <p class="text-xs text-[#8e918f] text-center mb-6">Enter email to receive code.</p>
-                        <form onsubmit="handleOtpSend(event)" class="space-y-4">
-                            <div class="relative group">
-                                <span
-                                    class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-[#8e918f] group-focus-within:text-primary transition">mail</span>
-                                <input type="email" id="otpEmail" required
-                                    class="w-full pl-11 pr-4 py-3 rounded-2xl bg-[#252529] border border-[#353539] focus:border-primary outline-none text-[#E3E3E3] transition font-medium text-sm placeholder-[#444746]"
-                                    placeholder="name@example.com">
-                            </div>
-                            <button type="submit" id="sendOtpBtn"
-                                class="w-full bg-primary text-[#003915] py-3.5 rounded-full font-bold text-sm shadow-lg shadow-primary/20 hover:bg-[#b1fcc5] active:scale-[0.98] transition transform flex justify-center items-center gap-2">
-                                <span class="material-symbols-rounded">send</span> Send Code
-                            </button>
-                            <p id="otpCountdown" class="text-center text-xs text-[#8e918f] mt-2 hidden"></p>
-                            <button type="button" id="resendOtpBtn" onclick="resendOtpCode()"
-                                class="w-full bg-[#252529] border border-primary/30 text-primary py-3.5 rounded-full font-bold text-sm hover:bg-primary/10 active:scale-[0.98] transition transform hidden flex justify-center items-center gap-2">
-                                <span class="material-symbols-rounded">refresh</span> Resend Code / නැවත යවන්න
-                            </button>
-                        </form>
-                    </div>
-
-                    <div id="otpStep2" class="hidden">
-                        <p class="text-xs text-[#8e918f] text-center mb-6">
-                            Code sent to <span id="displayOtpEmail" class="text-primary font-bold"></span>
-                            <br><button onclick="otpBackToStep1()" class="text-[10px] underline mt-1 opacity-70">Change
-                                Email</button>
-                        </p>
-                        <form onsubmit="handleOtpVerify(event)" class="space-y-4">
-                            <div class="relative group">
-                                <span
-                                    class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-[#8e918f] group-focus-within:text-primary transition">key</span>
-                                <input type="text" id="otpCode" required maxlength="6" inputmode="numeric"
-                                    autocomplete="one-time-code"
-                                    class="w-full otp-input pl-11 pr-4 py-3 rounded-2xl bg-[#252529] border border-[#353539] focus:border-primary outline-none text-[#E3E3E3] transition font-bold text-lg placeholder-[#444746]"
-                                    placeholder="123456">
-                            </div>
-                            <button type="submit" id="verifyOtpBtn"
-                                class="w-full bg-primary text-[#003915] py-3.5 rounded-full font-bold text-sm shadow-lg shadow-primary/20 hover:bg-[#b1fcc5] active:scale-[0.98] transition transform flex justify-center items-center gap-2">
-                                <span class="material-symbols-rounded">login</span> Verify & Login
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <p id="modalStatusMsg" class="text-center text-[10px] font-bold mt-4 hidden"></p>
-
-            </div>
-        </div>
-    </div>
 
     <!-- Login Instructions Modal -->
     <div id="loginInstructionsModal"
@@ -817,66 +647,14 @@
                     </div>
                 </div>
 
-                <!-- Method 2: Quick Login Options -->
+
+
+                <!-- Method 2: Google Login -->
                 <div class="mb-6 instruction-step" data-step="2">
                     <div class="flex items-start gap-4">
                         <div
                             class="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20 step-number">
                             <span class="text-primary font-bold text-lg">2</span>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="text-[#E3E3E3] font-bold text-base mb-2 flex items-center gap-2">
-                                <span class="material-symbols-rounded text-primary">rocket_launch</span>
-                                Quick Login Options / ඉක්මන් පිවිසුම් විකල්ප
-                            </h4>
-                            <div class="space-y-3 text-sm text-[#C4C7C5] leading-relaxed">
-                                <div class="instruction-item bg-[#252529] p-4 rounded-xl border border-white/5">
-                                    <p class="mb-2 font-bold text-primary flex items-center gap-2">
-                                        <span class="material-symbols-rounded">mark_email_unread</span>
-                                        Magic Link / මැජික් ලින්ක්
-                                    </p>
-                                    <ul class="list-disc list-inside space-y-1 text-xs ml-2">
-                                        <li>Click "Quick Login Options" button</li>
-                                        <li>Select "Magic Link" option</li>
-                                        <li>Enter your email address</li>
-                                        <li>Click "Send Link" button</li>
-                                        <li>Check your email and click the login link</li>
-                                    </ul>
-                                    <p class="text-xs text-[#8e918f] mt-2 border-t border-white/5 pt-2">
-                                        සිංහල: "Quick Login Options" බොත්තම ක්ලික් කර "Magic Link" තෝරන්න. ඊමේල් ලිපිනය
-                                        ඇතුළත් කර "Send Link" ක්ලික් කරන්න. ඔබගේ ඊමේල් එකෙන් ලින්ක් එක ක්ලික් කරන්න.
-                                    </p>
-                                </div>
-                                <div class="instruction-item bg-[#252529] p-4 rounded-xl border border-white/5">
-                                    <p class="mb-2 font-bold text-primary flex items-center gap-2">
-                                        <span class="material-symbols-rounded">password</span>
-                                        OTP Code / OTP කේතය
-                                    </p>
-                                    <ul class="list-disc list-inside space-y-1 text-xs ml-2">
-                                        <li>Click "Quick Login Options" button</li>
-                                        <li>Select "OTP Code" option</li>
-                                        <li>Enter your email address</li>
-                                        <li>Click "Send Code" button</li>
-                                        <li>Enter the 6-digit code from your email</li>
-                                        <li>Click "Verify & Login" button</li>
-                                    </ul>
-                                    <p class="text-xs text-[#8e918f] mt-2 border-t border-white/5 pt-2">
-                                        සිංහල: "Quick Login Options" බොත්තම ක්ලික් කර "OTP Code" තෝරන්න. ඊමේල් ලිපිනය
-                                        ඇතුළත් කර "Send Code" ක්ලික් කරන්න. ඔබගේ ඊමේල් එකෙන් ලැබෙන 6 අංක කේතය ඇතුළත් කර
-                                        "Verify & Login" ක්ලික් කරන්න.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Method 3: Google Login -->
-                <div class="mb-6 instruction-step" data-step="3">
-                    <div class="flex items-start gap-4">
-                        <div
-                            class="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20 step-number">
-                            <span class="text-primary font-bold text-lg">3</span>
                         </div>
                         <div class="flex-1">
                             <h4 class="text-[#E3E3E3] font-bold text-base mb-2 flex items-center gap-2">
@@ -927,16 +705,7 @@
                                     <span>Your account must be approved by admin to login / පිවිසීමට ඔබගේ ගිණුම පරිපාලක
                                         විසින් අනුමත කළ යුතුය</span>
                                 </li>
-                                <li class="flex items-start gap-2">
-                                    <span class="text-primary">•</span>
-                                    <span>Check your email spam folder if you don't receive codes / කේත නොලැබුනේ නම්
-                                        ඔබගේ ඊමේල් spam folder එක පරීක්ෂා කරන්න</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <span class="text-primary">•</span>
-                                    <span>Magic links and OTP codes expire after a few minutes / Magic links සහ OTP කේත
-                                        මිනිත්තු කිහිපයකින් කල් ඉකුත් වේ</span>
-                                </li>
+
                                 <li class="flex items-start gap-2">
                                     <span class="text-primary">•</span>
                                     <span>Use the same email you registered with / ඔබ ලියාපදිංචි වූ එම ඊමේල් ලිපිනය
@@ -1100,21 +869,7 @@
         const loginBtn = document.getElementById('loginBtn');
         const statusMsg = document.getElementById('statusMsg');
 
-        // Modal Elements
-        const quickModal = document.getElementById('quickModal');
-        const quickModalBackdrop = document.getElementById('quickModalBackdrop');
-        const quickModalContent = document.getElementById('quickModalContent');
-        const modalStatusMsg = document.getElementById('modalStatusMsg');
 
-        // Modal Views
-        const viewSelection = document.getElementById('viewSelection');
-        const viewMagic = document.getElementById('viewMagic');
-        const viewOtp = document.getElementById('viewOtp');
-
-        // Buttons
-        const sendMagicBtn = document.getElementById('sendMagicBtn');
-        const sendOtpBtn = document.getElementById('sendOtpBtn');
-        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
 
         let isManualLogin = false;
 
@@ -1141,7 +896,7 @@
             }
 
             loginBtn.disabled = true;
-            loginBtn.innerHTML = '<span class="material-symbols-rounded animate-spin">progress_activity</span> Checking...';
+            loginBtn.innerHTML = '<span class="material-symbols-rounded animate-spin">progress_activity</span> Verifying Account...';
             statusMsg.classList.add('hidden');
             statusMsg.textContent = "";
 
@@ -1169,451 +924,15 @@
             }
         });
 
-        // --- 2. MODAL LOGIC ---
 
-        function openQuickModal() {
-            // Pre-fill email
-            const mainEmail = document.getElementById('email').value;
-            if (mainEmail) {
-                document.getElementById('magicEmail').value = mainEmail;
-                document.getElementById('otpEmail').value = mainEmail;
-            }
-
-            // Reset View to Selection
-            switchView('viewSelection');
-
-            // Show Modal
-            quickModal.classList.remove('hidden');
-            setTimeout(() => {
-                quickModalBackdrop.classList.remove('opacity-0');
-                quickModalContent.classList.remove('scale-95', 'opacity-0');
-                quickModalContent.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-
-        function closeQuickModal() {
-            quickModalBackdrop.classList.add('opacity-0');
-            quickModalContent.classList.remove('scale-100', 'opacity-100');
-            quickModalContent.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                quickModal.classList.add('hidden');
-            }, 300);
-        }
-
-        function switchView(viewId) {
-            // Hide all views
-            viewSelection.classList.add('hidden');
-            viewMagic.classList.add('hidden');
-            viewOtp.classList.add('hidden');
-            modalStatusMsg.classList.add('hidden');
-            modalStatusMsg.textContent = "";
-
-            // Show selected
-            document.getElementById(viewId).classList.remove('hidden');
-
-            // Reset specific logic if entering OTP view
-            if (viewId === 'viewOtp') {
-                otpBackToStep1();
-            }
-        }
-
-        // --- COUNTDOWN TIMER VARIABLES ---
-        let magicLinkTimer = null;
-        let otpTimer = null;
-        let rateLimitTimer = null; // For rate limit countdown
-        const RESEND_COOLDOWN = 60; // seconds
-
-        // --- RATE LIMIT COUNTDOWN FUNCTION ---
-        function showRateLimitCountdown(seconds) {
-            let timeLeft = seconds;
-
-            const updateCountdown = () => {
-                const countdownText = `<span class="font-mono text-primary">${timeLeft}s</span>`;
-                const errorBox = modalStatusMsg.querySelector('.rate-limit-countdown');
-                if (errorBox) {
-                    errorBox.innerHTML = `
-                        For security, please wait ${countdownText} before requesting again.
-                        <br>
-                        <span class="text-[#8e918f] text-[9px]">
-                            ආරක්ෂාව සඳහා, තත්පර <span class="font-mono text-primary">${timeLeft}</span> බලා සිටින්න.
-                        </span>
-                    `;
-                }
-            };
-
-            // Clear any existing rate limit timer
-            if (rateLimitTimer) {
-                clearInterval(rateLimitTimer);
-            }
-
-            // Initial update
-            updateCountdown();
-
-            // Start countdown
-            rateLimitTimer = setInterval(() => {
-                timeLeft--;
-                if (timeLeft <= 0) {
-                    clearInterval(rateLimitTimer);
-                    rateLimitTimer = null;
-                    // Hide the error message when countdown completes
-                    modalStatusMsg.classList.add('hidden');
-                } else {
-                    updateCountdown();
-                }
-            }, 1000);
-        }
-
-        // --- COUNTDOWN TIMER FUNCTION ---
-        function startCountdown(type) {
-            const countdownElement = type === 'magic' ? document.getElementById('magicCountdown') : document.getElementById('otpCountdown');
-            const sendButton = type === 'magic' ? sendMagicBtn : sendOtpBtn;
-            const resendButton = type === 'magic' ? document.getElementById('resendMagicBtn') : document.getElementById('resendOtpBtn');
-
-            let timeLeft = RESEND_COOLDOWN;
-
-            // Show countdown, hide resend button
-            countdownElement.classList.remove('hidden');
-            resendButton.classList.add('hidden');
-            sendButton.classList.add('hidden');
-
-            const timer = setInterval(() => {
-                timeLeft--;
-                countdownElement.textContent = `Resend available in ${timeLeft}s / තත්පර ${timeLeft}කින් නැවත යැවිය හැක`;
-
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    countdownElement.classList.add('hidden');
-                    resendButton.classList.remove('hidden');
-                    if (type === 'magic') magicLinkTimer = null;
-                    else otpTimer = null;
-                }
-            }, 1000);
-
-            if (type === 'magic') magicLinkTimer = timer;
-            else otpTimer = timer;
-        }
-
-        // --- MAGIC LINK HANDLER ---
-        async function handleMagicSubmit(e) {
-            e.preventDefault();
-            const email = document.getElementById('magicEmail').value;
-
-            sendMagicBtn.disabled = true;
-            sendMagicBtn.innerHTML = '<span class="material-symbols-rounded animate-spin">progress_activity</span> Sending...';
-            modalStatusMsg.classList.add('hidden');
-
-            try {
-                const { data, error } = await _supabase.auth.signInWithOtp({
-                    email: email,
-                    options: { emailRedirectTo: window.location.href }
-                });
-
-                if (error) throw error;
-
-                modalStatusMsg.textContent = "Link sent! Check your inbox.\nලින්ක් එක ඊමේල් කරන ලදී.";
-                modalStatusMsg.className = "text-center text-[10px] font-bold mt-4 text-primary block";
-                modalStatusMsg.classList.remove('hidden');
-
-                // Start countdown timer
-                startCountdown('magic');
-
-            } catch (error) {
-                console.error("Magic Error:", error);
-
-                // Check if it's a rate limit error
-                if (error.message && error.message.includes('60 seconds')) {
-                    modalStatusMsg.innerHTML = `
-                        <div class="flex items-start gap-2 bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-3 text-left">
-                            <span class="material-symbols-rounded text-yellow-400 text-lg flex-shrink-0">schedule</span>
-                            <div>
-                                <p class="text-yellow-400 font-bold text-xs mb-1">Rate Limit Reached</p>
-                                <p class="text-[#C4C7C5] text-[10px] leading-relaxed rate-limit-countdown">
-                                    For security, please wait 60 seconds before requesting another link.
-                                    <br>
-                                    <span class="text-[#8e918f] text-[9px]">
-                                        ආරක්ෂාව සඳහා, තත්පර 60ක් බලා සිටින්න.
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                    `;
-                    modalStatusMsg.className = "text-center mt-4 block";
-                    modalStatusMsg.classList.remove('hidden');
-
-                    // Start rate limit countdown
-                    showRateLimitCountdown(60);
-                } else {
-                    modalStatusMsg.innerHTML = `
-                        <div class="flex items-start gap-2 bg-error/10 border border-error/20 rounded-xl p-3 text-left">
-                            <span class="material-symbols-rounded text-error text-lg flex-shrink-0">error</span>
-                            <div>
-                                <p class="text-error font-bold text-xs mb-1">Error</p>
-                                <p class="text-[#C4C7C5] text-[10px]">${error.message}</p>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                modalStatusMsg.className = "text-center mt-4 block";
-                modalStatusMsg.classList.remove('hidden');
-                sendMagicBtn.disabled = false;
-                sendMagicBtn.innerHTML = '<span class="material-symbols-rounded">send</span> Send Link';
-                sendMagicBtn.classList.remove('hidden');
-            }
-        }
-
-        // --- RESEND MAGIC LINK ---
-        async function resendMagicLink() {
-            const email = document.getElementById('magicEmail').value;
-            const resendButton = document.getElementById('resendMagicBtn');
-
-            resendButton.disabled = true;
-            resendButton.innerHTML = '<span class="material-symbols-rounded animate-spin">progress_activity</span> Sending...';
-            modalStatusMsg.classList.add('hidden');
-
-            try {
-                const { data, error } = await _supabase.auth.signInWithOtp({
-                    email: email,
-                    options: { emailRedirectTo: window.location.href }
-                });
-
-                if (error) throw error;
-
-                modalStatusMsg.textContent = "Link resent! Check your inbox.\nලින්ක් එක නැවත යවන ලදී.";
-                modalStatusMsg.className = "text-center text-[10px] font-bold mt-4 text-primary block";
-                modalStatusMsg.classList.remove('hidden');
-
-                // Start countdown timer again
-                startCountdown('magic');
-
-            } catch (error) {
-                console.error("Magic Resend Error:", error);
-
-                // Check if it's a rate limit error
-                if (error.message && error.message.includes('60 seconds')) {
-                    modalStatusMsg.innerHTML = `
-                        <div class="flex items-start gap-2 bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-3 text-left">
-                            <span class="material-symbols-rounded text-yellow-400 text-lg flex-shrink-0">schedule</span>
-                            <div>
-                                <p class="text-yellow-400 font-bold text-xs mb-1">Rate Limit Reached</p>
-                                <p class="text-[#C4C7C5] text-[10px] leading-relaxed rate-limit-countdown">
-                                    For security, please wait 60 seconds before requesting another link.
-                                    <br>
-                                    <span class="text-[#8e918f] text-[9px]">
-                                        ආරක්ෂාව සඳහා, තත්පර 60ක් බලා සිටින්න.
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                    `;
-                    modalStatusMsg.className = "text-center mt-4 block";
-                    modalStatusMsg.classList.remove('hidden');
-
-                    // Start rate limit countdown
-                    showRateLimitCountdown(60);
-                } else {
-                    modalStatusMsg.innerHTML = `
-                        <div class="flex items-start gap-2 bg-error/10 border border-error/20 rounded-xl p-3 text-left">
-                            <span class="material-symbols-rounded text-error text-lg flex-shrink-0">error</span>
-                            <div>
-                                <p class="text-error font-bold text-xs mb-1">Error</p>
-                                <p class="text-[#C4C7C5] text-[10px]">${error.message}</p>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                modalStatusMsg.className = "text-center mt-4 block";
-                modalStatusMsg.classList.remove('hidden');
-            } finally {
-                resendButton.disabled = false;
-                resendButton.innerHTML = '<span class="material-symbols-rounded">refresh</span> Resend Link / නැවත යවන්න';
-            }
-        }
-
-        // --- OTP HANDLERS ---
-        function otpBackToStep1() {
-            document.getElementById('otpStep1').classList.remove('hidden');
-            document.getElementById('otpStep2').classList.add('hidden');
-            modalStatusMsg.textContent = "";
-
-            // Clear OTP timer if going back
-            if (otpTimer) {
-                clearInterval(otpTimer);
-                otpTimer = null;
-            }
-            document.getElementById('otpCountdown').classList.add('hidden');
-            document.getElementById('resendOtpBtn').classList.add('hidden');
-            sendOtpBtn.classList.remove('hidden');
-            sendOtpBtn.disabled = false;
-        }
-
-        async function handleOtpSend(e) {
-            e.preventDefault();
-            const email = document.getElementById('otpEmail').value;
-
-            sendOtpBtn.disabled = true;
-            sendOtpBtn.innerHTML = '<span class="material-symbols-rounded animate-spin">progress_activity</span> Sending...';
-            modalStatusMsg.classList.add('hidden');
-
-            try {
-                const { data, error } = await _supabase.auth.signInWithOtp({ email: email });
-                if (error) throw error;
-
-                document.getElementById('displayOtpEmail').textContent = email;
-                document.getElementById('otpStep1').classList.add('hidden');
-                document.getElementById('otpStep2').classList.remove('hidden');
-
-                modalStatusMsg.textContent = "Code Sent! Check Email.";
-                modalStatusMsg.className = "text-center text-[10px] font-bold mt-4 text-primary block";
-                modalStatusMsg.classList.remove('hidden');
-
-                // Start countdown timer
-                startCountdown('otp');
-
-            } catch (error) {
-                console.error("OTP Send Error:", error);
-
-                // Check if it's a rate limit error
-                if (error.message && error.message.includes('60 seconds')) {
-                    modalStatusMsg.innerHTML = `
-                        <div class="flex items-start gap-2 bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-3 text-left">
-                            <span class="material-symbols-rounded text-yellow-400 text-lg flex-shrink-0">schedule</span>
-                            <div>
-                                <p class="text-yellow-400 font-bold text-xs mb-1">Rate Limit Reached</p>
-                                <p class="text-[#C4C7C5] text-[10px] leading-relaxed rate-limit-countdown">
-                                    For security, please wait 60 seconds before requesting another code.
-                                    <br>
-                                    <span class="text-[#8e918f] text-[9px]">
-                                        ආරක්ෂාව සඳහා, තත්පර 60ක් බලා සිටින්න.
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                    `;
-                    modalStatusMsg.className = "text-center mt-4 block";
-                    modalStatusMsg.classList.remove('hidden');
-
-                    // Start rate limit countdown
-                    showRateLimitCountdown(60);
-                } else {
-                    modalStatusMsg.innerHTML = `
-                        <div class="flex items-start gap-2 bg-error/10 border border-error/20 rounded-xl p-3 text-left">
-                            <span class="material-symbols-rounded text-error text-lg flex-shrink-0">error</span>
-                            <div>
-                                <p class="text-error font-bold text-xs mb-1">Error</p>
-                                <p class="text-[#C4C7C5] text-[10px]">${error.message}</p>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                modalStatusMsg.className = "text-center mt-4 block";
-                modalStatusMsg.classList.remove('hidden');
-                sendOtpBtn.disabled = false;
-                sendOtpBtn.innerHTML = '<span class="material-symbols-rounded">send</span> Send Code';
-                sendOtpBtn.classList.remove('hidden');
-            }
-        }
-
-        // --- RESEND OTP CODE ---
-        async function resendOtpCode() {
-            const email = document.getElementById('otpEmail').value;
-            const resendButton = document.getElementById('resendOtpBtn');
-
-            resendButton.disabled = true;
-            resendButton.innerHTML = '<span class="material-symbols-rounded animate-spin">progress_activity</span> Sending...';
-            modalStatusMsg.classList.add('hidden');
-
-            try {
-                const { data, error } = await _supabase.auth.signInWithOtp({ email: email });
-                if (error) throw error;
-
-                modalStatusMsg.textContent = "Code resent! Check Email.\nකේතය නැවත යවන ලදී.";
-                modalStatusMsg.className = "text-center text-[10px] font-bold mt-4 text-primary block";
-                modalStatusMsg.classList.remove('hidden');
-
-                // Start countdown timer again
-                startCountdown('otp');
-
-            } catch (error) {
-                console.error("OTP Resend Error:", error);
-
-                // Check if it's a rate limit error
-                if (error.message && error.message.includes('60 seconds')) {
-                    modalStatusMsg.innerHTML = `
-                        <div class="flex items-start gap-2 bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-3 text-left">
-                            <span class="material-symbols-rounded text-yellow-400 text-lg flex-shrink-0">schedule</span>
-                            <div>
-                                <p class="text-yellow-400 font-bold text-xs mb-1">Rate Limit Reached</p>
-                                <p class="text-[#C4C7C5] text-[10px] leading-relaxed rate-limit-countdown">
-                                    For security, please wait 60 seconds before requesting another code.
-                                    <br>
-                                    <span class="text-[#8e918f] text-[9px]">
-                                        ආරක්ෂාව සඳහා, තත්පර 60ක් බලා සිටින්න.
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                    `;
-                    modalStatusMsg.className = "text-center mt-4 block";
-                    modalStatusMsg.classList.remove('hidden');
-
-                    // Start rate limit countdown
-                    showRateLimitCountdown(60);
-                } else {
-                    modalStatusMsg.innerHTML = `
-                        <div class="flex items-start gap-2 bg-error/10 border border-error/20 rounded-xl p-3 text-left">
-                            <span class="material-symbols-rounded text-error text-lg flex-shrink-0">error</span>
-                            <div>
-                                <p class="text-error font-bold text-xs mb-1">Error</p>
-                                <p class="text-[#C4C7C5] text-[10px]">${error.message}</p>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                modalStatusMsg.className = "text-center mt-4 block";
-                modalStatusMsg.classList.remove('hidden');
-            } finally {
-                resendButton.disabled = false;
-                resendButton.innerHTML = '<span class="material-symbols-rounded">refresh</span> Resend Code / නැවත යවන්න';
-            }
-        }
-
-        async function handleOtpVerify(e) {
-            e.preventDefault();
-            const email = document.getElementById('otpEmail').value;
-            const token = document.getElementById('otpCode').value;
-
-            verifyOtpBtn.disabled = true;
-            verifyOtpBtn.innerHTML = '<span class="material-symbols-rounded animate-spin">progress_activity</span> Verifying...';
-            modalStatusMsg.textContent = "";
-
-            try {
-                const { data, error } = await _supabase.auth.verifyOtp({ email, token, type: 'email' });
-                if (error) throw error;
-
-                if (data.user) {
-                    modalStatusMsg.textContent = "Verified! Checking status...";
-                    modalStatusMsg.className = "text-center text-[10px] font-bold mt-4 text-primary block";
-                    await checkApprovalAndRedirect(data.user.id);
-                }
-
-            } catch (error) {
-                console.error("Verification Error:", error);
-                modalStatusMsg.textContent = "Invalid Code or Expired.\nකේතය වැරදියි හෝ කල් ඉකුත් වී ඇත.";
-                modalStatusMsg.className = "text-center text-[10px] font-bold mt-4 text-error block";
-                modalStatusMsg.classList.remove('hidden');
-
-                verifyOtpBtn.disabled = false;
-                verifyOtpBtn.innerHTML = '<span class="material-symbols-rounded">login</span> Verify & Login';
-            }
-        }
 
         // --- 3. Google Login Logic ---
         async function signInWithGoogle() {
+            const googleBtn = document.getElementById('googleLoginBtn');
             try {
+                googleBtn.disabled = true;
+                googleBtn.innerHTML = '<span class="material-symbols-rounded animate-spin">progress_activity</span> Verifying Account...';
+
                 const { data, error } = await _supabase.auth.signInWithOAuth({
                     provider: 'google',
                     options: { redirectTo: window.location.href }
@@ -1621,66 +940,190 @@
                 if (error) throw error;
             } catch (error) {
                 alert("Google Error: " + error.message);
+                googleBtn.disabled = false;
+                googleBtn.innerHTML = '<img src="../assets/images/google_logo.svg" class="h-5 w-5" alt="Google"> <span>Continue with Google</span>';
             }
         }
 
         // --- Helper: Check Database & Redirect ---
         async function checkApprovalAndRedirect(userId) {
-            const { data: profileData, error: profileError } = await _supabase
-                .from('profiles')
-                .select('is_approved, role')
-                .eq('id', userId)
-                .single();
+            // Add a timeout promise to prevent hanging forever
+            const timeout = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error("Request timed out. Please check your connection.")), 10000)
+            );
 
-            if (profileError) throw new Error("Profile not found.");
+            try {
+                // Race the DB call against timeout
+                const { data: profileData, error: profileError } = await Promise.race([
+                    _supabase
+                        .from('profiles')
+                        .select('is_approved, role')
+                        .eq('id', userId)
+                        .single(),
+                    timeout
+                ]);
 
-            if (profileData && profileData.is_approved === true) {
-                // Show success on main screen or modal
-                statusMsg.textContent = "Success! Redirecting...";
-                statusMsg.className = "text-center text-[10px] font-bold mt-2 text-primary block";
+                if (profileError) throw new Error("Profile not found or connection error.");
+
+                if (profileData && profileData.is_approved === true) {
+                    // Show success on main screen or modal
+                    // Button already says "Verifying Account...", so we only change button text or keep it
+                    loginBtn.innerHTML = '<span class="material-symbols-rounded animate-spin">check_circle</span> Success! Redirecting...';
+                    statusMsg.textContent = ""; // Clear redundant text below button
+                    statusMsg.classList.add('hidden');
+
+                    setTimeout(() => {
+                        if (profileData.role === 'admin') {
+                            window.location.href = '../admin/index.html';
+                        } else {
+                            window.location.href = '../user/index.html';
+                        }
+                    }, 500);
+                } else {
+                    await _supabase.auth.signOut();
+                    showPendingMessage();
+
+                    // Reset buttons
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = '<span class="material-symbols-rounded">login</span> Access Account';
+                }
+            } catch (error) {
+                console.error("Auth Check Error:", error);
+
+                // Show error message
+                statusMsg.textContent = error.message || "Login failed. Please try again.";
+                statusMsg.className = "text-center text-[10px] font-bold mt-2 text-error block";
                 statusMsg.classList.remove('hidden');
 
-                // Also update modal msg if open
-                if (!quickModal.classList.contains('hidden')) {
-                    modalStatusMsg.textContent = "Success! Redirecting...";
-                    modalStatusMsg.className = "text-center text-[10px] font-bold mt-4 text-primary block";
-                    modalStatusMsg.classList.remove('hidden');
-                }
-
-                setTimeout(() => {
-                    if (profileData.role === 'admin') {
-                        window.location.href = '../admin/index.html';
-                    } else {
-                        window.location.href = '../user/index.html';
-                    }
-                }, 800);
-            } else {
-                await _supabase.auth.signOut();
-                showPendingMessage();
-
-                // Reset buttons
+                // Reset Button
                 loginBtn.disabled = false;
                 loginBtn.innerHTML = '<span class="material-symbols-rounded">login</span> Access Account';
-                verifyOtpBtn.disabled = false;
-                verifyOtpBtn.innerHTML = '<span class="material-symbols-rounded">login</span> Verify & Login';
+
+                // If this was an auto-login attempt (not manual), sign out to prevent "stuck" session
+                if (!isManualLogin) {
+                    await _supabase.auth.signOut();
+                }
+
+                // Reset isManualLogin flag
+                isManualLogin = false;
             }
         }
 
         // --- 4. Auth State Monitor (Handles Link Click Returns) ---
         _supabase.auth.onAuthStateChange(async (event, session) => {
-            if (isManualLogin) return;
+            if (isManualLogin) return; // If manually submitting, let the form handler manage UI
 
             if (session) {
-                statusMsg.textContent = "Verifying Account...";
-                statusMsg.className = "text-center text-[10px] font-bold mt-2 text-primary block";
-                statusMsg.classList.remove('hidden');
-                try {
-                    await checkApprovalAndRedirect(session.user.id);
-                } catch (error) {
-                    console.error("Auth Check Error:", error);
-                    statusMsg.textContent = error.message;
-                    statusMsg.className = "text-center text-[10px] font-bold mt-2 text-error block";
-                }
+                // Determine if we are on the login page (we are)
+                // Update Button State to Loading
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '<span class="material-symbols-rounded animate-spin">progress_activity</span> Verifying Account...';
+
+                // Hide potential old error messages
+                statusMsg.classList.add('hidden');
+
+                await checkApprovalAndRedirect(session.user.id);
+            }
+        });
+    </script>
+    <!-- Issue Reporting Modal -->
+    <div id="issueModal"
+        class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-all duration-300 opacity-0">
+        <div
+            class="bg-[#1E1E1E] border border-white/5 rounded-[28px] shadow-2xl w-full max-w-md relative transform scale-95 transition-all duration-300">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-display font-medium text-[#E3E3E3] flex items-center gap-2">
+                        <span class="material-symbols-rounded text-error">report_problem</span> Report Issue
+                    </h3>
+                    <button onclick="closeIssueModal()" class="text-[#8e918f] hover:text-white transition"><span
+                            class="material-symbols-rounded">close</span></button>
+                </div>
+                <form id="issueForm" class="space-y-4">
+                    <div>
+                        <label class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Full
+                            Name</label>
+                        <input type="text" id="issueName" required
+                            class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] focus:border-error/50 outline-none transition">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Club ID
+                            (Optional)</label>
+                        <input type="text" id="issueClubId"
+                            class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] focus:border-error/50 outline-none transition">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label
+                                class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Email</label>
+                            <input type="email" id="issueEmail" required
+                                class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] focus:border-error/50 outline-none transition">
+                        </div>
+                        <div>
+                            <label
+                                class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">WhatsApp</label>
+                            <input type="tel" id="issueWhatsapp" required
+                                class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] focus:border-error/50 outline-none transition">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Issue
+                            Description</label>
+                        <textarea id="issueDesc" rows="3" required placeholder="Describe the error you are facing..."
+                            class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] focus:border-error/50 outline-none transition"></textarea>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-[#3c2525] hover:bg-[#533535] text-[#ffb4ab] hover:text-white font-bold py-3 rounded-full transition shadow-lg flex items-center justify-center gap-2">
+                        <span class="material-symbols-rounded">send</span> Submit Report
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Issue Modal Logic
+        const issueModal = document.getElementById('issueModal');
+        function openIssueModal() {
+            issueModal.classList.remove('hidden');
+            setTimeout(() => {
+                issueModal.classList.remove('opacity-0');
+                issueModal.querySelector('div').classList.remove('scale-95');
+                issueModal.querySelector('div').classList.add('scale-100');
+            }, 10);
+        }
+        function closeIssueModal() {
+            issueModal.classList.add('opacity-0');
+            issueModal.querySelector('div').classList.remove('scale-100');
+            issueModal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => issueModal.classList.add('hidden'), 300);
+        }
+
+        document.getElementById('issueForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-rounded animate-spin">progress_activity</span> Sending...';
+            btn.disabled = true;
+
+            const { error } = await _supabase.from('login_issues').insert({
+                full_name: document.getElementById('issueName').value,
+                club_id: document.getElementById('issueClubId').value || null,
+                email: document.getElementById('issueEmail').value,
+                whatsapp_number: document.getElementById('issueWhatsapp').value,
+                description: document.getElementById('issueDesc').value
+            });
+
+            if (error) {
+                alert("Error submitting report: " + error.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            } else {
+                alert("Report submitted successfully! The admin will check it soon.");
+                closeIssueModal();
+                e.target.reset();
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
         });
     </script>
