@@ -5,7 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Registration - DMYSC</title>
+    <meta name="description" content="Register for Dream Makers Youth & Sports Club (DMYSC). Join our community today.">
+    <meta name="theme-color" content="#121212">
+
+    <link rel="manifest" href="../manifest.json">
     <link rel="icon" type="image/png" href="../assets/images/logo_1.png">
+    <link rel="apple-touch-icon" href="../assets/images/logo_1.png">
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('../sw.js');
+            });
+        }
+    </script>
 
     <!-- External Auth CSS -->
     <link rel="stylesheet" href="../assets/css/auth-style.css">
@@ -43,7 +56,7 @@
     <div
         class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=2070')] bg-cover bg-center opacity-5 fixed">
     </div>
-    <div class="absolute inset-0 bg-gradient-to-t from-background via-background/95 to-background/80 fixed"></div>
+    <div class="absolute inset-0 fixed" style="background: linear-gradient(to top, var(--color-background), color-mix(in srgb, var(--color-background), transparent 5%), color-mix(in srgb, var(--color-background), transparent 20%));"></div>
 
     <div class="relative z-10 w-full max-w-3xl" data-aos="fade-up" data-aos-duration="600">
 

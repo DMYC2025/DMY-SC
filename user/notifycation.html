@@ -7,6 +7,23 @@
     <title>Notifications - DMYSC</title>
     <link rel="icon" type="image/png" href="../assets/images/logo_1.png">
 
+    <!-- PWA Settings -->
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/images/logo_1.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DMYSC">
+    <meta name="theme-color" content="#121212">
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('../sw.js');
+            });
+        }
+    </script>
+
     <!-- GOOGLE FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,6 +76,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/user-style.css">
 
     <style>
         body {
@@ -175,18 +193,17 @@
     <div id="global-footer-placeholder" class="pb-24 md:pb-0"></div>
 
     <!-- Mobile Bottom Nav (Google Style) -->
+    <!-- Mobile Bottom Nav -->
     <div class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#1E1E1E] border-t border-[#252529] pb-safe">
-        <div class="flex justify-around items-center h-20 px-2">
+        <div class="flex justify-around items-center h-16">
             <a href="index.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5] group">
                 <span class="material-symbols-rounded group-hover:text-[#E3E3E3] transition">home</span>
                 <span class="text-[10px] font-medium">Home</span>
             </a>
-            <button class="flex flex-col items-center gap-1 w-full text-[#E3E3E3]">
-                <div class="w-16 h-8 rounded-full bg-[#003915] flex items-center justify-center text-primary">
-                    <span class="material-symbols-rounded text-[20px]">notifications</span>
-                </div>
-                <span class="text-[10px] font-bold text-primary">Alerts</span>
-            </button>
+            <a href="event.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5] group">
+                <span class="material-symbols-rounded group-hover:text-[#E3E3E3] transition">event</span>
+                <span class="text-[10px] font-medium">Events</span>
+            </a>
             <a href="profile.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5] group">
                 <span class="material-symbols-rounded group-hover:text-[#E3E3E3] transition">person</span>
                 <span class="text-[10px] font-medium">Profile</span>
@@ -205,15 +222,15 @@
             if (typeof _supabase === 'undefined') return;
             const { data: { session } } = await _supabase.auth.getSession();
             if (!session) window.location.href = '../up and in/login.html';
-            else loadAvatar(session.user.id);
-        }
+            else {
+                // Use shared UI logic to populate sidebar/popup
+                if (typeof loadProfilePopupData === 'function') loadProfilePopupData();
 
-        // 2. Load Avatar for Nav
-        async function loadAvatar(uid) {
-            const { data } = await _supabase.from('profiles').select('avatar_url').eq('id', uid).single();
-            if (data && data.avatar_url) {
-                const navAv = document.getElementById('navAvatar');
-                if (navAv) navAv.src = data.avatar_url;
+                // Also manually set nav avatar just in case ui.js is delayed
+                const { data } = await _supabase.from('profiles').select('avatar_url').eq('id', session.user.id).single();
+                if (data && data.avatar_url && document.getElementById('navAvatar')) {
+                    document.getElementById('navAvatar').src = data.avatar_url;
+                }
             }
         }
 
@@ -228,16 +245,18 @@
             feed.innerHTML = '';
 
             if (!data || data.length === 0) {
-                feed.innerHTML = `
-                    <div class="m3-card p-12 text-center flex flex-col items-center border-dashed border-2 border-[#353539] bg-transparent">
-                        <div class="w-16 h-16 rounded-full bg-[#252529] flex items-center justify-center text-[#C4C7C5] mb-4">
-                            <span class="material-symbols-rounded text-3xl">notifications_off</span>
+                if (!data || data.length === 0) {
+                    feed.innerHTML = `
+                    <div class="p-12 text-center flex flex-col items-center justify-center opacity-60">
+                        <div class="w-20 h-20 rounded-full bg-[#252529] border border-[#353539] flex items-center justify-center text-[#C4C7C5] mb-4">
+                            <span class="material-symbols-rounded text-4xl">notifications_off</span>
                         </div>
                         <h3 class="text-lg font-display font-medium text-[#E3E3E3]">No New Alerts</h3>
                         <p class="text-sm text-[#C4C7C5] mt-1">You are all caught up!</p>
                     </div>
                 `;
-                return;
+                    return;
+                }
             }
 
             data.forEach((n, index) => {

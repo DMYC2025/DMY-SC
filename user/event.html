@@ -7,6 +7,23 @@
     <title>Events - DMYSC</title>
     <link rel="icon" type="image/png" href="../assets/images/logo_1.png">
 
+    <!-- PWA Settings -->
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" href="../assets/images/logo_1.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DMYSC">
+    <meta name="theme-color" content="#121212">
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('../sw.js');
+            });
+        }
+    </script>
+
     <!-- GOOGLE FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,6 +72,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/user-style.css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
@@ -429,10 +447,11 @@
     <div id="global-footer-placeholder" class="pb-20 md:pb-0"></div>
 
     <!-- Mobile Bottom Nav -->
+    <!-- Mobile Bottom Nav -->
     <div class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#1E1E1E] border-t border-[#252529] pb-safe">
         <div class="flex justify-around items-center h-16">
-            <a href="index.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5]">
-                <span class="material-symbols-rounded">home</span>
+            <a href="index.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5] group">
+                <span class="material-symbols-rounded group-hover:text-[#E3E3E3] transition">home</span>
                 <span class="text-[10px] font-medium">Home</span>
             </a>
             <button class="flex flex-col items-center gap-1 w-full text-primary">
@@ -441,8 +460,8 @@
                 </div>
                 <span class="text-[10px] font-medium">Events</span>
             </button>
-            <a href="profile.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5]">
-                <span class="material-symbols-rounded">person</span>
+            <a href="profile.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5] group">
+                <span class="material-symbols-rounded group-hover:text-[#E3E3E3] transition">person</span>
                 <span class="text-[10px] font-medium">Profile</span>
             </a>
         </div>
@@ -617,15 +636,17 @@
             feed.innerHTML = '';
 
             if (!data || data.length === 0) {
-                feed.innerHTML = `
-                    <div class="m3-card p-12 text-center flex flex-col items-center">
-                        <div class="w-16 h-16 rounded-full bg-[#252529] flex items-center justify-center text-[#C4C7C5] mb-4">
-                            <span class="material-symbols-rounded text-3xl">event_busy</span>
-                        </div>
-                        <h3 class="text-lg font-medium text-[#E3E3E3]">No Upcoming Events</h3>
-                        <p class="text-sm text-[#C4C7C5] mt-1">Check back later for updates.</p>
-                    </div>`;
-                return;
+                if (!data || data.length === 0) {
+                    feed.innerHTML = `
+                         <div class="p-12 text-center flex flex-col items-center justify-center opacity-60">
+                            <div class="w-20 h-20 rounded-full bg-[#252529] border border-[#353539] flex items-center justify-center text-[#C4C7C5] mb-4">
+                                <span class="material-symbols-rounded text-4xl">event_busy</span>
+                            </div>
+                            <h3 class="text-lg font-display font-medium text-[#E3E3E3]">No Upcoming Events</h3>
+                            <p class="text-sm text-[#C4C7C5] mt-1">We are planning something exciting! Check back soon.</p>
+                        </div>`;
+                    return;
+                }
             }
 
             data.forEach((ev, i) => {

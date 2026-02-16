@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dream Makers Youth & Sports Club</title>
     <link rel="icon" type="image/png" href="assets/images/logo_1.png">
+    <link rel="manifest" href="manifest.json">
 
     <!-- External Home CSS -->
     <link rel="stylesheet" href="assets/css/home-style.css">
@@ -66,8 +67,18 @@
 
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
 
 
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('SW registered'))
+                    .catch(err => console.log('SW registration failed', err));
+            });
+        }
+    </script>
 </head>
 
 <body
@@ -606,9 +617,8 @@
             }
         }
 
-        const supabaseUrl = 'https://tnrqasiiywcvtwkwytqe.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRucnFhc2lpeXdjdnR3a3d5dHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNDIxMTEsImV4cCI6MjA4MjkxODExMX0.rd9aKmLa687zMxg8FV5AllgnYkz7wpdXBRi3a5NyXc4';
-        const _supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        // Supabase Client is initialized in js/supabase.js as '_supabase'
+
 
         async function fetchNotifications() {
             const feed = document.getElementById('notificationFeedModal');

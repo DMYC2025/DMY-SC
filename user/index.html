@@ -5,7 +5,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard - DMYSC</title>
+    <meta name="description"
+        content="Member Dashboard - Dream Makers Youth & Sports Club. Manage your profile, payments, and events.">
+    <meta name="theme-color" content="#121212">
+
+    <link rel="manifest" href="../manifest.json">
     <link rel="icon" type="image/png" href="../assets/images/logo_1.png">
+    <link rel="apple-touch-icon" href="../assets/images/logo_1.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DMYSC">
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('../sw.js')
+                    .then(reg => console.log('SW registered'))
+                    .catch(err => console.log('SW registration failed', err));
+            });
+        }
+    </script>
 
     <!-- External User CSS -->
     <link rel="stylesheet" href="../assets/css/user-style.css">
@@ -165,53 +185,54 @@
     <main class="max-w-7xl mx-auto px-4 py-6 no-print space-y-6">
 
         <!-- Hero Section ("At A Glance" Style) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" data-aos="fade-up">
+        <!-- Hero Section ("At A Glance" Style) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3" data-aos="fade-up">
             <!-- Greeting Card -->
-            <div class="col-span-1 md:col-span-2 m3-card p-6 md:p-8 relative overflow-hidden bg-[#252529]">
-                <div class="relative z-10 flex flex-col justify-between h-full min-h-[180px]">
+            <div class="col-span-1 md:col-span-2 m3-card p-5 relative overflow-hidden bg-[#252529]">
+                <div class="relative z-10 flex flex-col justify-between h-full min-h-[150px]">
                     <div>
-                        <div class="flex items-center gap-2 text-primary font-display font-medium text-sm mb-1">
-                            <span class="material-symbols-rounded text-[18px]">calendar_today</span>
+                        <div class="flex items-center gap-2 text-primary font-display font-medium text-xs mb-1">
+                            <span class="material-symbols-rounded text-[16px]">calendar_today</span>
                             <span id="dateDisplay">Loading...</span>
                         </div>
-                        <h1 class="text-3xl md:text-5xl font-display font-normal text-[#E3E3E3] leading-tight mt-2">
+                        <h1 class="text-2xl md:text-4xl font-display font-normal text-[#E3E3E3] leading-tight mt-1">
                             <span id="greeting">Hello</span>,<br>
                             <span id="dashName" class="text-primary font-medium">Member</span>
                         </h1>
 
-                        <!-- Mobile-Only Weather Info -->
-                        <div class="mt-4 flex items-center gap-4 md:hidden animate-fade-in">
+                        <!-- Mobile-Only Weather Info (Compact) -->
+                        <div class="mt-3 flex items-center gap-3 md:hidden animate-fade-in">
                             <div class="flex items-center gap-2">
-                                <span class="material-symbols-rounded text-[28px] text-primary"
+                                <span class="material-symbols-rounded text-[24px] text-primary"
                                     id="mobileWeatherIcon">wb_sunny</span>
-                                <span class="text-2xl font-display font-medium text-[#E3E3E3]"
+                                <span class="text-xl font-display font-medium text-[#E3E3E3]"
                                     id="mobileWeatherTemp">--°C</span>
                             </div>
-                            <div class="h-8 w-[1px] bg-white/10"></div>
+                            <div class="h-6 w-[1px] bg-white/10"></div>
                             <div class="flex flex-col">
-                                <span class="text-[10px] text-primary font-bold uppercase tracking-wider">Horana</span>
-                                <span class="text-[10px] text-[#C4C7C5]" id="mobileWeatherDesc">Weather</span>
+                                <span class="text-[9px] text-primary font-bold uppercase tracking-wider">Horana</span>
+                                <span class="text-[9px] text-[#C4C7C5]" id="mobileWeatherDesc">Weather</span>
                             </div>
                         </div>
 
                     </div>
-                    <div class="mt-4 flex flex-wrap items-center gap-4">
-                        <span class="px-3 py-1 bg-[#353539] rounded-lg text-xs font-mono text-[#C4C7C5]"
+                    <div class="mt-3 flex flex-wrap items-center gap-3">
+                        <span class="px-2.5 py-1 bg-[#353539] rounded-lg text-[10px] font-mono text-[#C4C7C5]"
                             id="clockDisplay">00:00:00</span>
 
                         <!-- Social Links from Footer -->
-                        <div class="flex items-center gap-3 ml-auto">
+                        <div class="flex items-center gap-2 ml-auto">
                             <a href="https://www.facebook.com/profile.php?id=61585478932161" target="_blank"
-                                class="w-8 h-8 rounded-full bg-[#353539] hover:bg-[#1877F2] flex items-center justify-center text-[#C4C7C5] hover:text-white transition duration-300">
-                                <i class="ph-fill ph-facebook-logo text-lg"></i>
+                                class="w-7 h-7 rounded-full bg-[#353539] hover:bg-[#1877F2] flex items-center justify-center text-[#C4C7C5] hover:text-white transition duration-300">
+                                <i class="ph-fill ph-facebook-logo text-base"></i>
                             </a>
                             <a href="https://whatsapp.com/channel/0029Vb7AQ1bEKyZKwmjeYt0F" target="_blank"
-                                class="w-8 h-8 rounded-full bg-[#353539] hover:bg-[#25D366] flex items-center justify-center text-[#C4C7C5] hover:text-white transition duration-300">
-                                <i class="ph-fill ph-whatsapp-logo text-lg"></i>
+                                class="w-7 h-7 rounded-full bg-[#353539] hover:bg-[#25D366] flex items-center justify-center text-[#C4C7C5] hover:text-white transition duration-300">
+                                <i class="ph-fill ph-whatsapp-logo text-base"></i>
                             </a>
                             <a href="https://www.youtube.com/channel/UCbeh371G6OERp1zaAUMyuBQ" target="_blank"
-                                class="w-8 h-8 rounded-full bg-[#353539] hover:bg-[#FF0000] flex items-center justify-center text-[#C4C7C5] hover:text-white transition duration-300">
-                                <i class="ph-fill ph-youtube-logo text-lg"></i>
+                                class="w-7 h-7 rounded-full bg-[#353539] hover:bg-[#FF0000] flex items-center justify-center text-[#C4C7C5] hover:text-white transition duration-300">
+                                <i class="ph-fill ph-youtube-logo text-base"></i>
                             </a>
                         </div>
                     </div>
@@ -223,136 +244,143 @@
 
             <!-- Weather Widget (Pill Style - Hidden on Mobile) -->
             <div
-                class="hidden md:flex col-span-1 m3-card p-6 flex-col justify-center items-center bg-[#1b2e23] relative overflow-hidden">
+                class="hidden md:flex col-span-1 m3-card p-5 flex-col justify-center items-center bg-[#1b2e23] relative overflow-hidden">
                 <div
                     class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10">
                 </div>
                 <div class="z-10 text-center">
-                    <span class="material-symbols-rounded text-[48px] text-[#a6f7bd] mb-2 animate-pulse"
+                    <span class="material-symbols-rounded text-[40px] text-[#a6f7bd] mb-1 animate-pulse"
                         id="weatherIconGoogle">wb_sunny</span>
-                    <h4 id="weatherTemp" class="text-4xl font-display font-normal text-[#e4e2e2]">--°C</h4>
-                    <p id="weatherDesc" class="text-xs text-[#c1c8c5] uppercase tracking-widest mt-1">Horana</p>
+                    <h4 id="weatherTemp" class="text-3xl font-display font-normal text-[#e4e2e2]">--°C</h4>
+                    <p id="weatherDesc" class="text-[10px] text-[#c1c8c5] uppercase tracking-widest mt-1">Horana</p>
                 </div>
             </div>
         </div>
 
         <!-- Birthday Chip -->
         <div id="birthdayCard"
-            class="hidden m3-card bg-[#3c2e25] p-4 flex items-center justify-between animate-fade-in">
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 rounded-full bg-[#ffb783] flex items-center justify-center text-[#512300]">
-                    <span class="material-symbols-rounded">cake</span>
+            class="hidden m3-card bg-[#3c2e25] p-3 flex items-center justify-between animate-fade-in">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-[#ffb783] flex items-center justify-center text-[#512300]">
+                    <span class="material-symbols-rounded text-[20px]">cake</span>
                 </div>
                 <div>
-                    <h3 class="text-[#ffdcbe] font-display font-medium text-sm">Happy Birthday!</h3>
-                    <p class="text-xs text-[#e6beac]">Best wishes from DMYSC.</p>
+                    <h3 class="text-[#ffdcbe] font-display font-medium text-xs">Happy Birthday!</h3>
+                    <p class="text-[10px] text-[#e6beac]">Best wishes from DMYSC.</p>
                 </div>
             </div>
             <button onclick="document.getElementById('birthdayCard').classList.add('hidden')"
-                class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#554133] text-[#ffb4ab]">
-                <span class="material-symbols-rounded">close</span>
+                class="w-6 h-6 flex items-center justify-center rounded-full hover:bg-[#554133] text-[#ffb4ab]">
+                <span class="material-symbols-rounded text-[18px]">close</span>
             </button>
         </div>
 
         <!-- Grid Menu (Google Home Style) -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            <!-- Updated Links to point to current directory since files will be moved -->
+        <!-- Compact Grid Menu -->
+        <div class="grid grid-cols-3 lg:grid-cols-6 gap-2">
+            <!-- Quick Links -->
             <a href="quicklink.html"
-                class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group"
+                class="m3-card p-3 flex flex-col items-center justify-center text-center gap-2 group hover:bg-[#28282D] transition border border-white/5"
                 data-aos="fade-up" data-aos-delay="50">
                 <div
-                    class="w-12 h-12 rounded-full bg-[#3c2a2a] group-hover:bg-[#ffb4ab] text-[#ffb4ab] group-hover:text-[#690005] flex items-center justify-center transition-colors">
-                    <span class="material-symbols-rounded text-[24px]">link</span>
+                    class="w-10 h-10 rounded-full bg-[#3c2a2a] group-hover:bg-[#ffb4ab] text-[#ffb4ab] group-hover:text-[#690005] flex items-center justify-center transition-colors">
+                    <span class="material-symbols-rounded text-[20px]">link</span>
                 </div>
-                <span class="text-sm font-medium text-[#E3E3E3]">Quick Links</span>
+                <span class="text-[10px] sm:text-xs font-medium text-[#E3E3E3] leading-tight">Quick Links</span>
             </a>
 
+            <!-- Events -->
             <a href="event.html"
-                class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group"
+                class="m3-card p-3 flex flex-col items-center justify-center text-center gap-2 group hover:bg-[#28282D] transition border border-white/5"
                 data-aos="fade-up" data-aos-delay="100">
                 <div
-                    class="w-12 h-12 rounded-full bg-[#1e2f23] group-hover:bg-[#a6f7bd] text-[#a6f7bd] group-hover:text-[#003915] flex items-center justify-center transition-colors">
-                    <span class="material-symbols-rounded text-[24px]">event</span>
+                    class="w-10 h-10 rounded-full bg-[#1e2f23] group-hover:bg-[#a6f7bd] text-[#a6f7bd] group-hover:text-[#003915] flex items-center justify-center transition-colors">
+                    <span class="material-symbols-rounded text-[20px]">event</span>
                 </div>
-                <span class="text-sm font-medium text-[#E3E3E3]">Events</span>
+                <span class="text-[10px] sm:text-xs font-medium text-[#E3E3E3] leading-tight">Events</span>
             </a>
 
+            <!-- Sports -->
             <a href="sport.html"
-                class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group"
+                class="m3-card p-3 flex flex-col items-center justify-center text-center gap-2 group hover:bg-[#28282D] transition border border-white/5"
                 data-aos="fade-up" data-aos-delay="150">
                 <div
-                    class="w-12 h-12 rounded-full bg-[#232a3b] group-hover:bg-[#a0cfd0] text-[#a0cfd0] group-hover:text-[#003334] flex items-center justify-center transition-colors">
-                    <span class="material-symbols-rounded text-[24px]">emoji_events</span>
+                    class="w-10 h-10 rounded-full bg-[#232a3b] group-hover:bg-[#a0cfd0] text-[#a0cfd0] group-hover:text-[#003334] flex items-center justify-center transition-colors">
+                    <span class="material-symbols-rounded text-[20px]">emoji_events</span>
                 </div>
-                <span class="text-sm font-medium text-[#E3E3E3]">Sports</span>
+                <span class="text-[10px] sm:text-xs font-medium text-[#E3E3E3] leading-tight">Sports</span>
             </a>
 
+            <!-- Profile -->
             <a href="profile.html"
-                class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group"
+                class="m3-card p-3 flex flex-col items-center justify-center text-center gap-2 group hover:bg-[#28282D] transition border border-white/5"
                 data-aos="fade-up" data-aos-delay="200">
                 <div
-                    class="w-12 h-12 rounded-full bg-[#2f2536] group-hover:bg-[#e7bdfb] text-[#e7bdfb] group-hover:text-[#4d0076] flex items-center justify-center transition-colors">
-                    <span class="material-symbols-rounded text-[24px]">person</span>
+                    class="w-10 h-10 rounded-full bg-[#2f2536] group-hover:bg-[#e7bdfb] text-[#e7bdfb] group-hover:text-[#4d0076] flex items-center justify-center transition-colors">
+                    <span class="material-symbols-rounded text-[20px]">person</span>
                 </div>
-                <span class="text-sm font-medium text-[#E3E3E3]">Profile</span>
+                <span class="text-[10px] sm:text-xs font-medium text-[#E3E3E3] leading-tight">Profile</span>
             </a>
 
+            <!-- Payments -->
             <a href="pay.html"
-                class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group"
+                class="m3-card p-3 flex flex-col items-center justify-center text-center gap-2 group hover:bg-[#28282D] transition border border-white/5"
                 data-aos="fade-up" data-aos-delay="250">
                 <div
-                    class="w-12 h-12 rounded-full bg-[#1b2e2b] group-hover:bg-[#6dd58c] text-[#6dd58c] group-hover:text-[#00391b] flex items-center justify-center transition-colors">
-                    <span class="material-symbols-rounded text-[24px]">account_balance_wallet</span>
+                    class="w-10 h-10 rounded-full bg-[#1b2e2b] group-hover:bg-[#6dd58c] text-[#6dd58c] group-hover:text-[#00391b] flex items-center justify-center transition-colors">
+                    <span class="material-symbols-rounded text-[20px]">account_balance_wallet</span>
                 </div>
-                <span class="text-sm font-medium text-[#E3E3E3]">Payments</span>
+                <span class="text-[10px] sm:text-xs font-medium text-[#E3E3E3] leading-tight">Payments</span>
             </a>
 
+            <!-- About -->
             <a href="about.html"
-                class="m3-card p-5 flex flex-col items-center justify-center text-center gap-3 aspect-square group"
+                class="m3-card p-3 flex flex-col items-center justify-center text-center gap-2 group hover:bg-[#28282D] transition border border-white/5"
                 data-aos="fade-up" data-aos-delay="300">
                 <div
-                    class="w-12 h-12 rounded-full bg-[#362a1d] group-hover:bg-[#ffdcbe] text-[#ffdcbe] group-hover:text-[#2c1600] flex items-center justify-center transition-colors">
-                    <span class="material-symbols-rounded text-[24px]">info</span>
+                    class="w-10 h-10 rounded-full bg-[#362a1d] group-hover:bg-[#ffdcbe] text-[#ffdcbe] group-hover:text-[#2c1600] flex items-center justify-center transition-colors">
+                    <span class="material-symbols-rounded text-[20px]">info</span>
                 </div>
-                <span class="text-sm font-medium text-[#E3E3E3]">About</span>
+                <span class="text-[10px] sm:text-xs font-medium text-[#E3E3E3] leading-tight">About</span>
             </a>
         </div>
 
-        <!-- Desktop Slideshow & ID -->
-        <div class="hidden lg:grid grid-cols-3 gap-4 h-[400px]">
+        <!-- Desktop Slideshow & ID (Compact) -->
+        <div class="hidden lg:grid grid-cols-3 gap-3 h-[320px]">
 
             <!-- Slideshow (Rounded Corners) -->
-            <div class="col-span-2 relative bg-[#1E1E1E] rounded-[28px] overflow-hidden group">
+            <div class="col-span-2 relative bg-[#1E1E1E] rounded-[24px] overflow-hidden group">
                 <div id="mainSlideContainer" class="w-full h-full slide-content"></div>
 
                 <!-- Google Style FABs for arrows -->
                 <button onclick="prevSlide()"
-                    class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-[#252529] hover:bg-[#a6f7bd] hover:text-[#003915] text-[#E3E3E3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all z-20">
+                    class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#252529]/80 hover:bg-[#a6f7bd] hover:text-[#003915] text-[#E3E3E3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all z-20">
                     <span class="material-symbols-rounded">chevron_left</span>
                 </button>
                 <button onclick="nextSlide()"
-                    class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-[#252529] hover:bg-[#a6f7bd] hover:text-[#003915] text-[#E3E3E3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all z-20">
+                    class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#252529]/80 hover:bg-[#a6f7bd] hover:text-[#003915] text-[#E3E3E3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all z-20">
                     <span class="material-symbols-rounded">chevron_right</span>
                 </button>
             </div>
 
-            <div class="col-span-1 flex flex-col gap-4 h-full">
+            <div class="col-span-1 flex flex-col gap-3 h-full">
                 <!-- Next Preview -->
-                <div class="relative flex-1 bg-[#252529] rounded-[28px] overflow-hidden">
+                <div class="relative flex-1 bg-[#252529] rounded-[24px] overflow-hidden">
                     <div id="nextSlideContainer" class="w-full h-full opacity-60 slide-content grayscale"></div>
-                    <div class="absolute bottom-3 right-4 bg-[#121212]/80 px-3 py-1 rounded-md">
-                        <span class="text-[10px] font-bold text-white uppercase">Next</span>
+                    <div class="absolute bottom-3 right-3 bg-[#121212]/80 px-2 py-0.5 rounded-md">
+                        <span class="text-[9px] font-bold text-white uppercase">Next</span>
                     </div>
                 </div>
 
-                <!-- ID Card Download Widget -->
+                <!-- ID Card Download Widget (Compact) -->
                 <div
-                    class="h-40 bg-[#1b2e23] rounded-[28px] p-4 flex flex-col items-center justify-center text-center relative overflow-hidden group border border-[#233f2e]">
+                    class="h-32 bg-[#1b2e23] rounded-[24px] p-3 flex flex-col items-center justify-center text-center relative overflow-hidden group border border-[#233f2e]">
                     <span
-                        class="material-symbols-rounded text-[40px] text-[#a6f7bd] mb-2 group-hover:scale-110 transition">badge</span>
-                    <h4 class="text-sm font-medium text-[#E3E3E3] mb-2">Digital ID Pass</h4>
-                    <button onclick="openCardModal()" class="m3-btn-primary px-4 py-2 text-xs flex items-center gap-2">
-                        <span class="material-symbols-rounded text-[16px]">download</span> Save
+                        class="material-symbols-rounded text-[32px] text-[#a6f7bd] mb-1 group-hover:scale-110 transition">badge</span>
+                    <h4 class="text-xs font-medium text-[#E3E3E3] mb-2">Digital ID Pass</h4>
+                    <button onclick="openCardModal()"
+                        class="m3-btn-primary px-3 py-1.5 text-[10px] flex items-center gap-1">
+                        <span class="material-symbols-rounded text-[14px]">download</span> Save
                     </button>
                 </div>
             </div>
@@ -395,10 +423,10 @@
                 <span class="text-[10px] font-medium">Pay</span>
                 <span id="mobilePayBadge" class="hidden absolute top-1 right-8 w-2 h-2 bg-error rounded-full"></span>
             </button>
-            <button onclick="toggleProfilePopup()" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5]">
+            <a href="profile.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5]">
                 <span class="material-symbols-rounded">person</span>
                 <span class="text-[10px] font-medium">Profile</span>
-            </button>
+            </a>
         </div>
     </div>
 
