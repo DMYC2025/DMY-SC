@@ -46,10 +46,35 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+    <style>
+        body {
+            background-color: #121212;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(166, 247, 189, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(160, 207, 208, 0.05) 0%, transparent 20%);
+        }
+
+        .verified-badge {
+            background: rgba(166, 247, 189, 0.1);
+            border: 1px solid rgba(166, 247, 189, 0.3);
+            color: #a6f7bd;
+        }
+
+        /* Prevent Selection */
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+        /* Hide Scrollbar */
+        ::-webkit-scrollbar {
+            display: none;
+        }
     </style>
 </head>
 
-<body class="min-h-screen flex items-center justify-center p-4 page-id-card">
+<body class="min-h-screen flex items-center justify-center p-4">
 
     <!-- Loading State -->
     <div id="loading" class="fixed inset-0 bg-[#121212] z-50 flex flex-col items-center justify-center">
