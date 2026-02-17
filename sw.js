@@ -3,9 +3,13 @@ const ASSETS_TO_CACHE = [
     './',
     './index.html',
     './assets/css/home-style.css',
+    './assets/css/admin-style.css',
+    './assets/css/animations.css',
+    './admin/index.html',
     './assets/js/supabase.js',
     './assets/images/logo_1.png',
     './assets/images/logo_2.png',
+    './manifest.json',
     'https://cdn.tailwindcss.com',
     'https://unpkg.com/aos@2.3.1/dist/aos.css',
     'https://unpkg.com/aos@2.3.1/dist/aos.js'

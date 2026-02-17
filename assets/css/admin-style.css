@@ -1,262 +1,117 @@
-/* Google Fonts Import */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+/* -------------------------------------------------------------------------- */
+/*                            ADMIN DASHBOARD STYLES                          */
+/* -------------------------------------------------------------------------- */
+@import url('home-style.css');
 
-/* System Animations */
-@import url('animations.css');
-
-/* Base Styles */
-body {
-    background-color: #121212;
-    color: #E3E3E3;
-    font-family: 'Roboto', sans-serif;
-}
-
-.font-display {
-    font-family: 'Outfit', sans-serif;
-}
-
-/* Material Symbols Settings (Legacy Support) */
-.material-symbols-rounded {
-    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-}
-
-/* Scrollbar Styling */
-::-webkit-scrollbar {
-    width: 6px;
-}
-
-::-webkit-scrollbar-track {
-    background: #0f172a;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #334155;
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #475569;
-}
-
-/* -----------------------
-   Glassmorphism / New UI Styles
-   ----------------------- */
-
-/* Glassmorphism Styles (Deprecated/Unused) - Removed */
-
-/* Tabs */
-.tab-btn {
-    transition: all 0.3s ease;
-    border-bottom: 2px solid transparent;
-    opacity: 0.6;
-}
-
-.tab-btn.active {
-    opacity: 1;
-    border-bottom-color: #16a34a;
-    color: #16a34a;
-    font-weight: bold;
-    background: rgba(22, 163, 74, 0.1);
-}
-
-/* Sidebar Transition */
-#sidebar {
-    transition: transform 0.3s ease-in-out;
-}
-
-.sidebar-open {
-    transform: translateX(0) !important;
-}
-
-.sidebar-closed {
-    transform: translateX(-100%);
-}
-
-@media (min-width: 768px) {
-    .sidebar-closed {
-        transform: translateX(0);
-    }
-}
-
-/* Animations */
-@keyframes countdown {
-    from {
-        width: 100%;
-    }
-
-    to {
-        width: 0%;
-    }
-}
-
-.countdown-bar {
-    animation: countdown 5s linear forwards;
-}
-
-/* Modal Transitions */
-.modal-enter {
-    opacity: 0;
-    transform: scale(0.95);
-}
-
-.modal-enter-active {
-    opacity: 1;
-    transform: scale(1);
-    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
-}
-
-.modal-exit {
-    opacity: 1;
-    transform: scale(1);
-}
-
-.modal-exit-active {
-    opacity: 0;
-    transform: scale(0.95);
-    transition: opacity 0.2s ease-in, transform 0.2s ease-in;
-}
-
-/* -----------------------
-   Legacy M3 Styles (Preserved for other pages)
-   ----------------------- */
-/* Note: These may look slightly different on the new dark background, 
-   but preserved to prevent layout breakage on unmigrated pages. */
+/* --- Sidebar (M3 Navigation Drawer) --- */
 .m3-drawer {
-    background-color: #1E1E1E;
-    /* Restored for legacy compatibility */
-    border-top-right-radius: 28px;
-    border-bottom-right-radius: 28px;
+    background-color: #1a1a1c;
+    /* Slightly different from background */
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
 }
 
+/* Sidebar Toggle Logic */
+@media (max-width: 768px) {
+    .sidebar-closed {
+        transform: translateX(-100%);
+    }
+
+    .sidebar-open {
+        transform: translateX(0);
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+        /* Shadow when open on mobile */
+    }
+}
+
+/* --- Navigation Items --- */
 .m3-nav-item {
-    border-radius: 999px;
-    transition: all 0.2s ease;
+    border-radius: 9999px;
+    /* Full pill shape */
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #C4C7C5;
+    /* Secondary text */
+    margin-bottom: 4px;
+    border: 1px solid transparent;
 }
 
 .m3-nav-item:hover {
-    background-color: #252529;
-}
-
-.m3-nav-item.active {
-    background-color: #004d1b;
-    color: #a6f7bd;
-}
-
-.m3-card {
-    background-color: #1E1E1E;
-    border-radius: 24px;
-    transition: elevation 0.3s;
-}
-
-.m3-input {
-    background-color: #252529;
-    border: 1px solid #8e918f;
-    border-radius: 4px;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    border-bottom: 1px solid #8e918f;
+    background-color: rgba(255, 255, 255, 0.05);
+    /* Hover state */
     color: #E3E3E3;
+    /* Primary text */
 }
 
-.m3-input:focus {
-    border-color: #a6f7bd;
-    border-width: 2px;
-    outline: none;
+/* Active State (M3 Standard) */
+.m3-nav-item.active {
+    background-color: #004d40;
+    /* Dark Green Container equivalent */
+    color: #a6f7bd;
+    /* Primary color */
+    font-weight: 600;
+    border: 1px solid rgba(166, 247, 189, 0.1);
 }
 
-/* ========================================
-   CALENDAR & EVENT STYLES (From events.html)
-   ======================================== */
+.m3-nav-item.active .material-symbols-rounded {
+    font-variation-settings: 'FILL' 1;
+    /* Filled icon for active state */
+}
 
-.cal-day {
-    position: relative;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* --- Tables --- */
+table thead th {
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: 0.05em;
+    color: var(--md-sys-color-outline);
+}
+
+table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* --- Status Badges --- */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 8px;
     font-size: 11px;
-    border-radius: 50%;
-    transition: all 0.2s;
-    cursor: pointer;
-}
-
-.cal-day:hover {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.cal-day.today {
-    background: #a6f7bd !important;
-    color: #003915 !important;
     font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.cal-day.holiday::after {
-    content: '';
-    position: absolute;
-    bottom: 4px;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
+.status-badge.active {
+    background-color: rgba(166, 247, 189, 0.1);
+    color: #a6f7bd;
+    border: 1px solid rgba(166, 247, 189, 0.2);
 }
 
-.cal-day.poya {
-    color: #eab308;
-    font-weight: 700;
-}
-
-.cal-day.poya::after {
-    background: #eab308;
-}
-
-.cal-day.tamil {
-    color: #f97316;
-    font-weight: 700;
-}
-
-.cal-day.tamil::after {
-    background: #f97316;
-}
-
-.cal-day.islamic {
-    color: #2dd4bf;
-    font-weight: 700;
-}
-
-.cal-day.islamic::after {
-    background: #2dd4bf;
-}
-
-.cal-day.christian {
-    color: #a855f7;
-    font-weight: 700;
-}
-
-.cal-day.christian::after {
-    background: #a855f7;
-}
-
-.cal-day.national {
+.status-badge.pending {
+    background-color: rgba(255, 180, 171, 0.1);
     color: #ffb4ab;
-    font-weight: 700;
+    border: 1px solid rgba(255, 180, 171, 0.2);
 }
 
-.cal-day.national::after {
-    background: #ffb4ab;
+.status-badge.rejected {
+    background-color: rgba(255, 84, 73, 0.1);
+    color: #ff5449;
+    border: 1px solid rgba(255, 84, 73, 0.2);
 }
 
-.cal-day.has-event {
-    border: 2px solid white;
-    font-weight: 700;
+/* --- ID Card Preview --- */
+.glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.modal-backdrop.show {
-    opacity: 1;
-}
-
-.modal-panel.show {
-    transform: scale(1);
-    opacity: 1;
+.bg-pattern {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
 }

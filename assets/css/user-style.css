@@ -1,254 +1,132 @@
-/* ========================================
-   USER PAGES STYLES
-   ======================================== */
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
-body {
-    background-color: #121212;
-    color: #E3E3E3;
-    -webkit-tap-highlight-color: transparent;
+/* System Animations */
+@import url('animations.css');
+
+/* --- MATERIAL 3 DESIGN TOKENS --- */
+:root {
+    /* M3 Dark Theme Colors */
+    --md-sys-color-background: #121212;
+    --md-sys-color-surface: #1E1E1E;
+    --md-sys-color-surface-container: #252529;
+    --md-sys-color-primary: #a6f7bd;
+    --md-sys-color-on-primary: #003915;
+    --md-sys-color-secondary: #c2c9bd;
+    --md-sys-color-tertiary: #a0cfd0;
+    --md-sys-color-error: #ffb4ab;
+    --md-sys-color-outline: #8e918f;
+
+    /* Elevations */
+    --md-sys-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+    --md-sys-elevation-2: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+    --md-sys-elevation-3: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 8px 3px rgba(0, 0, 0, 0.15);
 }
 
-/* Material Symbols */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--md-sys-color-background);
+    color: #E3E3E3;
+    overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-display {
+    font-family: 'Outfit', sans-serif;
+}
+
 .material-symbols-rounded {
     font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     vertical-align: middle;
 }
 
-/* Scrollbar Utility */
-.no-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-
-/* ========================================
-   COMPONENTS
-   ======================================== */
-
-/* M3 Navbar */
+/* --- M3 NAVBAR (Floating Pill) --- */
 .m3-navbar {
-    background-color: #252529;
-    /* Default */
-    border-radius: 999px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-/* M3 Card */
-.m3-card {
-    background-color: #1E1E1E;
-    border-radius: 24px;
-    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.m3-card:hover {
-    background-color: #28282D;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transform: translateY(-2px);
-}
-
-/* Glass Card */
-.glass-card {
-    background: rgba(24, 24, 27, 0.6);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(30, 30, 30, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 24px;
+    border-radius: 9999px;
+    box-shadow: var(--md-sys-elevation-2);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.glass-card:hover {
-    border-color: rgba(166, 247, 189, 0.3);
-    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
-    transform: translateY(-4px);
+.m3-navbar:hover {
+    background: rgba(37, 37, 41, 0.8);
+    border-color: rgba(166, 247, 189, 0.2);
+    box-shadow: var(--md-sys-elevation-3);
 }
 
-/* ========================================
-   PAGE SPECIFIC STYLES
-   ======================================== */
-
-/* About Page */
-body.page-about {
-    background-color: #0F0F11;
-    background-image:
-        radial-gradient(circle at 10% 20%, rgba(166, 247, 189, 0.03) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(160, 207, 208, 0.03) 0%, transparent 20%);
-    background-attachment: fixed;
-}
-
-body.page-about .m3-navbar {
-    background: rgba(39, 39, 42, 0.8);
-    backdrop-filter: blur(12px);
+/* --- MATERIAL 3 CARDS --- */
+.m3-card {
+    background-color: var(--md-sys-color-surface);
+    border-radius: 24px;
     border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.member-row {
-    transition: background-color 0.2s;
+.m3-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--md-sys-elevation-3);
+    border-color: rgba(166, 247, 189, 0.2);
+    background-color: #232326;
 }
 
-.member-row:hover {
-    background-color: rgba(166, 247, 189, 0.05);
+/* --- CUSTOM SCROLLBAR --- */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
 }
 
-/* ID Card Page */
-body.page-id-card {
-    background-image:
-        radial-gradient(circle at 10% 20%, rgba(166, 247, 189, 0.05) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(160, 207, 208, 0.05) 0%, transparent 20%);
-    user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--md-sys-color-surface-container);
 }
 
-body.page-id-card ::-webkit-scrollbar {
-    display: none;
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #353539;
+    border-radius: 10px;
 }
 
-.verified-badge {
-    background: rgba(166, 247, 189, 0.1);
-    border: 1px solid rgba(166, 247, 189, 0.3);
-    color: #a6f7bd;
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--md-sys-color-outline);
 }
 
-/* ========================================
-   CALENDAR STYLES (From event.html)
-   ======================================== */
+/* --- INPUTS --- */
+.m3-input {
+    width: 100%;
+    background-color: #252529;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #E3E3E3;
+    outline: none;
+    transition: all 0.3s ease;
+}
 
-.cal-day {
-    width: 36px;
-    height: 36px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    font-size: 12px;
-    margin: auto;
-    color: #C4C7C5;
+.m3-input:focus {
+    border-color: var(--md-sys-color-primary);
+    background-color: #1E1E1E;
+}
+
+.m3-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* --- BUTTONS --- */
+.m3-btn-primary {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    border-radius: 9999px;
     font-weight: 500;
-    position: relative;
-    transition: all 0.2s;
-    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.cal-day:hover {
-    background-color: #353539;
-    color: #E3E3E3;
-}
-
-/* Today */
-.cal-day.today {
-    background-color: #a6f7bd;
-    color: #003915;
-    font-weight: 700;
-}
-
-/* Poya Day - Yellow */
-.cal-day.poya {
-    color: #eab308;
-    font-weight: 700;
-}
-
-.cal-day.poya::after {
-    background: #eab308;
-}
-
-.cal-day.today.poya {
-    color: #003915;
-}
-
-.cal-day.today.poya::after {
-    background: #003915;
-}
-
-/* Tamil - Orange */
-.cal-day.tamil {
-    color: #f97316;
-    font-weight: 700;
-}
-
-.cal-day.tamil::after {
-    background: #f97316;
-}
-
-.cal-day.today.tamil {
-    color: #003915;
-}
-
-.cal-day.today.tamil::after {
-    background: #003915;
-}
-
-/* Islamic - Teal/Emerald */
-.cal-day.islamic {
-    color: #2dd4bf;
-    font-weight: 700;
-}
-
-.cal-day.islamic::after {
-    background: #2dd4bf;
-}
-
-.cal-day.today.islamic {
-    color: #003915;
-}
-
-.cal-day.today.islamic::after {
-    background: #003915;
-}
-
-/* Christian - Purple */
-.cal-day.christian {
-    color: #a855f7;
-    font-weight: 700;
-}
-
-.cal-day.christian::after {
-    background: #a855f7;
-}
-
-.cal-day.today.christian {
-    color: #003915;
-}
-
-.cal-day.today.christian::after {
-    background: #003915;
-}
-
-/* National/Other - Red */
-.cal-day.national {
-    color: #ffb4ab;
-    font-weight: 700;
-}
-
-.cal-day.national::after {
-    background: #ffb4ab;
-}
-
-.cal-day.today.national {
-    color: #003915;
-}
-
-.cal-day.today.national::after {
-    background: #003915;
-}
-
-.cal-day.holiday::after {
-    content: '';
-    position: absolute;
-    bottom: 4px;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-}
-
-/* Event Day - Club Events (White Circle Only) */
-.cal-day.has-event {
-    border: 2px solid white;
-    color: #E3E3E3;
-    font-weight: 700;
-}
-
-.cal-day.has-event.today {
-    background-color: #a6f7bd;
-    color: #003915;
-    border: 2px solid white;
+.m3-btn-primary:hover {
+    box-shadow: 0 4px 12px rgba(166, 247, 189, 0.3);
+    transform: translateY(-1px);
 }
