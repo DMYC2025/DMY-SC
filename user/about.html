@@ -654,7 +654,7 @@
         checkAccess();
         loadData();
     </script>
-    <div id="global-footer-placeholder"></div>
+
     <script src="../assets/js/footer-loader.js"></script>
     <script>
         // --- Footer Script Start ---
@@ -666,15 +666,7 @@
         }
 
         // 2. Contact තොරතුරු පෙන්වීම (Simulated)
-        setTimeout(() => {
-            const addr = document.getElementById('footerAddress');
-            const phone = document.getElementById('footerPhone');
-            const email = document.getElementById('footerEmail');
 
-            if (addr) addr.innerText = "616-B, Dikhenagama, Horana";
-            if (phone) phone.innerText = "+94 77 155 7685";
-            if (email) email.innerText = "dreammakersysc@gmail.com";
-        }, 500);
 
         // 3. Popup (Modal) Open Function
         window.openModal = function (modalId) {

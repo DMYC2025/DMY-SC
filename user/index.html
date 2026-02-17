@@ -567,30 +567,29 @@
                             class="material-symbols-rounded">close</span></button>
                 </div>
                 <form id="issueForm" class="space-y-4">
-                    <div>
-                        <label class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Full
-                            Name</label>
-                        <input type="text" id="issueName" readonly
-                            class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] opacity-60 cursor-not-allowed">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Club
-                            ID</label>
-                        <input type="text" id="issueClubId" readonly
-                            class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] opacity-60 cursor-not-allowed">
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label
-                                class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Email</label>
-                            <input type="email" id="issueEmail" readonly
-                                class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] opacity-60 cursor-not-allowed">
+                    <div class="bg-[#252529] rounded-2xl p-4 mb-4 border border-white/5 animate-fade-in text-left">
+                        <div class="flex items-center gap-3 mb-3 pb-3 border-b border-white/5">
+                            <div
+                                class="w-10 h-10 rounded-full bg-primary/10 overflow-hidden flex items-center justify-center text-primary">
+                                <img id="issueAvatar"
+                                    src="https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h4 id="issueName" class="text-sm font-bold text-[#E3E3E3]">Loading...</h4>
+                                <p id="issueClubId" class="text-[10px] text-primary font-bold uppercase tracking-wider">
+                                    ID: ...</p>
+                            </div>
                         </div>
-                        <div>
-                            <label
-                                class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">WhatsApp</label>
-                            <input type="tel" id="issueWhatsapp" readonly
-                                class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] opacity-60 cursor-not-allowed">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-[9px] text-[#8e918f] uppercase font-bold mb-0.5">Email Address</p>
+                                <p id="issueEmail" class="text-[11px] text-[#C4C7C5] truncate">...</p>
+                            </div>
+                            <div>
+                                <p class="text-[9px] text-[#8e918f] uppercase font-bold mb-0.5">WhatsApp Number</p>
+                                <p id="issueWhatsapp" class="text-[11px] text-[#C4C7C5]">...</p>
+                            </div>
                         </div>
                     </div>
                     <div>
@@ -621,16 +620,21 @@
         async function openIssueModal() {
             // Auto-fill user data
             if (currentUserData) {
-                document.getElementById('issueName').value = currentUserData.fullName;
-                document.getElementById('issueClubId').value = currentUserData.id;
+                document.getElementById('issueName').textContent = currentUserData.fullName;
+                document.getElementById('issueClubId').textContent = `ID: ${currentUserData.id}`;
+
+                // Set Avatar
+                if (currentUserData.avatar) {
+                    document.getElementById('issueAvatar').src = currentUserData.avatar;
+                }
 
                 // Fetch email and phone if not in currentUserData (or use what we have)
                 const { data: { session } } = await _supabase.auth.getSession();
                 if (session) {
-                    document.getElementById('issueEmail').value = session.user.email;
+                    document.getElementById('issueEmail').textContent = session.user.email;
                     // Ideally phone should be in profile, if not use placeholder
                     const { data: profile } = await _supabase.from('profiles').select('phone').eq('id', session.user.id).single();
-                    if (profile) document.getElementById('issueWhatsapp').value = profile.phone || '';
+                    if (profile) document.getElementById('issueWhatsapp').textContent = profile.phone || 'Not Provided';
                 }
             }
 
@@ -657,10 +661,10 @@
             btn.disabled = true;
 
             const { error } = await _supabase.from('login_issues').insert({
-                full_name: document.getElementById('issueName').value,
-                club_id: document.getElementById('issueClubId').value,
-                email: document.getElementById('issueEmail').value,
-                whatsapp_number: document.getElementById('issueWhatsapp').value,
+                full_name: document.getElementById('issueName').textContent,
+                club_id: document.getElementById('issueClubId').textContent.replace('ID: ', ''),
+                email: document.getElementById('issueEmail').textContent,
+                whatsapp_number: document.getElementById('issueWhatsapp').textContent,
                 description: document.getElementById('issueDesc').value
             });
 
@@ -782,7 +786,14 @@
 
         async function checkNotifications() {
             if (typeof _supabase === 'undefined') return;
-            const { count, error } = await _supabase.from('notifications').select('*', { count: 'exact', head: true });
+            const { data: { session } } = await _supabase.auth.getSession();
+            const userId = session?.user?.id;
+
+            const { count, error } = await _supabase
+                .from('notifications')
+                .select('*', { count: 'exact', head: true })
+                .or(`user_id.eq.${userId},user_id.is.null`);
+
             if (!error && count > 0) {
                 document.getElementById('notifBadgeDot').classList.remove('hidden');
             } else {
@@ -1034,15 +1045,7 @@
         }
 
         // 2. Contact තොරතුරු පෙන්වීම (Simulated)
-        setTimeout(() => {
-            const addr = document.getElementById('footerAddress');
-            const phone = document.getElementById('footerPhone');
-            const email = document.getElementById('footerEmail');
 
-            if (addr) addr.innerText = "616-B, Dikhenagama, Horana";
-            if (phone) phone.innerText = "+94 77 155 7685";
-            if (email) email.innerText = "dreammakersysc@gmail.com";
-        }, 500);
 
         // 3. Popup (Modal) Open Function
         window.openModal = function (modalId) {

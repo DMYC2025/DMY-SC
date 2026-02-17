@@ -568,7 +568,18 @@
                         amount: amount,
                         recorded_by: user.id
                     });
-                    if (!error) successCount++;
+                    if (!error) {
+                        successCount++;
+                        // --- AUTO NOTIFICATION for Member ---
+                        const dateObj = new Date(month + '-01');
+                        const monthName = dateObj.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                        await _supabase.from('notifications').insert([{
+                            user_id: memberId,
+                            title: `Payment Confirmed: ${monthName}`,
+                            message: `Your payment of ${amount} LKR for ${monthName} has been successfully recorded.`,
+                            priority: 'normal'
+                        }]);
+                    }
                     else errors++;
                 }
             }
@@ -587,7 +598,20 @@
         }
 
         async function deletePayment(id) {
-            if (confirm("Are you sure you want to remove this record?")) {
+            const p = paymentsCache.find(x => x.id === id);
+            if (!p) return;
+
+            const dateObj = new Date(p.month_year + '-01');
+            const monthName = dateObj.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            const notifTitle = `Payment Confirmed: ${monthName}`;
+
+            if (confirm(`Delete this payment record for ${monthName}?\nThis will also remove the notification sent to the member.`)) {
+                // Delete associated notification first
+                await _supabase.from('notifications').delete().match({
+                    user_id: p.member_id,
+                    title: notifTitle
+                });
+
                 await _supabase.from('payments').delete().eq('id', id);
                 loadPayments();
                 loadRevenueChart();

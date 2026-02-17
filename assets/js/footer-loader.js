@@ -10,7 +10,7 @@ async function loadGlobalFooter() {
         const footerPlaceholder = document.getElementById('global-footer-placeholder');
         if (footerPlaceholder) {
             footerPlaceholder.innerHTML = footerHtml;
-            
+
             // 3. Initialize logic AFTER HTML is inserted
             updateFooterYear();
             loadFooterContactData();
@@ -23,7 +23,7 @@ async function loadGlobalFooter() {
 // Function to set the current year
 function updateFooterYear() {
     const yearElem = document.getElementById('year');
-    if(yearElem) yearElem.innerText = new Date().getFullYear();
+    if (yearElem) yearElem.innerText = new Date().getFullYear();
 }
 
 // Function to fetch contact data from Supabase
@@ -36,15 +36,24 @@ async function loadFooterContactData() {
         }
 
         const { data } = await _supabase.from('site_settings').select('address, phone, email').eq('id', 1).single();
-        
+
         if (data) {
             const addrEl = document.getElementById('footerAddress');
             const phoneEl = document.getElementById('footerPhone');
             const emailEl = document.getElementById('footerEmail');
+            const pPhoneEl = document.getElementById('privacyPhone');
+            const pEmailEl = document.getElementById('privacyEmail');
 
-            if(addrEl) addrEl.textContent = data.address || 'Dikhengama, Munagama';
-            if(phoneEl) phoneEl.textContent = data.phone || '+94 71 615 5666';
-            if(emailEl) emailEl.textContent = data.email || 'info@dmysc.lk';
+            if (addrEl) addrEl.textContent = data.address || 'No. **/*, Dikhengama, Munagama';
+            if (phoneEl) phoneEl.textContent = data.phone || '+94 XX XXX XXXX';
+            if (emailEl) emailEl.textContent = data.email || 'info@dmysc.lk';
+
+            // Privacy Policy placeholders
+            if (pPhoneEl) pPhoneEl.textContent = data.phone || '+94 XX XXX XXXX';
+            if (pEmailEl) {
+                pEmailEl.textContent = data.email || 'info@dmysc.lk';
+                if (pEmailEl.tagName === 'A') pEmailEl.href = `mailto:${data.email || 'info@dmysc.lk'}`;
+            }
         }
     } catch (err) { console.error('Supabase footer error: - footer-loader.js:49', err); }
 }

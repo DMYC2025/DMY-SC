@@ -158,7 +158,7 @@
                         the following types of information:
                     <ul class="list-disc pl-5 space-y-1 mt-2 opacity-80">
                         <li><strong>Personal Information:</strong> Full Name, NIC Number, Date of Birth, and Address
-                            (e.g., No. *** , Dikhengama, Munagama).</li>
+                            (e.g., No. **/*, Dikhengama, Munagama).</li>
                         <li><strong>Contact Details:</strong> Phone/WhatsApp number and Email address.</li>
                         <li><strong>Membership Data:</strong> Profile pictures, team assignments, and payment records of
                             monthly fees.</li>
@@ -187,7 +187,8 @@
                     <h4 class="text-[#E3E3E3] font-bold mb-2">4. Contact Us</h4>
                     <p class="mb-4">
                         If you have questions about your data, please contact us at
-                        <strong>dreammakersysc@gmail.com</strong> or call us at <strong>+94 71 615 5666</strong>.
+                        <strong id="privacyEmail">info@dmysc.lk</strong> or call us at <strong id="privacyPhone">+94 XX
+                            XXX XXXX</strong>.
                     </p>
                 </div>
                 <div class="px-6 py-4 flex justify-end border-t border-[#353539]">
@@ -269,9 +270,15 @@
             const addr = document.getElementById('footerAddress');
             const phone = document.getElementById('footerPhone');
             const email = document.getElementById('footerEmail');
-            if (addr) addr.innerText = "No. *** , Dikhengama, Munagama, Horana";
-            if (phone) phone.innerText = "loding....";
-            if (email) email.innerText = "dreammakersysc@gmail.com";
+            if (addr) addr.innerText = "No. **/*, Dikhengama, Munagama";
+            if (phone) phone.innerText = "loading...";
+            if (email) email.innerText = "info@dmysc.lk";
+
+            // Populate Privacy Policy
+            const pEmail = document.getElementById('privacyEmail');
+            const pPhone = document.getElementById('privacyPhone');
+            if (pEmail) pEmail.innerText = "info@dmysc.lk";
+            if (pPhone) pPhone.innerText = "+94 XX XXX XXXX";
         }, 500);
 
         // Modal Open Function

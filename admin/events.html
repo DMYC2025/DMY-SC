@@ -425,7 +425,7 @@
                     </div>
                     <div class="flex gap-2 shrink-0">
                         <button onclick='editEvent(${JSON.stringify(ev).replace(/'/g, "&apos;")})' class="p-2 rounded-full bg-[#353539] text-primary hover:bg-primary hover:text-on-primary transition"><span class="material-symbols-rounded">edit</span></button>
-                        <button onclick="deleteEvent('${ev.id}')" class="p-2 rounded-full bg-[#353539] text-error hover:bg-error hover:text-on-error transition"><span class="material-symbols-rounded">delete</span></button>
+                        <button onclick="deleteEvent('${ev.id}', '${ev.title.replace(/'/g, "\\\'")}')" class="p-2 rounded-full bg-[#353539] text-error hover:bg-error hover:text-on-error transition"><span class="material-symbols-rounded">delete</span></button>
                     </div>
                 </div>`;
             });
@@ -542,14 +542,45 @@
         const eventForm = document.getElementById('eventForm');
         eventForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const data = { title: document.getElementById('title').value, event_date: document.getElementById('date').value, event_time: document.getElementById('time').value, location: document.getElementById('location').value, description: document.getElementById('description').value, is_hidden: false };
+            const data = {
+                title: document.getElementById('title').value,
+                event_date: document.getElementById('date').value,
+                event_time: document.getElementById('time').value,
+                location: document.getElementById('location').value,
+                image_url: document.getElementById('image_url').value,
+                description: document.getElementById('description').value,
+                is_hidden: false
+            };
+
             let error;
-            if (isEditing) { error = (await _supabase.from('events').update(data).eq('id', document.getElementById('eventId').value)).error; }
-            else { error = (await _supabase.from('events').insert([data])).error; }
-            if (error) alert("Error: " + error.message); else { resetForm(); fetchEvents(); }
+            if (isEditing) {
+                error = (await _supabase.from('events').update(data).eq('id', document.getElementById('eventId').value)).error;
+            } else {
+                const { data: inserted, error: insertError } = await _supabase.from('events').insert([data]).select();
+                error = insertError;
+
+                if (!error) {
+                    // --- AUTO NOTIFICATION ---
+                    await _supabase.from('notifications').insert([{
+                        title: `New Event: ${data.title}`,
+                        message: `Join us for "${data.title}" on ${new Date(data.event_date).toLocaleDateString()} at ${data.event_time}. Location: ${data.location}`,
+                        priority: 'normal'
+                    }]);
+                }
+            }
+
+            if (error) alert("Error: " + error.message);
+            else { resetForm(); fetchEvents(); }
         });
 
-        async function deleteEvent(id) { if (confirm("Delete this event?")) { await _supabase.from('events').delete().eq('id', id); fetchEvents(); } }
+        async function deleteEvent(id, title) {
+            if (confirm(`Delete the event "${title}"?\nThis will also remove any associated automated notifications.`)) {
+                await _supabase.from('events').delete().eq('id', id);
+                // Attempt to delete the auto-generated notification by title match
+                await _supabase.from('notifications').delete().eq('title', `New Event: ${title}`);
+                fetchEvents();
+            }
+        }
         function editEvent(ev) {
             isEditing = true; document.getElementById('formTitle').innerText = "Edit Event"; document.getElementById('cancelBtn').classList.remove('hidden');
             document.getElementById('eventId').value = ev.id; document.getElementById('title').value = ev.title; document.getElementById('date').value = ev.event_date;

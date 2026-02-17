@@ -738,7 +738,7 @@
         checkAccess();
         loadEvents();
     </script>
-    <div id="global-footer-placeholder"></div>
+
     <!-- Day Details Modal -->
     <div id="dayDetailsModal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
         <div
@@ -779,15 +779,7 @@
         }
 
         // 2. Contact තොරතුරු පෙන්වීම (Simulated)
-        setTimeout(() => {
-            const addr = document.getElementById('footerAddress');
-            const phone = document.getElementById('footerPhone');
-            const email = document.getElementById('footerEmail');
 
-            if (addr) addr.innerText = "616-B, Dikhenagama, Horana";
-            if (phone) phone.innerText = "+94 77 155 7685";
-            if (email) email.innerText = "dreammakersysc@gmail.com";
-        }, 500);
 
         // --- CALENDAR POPUP ---
         function showDayDetails(dateStr, holiday) {

@@ -82,9 +82,13 @@ async function fetchNotifsForPopup() {
     try {
         if (typeof _supabase === 'undefined') return;
 
+        const { data: { session } } = await _supabase.auth.getSession();
+        const userId = session?.user?.id;
+
         const { data, error } = await _supabase
             .from('notifications')
             .select('*')
+            .or(`user_id.eq.${userId},user_id.is.null`)
             .order('created_at', { ascending: false })
             .limit(5);
 
@@ -150,6 +154,7 @@ document.addEventListener('click', function (event) {
         notifPopup.classList.add('hidden');
     }
 });
+
 // 8. Global Logout
 async function logout() {
     if (confirm("Are you sure you want to logout?")) {
@@ -165,7 +170,7 @@ async function logout() {
     }
 }
 
-// 9. Fetch and Populate Profile Popup Data
+// 10. Fetch and Populate Profile Popup Data
 async function loadProfilePopupData() {
     if (typeof _supabase === 'undefined') return;
     const { data: { session } } = await _supabase.auth.getSession();
@@ -223,3 +228,126 @@ async function loadProfilePopupData() {
         console.error("Profile Popup Error:", err);
     }
 }
+
+// 11. Web Notification Support
+async function setupBrowserNotifications() {
+    if (!("Notification" in window)) {
+        console.log("This browser does not support desktop notification");
+        return;
+    }
+
+    if (Notification.permission === "default") {
+        await Notification.requestPermission();
+    }
+
+    // Subscribe to Realtime Notifications (General & Targeted)
+    if (typeof _supabase !== 'undefined') {
+        const { data: { session } } = await _supabase.auth.getSession();
+        const currentId = session?.user?.id;
+
+        _supabase
+            .channel('public:notifications')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, payload => {
+                const newNotif = payload.new;
+
+                // Only show if it's for everyone (null) OR specifically for this user
+                if (newNotif.user_id && newNotif.user_id !== currentId) return;
+
+                // --- MODIFIED: Show image for Payment Success ---
+                if (newNotif.title.startsWith('Payment Confirmed:')) {
+                    showSystemNotification(newNotif.title, newNotif.message, '../assets/images/pay_success.png');
+                } else if (!newNotif.title.startsWith('New Event:')) {
+                    showSystemNotification(newNotif.title, newNotif.message);
+                }
+
+                const badge = document.getElementById('notifBadgeDot');
+                if (badge) badge.classList.remove('hidden');
+
+                const popup = document.getElementById('notifPopup');
+                if (popup && !popup.classList.contains('hidden')) fetchNotifsForPopup();
+            })
+            .subscribe();
+
+        // Subscribe to Realtime Events (New Events with Images)
+        _supabase
+            .channel('public:events')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'events' }, payload => {
+                const ev = payload.new;
+                showSystemNotification(`New Event: ${ev.title}`, `Join us on ${new Date(ev.event_date).toLocaleDateString()} at ${ev.event_time}`, ev.image_url);
+                // Reschedule reminders for this new event
+                checkUpcomingEvents();
+            })
+            .subscribe();
+    }
+
+    // Check for today's events and schedule reminders
+    checkUpcomingEvents();
+}
+
+async function checkUpcomingEvents() {
+    if (typeof _supabase === 'undefined') return;
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    const { data: events } = await _supabase
+        .from('events')
+        .select('*')
+        .eq('event_date', todayStr);
+
+    if (events) {
+        events.forEach(ev => {
+            if (!ev.event_time) return;
+
+            const [hours, minutes] = ev.event_time.split(':');
+            const eventTime = new Date();
+            eventTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+
+            const now = new Date();
+            const timeDiff = eventTime - now;
+
+            // Schedule a reminder 30 minutes before the event starts
+            const reminderLeadTime = 30 * 60 * 1000; // 30 mins
+            if (timeDiff > reminderLeadTime) {
+                setTimeout(() => {
+                    showSystemNotification(`Upcoming: ${ev.title}`, `Starting in 30 minutes at ${ev.location}!`, ev.image_url);
+                }, timeDiff - reminderLeadTime);
+            }
+
+            // Immediate reminder if it starts in less than 30 mins but hasn't started yet
+            if (timeDiff > 0 && timeDiff <= reminderLeadTime) {
+                showSystemNotification(`Starting Soon: ${ev.title}`, `Event begins at ${ev.event_time} today!`, ev.image_url);
+            }
+        });
+    }
+}
+
+function showSystemNotification(title, message, image = null) {
+    if (Notification.permission === "granted") {
+        const options = {
+            body: message,
+            icon: window.location.origin + '/assets/images/logo_1.png',
+            badge: window.location.origin + '/assets/images/logo_1.png',
+            vibrate: [200, 100, 200],
+            tag: 'dmysc-notif-' + Date.now(),
+            requireInteraction: true
+        };
+
+        if (image) options.image = image;
+
+        const notification = new Notification(title, options);
+
+        notification.onclick = function () {
+            window.focus();
+            window.location.href = window.location.origin + '/user/event.html';
+            this.close();
+        };
+    }
+}
+
+// Auto-init for logged in users
+setTimeout(() => {
+    if (typeof _supabase !== 'undefined') {
+        _supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) setupBrowserNotifications();
+        });
+    }
+}, 2000);

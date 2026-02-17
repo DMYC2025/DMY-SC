@@ -250,9 +250,13 @@
 
         // 3. Fetch Notifications Logic
         async function fetchNotifications() {
+            const { data: { session } } = await _supabase.auth.getSession();
+            const userId = session?.user?.id;
+
             const { data, error } = await _supabase
                 .from('notifications')
                 .select('*')
+                .or(`user_id.eq.${userId},user_id.is.null`)
                 .order('created_at', { ascending: false });
 
             const feed = document.getElementById('notificationFeed');
@@ -326,7 +330,7 @@
         checkAccess();
         fetchNotifications();
     </script>
-    <div id="global-footer-placeholder"></div>
+
     <script src="../assets/js/footer-loader.js"></script>
 </body>
 

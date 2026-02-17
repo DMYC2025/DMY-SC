@@ -243,7 +243,7 @@
                         <h3 class="text-base font-display font-medium text-[#E3E3E3] flex items-center gap-2">
                             <span class="bg-primary/10 text-primary p-1.5 rounded-full"><span
                                     class="material-symbols-rounded text-sm">bar_chart</span></span>
-                            Weekly Member Registration
+                            Daily Member Registration
                         </h3>
                         <p class="text-[10px] text-[#8e918f] font-mono">Click on bars to view details</p>
                     </div>
@@ -662,7 +662,7 @@
         let memberDataCache = [];
         let allProfilesCache = [];
         let activeMembersCache = []; // Cache for ID Cards
-        let weeklyMemberData = {}; // NEW: Store members grouped by week
+        let dailyMemberData = {}; // Updated: Store members grouped by day
 
         // Initialization: Checks if User is Admin
         async function initAdmin() {
@@ -714,90 +714,130 @@
         }
 
         // ----------------------------------------------------
-        // UPDATED: Render ApexChart with Weekly Grouping
+        // UPDATED: Render ApexChart with Daily Grouping (By Join Date)
         // ----------------------------------------------------
         function renderGrowthChart(data) {
-            weeklyMemberData = {}; // Reset cache
+            dailyMemberData = {}; // Reset cache
+            const membersOnly = data.filter(m => m.role === 'member').sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
-            // Helper to get week label (e.g., "Week 3, Jan")
-            function getWeekLabel(dateStr) {
-                const date = new Date(dateStr);
-                const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-                const dayOfWeek = firstDayOfMonth.getDay(); // 0-6
-                const dayOfMonth = date.getDate();
-
-                // Calculate week number in month (approx)
-                const weekNum = Math.ceil((dayOfMonth + dayOfWeek) / 7);
-                const month = date.toLocaleString('default', { month: 'short' });
-                const year = date.getFullYear();
-
-                return `Week ${weekNum} - ${month} ${year}`;
+            if (membersOnly.length === 0) {
+                document.querySelector("#growthChart").innerHTML = `<div class="flex items-center justify-center h-full text-[#8e918f] text-sm font-display">Waiting for member registrations...</div>`;
+                return;
             }
 
-            // Group by Week
-            data.forEach(m => {
-                if (m.role !== 'member') return; // Filter admins if needed
-                const key = getWeekLabel(m.created_at);
-                if (!weeklyMemberData[key]) weeklyMemberData[key] = [];
-                weeklyMemberData[key].push(m);
+            // Group by Day (Join Date)
+            function getDayLabel(dateStr) {
+                const date = new Date(dateStr);
+                // Including year to prevent overlap if data spans long periods
+                return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' });
+            }
+
+            membersOnly.forEach(m => {
+                const key = getDayLabel(m.created_at);
+                if (!dailyMemberData[key]) dailyMemberData[key] = [];
+                dailyMemberData[key].push(m);
             });
 
-            // Sort keys by actual date (using first member's date as proxy)
-            const keys = Object.keys(weeklyMemberData).sort((a, b) => {
-                const dateA = new Date(weeklyMemberData[a][0].created_at);
-                const dateB = new Date(weeklyMemberData[b][0].created_at);
+            const keys = Object.keys(dailyMemberData).sort((a, b) => {
+                const dateA = new Date(dailyMemberData[a][0].created_at);
+                const dateB = new Date(dailyMemberData[b][0].created_at);
                 return dateA - dateB;
             });
 
-            const values = keys.map(k => weeklyMemberData[k].length);
+            const dailyCounts = keys.map(k => dailyMemberData[k].length);
 
-            var options = {
-                series: [{ name: 'New Members', data: values }],
+            // Running total for "Growth"
+            let runningTotal = 0;
+            const cumulativeCounts = dailyCounts.map(count => {
+                runningTotal += count;
+                return runningTotal;
+            });
+
+            const options = {
+                series: [
+                    { name: 'Daily New Joins', type: 'column', data: dailyCounts },
+                    { name: 'Total Community Growth', type: 'line', data: cumulativeCounts }
+                ],
                 chart: {
-                    type: 'bar',
-                    height: 300,
+                    height: 320,
+                    type: 'line',
+                    stacked: false,
                     toolbar: { show: false },
                     background: 'transparent',
-                    fontFamily: 'Roboto, sans-serif',
+                    fontFamily: 'Outfit, sans-serif',
                     events: {
-                        // Click Event for Chart Columns
-                        dataPointSelection: function (event, chartContext, config) {
+                        dataPointSelection: (event, chartContext, config) => {
                             const selectedIndex = config.dataPointIndex;
-                            const weekLabel = keys[selectedIndex];
-                            showChartDetails(weekLabel);
+                            const dayLabel = keys[selectedIndex];
+                            showChartDetails(dayLabel);
                         }
                     }
                 },
-                colors: ['#a8c7fa'],
-                plotOptions: {
-                    bar: { borderRadius: 4, columnWidth: '40%', distributed: true }
+                stroke: { width: [0, 4], curve: 'smooth' },
+                colors: ['#a8c7fa', '#a0cfd0'], // Google-ish palette
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        inverseColors: false,
+                        shade: 'dark',
+                        type: 'vertical',
+                        opacityFrom: [0.85, 0.4],
+                        opacityTo: [0.85, 0.1],
+                    }
                 },
-                dataLabels: { enabled: false },
+                plotOptions: {
+                    bar: { borderRadius: 4, columnWidth: '50%' }
+                },
+                markers: {
+                    size: [0, 5],
+                    colors: ["#121212"],
+                    strokeColors: "#a0cfd0",
+                    strokeWidth: 3
+                },
                 xaxis: {
                     categories: keys,
-                    labels: { style: { colors: '#8e918f', fontSize: '10px' }, rotate: -45 },
+                    labels: {
+                        style: { colors: '#8e918f', fontSize: '9px' },
+                        rotate: -45,
+                        hideOverlappingLabels: true
+                    },
                     axisBorder: { show: false },
                     axisTicks: { show: false }
                 },
-                yaxis: { labels: { style: { colors: '#8e918f' } } },
+                yaxis: [
+                    {
+                        title: { text: "Daily Joins", style: { color: '#a8c7fa', fontWeight: 600 } },
+                        labels: { style: { colors: '#a8c7fa' } }
+                    },
+                    {
+                        opposite: true,
+                        title: { text: "Total Strength", style: { color: '#a0cfd0', fontWeight: 600 } },
+                        labels: { style: { colors: '#a0cfd0' } }
+                    }
+                ],
                 grid: { borderColor: '#353539', strokeDashArray: 4 },
                 theme: { mode: 'dark' },
-                tooltip: { theme: 'dark', y: { formatter: function (val) { return val + " members" } } },
-                legend: { show: false }
+                tooltip: {
+                    theme: 'dark',
+                    shared: true,
+                    intersect: false,
+                    y: { formatter: (val) => `${val} Members` }
+                },
+                legend: { position: 'top', labels: { colors: '#E3E3E3' } }
             };
 
             const chartEl = document.querySelector("#growthChart");
             chartEl.innerHTML = "";
-            var chart = new ApexCharts(chartEl, options);
+            const chart = new ApexCharts(chartEl, options);
             chart.render();
         }
 
-        // Show Weekly Details Modal
-        function showChartDetails(weekLabel) {
-            const members = weeklyMemberData[weekLabel];
+        // Show Daily Details Modal
+        function showChartDetails(dayLabel) {
+            const members = dailyMemberData[dayLabel];
             if (!members) return;
 
-            document.getElementById('chartModalTitle').innerText = weekLabel;
+            document.getElementById('chartModalTitle').innerText = dayLabel;
             const list = document.getElementById('chartModalList');
             list.innerHTML = '';
 
