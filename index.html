@@ -216,13 +216,23 @@
                 data-aos="fade-up" data-aos-delay="400">
 
                 <a href="up and in/login.html"
-                    class="w-full md:w-auto px-8 py-4 rounded-full bg-primary text-[#003915] font-bold text-sm uppercase tracking-wider hover:bg-[#b1fcc5] shadow-lg hover:shadow-primary/40 transition-all duration-300 transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2">
-                    <span class="material-symbols-rounded text-xl">login</span> Access Account
+                    class="w-full md:w-auto px-8 py-3 rounded-full bg-primary text-[#003915] hover:bg-[#b1fcc5] shadow-lg hover:shadow-primary/40 transition-all duration-300 transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3 group">
+                    <span class="material-symbols-rounded text-2xl bg-white/20 p-2 rounded-full">login</span>
+                    <div class="flex flex-col text-left">
+                        <span class="font-bold text-sm uppercase tracking-wider leading-none">Access Account</span>
+                        <span class="text-[11px] font-semibold leading-tight normal-case mt-0.5">Login to your
+                            dashboard</span>
+                    </div>
                 </a>
 
                 <a href="up and in/reg.html"
-                    class="w-full md:w-auto px-8 py-4 rounded-full bg-[#353539] border border-white/10 text-white font-bold text-sm uppercase tracking-wider hover:bg-[#444449] hover:border-white/30 transition-all duration-300 transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2 shadow-lg">
-                    <span class="material-symbols-rounded text-xl">person_add</span> Join Club
+                    class="w-full md:w-auto px-8 py-3 rounded-full bg-[#353539] border border-white/10 text-white hover:bg-[#444449] hover:border-white/30 transition-all duration-300 transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3 shadow-lg group">
+                    <span class="material-symbols-rounded text-2xl bg-white/10 p-2 rounded-full">person_add</span>
+                    <div class="flex flex-col text-left">
+                        <span class="font-bold text-sm uppercase tracking-wider leading-none">Join Club</span>
+                        <span class="text-[11px] font-semibold text-gray-300 leading-tight normal-case mt-0.5">Become a
+                            new member</span>
+                    </div>
                 </a>
             </div>
 
@@ -730,6 +740,29 @@
         loadStats();
         loadFooterData();
         checkBadge();
+        async function checkAutoLogin() {
+            try {
+                const { data: { session } } = await _supabase.auth.getSession();
+
+                // 1. If Logged In -> Go to User Dashboard
+                if (session) {
+                    window.location.href = 'user/index.html';
+                    return;
+                }
+
+                // 2. If Not Logged In + Running as PWA/Shortcut (Standalone) -> Go to Login Page
+                // This ensures Home Screen Shortcuts don't show the Landing Page, but prompt for Login.
+                const isStandalone = window.matchMedia('(display-mode: standalone)').matches || ("standalone" in window.navigator && window.navigator.standalone === true);
+
+                if (isStandalone) {
+                    window.location.href = 'up and in/login.html';
+                }
+
+            } catch (error) {
+                console.error("Auto-login check failed", error);
+            }
+        }
+        checkAutoLogin();
     </script>
 </body>
 

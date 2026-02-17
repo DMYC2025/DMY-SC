@@ -1,7 +1,7 @@
 {
   "name": "Dream Makers Youth & Sports Club",
   "short_name": "DMYSC",
-  "start_url": "index.html",
+  "start_url": "user/index.html",
   "display": "standalone",
   "background_color": "#121212",
   "theme_color": "#121212",
