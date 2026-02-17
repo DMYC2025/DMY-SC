@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="dark">
 
 <head>
@@ -21,8 +21,8 @@
                         surface: '#1E1E1E',
                         'surface-container': '#252529',
                         'surface-bright': '#3b3b3f',
-                        primary: '#a6f7bd',
-                        'on-primary': '#003915',
+                        primary: '#a8c7fa',
+                        'on-primary': '#062e6f',
                         secondary: '#c2c9bd',
                         tertiary: '#a0cfd0',
                         error: '#ffb4ab',
@@ -60,8 +60,8 @@
         }
 
         .cal-day.today {
-            background: #a6f7bd !important;
-            color: #003915 !important;
+            background: #a8c7fa !important;
+            color: #062e6f !important;
             font-weight: 700;
         }
 
@@ -224,7 +224,7 @@
                             <span class="material-symbols-rounded text-4xl md:text-5xl text-primary">event_note</span>
                             Event Manager
                         </h1>
-                        <p class="text-[#a6f7bd] text-sm font-medium mt-2 opacity-90 tracking-wide uppercase">Schedule &
+                        <p class="text-[#a8c7fa] text-sm font-medium mt-2 opacity-90 tracking-wide uppercase">Schedule &
                             Manage Activities</p>
                     </div>
                 </div>
@@ -412,7 +412,7 @@
                 list.innerHTML += `
                 <div class="m3-card p-5 bg-[#1E1E1E] border border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 group">
                     <div class="flex gap-4 items-center">
-                        <div class="w-12 h-12 rounded-2xl bg-[#252529] flex flex-col items-center justify-center border border-white/5 shrink-0">
+                        <div class="w-12 h-12 rounded-xl bg-[#252529] flex flex-col items-center justify-center border border-white/5 shrink-0">
                             <span class="text-[10px] font-bold text-primary uppercase">${new Date(ev.event_date).toLocaleString('default', { month: 'short' })}</span>
                             <span class="text-xl font-display font-bold text-[#E3E3E3]">${new Date(ev.event_date).getDate()}</span>
                         </div>
@@ -502,7 +502,7 @@
                 const type = window.DMY_HOLIDAYS.getType(holiday);
                 const isPoya = type === 'poya';
                 content += `
-                    <div class="p-4 rounded-2xl ${isPoya ? 'bg-[#3c2f10] border-yellow-500/20' : 'bg-[#3c2525] border-error/20'} border mb-4">
+                    <div class="p-4 rounded-xl ${isPoya ? 'bg-[#3c2f10] border-yellow-500/20' : 'bg-[#3c2525] border-error/20'} border mb-4">
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-rounded ${isPoya ? 'text-yellow-500' : 'text-error'}">${isPoya ? 'brightness_7' : 'celebration'}</span>
                             <div><h4 class="text-sm font-bold text-white">${holiday}</h4><p class="text-[10px] uppercase font-bold opacity-70">${type} Day</p></div>
@@ -512,7 +512,7 @@
             if (events.length > 0) {
                 content += '<h5 class="text-[10px] font-bold text-[#8e918f] uppercase mb-2">Club Activities</h5>';
                 events.forEach(ev => {
-                    content += `<div class="p-4 rounded-2xl bg-[#252529] border border-white/5 mb-2"><h4 class="text-sm font-bold text-[#E3E3E3] mb-1">${ev.title}</h4></div>`;
+                    content += `<div class="p-4 rounded-xl bg-[#252529] border border-white/5 mb-2"><h4 class="text-sm font-bold text-[#E3E3E3] mb-1">${ev.title}</h4></div>`;
                 });
             } else if (!holiday) {
                 content = '<div class="py-10 text-center opacity-40 text-xs">No entries.</div>';

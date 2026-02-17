@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="dark">
 
 <head>
@@ -21,8 +21,8 @@
                         surface: '#1E1E1E',
                         'surface-container': '#252529',
                         'surface-bright': '#3b3b3f',
-                        primary: '#a6f7bd',
-                        'on-primary': '#003915',
+                        primary: '#a8c7fa',
+                        'on-primary': '#062e6f',
                         secondary: '#c2c9bd',
                         tertiary: '#a0cfd0',
                         error: '#ffb4ab',
@@ -158,8 +158,8 @@
                                     <label
                                         class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">Priority</label>
                                     <select id="priority" class="w-full m3-input p-3 text-[#E3E3E3]">
-                                        <option value="normal" class="bg-[#252529]">🔵 Normal</option>
-                                        <option value="urgent" class="bg-[#252529]">🔴 Urgent</option>
+                                        <option value="normal" class="bg-[#252529]">ðŸ”µ Normal</option>
+                                        <option value="urgent" class="bg-[#252529]">ðŸ”´ Urgent</option>
                                     </select>
                                 </div>
                                 <button type="submit"
@@ -236,11 +236,11 @@
                 data.forEach(n => {
                     const isUrgent = n.priority === 'urgent';
                     const border = isUrgent ? 'border-error' : 'border-primary';
-                    const bgIcon = isUrgent ? 'bg-[#3c2525] text-[#ffb4ab]' : 'bg-[#003915] text-[#a6f7bd]';
+                    const bgIcon = isUrgent ? 'bg-[#3c2525] text-[#ffb4ab]' : 'bg-[#062e6f] text-[#a8c7fa]';
                     const icon = isUrgent ? 'priority_high' : 'info';
 
                     list.innerHTML += `
-                        <div class="bg-[#252529] p-5 rounded-2xl border border-white/5 border-l-4 ${border} relative group hover:bg-[#303036] transition">
+                        <div class="bg-[#252529] p-5 rounded-xl border border-white/5 border-l-4 ${border} relative group hover:bg-[#303036] transition">
                             <div class="flex justify-between items-start gap-4">
                                 <div class="flex gap-4">
                                     <div class="w-10 h-10 rounded-full ${bgIcon} flex items-center justify-center shrink-0"><span class="material-symbols-rounded text-xl">${icon}</span></div>

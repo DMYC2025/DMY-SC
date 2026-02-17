@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="dark">
 
 <head>
@@ -22,8 +22,8 @@
                         surface: '#1E1E1E',
                         'surface-container': '#252529',
                         'surface-bright': '#3b3b3f',
-                        primary: '#a6f7bd',
-                        'on-primary': '#003915',
+                        primary: '#a8c7fa',
+                        'on-primary': '#062e6f',
                         secondary: '#c2c9bd',
                         tertiary: '#a0cfd0',
                         error: '#ffb4ab',
@@ -225,14 +225,14 @@
 
                     <!-- System Status -->
                     <div onclick="openSystemStatus()"
-                        class="cursor-pointer m3-card p-6 bg-[#00210b] relative overflow-hidden group border border-[#003915] transition"
+                        class="cursor-pointer m3-card p-6 bg-[#00210b] relative overflow-hidden group border border-[#062e6f] transition"
                         data-aos="fade-up" data-aos-delay="150">
                         <div
-                            class="mb-4 w-12 h-12 rounded-full bg-[#003915] flex items-center justify-center text-primary">
+                            class="mb-4 w-12 h-12 rounded-full bg-[#062e6f] flex items-center justify-center text-primary">
                             <span class="material-symbols-rounded text-[24px]">wifi</span>
                         </div>
                         <h3 class="text-xl font-display font-bold text-primary mb-1">ONLINE</h3>
-                        <p class="text-xs font-medium text-[#a6f7bd] opacity-70 uppercase tracking-wide">System Status
+                        <p class="text-xs font-medium text-[#a8c7fa] opacity-70 uppercase tracking-wide">System Status
                         </p>
                     </div>
                 </div>
@@ -263,7 +263,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <a href="members.html"
-                            class="flex items-center gap-4 p-4 rounded-2xl bg-[#252529] hover:bg-[#303036] hover:shadow-lg transition group border border-white/5">
+                            class="flex items-center gap-4 p-4 rounded-xl bg-[#252529] hover:bg-[#303036] hover:shadow-lg transition group border border-white/5">
                             <div
                                 class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition">
                                 <span class="material-symbols-rounded text-2xl">person_add</span>
@@ -274,7 +274,7 @@
                             </div>
                         </a>
                         <a href="notifications.html"
-                            class="flex items-center gap-4 p-4 rounded-2xl bg-[#252529] hover:bg-[#303036] hover:shadow-lg transition group border border-white/5">
+                            class="flex items-center gap-4 p-4 rounded-xl bg-[#252529] hover:bg-[#303036] hover:shadow-lg transition group border border-white/5">
                             <div
                                 class="w-12 h-12 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center group-hover:scale-110 transition">
                                 <span class="material-symbols-rounded text-2xl">send</span>
@@ -285,7 +285,7 @@
                             </div>
                         </a>
                         <a href="events.html"
-                            class="flex items-center gap-4 p-4 rounded-2xl bg-[#252529] hover:bg-[#303036] hover:shadow-lg transition group border border-white/5">
+                            class="flex items-center gap-4 p-4 rounded-xl bg-[#252529] hover:bg-[#303036] hover:shadow-lg transition group border border-white/5">
                             <div
                                 class="w-12 h-12 rounded-full bg-purple-500/10 text-purple-500 flex items-center justify-center group-hover:scale-110 transition">
                                 <span class="material-symbols-rounded text-2xl">event_note</span>
@@ -400,7 +400,7 @@
     <div id="pendingModal"
         class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity">
         <div
-            class="bg-[#252529] border border-white/10 p-6 rounded-[28px] shadow-2xl max-w-lg w-full relative transform transition-all scale-100">
+            class="bg-[#252529] border border-white/10 p-6 rounded-xl shadow-2xl max-w-lg w-full relative transform transition-all scale-100">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-xl font-display font-medium text-[#E3E3E3] flex items-center gap-2">
                     <span class="material-symbols-rounded text-[#ffb4ab]">person_add</span> Pending Approvals
@@ -420,7 +420,7 @@
     <div id="chartDetailsModal"
         class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
         <div
-            class="bg-[#252529] border border-white/10 p-6 rounded-[28px] shadow-2xl max-w-md w-full relative transform transition-all scale-100">
+            class="bg-[#252529] border border-white/10 p-6 rounded-xl shadow-2xl max-w-md w-full relative transform transition-all scale-100">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-xl font-display font-medium text-[#E3E3E3] flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary">event_available</span>
@@ -441,7 +441,7 @@
     <div id="systemStatusModal"
         class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
         <div
-            class="bg-[#252529] border border-white/10 p-8 rounded-[28px] shadow-2xl max-w-5xl w-full relative transform transition-all scale-100 max-h-[85vh] flex flex-col">
+            class="bg-[#252529] border border-white/10 p-8 rounded-xl shadow-2xl max-w-5xl w-full relative transform transition-all scale-100 max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center mb-6 shrink-0">
                 <h3 class="text-xl font-display font-medium text-[#E3E3E3] flex items-center gap-2">
                     <span class="material-symbols-rounded text-primary">shield</span> System Logs & Status
@@ -484,10 +484,10 @@
             <div id="cardPreviewContainer" class="w-full relative group transform transition hover:scale-[1.02]">
                 <!-- Glow Effect -->
                 <div
-                    class="absolute -inset-1 bg-gradient-to-r from-brand-green to-blue-600 rounded-[2rem] blur opacity-25 group-hover:opacity-50 transition duration-1000">
+                    class="absolute -inset-1 bg-gradient-to-r from-brand-green to-blue-600 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000">
                 </div>
 
-                <div class="relative glass-card rounded-[1.8rem] overflow-hidden shadow-2xl">
+                <div class="relative glass-card rounded-xl overflow-hidden shadow-2xl">
                     <!-- Header Banner -->
                     <div class="relative h-32 bg-gradient-to-r from-green-900 to-slate-900">
                         <div class="absolute inset-0 bg-pattern"></div>
@@ -768,7 +768,7 @@
                         }
                     }
                 },
-                colors: ['#a6f7bd'],
+                colors: ['#a8c7fa'],
                 plotOptions: {
                     bar: { borderRadius: 4, columnWidth: '40%', distributed: true }
                 },
@@ -803,7 +803,7 @@
 
             members.forEach(m => {
                 list.innerHTML += `
-                    <div class="flex items-center justify-between bg-[#1E1E1E] p-3 rounded-2xl border border-white/5 animate-fade-in-up">
+                    <div class="flex items-center justify-between bg-[#1E1E1E] p-3 rounded-xl border border-white/5 animate-fade-in-up">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs">
                                 ${m.full_name.charAt(0)}
@@ -857,7 +857,7 @@
                 };
 
                 let tableHTML = `
-                    <div class="overflow-x-auto rounded-2xl border border-[#353539]">
+                    <div class="overflow-x-auto rounded-xl border border-[#353539]">
                         <table class="w-full text-left text-sm text-[#C4C7C5]">
                             <thead class="bg-[#252529] text-xs uppercase font-bold text-[#E3E3E3] sticky top-0 z-10">
                                 <tr>
@@ -950,7 +950,7 @@
             } else {
                 pending.forEach(m => {
                     list.innerHTML += `
-                        <div class="flex items-center justify-between bg-[#1E1E1E] p-4 rounded-2xl border border-white/5 hover:bg-[#252529] transition">
+                        <div class="flex items-center justify-between bg-[#1E1E1E] p-4 rounded-xl border border-white/5 hover:bg-[#252529] transition">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm">
                                     ${m.full_name.charAt(0)}

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="dark">
 
 <head>
@@ -21,8 +21,8 @@
                         surface: '#1E1E1E',
                         'surface-container': '#252529',
                         'surface-bright': '#3b3b3f',
-                        primary: '#a6f7bd',
-                        'on-primary': '#003915',
+                        primary: '#a8c7fa',
+                        'on-primary': '#062e6f',
                         secondary: '#c2c9bd',
                         tertiary: '#a0cfd0',
                         error: '#ffb4ab',
@@ -137,7 +137,7 @@
                             Member
                             Management
                         </h1>
-                        <p class="text-[#a6f7bd] text-sm font-medium mt-2 opacity-90 tracking-wide uppercase">Approve &
+                        <p class="text-[#a8c7fa] text-sm font-medium mt-2 opacity-90 tracking-wide uppercase">Approve &
                             Manage Members</p>
                     </div>
                 </div>
@@ -145,7 +145,7 @@
 
             <div class="max-w-7xl mx-auto px-4 lg:px-8 relative z-10 pb-12">
 
-                <div class="m3-card p-4 rounded-[24px] mb-6 bg-[#1E1E1E] border border-white/5 flex flex-col gap-6"
+                <div class="m3-card p-4 rounded-xl mb-6 bg-[#1E1E1E] border border-white/5 flex flex-col gap-6"
                     data-aos="fade-up">
 
                     <!-- M3 Tabs -->
@@ -171,7 +171,7 @@
                             class="tab-btn flex-1 py-4 text-sm font-medium flex items-center justify-center gap-2 whitespace-nowrap">
                             <span class="material-symbols-rounded text-lg">check_circle</span> Active <span
                                 id="count-active"
-                                class="bg-[#003915] text-[#a6f7bd] px-2 py-0.5 rounded-full text-[10px]">0</span>
+                                class="bg-[#062e6f] text-[#a8c7fa] px-2 py-0.5 rounded-full text-[10px]">0</span>
                         </button>
                     </div>
 
@@ -204,7 +204,7 @@
                 </div>
 
                 <!-- Members Table -->
-                <div class="bg-[#1E1E1E] rounded-[24px] shadow-xl border border-white/5 overflow-hidden"
+                <div class="bg-[#1E1E1E] rounded-xl shadow-xl border border-white/5 overflow-hidden"
                     data-aos="fade-up" data-aos-delay="100">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse min-w-[800px]">
@@ -243,7 +243,7 @@
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
         <div
             class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl p-4 max-h-[90vh] overflow-y-auto">
-            <div class="bg-[#1E1E1E] rounded-[28px] shadow-2xl border border-white/5 overflow-hidden">
+            <div class="bg-[#1E1E1E] rounded-xl shadow-2xl border border-white/5 overflow-hidden">
                 <div
                     class="p-6 border-b border-[#353539] flex justify-between items-center bg-[#252529] sticky top-0 z-10 backdrop-blur-md">
                     <h3 class="text-lg font-display font-medium text-[#E3E3E3] flex items-center gap-2"><span
@@ -310,7 +310,7 @@
                         </select>
                     </div>
                     <button type="submit"
-                        class="w-full bg-[#003915] text-[#a6f7bd] hover:text-white hover:bg-primary py-3.5 rounded-full font-bold mt-4 transition shadow-lg">Save
+                        class="w-full bg-[#062e6f] text-[#a8c7fa] hover:text-white hover:bg-primary py-3.5 rounded-full font-bold mt-4 transition shadow-lg">Save
                         All Changes</button>
                 </form>
             </div>
@@ -321,7 +321,7 @@
     <div id="deletePopup"
         class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
         <div
-            class="bg-[#1E1E1E] border border-white/10 p-8 rounded-[28px] shadow-2xl max-w-sm w-full text-center relative overflow-hidden">
+            class="bg-[#1E1E1E] border border-white/10 p-8 rounded-xl shadow-2xl max-w-sm w-full text-center relative overflow-hidden">
             <!-- Countdown Bar -->
             <div class="absolute top-0 left-0 h-1 bg-red-400 countdown-bar w-full"></div>
 
@@ -344,14 +344,14 @@
     <!-- Success Popup -->
     <div id="successPopup"
         class="fixed inset-0 z-[70] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
-        <div class="bg-[#1E1E1E] border border-white/10 p-8 rounded-[28px] shadow-2xl max-w-sm w-full text-center">
-            <div class="w-16 h-16 bg-[#003915] rounded-full flex items-center justify-center mx-auto mb-4">
+        <div class="bg-[#1E1E1E] border border-white/10 p-8 rounded-xl shadow-2xl max-w-sm w-full text-center">
+            <div class="w-16 h-16 bg-[#062e6f] rounded-full flex items-center justify-center mx-auto mb-4">
                 <span class="material-symbols-rounded text-3xl text-primary">check_circle</span>
             </div>
             <h3 class="text-xl font-display font-medium text-[#E3E3E3] mb-2">Success!</h3>
             <p class="text-[#8e918f] text-sm mb-6">Member deleted successfully.</p>
             <button onclick="closeSuccess()"
-                class="w-full py-3 rounded-full bg-[#003915] hover:bg-primary hover:text-black text-[#a6f7bd] font-medium transition shadow-lg">Close</button>
+                class="w-full py-3 rounded-full bg-[#062e6f] hover:bg-primary hover:text-black text-[#a8c7fa] font-medium transition shadow-lg">Close</button>
         </div>
     </div>
 
@@ -469,7 +469,7 @@
                 const age = calculateAge(m.dob);
                 let badge = m.role === 'admin' ?
                     `<span class="bg-purple-900/20 text-purple-300 px-3 py-1 rounded-lg text-xs font-bold border border-purple-500/20">Admin</span>` :
-                    (isApproved ? `<span class="bg-[#003915] text-[#a6f7bd] px-3 py-1 rounded-lg text-xs font-bold border border-[#a6f7bd]/20">Active</span>` :
+                    (isApproved ? `<span class="bg-[#062e6f] text-[#a8c7fa] px-3 py-1 rounded-lg text-xs font-bold border border-[#a8c7fa]/20">Active</span>` :
                         `<span class="bg-[#3c2525] text-[#ffb4ab] px-3 py-1 rounded-lg text-xs font-bold animate-pulse border border-[#ffb4ab]/20">Pending</span>`);
 
                 tbody.innerHTML += `
@@ -497,7 +497,7 @@
                         <td class="p-6">${badge}</td>
                         <td class="p-6 text-right">
                              <div class="flex items-center justify-end gap-2 opacity-100">
-                                <button onclick="toggleStatus('${m.id}', ${!isApproved})" title="${isApproved ? 'Deactivate' : 'Activate'}" class="h-10 w-10 flex items-center justify-center rounded-full transition ${isApproved ? 'bg-[#3c2525] text-[#ffb4ab] hover:bg-[#ffb4ab] hover:text-[#3c2525]' : 'bg-[#003915] text-[#a6f7bd] hover:bg-[#a6f7bd] hover:text-[#003915]'}">
+                                <button onclick="toggleStatus('${m.id}', ${!isApproved})" title="${isApproved ? 'Deactivate' : 'Activate'}" class="h-10 w-10 flex items-center justify-center rounded-full transition ${isApproved ? 'bg-[#3c2525] text-[#ffb4ab] hover:bg-[#ffb4ab] hover:text-[#3c2525]' : 'bg-[#062e6f] text-[#a8c7fa] hover:bg-[#a8c7fa] hover:text-[#062e6f]'}">
                                     <span class="material-symbols-rounded text-lg">${isApproved ? 'block' : 'check'}</span>
                                 </button>
                                 <button onclick="openEditModal('${m.id}')" title="Edit Full Profile" class="h-10 w-10 flex items-center justify-center rounded-full bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition">

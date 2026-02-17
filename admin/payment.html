@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="dark">
 
 <head>
@@ -21,8 +21,8 @@
                         surface: '#1E1E1E',
                         'surface-container': '#252529',
                         'surface-bright': '#3b3b3f',
-                        primary: '#a6f7bd',
-                        'on-primary': '#003915',
+                        primary: '#a8c7fa',
+                        'on-primary': '#062e6f',
                         secondary: '#c2c9bd',
                         tertiary: '#a0cfd0',
                         error: '#ffb4ab',
@@ -139,7 +139,7 @@
             </div>
 
             <div class="px-6 md:px-12 pb-0">
-                <div class="m3-card p-6 rounded-[2rem] bg-[#1E1E1E] border border-white/5 shadow-2xl relative overflow-hidden"
+                <div class="m3-card p-6 rounded-xl bg-[#1E1E1E] border border-white/5 shadow-2xl relative overflow-hidden"
                     data-aos="fade-down">
                     <div class="flex justify-between items-center mb-4 px-2">
                         <div>
@@ -161,7 +161,7 @@
 
                     <div class="lg:col-span-1 space-y-8">
 
-                        <div class="m3-card p-6 rounded-[2rem] bg-[#1E1E1E] border border-white/5 shadow-2xl"
+                        <div class="m3-card p-6 rounded-xl bg-[#1E1E1E] border border-white/5 shadow-2xl"
                             data-aos="fade-up">
                             <h3 class="text-xl font-display font-medium text-[#E3E3E3] mb-6 flex items-center gap-3">
                                 <span class="bg-primary/10 text-primary p-2 rounded-full"><span
@@ -266,7 +266,7 @@
                                 </div>
 
                                 <button onclick="recordBulkPayment()"
-                                    class="w-full py-4 bg-[#003915] hover:bg-[#004d1b] text-[#a6f7bd] font-bold rounded-full shadow-lg transition transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 border border-[#a6f7bd]/20">
+                                    class="w-full py-4 bg-[#062e6f] hover:bg-[#0b4ec7] text-[#a8c7fa] font-bold rounded-full shadow-lg transition transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 border border-[#a8c7fa]/20">
                                     <span class="material-symbols-rounded">check_circle</span> Record Payments
                                 </button>
                             </div>
@@ -275,7 +275,7 @@
 
                     <div class="lg:col-span-2" data-aos="fade-up" data-aos-delay="200">
                         <div
-                            class="m3-card p-6 rounded-[2rem] bg-[#1E1E1E] border border-white/5 shadow-2xl h-full flex flex-col">
+                            class="m3-card p-6 rounded-xl bg-[#1E1E1E] border border-white/5 shadow-2xl h-full flex flex-col">
                             <div class="flex justify-between items-center mb-6">
                                 <div>
                                     <h3 class="text-xl font-display font-medium text-[#E3E3E3] flex items-center gap-2">
@@ -290,7 +290,7 @@
                                 </button>
                             </div>
 
-                            <div class="flex-1 overflow-hidden rounded-2xl border border-white/5 bg-[#121212]">
+                            <div class="flex-1 overflow-hidden rounded-xl border border-white/5 bg-[#121212]">
                                 <div class="overflow-x-auto h-full">
                                     <table class="w-full text-left text-sm text-[#C4C7C5]">
                                         <thead
@@ -323,7 +323,7 @@
     <div id="statusModal"
         class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
         <div
-            class="bg-[#1E1E1E] border border-white/5 p-6 rounded-[28px] shadow-2xl max-w-2xl w-full relative transform transition-all scale-100 flex flex-col max-h-[85vh]">
+            class="bg-[#1E1E1E] border border-white/5 p-6 rounded-xl shadow-2xl max-w-2xl w-full relative transform transition-all scale-100 flex flex-col max-h-[85vh]">
 
             <div class="flex justify-between items-center mb-6 shrink-0">
                 <div>
@@ -550,7 +550,7 @@
             if (!amount || selectedIds.length === 0) return alert("Please enter amount and select at least one member.");
 
             const totalRecords = monthsToProcess.length * selectedIds.length;
-            if (!confirm(`You are about to record ${totalRecords} payment records (${selectedIds.length} members × ${monthsToProcess.length} months).\n\nContinue?`)) {
+            if (!confirm(`You are about to record ${totalRecords} payment records (${selectedIds.length} members Ã— ${monthsToProcess.length} months).\n\nContinue?`)) {
                 return;
             }
 
@@ -573,7 +573,7 @@
                 }
             }
 
-            alert(`Processing Complete!\n\n✓ Success: ${successCount} records\n✗ Failed/Already Paid: ${errors} records`);
+            alert(`Processing Complete!\n\nâœ“ Success: ${successCount} records\nâœ— Failed/Already Paid: ${errors} records`);
             loadPayments();
             loadRevenueChart(); // Update Chart
 
@@ -633,7 +633,7 @@
                         }
                     }
                 },
-                colors: ['#a6f7bd'],
+                colors: ['#a8c7fa'],
                 plotOptions: { bar: { borderRadius: 4, columnWidth: '40%' } },
                 dataLabels: { enabled: false },
                 xaxis: { categories: sortedMonths, labels: { style: { colors: '#8e918f' } }, axisBorder: { show: false }, axisTicks: { show: false } },
@@ -666,7 +666,7 @@
 
             membersCache.forEach(m => {
                 const isPaid = paidIds.includes(m.id);
-                const bgClass = isPaid ? 'bg-[#003915]/20 border-primary/20' : 'bg-[#3c2525]/20 border-error/20';
+                const bgClass = isPaid ? 'bg-[#062e6f]/20 border-primary/20' : 'bg-[#3c2525]/20 border-error/20';
                 const textClass = isPaid ? 'text-primary' : 'text-error';
                 const icon = isPaid ? '<span class="material-symbols-rounded">check</span>' : '<span class="material-symbols-rounded">close</span>';
                 const statusText = isPaid ? 'PAID' : 'NOT PAID';
