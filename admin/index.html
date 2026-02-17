@@ -87,6 +87,10 @@
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">group</span> Members
                 </a>
+                <a href="payment.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">payments</span> Payments
+                </a>
                 <a href="events.html"
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">event</span> Events
@@ -99,7 +103,6 @@
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">notifications</span> Notifications
                 </a>
-
                 <a href="quick_links.html"
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">link</span> Quick Links
@@ -111,10 +114,6 @@
                 <a href="committee.html"
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">diversity_3</span> Committee
-                </a>
-                <a href="payment.html"
-                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
-                    <span class="material-symbols-rounded text-[20px]">payments</span> Payments
                 </a>
                 <a href="about.html"
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
@@ -159,14 +158,14 @@
             </div>
 
             <!-- M3 Header Section (Simplified) -->
-            <div class="relative px-6 md:px-12 pt-8 pb-8">
+            <div class="relative px-6 md:px-12 pt-6 pb-4">
                 <div class="flex items-end justify-between" data-aos="fade-up">
                     <div>
                         <div class="flex items-center gap-2 mb-1">
                             <span class="text-primary text-xs font-bold uppercase tracking-widest"
                                 id="dateDisplay">Loading...</span>
                         </div>
-                        <h1 class="text-3xl md:text-5xl font-display font-medium text-[#E3E3E3]">
+                        <h1 class="text-2xl md:text-4xl font-display font-medium text-[#E3E3E3]">
                             Welcome, <span id="adminName" class="text-primary">Admin</span>
                         </h1>
                     </div>
@@ -184,80 +183,80 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                     <!-- Total Members -->
                     <div onclick="window.location.href='members.html'"
-                        class="cursor-pointer m3-card p-6 relative overflow-hidden group hover:bg-[#252529] transition"
+                        class="cursor-pointer m3-card p-4 md:p-5 relative overflow-hidden group hover:bg-[#252529] transition"
                         data-aos="fade-up">
                         <div
-                            class="mb-4 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                            <span class="material-symbols-rounded text-[24px]">group</span>
+                            class="mb-3 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            <span class="material-symbols-rounded text-[20px]">group</span>
                         </div>
-                        <h3 class="text-4xl font-display font-medium text-[#E3E3E3] mb-1" id="totalMembers">...</h3>
-                        <p class="text-xs font-medium text-[#C4C7C5] uppercase tracking-wide">Total Members</p>
+                        <h3 class="text-3xl font-display font-medium text-[#E3E3E3] mb-0.5" id="totalMembers">...</h3>
+                        <p class="text-[10px] font-bold text-[#C4C7C5] uppercase tracking-wider">Total Members</p>
                         <span
-                            class="material-symbols-rounded absolute top-6 right-6 text-[#353539] text-[40px] opacity-20 group-hover:scale-110 transition">arrow_forward</span>
+                            class="material-symbols-rounded absolute top-4 right-4 text-[#353539] text-[32px] opacity-20 group-hover:scale-110 transition">arrow_forward</span>
                     </div>
 
                     <!-- Pending -->
                     <div onclick="openPendingModal()"
-                        class="cursor-pointer m3-card p-6 relative overflow-hidden group hover:bg-[#252529] transition"
+                        class="cursor-pointer m3-card p-4 md:p-5 relative overflow-hidden group hover:bg-[#252529] transition"
                         data-aos="fade-up" data-aos-delay="50">
                         <div
-                            class="mb-4 w-12 h-12 rounded-full bg-[#3c2525] flex items-center justify-center text-[#ffb4ab]">
-                            <span class="material-symbols-rounded text-[24px]">person_add</span>
+                            class="mb-3 w-10 h-10 rounded-full bg-[#3c2525] flex items-center justify-center text-[#ffb4ab]">
+                            <span class="material-symbols-rounded text-[20px]">person_add</span>
                         </div>
-                        <h3 class="text-4xl font-display font-medium text-[#E3E3E3] mb-1" id="pendingMembers">...</h3>
-                        <p class="text-xs font-medium text-[#C4C7C5] uppercase tracking-wide">Pending</p>
+                        <h3 class="text-3xl font-display font-medium text-[#E3E3E3] mb-0.5" id="pendingMembers">...</h3>
+                        <p class="text-[10px] font-bold text-[#C4C7C5] uppercase tracking-wider">Pending</p>
                         <div
-                            class="absolute right-0 top-0 w-2 h-full bg-[#ffb4ab] opacity-0 group-hover:opacity-100 transition">
+                            class="absolute right-0 top-0 w-1.5 h-full bg-[#ffb4ab] opacity-0 group-hover:opacity-100 transition">
                         </div>
                     </div>
 
                     <!-- Events -->
                     <div onclick="window.location.href='events.html'"
-                        class="cursor-pointer m3-card p-6 relative overflow-hidden group hover:bg-[#252529] transition"
+                        class="cursor-pointer m3-card p-4 md:p-5 relative overflow-hidden group hover:bg-[#252529] transition"
                         data-aos="fade-up" data-aos-delay="100">
                         <div
-                            class="mb-4 w-12 h-12 rounded-full bg-[#1b2e2b] flex items-center justify-center text-[#a0cfd0]">
-                            <span class="material-symbols-rounded text-[24px]">event_available</span>
+                            class="mb-3 w-10 h-10 rounded-full bg-[#1b2e2b] flex items-center justify-center text-[#a0cfd0]">
+                            <span class="material-symbols-rounded text-[20px]">event_available</span>
                         </div>
-                        <h3 class="text-4xl font-display font-medium text-[#E3E3E3] mb-1" id="eventCount">...</h3>
-                        <p class="text-xs font-medium text-[#C4C7C5] uppercase tracking-wide">Active Events</p>
+                        <h3 class="text-3xl font-display font-medium text-[#E3E3E3] mb-0.5" id="eventCount">...</h3>
+                        <p class="text-[10px] font-bold text-[#C4C7C5] uppercase tracking-wider">Active Events</p>
                     </div>
 
                     <!-- System Status -->
                     <div onclick="openSystemStatus()"
-                        class="cursor-pointer m3-card p-6 bg-[#00210b] relative overflow-hidden group border border-[#062e6f] transition"
+                        class="cursor-pointer m3-card p-4 md:p-5 bg-[#00210b] relative overflow-hidden group border border-[#062e6f] transition"
                         data-aos="fade-up" data-aos-delay="150">
                         <div
-                            class="mb-4 w-12 h-12 rounded-full bg-[#062e6f] flex items-center justify-center text-primary">
-                            <span class="material-symbols-rounded text-[24px]">wifi</span>
+                            class="mb-3 w-10 h-10 rounded-full bg-[#062e6f] flex items-center justify-center text-primary">
+                            <span class="material-symbols-rounded text-[20px]">wifi</span>
                         </div>
-                        <h3 class="text-xl font-display font-bold text-primary mb-1">ONLINE</h3>
-                        <p class="text-xs font-medium text-[#a8c7fa] opacity-70 uppercase tracking-wide">System Status
+                        <h3 class="text-lg font-display font-bold text-primary mb-0.5">ONLINE</h3>
+                        <p class="text-[10px] font-bold text-[#a8c7fa] opacity-70 uppercase tracking-wider">System
+                            Status
                         </p>
                     </div>
                 </div>
 
                 <!-- Member Growth Chart (WEEKLY) -->
-                <!-- Member Growth Chart (WEEKLY) -->
-                <div class="m3-card p-6 mb-8 bg-[#1E1E1E] border border-white/5" data-aos="fade-up">
+                <div class="m3-card p-4 md:p-6 mb-6 bg-[#1E1E1E] border border-white/5" data-aos="fade-up">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-display font-medium text-[#E3E3E3] flex items-center gap-2">
+                        <h3 class="text-base font-display font-medium text-[#E3E3E3] flex items-center gap-2">
                             <span class="bg-primary/10 text-primary p-1.5 rounded-full"><span
-                                    class="material-symbols-rounded">bar_chart</span></span>
+                                    class="material-symbols-rounded text-sm">bar_chart</span></span>
                             Weekly Member Registration
                         </h3>
-                        <p class="text-xs text-[#8e918f] font-mono">Click on bars to view details</p>
+                        <p class="text-[10px] text-[#8e918f] font-mono">Click on bars to view details</p>
                     </div>
                     <div id="growthChart" class="w-full h-72"></div>
                 </div>
 
                 <!-- Quick Actions Section (Removed AOS to fix visibility) -->
                 <!-- Quick Actions Section -->
-                <div class="m3-card p-8 mb-8 bg-[#1E1E1E] border border-white/5">
-                    <h3 class="text-lg font-display font-medium text-[#E3E3E3] mb-6 flex items-center gap-2">
+                <div class="m3-card p-5 md:p-6 mb-8 bg-[#1E1E1E] border border-white/5">
+                    <h3 class="text-base font-display font-medium text-[#E3E3E3] mb-4 flex items-center gap-2">
                         <span
-                            class="bg-yellow-500/10 text-yellow-500 p-2 rounded-full flex items-center justify-center"><span
-                                class="material-symbols-rounded">bolt</span></span>
+                            class="bg-yellow-500/10 text-yellow-500 p-1.5 rounded-full flex items-center justify-center"><span
+                                class="material-symbols-rounded text-sm">bolt</span></span>
                         Quick Actions
                     </h3>
 
@@ -301,13 +300,14 @@
                 <!-- Combined Reports & ID Cards Section -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                     <!-- Member Reports Section -->
-                    <div class="m3-card p-8 bg-[#1E1E1E] border border-white/5">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                    <div class="m3-card p-5 md:p-6 bg-[#1E1E1E] border border-white/5">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
                             <div>
-                                <h3 class="text-lg font-display font-medium text-[#E3E3E3] flex items-center gap-2">
-                                    <span class="material-symbols-rounded text-red-400">picture_as_pdf</span> Reports
+                                <h3 class="text-base font-display font-medium text-[#E3E3E3] flex items-center gap-2">
+                                    <span class="material-symbols-rounded text-red-400 text-sm">picture_as_pdf</span>
+                                    Reports
                                 </h3>
-                                <p class="text-xs text-[#8e918f] mt-1">Generate member PDF reports</p>
+                                <p class="text-[10px] text-[#8e918f] mt-0.5">Generate member PDF reports</p>
                             </div>
                             <button onclick="downloadPDF()"
                                 class="bg-[#3c2525] hover:bg-[#533535] text-[#ffb4ab] hover:text-white font-medium py-2.5 px-6 rounded-full shadow-lg transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
@@ -343,13 +343,13 @@
                     </div>
 
                     <!-- Club Identity Cards Section -->
-                    <div class="m3-card p-8 bg-[#1E1E1E] border border-white/5">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                    <div class="m3-card p-5 md:p-6 bg-[#1E1E1E] border border-white/5">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
                             <div>
-                                <h3 class="text-lg font-display font-medium text-[#E3E3E3] flex items-center gap-2">
-                                    <span class="material-symbols-rounded text-blue-400">badge</span> ID Cards
+                                <h3 class="text-base font-display font-medium text-[#E3E3E3] flex items-center gap-2">
+                                    <span class="material-symbols-rounded text-blue-400 text-sm">badge</span> ID Cards
                                 </h3>
-                                <p class="text-xs text-[#8e918f] mt-1">Manage active member IDs</p>
+                                <p class="text-[10px] text-[#8e918f] mt-0.5">Manage active member IDs</p>
                             </div>
                             <button onclick="downloadSelectedCards()" id="downloadCardsBtn"
                                 class="bg-[#1e2b3c] hover:bg-[#25364d] text-blue-300 hover:text-white font-medium py-2.5 px-6 rounded-full shadow-lg transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center">

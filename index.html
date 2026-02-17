@@ -744,14 +744,23 @@
             try {
                 const { data: { session } } = await _supabase.auth.getSession();
 
-                // 1. If Logged In -> Go to User Dashboard
+                // 1. If Logged In -> Check Role and Redirect
                 if (session) {
-                    window.location.href = 'user/index.html';
+                    const { data: profile } = await _supabase
+                        .from('profiles')
+                        .select('role')
+                        .eq('id', session.user.id)
+                        .single();
+
+                    if (profile && profile.role === 'admin') {
+                        window.location.href = 'admin/index.html';
+                    } else {
+                        window.location.href = 'user/index.html';
+                    }
                     return;
                 }
 
                 // 2. If Not Logged In + Running as PWA/Shortcut (Standalone) -> Go to Login Page
-                // This ensures Home Screen Shortcuts don't show the Landing Page, but prompt for Login.
                 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || ("standalone" in window.navigator && window.navigator.standalone === true);
 
                 if (isStandalone) {

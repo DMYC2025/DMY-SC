@@ -478,10 +478,24 @@
         async function checkAccess() {
             if (typeof _supabase === 'undefined') return;
             const { data: { session } } = await _supabase.auth.getSession();
-            if (!session) window.location.href = '../up and in/login.html';
-            else {
-                loadProfilePopupData(); // Shared logic from ui.js
+            if (!session) {
+                window.location.href = '../up and in/login.html';
+                return;
             }
+
+            // Check Role - If Admin, redirect to Admin Dashboard
+            const { data: profile } = await _supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', session.user.id)
+                .single();
+
+            if (profile && profile.role === 'admin') {
+                window.location.href = '../admin/index.html';
+                return;
+            }
+
+            loadProfilePopupData(); // Shared logic from ui.js
         }
 
 
