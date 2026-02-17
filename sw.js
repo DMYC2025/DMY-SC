@@ -3,7 +3,7 @@ const ASSETS_TO_CACHE = [
     './',
     './index.html',
     './assets/css/home-style.css',
-    './js/supabase.js',
+    './assets/js/supabase.js',
     './assets/images/logo_1.png',
     './assets/images/logo_2.png',
     'https://cdn.tailwindcss.com',

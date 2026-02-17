@@ -102,7 +102,7 @@
 
                 <!-- Report Issue Button -->
                 <button onclick="openIssueModal()"
-                    class="flex items-center gap-2 px-4 py-2 rounded-full bg-error/10 hover:bg-error/20 transition text-xs font-medium border border-error/20 text-error">
+                    class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-error/10 hover:bg-error/20 transition text-xs font-medium border border-error/20 text-error">
                     <span class="material-symbols-rounded text-[18px]">report_problem</span> Report
                 </button>
 
@@ -552,542 +552,541 @@
                 <a href="pay.html" class="block w-full m3-btn-primary py-3 text-sm">View Full History</a>
             </div>
         </div>
-        <!-- Issue Reporting Modal -->
-        <div id="issueModal"
-            class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-all duration-300 opacity-0">
-            <div
-                class="bg-[#1E1E1E] border border-white/5 rounded-[28px] shadow-2xl w-full max-w-md relative transform scale-95 transition-all duration-300">
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-display font-medium text-[#E3E3E3] flex items-center gap-2">
-                            <span class="material-symbols-rounded text-error">report_problem</span> Report Issue
-                        </h3>
-                        <button onclick="closeIssueModal()" class="text-[#8e918f] hover:text-white transition"><span
-                                class="material-symbols-rounded">close</span></button>
+    </div>
+    <!-- Issue Reporting Modal -->
+    <div id="issueModal"
+        class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-all duration-300 opacity-0">
+        <div
+            class="bg-[#1E1E1E] border border-white/5 rounded-[28px] shadow-2xl w-full max-w-md relative transform scale-95 transition-all duration-300">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-display font-medium text-[#E3E3E3] flex items-center gap-2">
+                        <span class="material-symbols-rounded text-error">report_problem</span> Report Issue
+                    </h3>
+                    <button onclick="closeIssueModal()" class="text-[#8e918f] hover:text-white transition"><span
+                            class="material-symbols-rounded">close</span></button>
+                </div>
+                <form id="issueForm" class="space-y-4">
+                    <div>
+                        <label class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Full
+                            Name</label>
+                        <input type="text" id="issueName" readonly
+                            class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] opacity-60 cursor-not-allowed">
                     </div>
-                    <form id="issueForm" class="space-y-4">
+                    <div>
+                        <label class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Club
+                            ID</label>
+                        <input type="text" id="issueClubId" readonly
+                            class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] opacity-60 cursor-not-allowed">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Full
-                                Name</label>
-                            <input type="text" id="issueName" readonly
+                            <label
+                                class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Email</label>
+                            <input type="email" id="issueEmail" readonly
                                 class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] opacity-60 cursor-not-allowed">
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Club
-                                ID</label>
-                            <input type="text" id="issueClubId" readonly
-                                class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] opacity-60 cursor-not-allowed">
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label
-                                    class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Email</label>
-                                <input type="email" id="issueEmail" readonly
-                                    class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] opacity-60 cursor-not-allowed">
-                            </div>
-                            <div>
-                                <label
-                                    class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">WhatsApp</label>
-                                <input type="tel" id="issueWhatsapp" readonly
-                                    class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] opacity-60 cursor-not-allowed">
-                            </div>
                         </div>
                         <div>
                             <label
-                                class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Issue
-                                Description</label>
-                            <textarea id="issueDesc" rows="3" required
-                                placeholder="Describe the issue you are facing..."
-                                class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] focus:border-error/50 outline-none transition"></textarea>
+                                class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">WhatsApp</label>
+                            <input type="tel" id="issueWhatsapp" readonly
+                                class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] opacity-60 cursor-not-allowed">
                         </div>
-                        <button type="submit"
-                            class="w-full bg-[#3c2525] hover:bg-[#533535] text-[#ffb4ab] hover:text-white font-bold py-3 rounded-full transition shadow-lg flex items-center justify-center gap-2">
-                            <span class="material-symbols-rounded">send</span> Submit Report
-                        </button>
-                    </form>
-                </div>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider block mb-1">Issue
+                            Description</label>
+                        <textarea id="issueDesc" rows="3" required placeholder="Describe the issue you are facing..."
+                            class="w-full bg-[#252529] border border-white/5 rounded-xl p-3 text-sm text-[#E3E3E3] focus:border-error/50 outline-none transition"></textarea>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-[#3c2525] hover:bg-[#533535] text-[#ffb4ab] hover:text-white font-bold py-3 rounded-full transition shadow-lg flex items-center justify-center gap-2">
+                        <span class="material-symbols-rounded">send</span> Submit Report
+                    </button>
+                </form>
             </div>
         </div>
+    </div>
 
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-        <script src="../js/supabase.js"></script>
-        <script src="../js/ui.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="../assets/js/supabase.js"></script>
+    <script src="../assets/js/ui.js"></script>
 
-        <script>
-            // Issue Modal Logic
-            const issueModal = document.getElementById('issueModal');
+    <script>
+        // Issue Modal Logic
+        const issueModal = document.getElementById('issueModal');
 
-            // Auth Check
-            async function checkAuth() {
-                const { data: { session } } = await _supabase.auth.getSession();
-                if (!session) {
-                    window.location.href = '../up and in/login.html';
-                }
+        // Auth Check
+        async function checkAuth() {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) {
+                window.location.href = '../up and in/login.html';
             }
-            checkAuth();
+        }
+        checkAuth();
 
-            async function openIssueModal() {
-                // Auto-fill user data
-                if (currentUserData) {
-                    document.getElementById('issueName').value = currentUserData.fullName;
-                    document.getElementById('issueClubId').value = currentUserData.id;
+        async function openIssueModal() {
+            // Auto-fill user data
+            if (currentUserData) {
+                document.getElementById('issueName').value = currentUserData.fullName;
+                document.getElementById('issueClubId').value = currentUserData.id;
 
-                    // Fetch email and phone if not in currentUserData (or use what we have)
-                    const { data: { session } } = await _supabase.auth.getSession();
-                    if (session) {
-                        document.getElementById('issueEmail').value = session.user.email;
-                        // Ideally phone should be in profile, if not use placeholder
-                        const { data: profile } = await _supabase.from('profiles').select('phone').eq('id', session.user.id).single();
-                        if (profile) document.getElementById('issueWhatsapp').value = profile.phone || '';
-                    }
-                }
-
-                issueModal.classList.remove('hidden');
-                setTimeout(() => {
-                    issueModal.classList.remove('opacity-0');
-                    issueModal.querySelector('div').classList.remove('scale-95');
-                    issueModal.querySelector('div').classList.add('scale-100');
-                }, 10);
-            }
-
-            function closeIssueModal() {
-                issueModal.classList.add('opacity-0');
-                issueModal.querySelector('div').classList.remove('scale-100');
-                issueModal.querySelector('div').classList.add('scale-95');
-                setTimeout(() => issueModal.classList.add('hidden'), 300);
-            }
-
-            document.getElementById('issueForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = e.target.querySelector('button');
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '<span class="material-symbols-rounded animate-spin">progress_activity</span> Sending...';
-                btn.disabled = true;
-
-                const { error } = await _supabase.from('login_issues').insert({
-                    full_name: document.getElementById('issueName').value,
-                    club_id: document.getElementById('issueClubId').value,
-                    email: document.getElementById('issueEmail').value,
-                    whatsapp_number: document.getElementById('issueWhatsapp').value,
-                    description: document.getElementById('issueDesc').value
-                });
-
-                if (error) {
-                    alert("Error submitting report: " + error.message);
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                } else {
-                    alert("Report submitted successfully! The admin will check it soon.");
-                    closeIssueModal();
-                    e.target.reset();
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                }
-            });
-        </script>
-
-        <script>
-            AOS.init();
-            const DEFAULT_AVATAR = "https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg";
-            let currentUserData = null;
-
-            async function checkAccess() {
-                if (typeof _supabase === 'undefined') return;
-                const { data: { session } } = await _supabase.auth.getSession();
-                if (!session) window.location.href = '../up and in/login.html';
-            }
-            checkAccess();
-
-            async function loadUserData() {
-                if (typeof _supabase === 'undefined') return;
+                // Fetch email and phone if not in currentUserData (or use what we have)
                 const { data: { session } } = await _supabase.auth.getSession();
                 if (session) {
-                    const { data: profile } = await _supabase.from('profiles').select('*').eq('id', session.user.id).single();
-                    if (profile) {
-                        const preferredName = profile.display_name && profile.display_name.trim() !== "" ? profile.display_name : profile.full_name.split(' ')[0];
-                        document.getElementById('dashName').innerHTML = preferredName;
-                        const avatarSrc = (profile.avatar_url && profile.avatar_url.trim() !== "") ? profile.avatar_url : DEFAULT_AVATAR;
+                    document.getElementById('issueEmail').value = session.user.email;
+                    // Ideally phone should be in profile, if not use placeholder
+                    const { data: profile } = await _supabase.from('profiles').select('phone').eq('id', session.user.id).single();
+                    if (profile) document.getElementById('issueWhatsapp').value = profile.phone || '';
+                }
+            }
 
-                        const { data: exData } = await _supabase.from('executive_committee').select('*').eq('profile_id', session.user.id).single();
-                        const { data: sportsData } = await _supabase.from('sports').select('name').eq('captain_id', session.user.id);
+            issueModal.classList.remove('hidden');
+            setTimeout(() => {
+                issueModal.classList.remove('opacity-0');
+                issueModal.querySelector('div').classList.remove('scale-95');
+                issueModal.querySelector('div').classList.add('scale-100');
+            }, 10);
+        }
 
-                        const verificationUrl = new URL('club_id.html', window.location.href).href + '?id=' + (profile.member_id || 'PENDING');
-                        const age = calculateAge(profile.dob);
+        function closeIssueModal() {
+            issueModal.classList.add('opacity-0');
+            issueModal.querySelector('div').classList.remove('scale-100');
+            issueModal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => issueModal.classList.add('hidden'), 300);
+        }
 
-                        currentUserData = {
-                            name: profile.full_name,
-                            fullName: profile.full_name,
-                            displayName: preferredName,
-                            id: profile.member_id || 'PENDING',
-                            avatar: avatarSrc,
-                            qrCode: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verificationUrl)}`,
-                            age: age,
-                            isExec: !!exData,
-                            execRole: exData ? exData.term_period : null,
-                            captainRoles: sportsData ? sportsData.map(t => t.name) : []
-                        };
+        document.getElementById('issueForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-rounded animate-spin">progress_activity</span> Sending...';
+            btn.disabled = true;
 
-                        checkPaymentStatus(session.user.id, profile.created_at);
-                        checkNotifications();
-                        if (profile.dob) {
-                            const dobParts = profile.dob.split('-');
-                            if (dobParts.length === 3) {
-                                const today = new Date();
-                                if (parseInt(dobParts[1]) === (today.getMonth() + 1) && parseInt(dobParts[2]) === today.getDate()) {
-                                    document.getElementById('birthdayCard').classList.remove('hidden');
-                                }
+            const { error } = await _supabase.from('login_issues').insert({
+                full_name: document.getElementById('issueName').value,
+                club_id: document.getElementById('issueClubId').value,
+                email: document.getElementById('issueEmail').value,
+                whatsapp_number: document.getElementById('issueWhatsapp').value,
+                description: document.getElementById('issueDesc').value
+            });
+
+            if (error) {
+                alert("Error submitting report: " + error.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            } else {
+                alert("Report submitted successfully! The admin will check it soon.");
+                closeIssueModal();
+                e.target.reset();
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+    </script>
+
+    <script>
+        AOS.init();
+        const DEFAULT_AVATAR = "https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg";
+        let currentUserData = null;
+
+        async function checkAccess() {
+            if (typeof _supabase === 'undefined') return;
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) window.location.href = '../up and in/login.html';
+        }
+        checkAccess();
+
+        async function loadUserData() {
+            if (typeof _supabase === 'undefined') return;
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (session) {
+                const { data: profile } = await _supabase.from('profiles').select('*').eq('id', session.user.id).single();
+                if (profile) {
+                    const preferredName = profile.display_name && profile.display_name.trim() !== "" ? profile.display_name : profile.full_name.split(' ')[0];
+                    document.getElementById('dashName').innerHTML = preferredName;
+                    const avatarSrc = (profile.avatar_url && profile.avatar_url.trim() !== "") ? profile.avatar_url : DEFAULT_AVATAR;
+
+                    const { data: exData } = await _supabase.from('executive_committee').select('*').eq('profile_id', session.user.id).single();
+                    const { data: sportsData } = await _supabase.from('sports').select('name').eq('captain_id', session.user.id);
+
+                    const verificationUrl = new URL('club_id.html', window.location.href).href + '?id=' + (profile.member_id || 'PENDING');
+                    const age = calculateAge(profile.dob);
+
+                    currentUserData = {
+                        name: profile.full_name,
+                        fullName: profile.full_name,
+                        displayName: preferredName,
+                        id: profile.member_id || 'PENDING',
+                        avatar: avatarSrc,
+                        qrCode: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verificationUrl)}`,
+                        age: age,
+                        isExec: !!exData,
+                        execRole: exData ? exData.term_period : null,
+                        captainRoles: sportsData ? sportsData.map(t => t.name) : []
+                    };
+
+                    checkPaymentStatus(session.user.id, profile.created_at);
+                    checkNotifications();
+                    if (profile.dob) {
+                        const dobParts = profile.dob.split('-');
+                        if (dobParts.length === 3) {
+                            const today = new Date();
+                            if (parseInt(dobParts[1]) === (today.getMonth() + 1) && parseInt(dobParts[2]) === today.getDate()) {
+                                document.getElementById('birthdayCard').classList.remove('hidden');
                             }
                         }
-
-                        // Call shared popup loader
-                        loadProfilePopupData();
                     }
+
+                    // Call shared popup loader
+                    loadProfilePopupData();
                 }
             }
+        }
 
-            function updateClock() {
-                const now = new Date();
-                const clockEl = document.getElementById('clockDisplay');
-                const dateEl = document.getElementById('dateDisplay');
-                if (clockEl) clockEl.innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                if (dateEl) dateEl.innerText = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                const hour = now.getHours();
-                const greetingSpan = document.getElementById('greeting');
-                if (greetingSpan) {
-                    if (hour < 12) { greetingSpan.innerText = "Good Morning"; }
-                    else if (hour < 18) { greetingSpan.innerText = "Good Afternoon"; }
-                    else { greetingSpan.innerText = (hour < 21) ? "Good Evening" : "Good Night"; }
-                }
+        function updateClock() {
+            const now = new Date();
+            const clockEl = document.getElementById('clockDisplay');
+            const dateEl = document.getElementById('dateDisplay');
+            if (clockEl) clockEl.innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            if (dateEl) dateEl.innerText = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const hour = now.getHours();
+            const greetingSpan = document.getElementById('greeting');
+            if (greetingSpan) {
+                if (hour < 12) { greetingSpan.innerText = "Good Morning"; }
+                else if (hour < 18) { greetingSpan.innerText = "Good Afternoon"; }
+                else { greetingSpan.innerText = (hour < 21) ? "Good Evening" : "Good Night"; }
             }
-            setInterval(updateClock, 1000);
-            updateClock();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
 
-            function calculateAge(dob) {
-                if (!dob) return 'N/A';
-                const birthDate = new Date(dob);
-                const today = new Date();
-                let age = today.getFullYear() - birthDate.getFullYear();
-                const m = today.getMonth() - birthDate.getMonth();
-                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                    age--;
-                }
-                return age;
+        function calculateAge(dob) {
+            if (!dob) return 'N/A';
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        async function checkNotifications() {
+            if (typeof _supabase === 'undefined') return;
+            const { count, error } = await _supabase.from('notifications').select('*', { count: 'exact', head: true });
+            if (!error && count > 0) {
+                document.getElementById('notifBadgeDot').classList.remove('hidden');
+            } else {
+                document.getElementById('notifBadgeDot').classList.add('hidden');
+            }
+        }
+
+        function renderCard(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container || !currentUserData) return;
+            const card = document.getElementById('cardTemplate').firstElementChild.cloneNode(true);
+
+            card.querySelector('#cardAvatarImg').src = currentUserData.avatar;
+            card.querySelector('#cardUserName').innerText = currentUserData.fullName;
+            card.querySelector('#cardUserId').innerText = currentUserData.id;
+            card.querySelector('#cardQrCode').src = currentUserData.qrCode;
+            card.querySelector('#cardAge').innerText = currentUserData.age;
+
+            const rolesContainer = card.querySelector('#cardRolesContainer');
+            rolesContainer.innerHTML = '';
+
+            if (currentUserData.isExec) {
+                const badge = document.createElement('div');
+                badge.className = "px-2 py-0.5 rounded-full bg-[#ffb783] text-[#512300] text-[8px] font-bold uppercase tracking-wider flex items-center gap-1";
+                badge.innerHTML = `<span class="material-symbols-rounded text-[10px]">crown</span> ${currentUserData.execRole || 'Executive'}`;
+                rolesContainer.appendChild(badge);
             }
 
-            async function checkNotifications() {
-                if (typeof _supabase === 'undefined') return;
-                const { count, error } = await _supabase.from('notifications').select('*', { count: 'exact', head: true });
-                if (!error && count > 0) {
-                    document.getElementById('notifBadgeDot').classList.remove('hidden');
-                } else {
-                    document.getElementById('notifBadgeDot').classList.add('hidden');
-                }
-            }
-
-            function renderCard(containerId) {
-                const container = document.getElementById(containerId);
-                if (!container || !currentUserData) return;
-                const card = document.getElementById('cardTemplate').firstElementChild.cloneNode(true);
-
-                card.querySelector('#cardAvatarImg').src = currentUserData.avatar;
-                card.querySelector('#cardUserName').innerText = currentUserData.fullName;
-                card.querySelector('#cardUserId').innerText = currentUserData.id;
-                card.querySelector('#cardQrCode').src = currentUserData.qrCode;
-                card.querySelector('#cardAge').innerText = currentUserData.age;
-
-                const rolesContainer = card.querySelector('#cardRolesContainer');
-                rolesContainer.innerHTML = '';
-
-                if (currentUserData.isExec) {
+            if (currentUserData.captainRoles && currentUserData.captainRoles.length > 0) {
+                currentUserData.captainRoles.forEach(sport => {
                     const badge = document.createElement('div');
-                    badge.className = "px-2 py-0.5 rounded-full bg-[#ffb783] text-[#512300] text-[8px] font-bold uppercase tracking-wider flex items-center gap-1";
-                    badge.innerHTML = `<span class="material-symbols-rounded text-[10px]">crown</span> ${currentUserData.execRole || 'Executive'}`;
+                    badge.className = "px-2 py-0.5 rounded-full bg-[#a0cfd0] text-[#003334] text-[8px] font-bold uppercase tracking-wider flex items-center gap-1";
+                    badge.innerHTML = `<span class="material-symbols-rounded text-[10px]">star</span> ${sport}`;
                     rolesContainer.appendChild(badge);
-                }
-
-                if (currentUserData.captainRoles && currentUserData.captainRoles.length > 0) {
-                    currentUserData.captainRoles.forEach(sport => {
-                        const badge = document.createElement('div');
-                        badge.className = "px-2 py-0.5 rounded-full bg-[#a0cfd0] text-[#003334] text-[8px] font-bold uppercase tracking-wider flex items-center gap-1";
-                        badge.innerHTML = `<span class="material-symbols-rounded text-[10px]">star</span> ${sport}`;
-                        rolesContainer.appendChild(badge);
-                    });
-                }
-
-                container.innerHTML = '';
-                container.appendChild(card);
-            }
-
-            function updateCardName() {
-                const choice = document.querySelector('input[name="nameChoice"]:checked').value;
-                const nameEl = document.querySelector('#modalCardContainer #cardUserName');
-                if (nameEl && currentUserData) {
-                    nameEl.style.opacity = '0';
-                    setTimeout(() => {
-                        nameEl.innerText = (choice === 'display') ? currentUserData.displayName : currentUserData.fullName;
-                        nameEl.style.opacity = '1';
-                    }, 200);
-                }
-            }
-
-            async function checkPaymentStatus(userId, joinDateStr) {
-                const { data: payments } = await _supabase.from('payments').select('month_year').eq('member_id', userId);
-                const paidMonths = payments ? payments.map(p => p.month_year) : [];
-                window.paymentHistoryData = paidMonths;
-                const now = new Date();
-                const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-                const isPaidCurrent = paidMonths.includes(currentMonth);
-                const btn = document.getElementById('navPayBtn');
-                btn.classList.remove('hidden');
-                if (isPaidCurrent) {
-                    btn.classList.add('bg-[#a6f7bd]', 'text-[#003915]');
-                    btn.innerHTML = `<span class="material-symbols-rounded text-[18px]">check_circle</span> <span class="hidden md:inline">Paid</span>`;
-                } else {
-                    btn.classList.add('bg-[#93000a]', 'text-[#ffdad6]');
-                    btn.innerHTML = `<span class="material-symbols-rounded text-[18px]">error</span> <span class="hidden md:inline">Due</span>`;
-                    document.getElementById('mobilePayBadge').classList.remove('hidden');
-                }
-                window.userJoinDate = joinDateStr;
-            }
-
-            function openCardModal() {
-                renderCard('modalCardContainer');
-                const fullRadio = document.querySelector('input[name="nameChoice"][value="full"]');
-                if (fullRadio) { fullRadio.checked = true; updateCardName(); }
-                document.getElementById('cardModal').classList.remove('hidden');
-            }
-            function closeCardModal() { document.getElementById('cardModal').classList.add('hidden'); }
-
-            function openPayStatusModal() {
-                const list = document.getElementById('payStatusList');
-                const paidMonths = window.paymentHistoryData || [];
-                let start = window.userJoinDate ? new Date(window.userJoinDate) : new Date('2024-01-01');
-                start.setDate(1);
-                const now = new Date();
-                let html = '';
-                let tempDate = new Date(now);
-                while (tempDate >= start) {
-                    const mStr = `${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, '0')}`;
-                    const isPaid = paidMonths.includes(mStr);
-                    const colorClass = isPaid ? 'bg-[#1b2e23] border-[#2b3e32] text-[#a6f7bd]' : 'bg-[#3c2525] border-[#533535] text-[#ffb4ab]';
-                    const label = isPaid ? 'PAID' : 'UNPAID';
-                    const icon = isPaid ? 'check' : 'warning';
-                    html += `<div class="flex items-center justify-between p-3 rounded-xl border mb-2 ${colorClass}"><span class="font-bold text-sm font-mono">${mStr}</span><div class="flex items-center gap-2 text-xs font-bold"><span class="material-symbols-rounded text-[16px]">${icon}</span> ${label}</div></div>`;
-                    tempDate.setMonth(tempDate.getMonth() - 1);
-                }
-                list.innerHTML = html || '<div class="text-center text-[#C4C7C5]">No history found.</div>';
-                document.getElementById('payStatusModal').classList.remove('hidden');
-            }
-            function closePayStatusModal() { document.getElementById('payStatusModal').classList.add('hidden'); }
-
-            function downloadCardImage() {
-                const cardElement = document.querySelector('#modalCardContainer > div');
-                if (!cardElement) return;
-                const btn = document.querySelector('button[onclick="downloadCardImage()"]');
-                const originalHTML = btn.innerHTML;
-                btn.innerHTML = '<span class="material-symbols-rounded animate-spin">refresh</span> Saving...';
-                btn.disabled = true;
-                html2canvas(cardElement, { useCORS: true, scale: 3, backgroundColor: null }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = `DMYSC_ID_${currentUserData?.id || 'User'}.png`;
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                    btn.innerHTML = originalHTML; btn.disabled = false;
-                }).catch(err => { console.error(err); btn.innerHTML = originalHTML; btn.disabled = false; });
-            }
-
-            let currentSlide = 0; let slides = []; let slideInterval;
-            async function loadHeroSlides() {
-                if (typeof _supabase === 'undefined') return;
-                const { data } = await _supabase.from('hero_slides').select('*').order('order_index');
-                if (data && data.length > 0) {
-                    slides = data;
-                    updateSlideView();
-                    startSlideShow();
-                }
-            }
-
-            function getYouTubeId(url) {
-                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-                const match = url.match(regExp);
-                return (match && match[2].length === 11) ? match[2] : null;
-            }
-
-            function createMediaElement(url) {
-                const ytId = getYouTubeId(url);
-                if (ytId) {
-                    const iframe = document.createElement('iframe');
-                    iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${ytId}&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1`;
-                    iframe.className = "absolute inset-0 w-full h-full object-cover animate-fade-in pointer-events-none";
-                    iframe.allow = "autoplay; encrypted-media";
-                    iframe.setAttribute('frameborder', '0');
-                    return iframe;
-                }
-                const isVideo = url.match(/\.(mp4|webm|ogg)$/i);
-                if (isVideo) {
-                    const video = document.createElement('video');
-                    video.src = url;
-                    video.autoplay = true; loop = true; muted = true; playsInline = true;
-                    video.className = "absolute inset-0 w-full h-full object-cover animate-fade-in";
-                    return video;
-                }
-                const img = document.createElement('img');
-                img.src = url;
-                img.className = "absolute inset-0 w-full h-full object-cover animate-fade-in";
-                return img;
-            }
-
-            function updateSlideView() {
-                const mainContainers = [document.getElementById('mainSlideContainer'), document.getElementById('mobileSlideContainer')];
-                mainContainers.forEach(c => {
-                    if (c) {
-                        c.innerHTML = '';
-                        c.appendChild(createMediaElement(slides[currentSlide].image_url));
-                    }
                 });
-
-                const nextContainer = document.getElementById('nextSlideContainer');
-                if (nextContainer && slides.length > 1) {
-                    const nextIndex = (currentSlide + 1) % slides.length;
-                    nextContainer.innerHTML = '';
-                    nextContainer.appendChild(createMediaElement(slides[nextIndex].image_url));
-                }
             }
 
-            function nextSlide() {
-                currentSlide = (currentSlide + 1) % slides.length;
-                updateSlideView();
-                resetInterval();
-            }
+            container.innerHTML = '';
+            container.appendChild(card);
+        }
 
-            function prevSlide() {
-                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-                updateSlideView();
-                resetInterval();
-            }
-
-            function startSlideShow() { slideInterval = setInterval(nextSlide, 5000); }
-            function resetInterval() { clearInterval(slideInterval); startSlideShow(); }
-
-            async function fetchWeather() {
-                const tempEl = document.getElementById('weatherTemp');
-                const descEl = document.getElementById('weatherDesc');
-                const mTempEl = document.getElementById('mobileWeatherTemp');
-                const mDescEl = document.getElementById('mobileWeatherDesc');
-
-                try {
-                    const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=6.7161&longitude=80.0632&current_weather=true');
-                    if (!res.ok) throw new Error('Weather API failed');
-                    const data = await res.json();
-
-                    if (data.current_weather) {
-                        const temp = Math.round(data.current_weather.temperature);
-                        if (tempEl) tempEl.innerText = `${temp}°C`;
-                        if (mTempEl) mTempEl.innerText = `${temp}°C`;
-
-                        // Simple icon logic for Google Material
-                        const code = data.current_weather.weathercode;
-                        const iconEl = document.getElementById('weatherIconGoogle');
-                        const mIconEl = document.getElementById('mobileWeatherIcon');
-
-                        let iconName = 'wb_sunny';
-                        let descText = 'Clear Sky';
-
-                        if (code <= 1) { iconName = 'wb_sunny'; descText = 'Clear'; }
-                        else if (code <= 3) { iconName = 'partly_cloudy_day'; descText = 'Cloudy'; }
-                        else if (code <= 67) { iconName = 'rainy'; descText = 'Rainy'; }
-                        else { iconName = 'thunderstorm'; descText = 'Stormy'; }
-
-                        if (iconEl) iconEl.innerText = iconName;
-                        if (mIconEl) mIconEl.innerText = iconName;
-                        if (descEl) descEl.innerText = 'Horana'; // Keeping city fixed as it was
-                        if (mDescEl) mDescEl.innerText = descText;
-                    }
-                } catch (e) {
-                    console.warn("Weather fetch error:", e);
-                    if (tempEl) tempEl.innerText = "--°C";
-                    if (mTempEl) mTempEl.innerText = "--°C";
-                }
-            }
-
-            fetchWeather();
-
-            loadHeroSlides();
-            loadUserData();
-            fetchWeather();
-        </script>
-
-        <script src="../js/footer-loader.js"></script>
-        <script>
-            // --- Footer Script Start ---
-
-            // 1. Footer එකේ වර්ෂය update කිරීම
-            const yearElem = document.getElementById('year');
-            if (yearElem) {
-                yearElem.innerText = new Date().getFullYear();
-            }
-
-            // 2. Contact තොරතුරු පෙන්වීම (Simulated)
-            setTimeout(() => {
-                const addr = document.getElementById('footerAddress');
-                const phone = document.getElementById('footerPhone');
-                const email = document.getElementById('footerEmail');
-
-                if (addr) addr.innerText = "616-B, Dikhenagama, Horana";
-                if (phone) phone.innerText = "+94 77 155 7685";
-                if (email) email.innerText = "dreammakersysc@gmail.com";
-            }, 500);
-
-            // 3. Popup (Modal) Open Function
-            window.openModal = function (modalId) {
-                const modal = document.getElementById(modalId);
-                if (!modal) return; // Modal එක නැත්නම් නවතින්න
-
-                const backdrop = modal.querySelector('.modal-backdrop');
-                const panel = modal.querySelector('.modal-panel');
-
-                modal.classList.remove('hidden');
-
-                // Animation එක පෙනෙන්නට සුළු වේලාවක් දෙන්න
+        function updateCardName() {
+            const choice = document.querySelector('input[name="nameChoice"]:checked').value;
+            const nameEl = document.querySelector('#modalCardContainer #cardUserName');
+            if (nameEl && currentUserData) {
+                nameEl.style.opacity = '0';
                 setTimeout(() => {
-                    if (backdrop) backdrop.classList.remove('opacity-0');
-                    if (panel) {
-                        panel.classList.remove('scale-95', 'opacity-0');
-                        panel.classList.add('scale-100', 'opacity-100');
-                    }
-                }, 10);
+                    nameEl.innerText = (choice === 'display') ? currentUserData.displayName : currentUserData.fullName;
+                    nameEl.style.opacity = '1';
+                }, 200);
             }
+        }
 
-            // 4. Popup (Modal) Close Function
-            window.closeModal = function (modalId) {
-                const modal = document.getElementById(modalId);
-                if (!modal) return;
-
-                const backdrop = modal.querySelector('.modal-backdrop');
-                const panel = modal.querySelector('.modal-panel');
-
-                if (backdrop) backdrop.classList.add('opacity-0');
-                if (panel) {
-                    panel.classList.remove('scale-100', 'opacity-100');
-                    panel.classList.add('scale-95', 'opacity-0');
-                }
-
-                // Animation එක ඉවර වුනාම hide කරන්න
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                }, 300);
+        async function checkPaymentStatus(userId, joinDateStr) {
+            const { data: payments } = await _supabase.from('payments').select('month_year').eq('member_id', userId);
+            const paidMonths = payments ? payments.map(p => p.month_year) : [];
+            window.paymentHistoryData = paidMonths;
+            const now = new Date();
+            const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+            const isPaidCurrent = paidMonths.includes(currentMonth);
+            const btn = document.getElementById('navPayBtn');
+            btn.classList.remove('hidden');
+            if (isPaidCurrent) {
+                btn.classList.add('bg-[#a6f7bd]', 'text-[#003915]');
+                btn.innerHTML = `<span class="material-symbols-rounded text-[18px]">check_circle</span> <span class="hidden md:inline">Paid</span>`;
+            } else {
+                btn.classList.add('bg-[#93000a]', 'text-[#ffdad6]');
+                btn.innerHTML = `<span class="material-symbols-rounded text-[18px]">error</span> <span class="hidden md:inline">Due</span>`;
+                document.getElementById('mobilePayBadge').classList.remove('hidden');
             }
+            window.userJoinDate = joinDateStr;
+        }
 
-            // 5. Modal එකෙන් එලිය click කල විට close වීම
-            document.addEventListener('click', function (event) {
-                if (event.target.classList.contains('modal-backdrop')) {
-                    const modal = event.target.closest('[role="dialog"]');
-                    if (modal) closeModal(modal.id);
+        function openCardModal() {
+            renderCard('modalCardContainer');
+            const fullRadio = document.querySelector('input[name="nameChoice"][value="full"]');
+            if (fullRadio) { fullRadio.checked = true; updateCardName(); }
+            document.getElementById('cardModal').classList.remove('hidden');
+        }
+        function closeCardModal() { document.getElementById('cardModal').classList.add('hidden'); }
+
+        function openPayStatusModal() {
+            const list = document.getElementById('payStatusList');
+            const paidMonths = window.paymentHistoryData || [];
+            let start = window.userJoinDate ? new Date(window.userJoinDate) : new Date('2024-01-01');
+            start.setDate(1);
+            const now = new Date();
+            let html = '';
+            let tempDate = new Date(now);
+            while (tempDate >= start) {
+                const mStr = `${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, '0')}`;
+                const isPaid = paidMonths.includes(mStr);
+                const colorClass = isPaid ? 'bg-[#1b2e23] border-[#2b3e32] text-[#a6f7bd]' : 'bg-[#3c2525] border-[#533535] text-[#ffb4ab]';
+                const label = isPaid ? 'PAID' : 'UNPAID';
+                const icon = isPaid ? 'check' : 'warning';
+                html += `<div class="flex items-center justify-between p-3 rounded-xl border mb-2 ${colorClass}"><span class="font-bold text-sm font-mono">${mStr}</span><div class="flex items-center gap-2 text-xs font-bold"><span class="material-symbols-rounded text-[16px]">${icon}</span> ${label}</div></div>`;
+                tempDate.setMonth(tempDate.getMonth() - 1);
+            }
+            list.innerHTML = html || '<div class="text-center text-[#C4C7C5]">No history found.</div>';
+            document.getElementById('payStatusModal').classList.remove('hidden');
+        }
+        function closePayStatusModal() { document.getElementById('payStatusModal').classList.add('hidden'); }
+
+        function downloadCardImage() {
+            const cardElement = document.querySelector('#modalCardContainer > div');
+            if (!cardElement) return;
+            const btn = document.querySelector('button[onclick="downloadCardImage()"]');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-rounded animate-spin">refresh</span> Saving...';
+            btn.disabled = true;
+            html2canvas(cardElement, { useCORS: true, scale: 3, backgroundColor: null }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `DMYSC_ID_${currentUserData?.id || 'User'}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                btn.innerHTML = originalHTML; btn.disabled = false;
+            }).catch(err => { console.error(err); btn.innerHTML = originalHTML; btn.disabled = false; });
+        }
+
+        let currentSlide = 0; let slides = []; let slideInterval;
+        async function loadHeroSlides() {
+            if (typeof _supabase === 'undefined') return;
+            const { data } = await _supabase.from('hero_slides').select('*').order('order_index');
+            if (data && data.length > 0) {
+                slides = data;
+                updateSlideView();
+                startSlideShow();
+            }
+        }
+
+        function getYouTubeId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        function createMediaElement(url) {
+            const ytId = getYouTubeId(url);
+            if (ytId) {
+                const iframe = document.createElement('iframe');
+                iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${ytId}&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1`;
+                iframe.className = "absolute inset-0 w-full h-full object-cover animate-fade-in pointer-events-none";
+                iframe.allow = "autoplay; encrypted-media";
+                iframe.setAttribute('frameborder', '0');
+                return iframe;
+            }
+            const isVideo = url.match(/\.(mp4|webm|ogg)$/i);
+            if (isVideo) {
+                const video = document.createElement('video');
+                video.src = url;
+                video.autoplay = true; loop = true; muted = true; playsInline = true;
+                video.className = "absolute inset-0 w-full h-full object-cover animate-fade-in";
+                return video;
+            }
+            const img = document.createElement('img');
+            img.src = url;
+            img.className = "absolute inset-0 w-full h-full object-cover animate-fade-in";
+            return img;
+        }
+
+        function updateSlideView() {
+            const mainContainers = [document.getElementById('mainSlideContainer'), document.getElementById('mobileSlideContainer')];
+            mainContainers.forEach(c => {
+                if (c) {
+                    c.innerHTML = '';
+                    c.appendChild(createMediaElement(slides[currentSlide].image_url));
                 }
             });
 
-            // --- Footer Script End ---
-        </script>
+            const nextContainer = document.getElementById('nextSlideContainer');
+            if (nextContainer && slides.length > 1) {
+                const nextIndex = (currentSlide + 1) % slides.length;
+                nextContainer.innerHTML = '';
+                nextContainer.appendChild(createMediaElement(slides[nextIndex].image_url));
+            }
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateSlideView();
+            resetInterval();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            updateSlideView();
+            resetInterval();
+        }
+
+        function startSlideShow() { slideInterval = setInterval(nextSlide, 5000); }
+        function resetInterval() { clearInterval(slideInterval); startSlideShow(); }
+
+        async function fetchWeather() {
+            const tempEl = document.getElementById('weatherTemp');
+            const descEl = document.getElementById('weatherDesc');
+            const mTempEl = document.getElementById('mobileWeatherTemp');
+            const mDescEl = document.getElementById('mobileWeatherDesc');
+
+            try {
+                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=6.7161&longitude=80.0632&current_weather=true');
+                if (!res.ok) throw new Error('Weather API failed');
+                const data = await res.json();
+
+                if (data.current_weather) {
+                    const temp = Math.round(data.current_weather.temperature);
+                    if (tempEl) tempEl.innerText = `${temp}°C`;
+                    if (mTempEl) mTempEl.innerText = `${temp}°C`;
+
+                    // Simple icon logic for Google Material
+                    const code = data.current_weather.weathercode;
+                    const iconEl = document.getElementById('weatherIconGoogle');
+                    const mIconEl = document.getElementById('mobileWeatherIcon');
+
+                    let iconName = 'wb_sunny';
+                    let descText = 'Clear Sky';
+
+                    if (code <= 1) { iconName = 'wb_sunny'; descText = 'Clear'; }
+                    else if (code <= 3) { iconName = 'partly_cloudy_day'; descText = 'Cloudy'; }
+                    else if (code <= 67) { iconName = 'rainy'; descText = 'Rainy'; }
+                    else { iconName = 'thunderstorm'; descText = 'Stormy'; }
+
+                    if (iconEl) iconEl.innerText = iconName;
+                    if (mIconEl) mIconEl.innerText = iconName;
+                    if (descEl) descEl.innerText = 'Horana'; // Keeping city fixed as it was
+                    if (mDescEl) mDescEl.innerText = descText;
+                }
+            } catch (e) {
+                console.warn("Weather fetch error:", e);
+                if (tempEl) tempEl.innerText = "--°C";
+                if (mTempEl) mTempEl.innerText = "--°C";
+            }
+        }
+
+        fetchWeather();
+
+        loadHeroSlides();
+        loadUserData();
+        fetchWeather();
+    </script>
+
+    <script src="../assets/js/footer-loader.js"></script>
+    <script>
+        // --- Footer Script Start ---
+
+        // 1. Footer එකේ වර්ෂය update කිරීම
+        const yearElem = document.getElementById('year');
+        if (yearElem) {
+            yearElem.innerText = new Date().getFullYear();
+        }
+
+        // 2. Contact තොරතුරු පෙන්වීම (Simulated)
+        setTimeout(() => {
+            const addr = document.getElementById('footerAddress');
+            const phone = document.getElementById('footerPhone');
+            const email = document.getElementById('footerEmail');
+
+            if (addr) addr.innerText = "616-B, Dikhenagama, Horana";
+            if (phone) phone.innerText = "+94 77 155 7685";
+            if (email) email.innerText = "dreammakersysc@gmail.com";
+        }, 500);
+
+        // 3. Popup (Modal) Open Function
+        window.openModal = function (modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return; // Modal එක නැත්නම් නවතින්න
+
+            const backdrop = modal.querySelector('.modal-backdrop');
+            const panel = modal.querySelector('.modal-panel');
+
+            modal.classList.remove('hidden');
+
+            // Animation එක පෙනෙන්නට සුළු වේලාවක් දෙන්න
+            setTimeout(() => {
+                if (backdrop) backdrop.classList.remove('opacity-0');
+                if (panel) {
+                    panel.classList.remove('scale-95', 'opacity-0');
+                    panel.classList.add('scale-100', 'opacity-100');
+                }
+            }, 10);
+        }
+
+        // 4. Popup (Modal) Close Function
+        window.closeModal = function (modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+
+            const backdrop = modal.querySelector('.modal-backdrop');
+            const panel = modal.querySelector('.modal-panel');
+
+            if (backdrop) backdrop.classList.add('opacity-0');
+            if (panel) {
+                panel.classList.remove('scale-100', 'opacity-100');
+                panel.classList.add('scale-95', 'opacity-0');
+            }
+
+            // Animation එක ඉවර වුනාම hide කරන්න
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // 5. Modal එකෙන් එලිය click කල විට close වීම
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('modal-backdrop')) {
+                const modal = event.target.closest('[role="dialog"]');
+                if (modal) closeModal(modal.id);
+            }
+        });
+
+        // --- Footer Script End ---
+    </script>
 </body>
 
 </html>

@@ -75,182 +75,7 @@
     <link rel="stylesheet" href="../assets/css/user-style.css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    <style>
-        body {
-            background-color: #121212;
-            color: #E3E3E3;
-            -webkit-tap-highlight-color: transparent;
-        }
 
-        .material-symbols-rounded {
-            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            vertical-align: middle;
-        }
-
-        .m3-card {
-            background-color: #1E1E1E;
-            border-radius: 24px;
-            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .m3-card:hover {
-            background-color: #28282D;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        .m3-navbar {
-            background-color: #252529;
-            border-radius: 999px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-        }
-
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* Calendar Styles */
-        .cal-day {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-size: 12px;
-            margin: auto;
-            color: #C4C7C5;
-            font-weight: 500;
-            position: relative;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .cal-day:hover {
-            background-color: #353539;
-            color: #E3E3E3;
-        }
-
-        /* Today */
-        .cal-day.today {
-            background-color: #a6f7bd;
-            color: #003915;
-            font-weight: 700;
-        }
-
-        /* Poya Day - Yellow */
-        .cal-day.poya {
-            color: #eab308;
-            font-weight: 700;
-        }
-
-        .cal-day.poya::after {
-            background: #eab308;
-        }
-
-        .cal-day.today.poya {
-            color: #003915;
-        }
-
-        .cal-day.today.poya::after {
-            background: #003915;
-        }
-
-        /* Tamil - Orange */
-        .cal-day.tamil {
-            color: #f97316;
-            font-weight: 700;
-        }
-
-        .cal-day.tamil::after {
-            background: #f97316;
-        }
-
-        .cal-day.today.tamil {
-            color: #003915;
-        }
-
-        .cal-day.today.tamil::after {
-            background: #003915;
-        }
-
-        /* Islamic - Teal/Emerald */
-        .cal-day.islamic {
-            color: #2dd4bf;
-            font-weight: 700;
-        }
-
-        .cal-day.islamic::after {
-            background: #2dd4bf;
-        }
-
-        .cal-day.today.islamic {
-            color: #003915;
-        }
-
-        .cal-day.today.islamic::after {
-            background: #003915;
-        }
-
-        /* Christian - Purple */
-        .cal-day.christian {
-            color: #a855f7;
-            font-weight: 700;
-        }
-
-        .cal-day.christian::after {
-            background: #a855f7;
-        }
-
-        .cal-day.today.christian {
-            color: #003915;
-        }
-
-        .cal-day.today.christian::after {
-            background: #003915;
-        }
-
-        /* National/Other - Red */
-        .cal-day.national {
-            color: #ffb4ab;
-            font-weight: 700;
-        }
-
-        .cal-day.national::after {
-            background: #ffb4ab;
-        }
-
-        .cal-day.today.national {
-            color: #003915;
-        }
-
-        .cal-day.today.national::after {
-            background: #003915;
-        }
-
-        .cal-day.holiday::after {
-            content: '';
-            position: absolute;
-            bottom: 4px;
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-        }
-
-        /* Event Day - Club Events (White Circle Only) */
-        .cal-day.has-event {
-            border: 2px solid white;
-            color: #E3E3E3;
-            font-weight: 700;
-        }
-
-        .cal-day.has-event.today {
-            background-color: #a6f7bd;
-            color: #003915;
-            border: 2px solid white;
-        }
-    </style>
 </head>
 
 <body class="min-h-screen pb-24 md:pb-0 font-sans">
@@ -468,9 +293,9 @@
     </div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="../js/supabase.js"></script>
-    <script src="../js/ui.js"></script>
-    <script src="../js/holidays.js"></script>
+    <script src="../assets/js/supabase.js"></script>
+    <script src="../assets/js/ui.js"></script>
+    <script src="../assets/js/holidays.js"></script>
     <script>
         AOS.init();
 
@@ -754,7 +579,7 @@
         </div>
     </div>
 
-    <script src="../js/footer-loader.js"></script>
+    <script src="../assets/js/footer-loader.js"></script>
     <script>
         // --- Footer Script Start ---
 

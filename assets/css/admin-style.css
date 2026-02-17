@@ -165,3 +165,98 @@ body {
     border-width: 2px;
     outline: none;
 }
+
+/* ========================================
+   CALENDAR & EVENT STYLES (From events.html)
+   ======================================== */
+
+.cal-day {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.cal-day:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.cal-day.today {
+    background: #a6f7bd !important;
+    color: #003915 !important;
+    font-weight: 700;
+}
+
+.cal-day.holiday::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+}
+
+.cal-day.poya {
+    color: #eab308;
+    font-weight: 700;
+}
+
+.cal-day.poya::after {
+    background: #eab308;
+}
+
+.cal-day.tamil {
+    color: #f97316;
+    font-weight: 700;
+}
+
+.cal-day.tamil::after {
+    background: #f97316;
+}
+
+.cal-day.islamic {
+    color: #2dd4bf;
+    font-weight: 700;
+}
+
+.cal-day.islamic::after {
+    background: #2dd4bf;
+}
+
+.cal-day.christian {
+    color: #a855f7;
+    font-weight: 700;
+}
+
+.cal-day.christian::after {
+    background: #a855f7;
+}
+
+.cal-day.national {
+    color: #ffb4ab;
+    font-weight: 700;
+}
+
+.cal-day.national::after {
+    background: #ffb4ab;
+}
+
+.cal-day.has-event {
+    border: 2px solid white;
+    font-weight: 700;
+}
+
+.modal-backdrop.show {
+    opacity: 1;
+}
+
+.modal-panel.show {
+    transform: scale(1);
+    opacity: 1;
+}
