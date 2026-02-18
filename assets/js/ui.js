@@ -201,7 +201,7 @@ async function loadProfilePopupData() {
             if (popupNic) popupNic.innerText = profile.nic || 'N/A';
 
             // Executive Role
-            const { data: exData } = await _supabase.from('executive_committee').select('*').eq('profile_id', session.user.id).single();
+            const { data: exData } = await _supabase.from('executive_committee').select('*').eq('profile_id', session.user.id).maybeSingle();
             const exEl = document.getElementById('popupExecRole');
             if (exEl) {
                 if (exData && exData.term_period) {
@@ -241,6 +241,7 @@ async function setupBrowserNotifications() {
     }
 
     // Subscribe to Realtime Notifications (General & Targeted)
+    // Subscribe to Realtime Notifications (General & Targeted) - ONLY UI UPDATES
     if (typeof _supabase !== 'undefined') {
         const { data: { session } } = await _supabase.auth.getSession();
         const currentId = session?.user?.id;
@@ -253,12 +254,8 @@ async function setupBrowserNotifications() {
                 // Only show if it's for everyone (null) OR specifically for this user
                 if (newNotif.user_id && newNotif.user_id !== currentId) return;
 
-                // --- MODIFIED: Show image for Payment Success ---
-                if (newNotif.title.startsWith('Payment Confirmed:')) {
-                    showSystemNotification(newNotif.title, newNotif.message, '../assets/images/pay_success.png');
-                } else if (!newNotif.title.startsWith('New Event:')) {
-                    showSystemNotification(newNotif.title, newNotif.message);
-                }
+                // NOTE: We rely on FCM (via Service Worker) for the actual pop-up notification now.
+                // We only update the UI badge and popup list here.
 
                 const badge = document.getElementById('notifBadgeDot');
                 if (badge) badge.classList.remove('hidden');
@@ -268,13 +265,13 @@ async function setupBrowserNotifications() {
             })
             .subscribe();
 
-        // Subscribe to Realtime Events (New Events with Images)
+        // Subscribe to Realtime Events (New Events) - Reschedule Reminders only
         _supabase
             .channel('public:events')
             .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'events' }, payload => {
-                const ev = payload.new;
-                showSystemNotification(`New Event: ${ev.title}`, `Join us on ${new Date(ev.event_date).toLocaleDateString()} at ${ev.event_time}`, ev.image_url);
-                // Reschedule reminders for this new event
+                // We rely on backend/FCM for the "New Event" alert if implemented there.
+                // Or user can manually add a notification record when creating an event.
+                // Here we just reschedule local reminders.
                 checkUpcomingEvents();
             })
             .subscribe();

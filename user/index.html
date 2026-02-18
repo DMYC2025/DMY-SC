@@ -609,6 +609,11 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="../assets/js/supabase.js"></script>
+    <!-- Firebase Push Notification SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
+    <script src="../assets/js/fcm.js"></script>
+
     <script src="../assets/js/ui.js"></script>
 
     <script>
@@ -718,7 +723,7 @@
                     document.getElementById('dashName').innerHTML = preferredName;
                     const avatarSrc = (profile.avatar_url && profile.avatar_url.trim() !== "") ? profile.avatar_url : DEFAULT_AVATAR;
 
-                    const { data: exData } = await _supabase.from('executive_committee').select('*').eq('profile_id', session.user.id).single();
+                    const { data: exData } = await _supabase.from('executive_committee').select('*').eq('profile_id', session.user.id).maybeSingle();
                     const { data: sportsData } = await _supabase.from('sports').select('name').eq('captain_id', session.user.id);
 
                     const verificationUrl = new URL('club_id.html', window.location.href).href + '?id=' + (profile.member_id || 'PENDING');

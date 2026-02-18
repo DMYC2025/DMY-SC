@@ -169,7 +169,35 @@
                             Welcome, <span id="adminName" class="text-primary">Admin</span>
                         </h1>
                     </div>
-                    <div class="hidden md:block">
+                    <div class="hidden md:flex items-center gap-4">
+                        <!-- Notification Bell -->
+                        <div class="relative">
+                            <button onclick="toggleAdminNotif()"
+                                class="relative p-2 text-[#C4C7C5] hover:text-white transition rounded-full hover:bg-white/5">
+                                <span class="material-symbols-rounded text-[24px]">notifications</span>
+                                <span id="adminNotifBadge"
+                                    class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-[#1E1E1E] hidden"></span>
+                            </button>
+                            <!-- Popup -->
+                            <div id="adminNotifPopup"
+                                class="hidden absolute right-0 mt-3 w-80 bg-[#252529] border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden transform origin-top-right transition-all">
+                                <div
+                                    class="p-4 border-b border-white/5 flex justify-between items-center bg-[#1E1E1E]/50">
+                                    <h4 class="font-display font-bold text-[#E3E3E3] text-sm flex items-center gap-2">
+                                        <span class="material-symbols-rounded text-red-400 text-sm">report</span> Recent
+                                        Issues
+                                    </h4>
+                                    <a href="issues.html"
+                                        class="text-[10px] font-bold uppercase tracking-wider text-primary hover:text-white transition">View
+                                        All</a>
+                                </div>
+                                <div id="adminNotifList" class="max-h-64 overflow-y-auto custom-scrollbar p-1">
+                                    <div class="p-4 text-center text-xs text-[#8e918f]">No new issues reported</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Profile Icon -->
                         <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                             <span class="material-symbols-rounded">manage_accounts</span>
                         </div>
@@ -641,9 +669,96 @@
         // Initialize
         async function init() {
             checkIssues();
+            fetchRecentIssues(); // Initial fetch for popup
+            setupAdminNotifListener(); // Realtime listener
             // ... existing init logic if any ...
         }
         init();
+
+        // --- NEW: Admin Notification Logic ---
+        function toggleAdminNotif() {
+            const popup = document.getElementById('adminNotifPopup');
+            popup.classList.toggle('hidden');
+            if (!popup.classList.contains('hidden')) {
+                // Mark badge as seen (hide it) when opened
+                document.getElementById('adminNotifBadge').classList.add('hidden');
+                fetchRecentIssues();
+            }
+        }
+
+        // Close popup when clicking outside
+        document.addEventListener('click', function (event) {
+            const popup = document.getElementById('adminNotifPopup');
+            const btn = document.querySelector('button[onclick="toggleAdminNotif()"]');
+            if (popup && !popup.classList.contains('hidden') && !popup.contains(event.target) && !btn.contains(event.target)) {
+                popup.classList.add('hidden');
+            }
+        });
+
+        async function fetchRecentIssues() {
+            if (typeof _supabase === 'undefined') return;
+
+            const { data, error } = await _supabase
+                .from('login_issues')
+                .select('*')
+                .eq('status', 'open')
+                .order('created_at', { ascending: false })
+                .limit(5);
+
+            const list = document.getElementById('adminNotifList');
+            if (data && data.length > 0) {
+                list.innerHTML = data.map(issue => `
+                    <div onclick="window.location.href='issues.html'" class="p-3 hover:bg-white/5 rounded-lg cursor-pointer transition border-b border-white/5 last:border-0">
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="font-bold text-xs text-[#E3E3E3] truncate w-32">${issue.full_name || 'Anonymous'}</span>
+                            <span class="text-[9px] text-[#8e918f] font-mono">${new Date(issue.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <p class="text-[11px] text-[#C4C7C5] line-clamp-2">${issue.description}</p>
+                        <span class="mt-1.5 inline-block px-1.5 py-0.5 rounded bg-red-500/10 text-red-400 text-[9px] font-bold uppercase tracking-wider">
+                            ${issue.category || 'Issue'}
+                        </span>
+                    </div>
+                `).join('');
+
+                // Show badge if there are open issues
+                document.getElementById('adminNotifBadge').classList.remove('hidden');
+            } else {
+                list.innerHTML = `<div class="p-6 text-center">
+                    <span class="material-symbols-rounded text-[#353539] text-4xl mb-2 block">inbox_customize</span>
+                    <p class="text-xs text-[#8e918f]">All caught up! No open issues.</p>
+                </div>`;
+                document.getElementById('adminNotifBadge').classList.add('hidden');
+            }
+        }
+
+        function setupAdminNotifListener() {
+            if (typeof _supabase === 'undefined') return;
+
+            _supabase.channel('admin-issues')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'login_issues' }, payload => {
+                    // Show notification badge
+                    document.getElementById('adminNotifBadge').classList.remove('hidden');
+
+                    // Update Ticker
+                    const ticker = document.getElementById('issuesTicker');
+                    const text = document.getElementById('latestIssueText');
+                    if (ticker) {
+                        ticker.classList.remove('hidden');
+                        text.innerText = `${payload.new.full_name}: ${payload.new.description}`;
+                    }
+
+                    // Play simple alert sound (optional)
+                    // const audio = new Audio('../assets/sounds/notification.mp3'); 
+                    // audio.play().catch(e => console.log('Audio play failed', e));
+
+                    // If popup is open, refresh it
+                    const popup = document.getElementById('adminNotifPopup');
+                    if (popup && !popup.classList.contains('hidden')) {
+                        fetchRecentIssues();
+                    }
+                })
+                .subscribe();
+        }
 
         // Logout Logic
         async function logout() {
