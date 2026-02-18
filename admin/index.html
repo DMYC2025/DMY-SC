@@ -184,10 +184,10 @@
                                 <div
                                     class="p-4 border-b border-white/5 flex justify-between items-center bg-[#1E1E1E]/50">
                                     <h4 class="font-display font-bold text-[#E3E3E3] text-sm flex items-center gap-2">
-                                        <span class="material-symbols-rounded text-red-400 text-sm">report</span> Recent
-                                        Issues
+                                        <span class="material-symbols-rounded text-primary text-sm">notifications</span>
+                                        Notifications
                                     </h4>
-                                    <a href="issues.html"
+                                    <a href="notifications.html"
                                         class="text-[10px] font-bold uppercase tracking-wider text-primary hover:text-white transition">View
                                         All</a>
                                 </div>
@@ -669,20 +669,20 @@
         // Initialize
         async function init() {
             checkIssues();
-            fetchRecentIssues(); // Initial fetch for popup
-            setupAdminNotifListener(); // Realtime listener
+            fetchRecentNotifications(); // Initial fetch for popup (Normal Notifications)
+            setupRealtimeListeners(); // Realtime listeners
             // ... existing init logic if any ...
         }
         init();
 
-        // --- NEW: Admin Notification Logic ---
+        // --- NEW: Admin Notification Logic (Normal Notifications) ---
         function toggleAdminNotif() {
             const popup = document.getElementById('adminNotifPopup');
             popup.classList.toggle('hidden');
             if (!popup.classList.contains('hidden')) {
                 // Mark badge as seen (hide it) when opened
                 document.getElementById('adminNotifBadge').classList.add('hidden');
-                fetchRecentIssues();
+                fetchRecentNotifications();
             }
         }
 
@@ -695,50 +695,67 @@
             }
         });
 
-        async function fetchRecentIssues() {
+        // Helper to determine redirect link based on content
+        function getNotificationLink(title, message) {
+            const t = (title || '').toLowerCase();
+            const m = (message || '').toLowerCase();
+
+            if (t.includes('payment') || m.includes('payment') || t.includes('fee')) return 'payment.html';
+            if (t.includes('issue') || m.includes('issue') || t.includes('support')) return 'issues.html';
+            if (t.includes('member') || m.includes('member') || t.includes('register')) return 'members.html';
+            if (t.includes('event') || m.includes('event')) return 'events.html';
+
+            return 'notifications.html';
+        }
+
+        // Fetch Normal Notifications (Not Issues)
+        async function fetchRecentNotifications() {
             if (typeof _supabase === 'undefined') return;
 
+            // Fetch from 'notifications' table (Messages, Payments, etc.)
             const { data, error } = await _supabase
-                .from('login_issues')
+                .from('notifications')
                 .select('*')
-                .eq('status', 'open')
                 .order('created_at', { ascending: false })
-                .limit(5);
+                .limit(3);
 
             const list = document.getElementById('adminNotifList');
             if (data && data.length > 0) {
-                list.innerHTML = data.map(issue => `
-                    <div onclick="window.location.href='issues.html'" class="p-3 hover:bg-white/5 rounded-lg cursor-pointer transition border-b border-white/5 last:border-0">
+                list.innerHTML = data.map(note => {
+                    const targetLink = getNotificationLink(note.title, note.message);
+                    return `
+                    <div onclick="window.location.href='${targetLink}'" class="p-3 hover:bg-white/5 rounded-lg cursor-pointer transition border-b border-white/5 last:border-0">
                         <div class="flex justify-between items-start mb-1">
-                            <span class="font-bold text-xs text-[#E3E3E3] truncate w-32">${issue.full_name || 'Anonymous'}</span>
-                            <span class="text-[9px] text-[#8e918f] font-mono">${new Date(issue.created_at).toLocaleDateString()}</span>
+                            <span class="font-bold text-xs text-[#E3E3E3] truncate w-40">${note.title}</span>
+                            <span class="text-[9px] text-[#8e918f] font-mono">${new Date(note.created_at).toLocaleDateString()}</span>
                         </div>
-                        <p class="text-[11px] text-[#C4C7C5] line-clamp-2">${issue.description}</p>
-                        <span class="mt-1.5 inline-block px-1.5 py-0.5 rounded bg-red-500/10 text-red-400 text-[9px] font-bold uppercase tracking-wider">
-                            ${issue.category || 'Issue'}
+                        <p class="text-[11px] text-[#C4C7C5] line-clamp-2">${note.message}</p>
+                        <span class="mt-1.5 inline-block px-1.5 py-0.5 rounded ${note.priority === 'urgent' ? 'bg-error/10 text-error' : 'bg-primary/10 text-primary'} text-[9px] font-bold uppercase tracking-wider">
+                            ${note.priority || 'Normal'}
                         </span>
                     </div>
-                `).join('');
-
-                // Show badge if there are open issues
-                document.getElementById('adminNotifBadge').classList.remove('hidden');
+                `}).join('');
             } else {
                 list.innerHTML = `<div class="p-6 text-center">
-                    <span class="material-symbols-rounded text-[#353539] text-4xl mb-2 block">inbox_customize</span>
-                    <p class="text-xs text-[#8e918f]">All caught up! No open issues.</p>
+                    <span class="material-symbols-rounded text-[#353539] text-4xl mb-2 block">notifications_off</span>
+                    <p class="text-xs text-[#8e918f]">No recent notifications.</p>
                 </div>`;
-                document.getElementById('adminNotifBadge').classList.add('hidden');
             }
         }
 
-        function setupAdminNotifListener() {
+        let issuesSubscription = null;
+        let notifSubscription = null;
+
+        function setupRealtimeListeners() {
             if (typeof _supabase === 'undefined') return;
 
-            _supabase.channel('admin-issues')
-                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'login_issues' }, payload => {
-                    // Show notification badge
-                    document.getElementById('adminNotifBadge').classList.remove('hidden');
+            // Fix Double Notify: Remove existing channels if they exist
+            if (issuesSubscription) _supabase.removeChannel(issuesSubscription);
+            if (notifSubscription) _supabase.removeChannel(notifSubscription);
 
+            // 1. Listen for New Report Issues (Updates TICKER Only)
+            issuesSubscription = _supabase.channel('admin-issues-ticker-v2')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'login_issues' }, payload => {
                     // Update Ticker
                     const ticker = document.getElementById('issuesTicker');
                     const text = document.getElementById('latestIssueText');
@@ -746,15 +763,19 @@
                         ticker.classList.remove('hidden');
                         text.innerText = `${payload.new.full_name}: ${payload.new.description}`;
                     }
+                })
+                .subscribe();
 
-                    // Play simple alert sound (optional)
-                    // const audio = new Audio('../assets/sounds/notification.mp3'); 
-                    // audio.play().catch(e => console.log('Audio play failed', e));
+            // 2. Listen for New Notifications (Updates BELL Only)
+            notifSubscription = _supabase.channel('admin-notifications-bell-v2')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, payload => {
+                    // Show notification badge
+                    document.getElementById('adminNotifBadge').classList.remove('hidden');
 
                     // If popup is open, refresh it
                     const popup = document.getElementById('adminNotifPopup');
                     if (popup && !popup.classList.contains('hidden')) {
-                        fetchRecentIssues();
+                        fetchRecentNotifications();
                     }
                 })
                 .subscribe();

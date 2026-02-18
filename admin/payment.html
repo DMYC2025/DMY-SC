@@ -40,6 +40,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
 
 </head>
@@ -730,6 +732,285 @@
         }
 
         initAdmin();
+
+        // --- NEW: Advanced Reporting Logic ---
+
+        function switchReportTab(tab) {
+            const secMonthly = document.getElementById('reportMonthlySection');
+            const secMember = document.getElementById('reportMemberSection');
+            const btnMonthly = document.getElementById('tabMonthly');
+            const btnMember = document.getElementById('tabMember');
+
+            if (tab === 'monthly') {
+                secMonthly.classList.remove('hidden');
+                secMember.classList.add('hidden');
+                btnMonthly.classList.add('bg-tertiary/20', 'text-tertiary', 'border', 'border-tertiary/30');
+                btnMonthly.classList.remove('text-[#8e918f]');
+                btnMember.classList.remove('bg-tertiary/20', 'text-tertiary', 'border', 'border-tertiary/30');
+                btnMember.classList.add('text-[#8e918f]');
+            } else {
+                secMonthly.classList.add('hidden');
+                secMember.classList.remove('hidden');
+                btnMember.classList.add('bg-tertiary/20', 'text-tertiary', 'border', 'border-tertiary/30');
+                btnMember.classList.remove('text-[#8e918f]');
+                btnMonthly.classList.remove('bg-tertiary/20', 'text-tertiary', 'border', 'border-tertiary/30');
+                btnMonthly.classList.add('text-[#8e918f]');
+                renderMemberSelect();
+            }
+        }
+
+        let currentReportData = { month: '', paid: [], unpaid: [] };
+
+        async function loadMonthlyStatus() {
+            const month = document.getElementById('reportMonth').value;
+            if (!month) return;
+
+            document.getElementById('btnDownloadMonthly').disabled = true;
+            document.getElementById('listPaid').innerHTML = '<div class="text-center py-4"><div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto"></div></div>';
+            document.getElementById('listUnpaid').innerHTML = '<div class="text-center py-4"><div class="animate-spin rounded-full h-6 w-6 border-b-2 border-error mx-auto"></div></div>';
+
+            const { data: paidRecords } = await _supabase.from('payments').select('member_id').eq('month_year', month);
+            const paidIds = (paidRecords || []).map(p => p.member_id);
+
+            const paidList = [];
+            const unpaidList = [];
+
+            membersCache.forEach(m => {
+                if (paidIds.includes(m.id)) paidList.push(m);
+                else unpaidList.push(m);
+            });
+
+            currentReportData = { month, paid: paidList, unpaid: unpaidList };
+
+            // Render Paid
+            document.getElementById('countPaid').textContent = paidList.length;
+            document.getElementById('listPaid').innerHTML = paidList.length ? paidList.map(m => `
+                <div class="flex items-center justify-between p-2 rounded bg-[#121212] border border-white/5">
+                    <div>
+                        <div class="text-xs font-bold text-[#E3E3E3]">${m.full_name}</div>
+                        <div class="text-[9px] text-[#8e918f] font-mono">${m.member_id || '-'}</div>
+                    </div>
+                </div>
+            `).join('') : '<div class="text-center py-4 text-xs text-[#8e918f]">No payments yet</div>';
+
+            // Render Unpaid
+            document.getElementById('countUnpaid').textContent = unpaidList.length;
+            document.getElementById('listUnpaid').innerHTML = unpaidList.length ? unpaidList.map(m => `
+                <div class="flex items-center justify-between p-2 rounded bg-[#121212] border border-white/5">
+                    <div>
+                        <div class="text-xs font-bold text-[#E3E3E3]">${m.full_name}</div>
+                        <div class="text-[9px] text-[#8e918f] font-mono">${m.member_id || '-'}</div>
+                    </div>
+                </div>
+            `).join('') : '<div class="text-center py-4 text-xs text-[#8e918f]">Everyone paid!</div>';
+
+            document.getElementById('btnDownloadMonthly').disabled = false;
+        }
+
+        async function downloadMonthlyPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const month = currentReportData.month;
+            const dateStr = new Date(month + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+            // Title
+            doc.setFontSize(18);
+            doc.text("DMY Sports Club - Monthly Payment Report", 14, 20);
+            doc.setFontSize(12);
+            doc.text(`Month: ${dateStr}`, 14, 28);
+            doc.setFontSize(10);
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 34);
+
+            // Summary
+            doc.setDrawColor(200);
+            doc.line(14, 38, 196, 38);
+            doc.text(`Total Members: ${membersCache.length} | Paid: ${currentReportData.paid.length} | Due: ${currentReportData.unpaid.length}`, 14, 46);
+
+            // Table 1: Paid Members - Data Preparation
+            const paidBody = currentReportData.paid.map((m, i) => [i + 1, m.full_name || '', m.member_id || '-', 'PAID']);
+
+            // Table 1: Paid Members
+            doc.autoTable({
+                startY: 55,
+                head: [['#', 'Member Name', 'Club ID', 'Status']],
+                body: paidBody,
+                theme: 'grid',
+                headStyles: { fillColor: [6, 46, 111] } // Primary Color
+            });
+
+            // Table 2: Unpaid Members - Data Preparation
+            const unpaidBody = currentReportData.unpaid.map((m, i) => [i + 1, m.full_name || '', m.member_id || '-', 'DUE']);
+
+            // Table 2: Unpaid Members
+            doc.autoTable({
+                startY: doc.lastAutoTable.finalY + 15,
+                head: [['#', 'Member Name', 'Club ID', 'Status']],
+                body: unpaidBody,
+                theme: 'grid',
+                headStyles: { fillColor: [60, 37, 37] } // Red Color
+            });
+
+            doc.save(`DMYSC_Payment_Report_${month}.pdf`);
+        }
+
+        function renderMemberSelect() {
+            const select = document.getElementById('reportMemberSelect');
+            if (select.options.length > 1) return; // Already populated
+            membersCache.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m.id;
+                opt.text = `${m.full_name} (${m.member_id || '-'})`;
+                select.appendChild(opt);
+            });
+        }
+
+        let currentMemberHistory = null;
+
+        async function loadMemberHistory() {
+            const memberId = document.getElementById('reportMemberSelect').value;
+            const container = document.getElementById('memberHistoryContainer');
+            const grid = document.getElementById('memberHistoryGrid');
+            const placeholder = document.getElementById('memberHistoryPlaceholder');
+            const btn = document.getElementById('btnDownloadMember');
+
+            if (!memberId) {
+                container.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+                btn.disabled = true;
+                return;
+            }
+
+            placeholder.classList.add('hidden');
+            container.classList.remove('hidden');
+            grid.innerHTML = '<div class="col-span-full text-center py-8">Loading history...</div>';
+
+            // Get all payments for this member
+            const { data } = await _supabase.from('payments').select('month_year, amount, paid_at').eq('member_id', memberId);
+            const paidMonths = new Set((data || []).map(p => p.month_year));
+
+            // Generate last 12 months for display
+            const today = new Date();
+            const monthsToShow = [];
+            for (let i = 0; i < 12; i++) {
+                const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+                monthsToShow.push(d.toISOString().slice(0, 7));
+            }
+
+            const selectedMember = membersCache.find(m => m.id === memberId);
+            currentMemberHistory = { member: selectedMember, data: data };
+
+            grid.innerHTML = monthsToShow.map(m => {
+                const isPaid = paidMonths.has(m);
+                const dateStr = new Date(m + '-01').toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                return `
+                    <div class="p-3 rounded-lg border ${isPaid ? 'bg-primary/10 border-primary/30' : 'bg-[#252529] border-white/5'}">
+                        <div class="text-xs font-mono text-[#8e918f] mb-1">${dateStr}</div>
+                        <div class="font-bold ${isPaid ? 'text-primary' : 'text-error'} flex items-center justify-between">
+                            ${isPaid ? 'PAID' : 'PENDING'}
+                            <span class="material-symbols-rounded text-base">${isPaid ? 'check_circle' : 'pending'}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            btn.disabled = false;
+        }
+
+        async function downloadMemberPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const member = currentMemberHistory.member;
+
+            // Header
+            doc.setFontSize(18);
+            doc.text("Member Payment History", 14, 20);
+            doc.setFontSize(12);
+            doc.text(`Name: ${member.full_name}`, 14, 28);
+            doc.text(`Club ID: ${member.member_id || '-'}`, 14, 34);
+
+            const bodyData = (currentMemberHistory.data || []).map(p => [
+                p.month_year,
+                p.amount + ' LKR',
+                new Date(p.paid_at).toLocaleDateString()
+            ]);
+
+            // Sort by month
+            bodyData.sort().reverse();
+
+            doc.autoTable({
+                startY: 45,
+                head: [['Month', 'Amount', 'Date Paid']],
+                body: bodyData,
+                theme: 'grid',
+                headStyles: { fillColor: [6, 46, 111] }
+            });
+
+            doc.save(`Payment_History_${member.full_name}.pdf`);
+        }
+
+        async function downloadYearlyReport() {
+            const year = document.getElementById('reportYear').value;
+            if (!confirm(`Generate full payment matrix for ${year}? This might take a moment.`)) return;
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', 'a3'); // Landscape A3 for space
+
+            // Fetch ALL payments for the year
+            const { data } = await _supabase.from('payments')
+                .select('member_id, month_year')
+                .like('month_year', `${year}%`); // Filter by year string
+
+            const paymentsMap = {}; // memberId -> Set of months
+            (data || []).forEach(p => {
+                if (!paymentsMap[p.member_id]) paymentsMap[p.member_id] = new Set();
+                paymentsMap[p.member_id].add(p.month_year);
+            });
+
+            // Re-fetch members to ensure full list if cache is stale
+            const { data: allMembers } = await _supabase.from('profiles').select('id, full_name, member_id').eq('role', 'member').order('member_id'); // Sort by ID
+
+            const months = [];
+            for (let i = 1; i <= 12; i++) {
+                months.push(`${year}-${String(i).padStart(2, '0')}`);
+            }
+
+            const headRow = ['Member Name', 'ID', ...months.map(m => new Date(m + '-01').toLocaleDateString('en-US', { month: 'short' }))];
+
+            // Check if members exist
+            const membersToUse = allMembers || membersCache;
+
+            const bodyRows = membersToUse.map(m => {
+                const paidSet = paymentsMap[m.id] || new Set();
+                const statuses = months.map(month => paidSet.has(month) ? 'PAID' : '-');
+                return [m.full_name, m.member_id || '', ...statuses];
+            });
+
+            doc.setFontSize(18);
+            doc.text(`Yearly Payment Matrix - ${year}`, 14, 15);
+            doc.setFontSize(10);
+            doc.text(`Generated on ${new Date().toLocaleDateString()}`, 14, 22);
+
+            doc.autoTable({
+                startY: 28,
+                head: [headRow],
+                body: bodyRows,
+                theme: 'grid',
+                styles: { fontSize: 8, cellPadding: 2, halign: 'center' },
+                columnStyles: { 0: { halign: 'left' }, 1: { halign: 'left' } }, // Name and ID left aligned
+                headStyles: { fillColor: [6, 46, 111] },
+                didParseCell: function (data) {
+                    if (data.section === 'body' && data.cell.raw === 'PAID') {
+                        data.cell.styles.fillColor = [200, 255, 200];
+                        data.cell.styles.textColor = [0, 100, 0];
+                        data.cell.styles.fontStyle = 'bold';
+                    } else if (data.section === 'body' && data.cell.raw === '-') {
+                        data.cell.styles.textColor = [200, 200, 200];
+                    }
+                }
+            });
+
+            doc.save(`Yearly_Report_${year}.pdf`);
+        }
     </script>
 </body>
 
