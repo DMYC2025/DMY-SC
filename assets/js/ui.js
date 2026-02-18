@@ -94,8 +94,10 @@ async function fetchNotifsForPopup() {
 
         if (error) throw error;
 
+        const permBtn = getPermissionBtn();
+
         if (!data || data.length === 0) {
-            list.innerHTML = `
+            list.innerHTML = permBtn + `
                 <div class="flex flex-col items-center justify-center py-10 opacity-60">
                     <span class="material-symbols-rounded text-3xl mb-2">notifications_off</span>
                     <p class="text-[10px] font-bold uppercase tracking-wider">No Alerts Yet</p>
@@ -104,7 +106,7 @@ async function fetchNotifsForPopup() {
             return;
         }
 
-        list.innerHTML = data.map(n => {
+        list.innerHTML = permBtn + data.map(n => {
             const date = new Date(n.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             const isUrgent = n.priority === 'urgent';
             return `
@@ -125,10 +127,47 @@ async function fetchNotifsForPopup() {
             `;
         }).join('');
 
+
     } catch (err) {
         console.error("Popup Notif Error:", err);
         list.innerHTML = `<div class="p-4 text-center text-error text-[10px]">Failed to load alerts</div>`;
     }
+}
+
+// Enable Notifications Button Logic
+window.requestNotifPermission = async function () {
+    // This MUST be called from a user gesture (onclick)
+    const result = await Notification.requestPermission();
+    if (result === 'granted') {
+        // Refresh the popup to remove the button
+        fetchNotifsForPopup();
+        // Re-init Firebase to get the token now that we have permission
+        if (window.reInitFirebase) {
+            window.reInitFirebase();
+        }
+        alert("Notifications enabled! You will now receive alerts on this device.");
+    }
+}
+
+// Helper to inject permission button
+function getPermissionBtn() {
+    if ("Notification" in window && Notification.permission === "default") {
+        return `
+            <button onclick="requestNotifPermission()" class="w-full mb-3 flex items-center justify-between px-4 py-3 bg-[#1E1E1E] border border-primary/20 rounded-xl text-left hover:bg-[#252529] transition group shadow-md">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                        <span class="material-symbols-rounded">notifications_active</span>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-[#E3E3E3]">Enable Alerts</h4>
+                        <p class="text-[10px] text-[#C4C7C5]">Tap to get notifications</p>
+                    </div>
+                </div>
+                <span class="text-primary text-[10px] font-bold uppercase tracking-wider group-hover:underline">Turn On</span>
+            </button>
+        `;
+    }
+    return '';
 }
 
 // 7. Global Click Listener for Popups

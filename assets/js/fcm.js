@@ -22,6 +22,7 @@ try {
     async function initFirebaseMessaging() {
         console.log('Initializing Firebase Messaging...');
         try {
+            // Check if permission is already granted or if we are triggered by user action
             const permission = await Notification.requestPermission();
             if (permission === 'granted') {
                 console.log('Notification permission granted.');
@@ -49,6 +50,9 @@ try {
             console.error('An error occurred while retrieving token.', error);
         }
     }
+
+    // Expose for manual trigger (e.g. from UI button)
+    window.reInitFirebase = initFirebaseMessaging;
 
     async function saveTokenToSupabase(token) {
         // Ensure Supabase is loaded
