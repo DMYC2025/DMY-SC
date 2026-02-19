@@ -1,0 +1,507 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+/* System Animations */
+@import url('animations.css');
+
+/* ========================================
+   BASE STYLES
+   ======================================== */
+
+html {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    background-color: #121212;
+    font-family: 'Roboto', sans-serif;
+    color: #E3E3E3;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.material-symbols-rounded {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+}
+
+.no-tap-highlight {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ========================================
+   MODAL ANIMATIONS (Legacy)
+   ======================================== */
+.modal-enter {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+.modal-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 300ms, transform 300ms;
+}
+
+.modal-exit {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.modal-exit-active {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 200ms, transform 200ms;
+}
+
+/* OTP Input Styling */
+.otp-input {
+    letter-spacing: 0.5em;
+    text-align: center;
+    font-family: 'Outfit', monospace;
+}
+
+/* Option Button Hover Effect */
+.option-card:hover {
+    border-color: #a6f7bd;
+    background-color: rgba(166, 247, 189, 0.05);
+}
+
+/* ========================================
+   MOBILE-FIRST STYLES (From Login)
+   ======================================== */
+
+/* Landscape mode fixes for phones */
+@media (max-width: 768px) and (orientation: landscape) {
+    body {
+        min-height: 100vh;
+        height: auto;
+    }
+
+    /* Reduce header height in landscape */
+    .h-28 {
+        height: 5rem !important;
+    }
+
+    /* Compact padding in landscape */
+    .p-8 {
+        padding: 1.5rem !important;
+    }
+
+    /* Smaller logo in landscape */
+    .h-16.w-16 {
+        height: 3rem !important;
+        width: 3rem !important;
+    }
+
+    /* Reduce spacing between inputs */
+    .space-y-5>*+* {
+        margin-top: 0.75rem !important;
+    }
+
+    /* Make card scrollable if needed */
+    .bg-\[#1E1E1E\].rounded-\[32px\] {
+        max-height: 95vh;
+        overflow-y: auto;
+    }
+}
+
+/* Mobile: Touch-friendly interactions */
+@media (max-width: 768px) {
+
+    /* Larger touch targets */
+    button,
+    a,
+    input {
+        min-height: 44px;
+    }
+
+    /* Mobile: Compact spacing */
+    .login-container {
+        padding: 1rem !important;
+    }
+
+    /* Mobile: Full-width cards */
+    .bg-\[#1E1E1E\].rounded-\[32px\] {
+        border-radius: 24px !important;
+    }
+
+    /* Mobile: Smaller text for better fit */
+    h2 {
+        font-size: 1.75rem !important;
+    }
+
+    /* Mobile: Touch ripple effect */
+    button:active {
+        animation: touchRipple 0.6s ease-out;
+    }
+
+    @keyframes touchRipple {
+        0% {
+            box-shadow: 0 0 0 0 rgba(166, 247, 189, 0.4);
+        }
+
+        100% {
+            box-shadow: 0 0 0 20px rgba(166, 247, 189, 0);
+        }
+    }
+
+    /* Mobile: Optimized input focus */
+    input:focus {
+        transform: scale(1.02);
+        transition: transform 0.2s ease;
+    }
+
+    /* Mobile: Reduced blur for performance */
+    .blur-\[80px\] {
+        filter: blur(40px) !important;
+    }
+}
+
+/* ========================================
+   DESKTOP STYLES (768px+)
+   ======================================== */
+
+@media (min-width: 769px) {
+
+    /* Desktop: Hover effects */
+    button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Desktop: Smooth card entrance */
+    .bg-\[#1E1E1E\].rounded-\[32px\] {
+        animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes fadeInScale {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* Desktop: Enhanced glassmorphism */
+    .bg-\[#1E1E1E\] {
+        backdrop-filter: blur(20px);
+        background: rgba(30, 30, 30, 0.85) !important;
+    }
+
+    /* Desktop: Floating animation for background blobs */
+    .animate-pulse {
+        animation: floatDesktop 8s ease-in-out infinite;
+    }
+
+    @keyframes floatDesktop {
+
+        0%,
+        100% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        33% {
+            transform: translate(30px, -30px) scale(1.1);
+        }
+
+        66% {
+            transform: translate(-20px, 20px) scale(0.9);
+        }
+    }
+
+    /* Desktop: Input hover glow */
+    input:hover {
+        border-color: rgba(166, 247, 189, 0.3);
+        box-shadow: 0 0 0 3px rgba(166, 247, 189, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    /* Desktop: Enhanced focus state */
+    input:focus {
+        box-shadow: 0 0 0 4px rgba(166, 247, 189, 0.2),
+            0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Desktop: Parallax effect on scroll */
+    .login-container {
+        transform-style: preserve-3d;
+    }
+
+    /* Desktop: Button press effect */
+    button:active {
+        transform: translateY(0) scale(0.98);
+    }
+
+    /* Desktop: Larger spacing */
+    .p-8 {
+        padding: 2.5rem !important;
+    }
+
+    /* Desktop: Enhanced shadows */
+    .shadow-2xl {
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+    }
+}
+
+/* ========================================
+   SHARED ANIMATIONS
+   ======================================== */
+
+/* Smooth page transitions */
+body {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Button loading animation */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Pulse animation for notifications */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* Slide in from left for instructions */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Countdown number animation */
+.rate-limit-countdown .font-mono {
+    animation: numberPulse 1s ease-in-out infinite;
+}
+
+@keyframes numberPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* ========================================
+   TABLET OPTIMIZATION (768px - 1024px)
+   ======================================== */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+
+    /* Tablet: Medium spacing */
+    .p-8 {
+        padding: 2rem !important;
+    }
+
+    /* Tablet: Balanced card size */
+    .max-w-sm {
+        max-width: 28rem !important;
+    }
+
+    /* Tablet: Hybrid interactions */
+    button:hover {
+        transform: translateY(-1px);
+    }
+
+    button:active {
+        transform: scale(0.98);
+    }
+}
+
+/* ========================================
+   LARGE DESKTOP (1440px+)
+   ======================================== */
+
+@media (min-width: 1440px) {
+
+    /* Large desktop: More dramatic effects */
+    .bg-\[#1E1E1E\].rounded-\[32px\] {
+        max-width: 32rem !important;
+    }
+
+    /* Large desktop: Enhanced blur */
+    .blur-\[80px\] {
+        filter: blur(120px) !important;
+    }
+
+    /* Large desktop: Larger background elements */
+    .w-96 {
+        width: 32rem !important;
+        height: 32rem !important;
+    }
+}
+
+/* ========================================
+   ACCESSIBILITY & PERFORMANCE
+   ======================================== */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Dark mode optimizations */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #0a0a0a;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .border-white\/5 {
+        border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+}
+
+/* ========================================
+   CUSTOM SCROLLBAR
+   ======================================== */
+
+/* Desktop scrollbar */
+@media (min-width: 769px) {
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #1E1E1E;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #a6f7bd;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #b1fcc5;
+    }
+}
+
+/* Mobile: Hide scrollbar for cleaner look */
+@media (max-width: 768px) {
+    ::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* ========================================
+   REGISTRATION PAGE SPECIFIC (From Reg)
+   ======================================== */
+
+/* Custom Scrollbar Override for Reg Instruction Steps */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #1E1E1E;
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #a6f7bd;
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #b1fcc5;
+}
+
+/* Instruction Step Animations */
+.instruction-step {
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInLeft 0.6s ease forwards;
+}
+
+.instruction-step:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.instruction-step:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.instruction-step:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.instruction-step:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+/* Step Number Pulse */
+.step-number {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Instruction Item Hover */
+.instruction-item {
+    transition: all 0.3s ease;
+}
+
+.instruction-item:hover {
+    transform: translateX(5px);
+    border-color: rgba(166, 247, 189, 0.2);
+    background: #2a2a2e;
+}
+
+/* Modal Fade In */
+#instructionsModal.show {
+    display: flex !important;
+    opacity: 1;
+}

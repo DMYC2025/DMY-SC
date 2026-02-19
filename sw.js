@@ -8,7 +8,9 @@ const ASSETS_TO_CACHE = [
     './admin/index.html',
     './assets/js/supabase.js',
     './assets/images/logo_2.png',
-    './manifest.json'
+    './manifest.json',
+    './user/index.html',
+    './auth/login.html'
 ];
 
 // --- FIREBASE PUSH NOTIFICATION SETUP ---
@@ -56,18 +58,22 @@ self.addEventListener('notificationclick', function (event) {
     event.notification.close();
 
     // Determine target URL based on notification content keywords
-    let targetUrl = '/user/index.html'; // Default
+    // Determine target URL based on notification content keywords
+    let targetUrl = 'user/index.html'; // Default (relative)
     const title = (event.notification.title || '').toLowerCase();
     const body = (event.notification.body || '').toLowerCase();
 
     // Check for keywords
     if (title.includes('pay') || body.includes('payment') || title.includes('bill') || body.includes('receipt') || title.includes('fee')) {
-        targetUrl = '/user/pay.html';
+        targetUrl = 'user/pay.html';
     } else if (title.includes('event') || body.includes('event') || title.includes('match') || body.includes('practice') || title.includes('meeting')) {
-        targetUrl = '/user/event.html';
+        targetUrl = 'user/event.html';
     } else if (title.includes('alert') || title.includes('notice') || title.includes('update')) {
-        targetUrl = '/user/notifycation.html';
+        targetUrl = 'user/notifycation.html';
     }
+
+    // Construct absolute URL based on SW scope
+    const absoluteUrl = new URL(targetUrl, self.registration.scope).href;
 
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
@@ -77,14 +83,14 @@ self.addEventListener('notificationclick', function (event) {
                 if (client.url.includes('user/') && 'focus' in client) {
                     client.focus();
                     if ('navigate' in client) {
-                        client.navigate(targetUrl);
+                        client.navigate(absoluteUrl);
                     }
                     return;
                 }
             }
             // Otherwise open a new window
             if (clients.openWindow) {
-                return clients.openWindow(targetUrl);
+                return clients.openWindow(absoluteUrl);
             }
         })
     );
