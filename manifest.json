@@ -1,6 +1,7 @@
 {
   "name": "Dream Makers Youth & Sports Club",
   "short_name": "DMYSC",
+  "gcm_sender_id": "103953800507",
   "start_url": "user/index.html",
   "display": "standalone",
   "background_color": "#121212",

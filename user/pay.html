@@ -487,47 +487,504 @@
 
         async function generateReceipt(payId, month, amount, paidAt) {
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [100, 150] });
+
+            // --- Configuration ---
+            const doc = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            // --- Dark Mode Color Palette ---
+            const colors = {
+                background: [18, 18, 18],     // #121212 (Main Black)
+                surface: [30, 30, 30],        // #1E1E1E (Card Bg)
+                primary: [166, 247, 189],     // #a6f7bd (Light Green)
+                onPrimary: [0, 57, 21],       // #003915 (Dark Green Text)
+                textMain: [227, 227, 227],    // #E3E3E3 (White Text)
+                textSec: [170, 170, 170],     // #AAAAAA (Gray Text)
+                divider: [60, 60, 60],        // #3C3C3C
+                accent: [0, 108, 69]          // #006c45 (Dark Green Accent)
+            };
+
+            // --- 1. Background ---
+            doc.setFillColor(...colors.background);
+            doc.rect(0, 0, 210, 297, 'F');
+
+            // Watermark "PAID"
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(120);
+            doc.setFont("helvetica", "bold");
+            doc.setGState(new doc.GState({ opacity: 0.03 })); // Very faint white
+            doc.text("PAID", 105, 148, { align: 'center', angle: 30 });
+            doc.setGState(new doc.GState({ opacity: 1 }));
+
+
+            // --- 2. Header Section ---
+            // Header Content
+            const logoX = 15;
+            const logoY = 15;
+            const logoSize = 25;
+
+            // Load Specific Logo
             const logoData = await getBase64ImageFromURL('../assets/images/logo.png');
-
-            // Header Background (Dark)
-            doc.setFillColor(18, 18, 18); doc.rect(0, 0, 100, 30, 'F');
-            if (logoData) doc.addImage(logoData, 'PNG', 5, 5, 20, 20);
-
-            doc.setTextColor(255, 255, 255); doc.setFontSize(10); doc.setFont("helvetica", "bold");
-            doc.text("Dream Makers", 30, 12); doc.text("Youth & Sports Club", 30, 17);
-            doc.setFontSize(8); doc.setTextColor(166, 247, 189); // Primary Color
-            doc.text("Official Payment Receipt", 30, 23);
-
-            doc.setTextColor(0, 0, 0); doc.setFont("helvetica", "normal");
-            const dateStr = new Date(paidAt).toLocaleString();
-            doc.setFontSize(8); doc.setTextColor(100); doc.text("Date: " + dateStr, 50, 38, { align: 'center' });
-            doc.setDrawColor(200); doc.line(10, 40, 90, 40);
-
-            let y = 48;
-            function addRow(l, v, b = false) {
-                doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(80); doc.text(l, 10, y);
-                doc.setFont("helvetica", b ? "bold" : "normal"); doc.setTextColor(0); doc.text(v, 90, y, { align: 'right' });
-                y += 8;
+            if (logoData) {
+                doc.addImage(logoData, 'PNG', logoX, logoY, logoSize, logoSize);
             }
 
-            addRow("Receipt ID", payId.split('-')[0].toUpperCase());
-            addRow("Member Name", currentUserProfile ? currentUserProfile.full_name : "Unknown");
-            addRow("Payment For", month, true);
+            // Title
+            doc.setTextColor(...colors.textMain);
+            doc.setFontSize(26);
+            doc.setFont("helvetica", "bold");
+            doc.text("Dream Makers", logoX + logoSize + 8, logoY + 10);
 
-            y += 5;
-            // Amount Box (Green tint)
-            doc.setFillColor(230, 255, 240); doc.roundedRect(10, y - 5, 80, 15, 2, 2, 'F');
-            doc.setTextColor(0, 57, 21); // On-Primary
-            doc.setFontSize(12); doc.setFont("helvetica", "bold");
-            doc.text("AMOUNT PAID", 15, y + 2); doc.text(amount + " LKR", 85, y + 2, { align: 'right' });
+            doc.setTextColor(...colors.primary);
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "bold");
+            doc.text("YOUTH & SPORTS CLUB", logoX + logoSize + 9, logoY + 16);
 
-            y += 20; doc.setFontSize(7); doc.setTextColor(150);
-            doc.text("Thank you for your contribution!", 50, y, { align: 'center' });
+            // Verified Badge (Top Right)
+            const badgeW = 35;
+            const badgeX = 210 - 15 - badgeW;
+            doc.setFillColor(...colors.primary);
+            doc.roundedRect(badgeX, logoY, badgeW, 8, 4, 4, 'F');
+            doc.setTextColor(...colors.onPrimary);
+            doc.setFontSize(8);
+            doc.setFont("helvetica", "bold");
+            doc.text("VERIFIED", badgeX + badgeW / 2, logoY + 5.5, { align: "center" });
 
-            doc.save(`Receipt_${month}.pdf`);
+            // Receipt ID
+            doc.setTextColor(...colors.textSec);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Receipt ID: #${payId.split('-')[0].toUpperCase()}`, 210 - 15, logoY + 15, { align: "right" });
+
+
+            // --- 3. Prominent Date & Month Section ---
+            let y = 60;
+
+            // Payment For: Month & Year (Prominent as requested)
+            const payDate = new Date(); // Current generation date
+
+            // Parse Month Name from YYYY-MM if possible
+            let payForMonth = month.toUpperCase();
+            let payForYear = new Date().getFullYear();
+
+            try {
+                if (month.includes('-')) {
+                    const [y, m] = month.split('-');
+                    const d = new Date(parseInt(y), parseInt(m) - 1);
+                    payForMonth = d.toLocaleString('en-US', { month: 'long' }).toUpperCase();
+                    payForYear = y;
+                }
+            } catch (e) {
+                console.error("Date parse error", e);
+            }
+
+            doc.setFillColor(...colors.surface);
+            doc.roundedRect(15, y, 180, 25, 2, 2, 'F');
+
+            // Label
+            doc.setFontSize(8);
+            doc.setTextColor(...colors.primary);
+            doc.text("PAYMENT FOR", 25, y + 15);
+
+            // Value
+            doc.setFontSize(14);
+            doc.setTextColor(...colors.textMain);
+            doc.setFont("helvetica", "bold");
+            doc.text(`${payForMonth} ${payForYear}`, 60, y + 15);
+
+            // Paid Date (Right aligned in box)
+            doc.setFontSize(8);
+            doc.setTextColor(...colors.textSec);
+            doc.setFont("helvetica", "normal");
+            doc.text("PAID ON", 150, y + 10);
+            doc.setFontSize(10);
+            doc.setTextColor(...colors.textMain);
+            doc.text(new Date(paidAt).toLocaleDateString(), 150, y + 16);
+
+
+            // --- 4. Details Grid ---
+            y += 35;
+
+            // Billed To Box
+            drawDarkCard(doc, 15, y, 85, 45, "BILLED TO",
+                currentUserProfile ? currentUserProfile.full_name : "Valued Member",
+                `ID: ${currentUserProfile ? currentUserProfile.member_id : 'N/A'}`);
+
+            // Payment Method Box
+            drawDarkCard(doc, 110, y, 85, 45, "PAYMENT METHOD",
+                "Online Transfer / Cash",
+                `Ref: ${payId.substr(0, 12).toUpperCase()}`);
+
+            function drawDarkCard(doc, x, y, w, h, label, title, subtitle) {
+                doc.setFillColor(...colors.surface);
+                doc.setDrawColor(...colors.divider);
+                doc.roundedRect(x, y, w, h, 2, 2, 'DF');
+
+                doc.setFontSize(8);
+                doc.setTextColor(...colors.textSec);
+                doc.text(label, x + 6, y + 10);
+
+                doc.setFontSize(12);
+                doc.setTextColor(...colors.textMain);
+                doc.setFont("helvetica", "bold");
+                doc.text(title, x + 6, y + 20);
+
+                doc.setFontSize(9);
+                doc.setTextColor(...colors.primary);
+                doc.setFont("helvetica", "normal");
+                doc.text(subtitle, x + 6, y + 30);
+            }
+
+
+            // --- 5. Amount Section ---
+            y += 55;
+
+            // Header Line
+            doc.setDrawColor(...colors.divider);
+            doc.line(15, y, 195, y);
+
+            y += 8;
+            doc.setFontSize(10);
+            doc.setTextColor(...colors.textSec);
+            doc.text("Description", 15, y);
+            doc.text("Amount", 195, y, { align: "right" });
+
+            y += 10;
+            doc.setFontSize(12);
+            doc.setTextColor(...colors.textMain);
+            doc.setFont("helvetica", "bold");
+            doc.text("Monthly Membership Fee", 15, y);
+            doc.text(`${amount}.00 LKR`, 195, y, { align: "right" });
+
+            // Total Box
+            y += 20;
+            doc.setFillColor(...colors.primary);
+            doc.roundedRect(120, y, 75, 14, 2, 2, 'F');
+
+            doc.setTextColor(...colors.onPrimary);
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "bold");
+            doc.text("TOTAL PAID", 125, y + 9);
+            doc.setFontSize(14);
+            doc.text(`LKR ${amount}.00`, 190, y + 9, { align: "right" });
+
+
+            // --- 6. QR Code & Footer ---
+            const footerY = 250;
+
+            // Generate Verification URL
+            // Assuming the site is hosted at the current origin
+            const origin = window.location.origin;
+            const verifyPath = window.location.pathname.replace('pay.html', 'verify.html');
+            const verifyUrl = `${origin}${verifyPath}?id=${payId}&user=${encodeURIComponent(currentUserProfile?.full_name || '')}&month=${month}&amount=${amount}&date=${paidAt}`;
+
+            // QR Code (Generate using API for simplicity in PDF)
+            doc.setFillColor(255, 255, 255);
+            doc.roundedRect(15, footerY, 25, 25, 2, 2, 'F');
+            const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verifyUrl)}`;
+            const qrImg = await getBase64ImageFromURL(qrImgUrl);
+            if (qrImg) {
+                doc.addImage(qrImg, 'PNG', 16, footerY + 1, 23, 23);
+            }
+
+            // Footer Text
+            doc.setFontSize(8);
+            doc.setTextColor(...colors.textSec);
+            doc.text("Scan to verify this receipt", 45, footerY + 10);
+            doc.text("online at Dream Makers Club.", 45, footerY + 15);
+
+            // Copyright
+            doc.setFontSize(7);
+            doc.setTextColor(80, 80, 80);
+            doc.text("This is a computer-generated receipt. No signature required.", 105, 285, { align: "center" });
+            doc.text("Thank you for your support.", 105, 290, { align: "center" });
+
+            doc.save(`DMYSC_Receipt_${month}.pdf`);
+        }
+        /*
+        async function generateReceipt(payId, month, amount, paidAt) {
+            const { jsPDF } = window.jspdf;
+
+            // --- Configuration ---
+            const doc = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4' // Standard A4 size as per request
+            });
+
+            // Color Palette (Matched to User's CSS Variables)
+            const colors = {
+                primary: [0, 108, 69],        // #006c45 --md-sys-color-primary
+                onPrimary: [255, 255, 255],   // #ffffff
+                primaryContainer: [142, 247, 194], // #8ef7c2
+                onPrimaryContainer: [0, 33, 18],   // #002112 (Approx)
+                surface: [251, 253, 249],     // #fbfdf9
+                surfaceContainer: [238, 245, 239], // #eef5ef
+                outline: [114, 121, 116],     // #727974
+                textMain: [26, 28, 30],       // #1A1C1E
+                textLight: [100, 100, 100],
+                divider: [224, 227, 225]      // #e0e3e1
+            };
+
+            // --- 1. Background & Watermark ---
+            // White Page Background
+            doc.setFillColor(255, 255, 255);
+            doc.rect(0, 0, 210, 297, 'F');
+
+            // Watermark "PAID" - Rotated, Light Green
+            doc.setTextColor(...colors.primary);
+            doc.setFontSize(120);
+            doc.setFont("helvetica", "bold");
+            doc.setGState(new doc.GState({ opacity: 0.04 }));
+            const watermarkText = "PAID";
+            // Center rotation logic
+            const centerX = 105;
+            const centerY = 148;
+            doc.text(watermarkText, centerX, centerY, { align: 'center', angle: 30 });
+            doc.setGState(new doc.GState({ opacity: 1 }));
+
+            // --- 2. Header Section (Light Green Background) ---
+            doc.setFillColor(...colors.surfaceContainer);
+            doc.rect(0, 0, 210, 75, 'F');
+
+            // Dashed Border Bottom for Header
+            doc.setDrawColor(...colors.outline);
+            doc.setLineDash([1, 1], 0);
+            doc.line(0, 75, 210, 75);
+            doc.setLineDash([]); // Reset dash
+
+            // --- Logo & Title ---
+            const logoX = 15;
+            const logoY = 15;
+            const logoSize = 25;
+
+            // White Rounded Box for Logo backdrop
+            doc.setFillColor(255, 255, 255);
+            doc.roundedRect(logoX, logoY, logoSize, logoSize, 5, 5, 'F');
+
+            // Actual Logo
+            const logoData = await getBase64ImageFromURL('../assets/images/logo_2.png');
+            if (logoData) {
+                doc.addImage(logoData, 'PNG', logoX + 3, logoY + 3, 19, 19);
+            }
+
+            // Title Text
+            doc.setTextColor(...colors.primary);
+            doc.setFontSize(26);
+            doc.setFont("helvetica", "bold");
+            doc.text("Dream Makers", logoX + logoSize + 8, logoY + 12);
+
+            doc.setTextColor(67, 73, 69); // #434945
+            doc.setFontSize(9);
+            doc.setFont("helvetica", "bold");
+            doc.text("YOUTH & SPORTS CLUB", logoX + logoSize + 9, logoY + 18);
+
+            // --- Status Pill (Right Side) ---
+            const pillWidth = 35;
+            const pillHeight = 8;
+            const pillX = 210 - 15 - pillWidth;
+            const pillY = 15;
+
+            doc.setFillColor(...colors.primaryContainer);
+            doc.roundedRect(pillX, pillY, pillWidth, pillHeight, 4, 4, 'F');
+
+            doc.setTextColor(...colors.onPrimaryContainer);
+            doc.setFontSize(8);
+            doc.setFont("helvetica", "bold");
+            doc.text("SUCCESS", pillX + pillWidth / 2, pillY + 5.5, { align: "center" });
+
+            // Receipt ID
+            doc.setTextColor(...colors.outline);
+            doc.setFontSize(8);
+            doc.setFont("helvetica", "normal");
+            doc.text("Receipt ID", 210 - 15, pillY + 14, { align: "right" });
+
+            doc.setTextColor(...colors.textMain);
+            doc.setFontSize(10);
+            doc.setFont("courier", "bold"); // Mono font
+            doc.text(`#${payId.split('-')[0].toUpperCase()}`, 210 - 15, pillY + 19, { align: "right" });
+
+            // --- Date & QR (Header Bottom) ---
+            const headerBottomY = 65;
+            const dateStr = new Date(paidAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(8);
+            doc.setTextColor(...colors.outline);
+            doc.text("Date Issued", 15, headerBottomY - 6);
+
+            doc.setFontSize(10);
+            doc.setTextColor(...colors.textMain);
+            doc.text(dateStr, 15, headerBottomY);
+
+            // QR Code Placeholder box
+            const qrSize = 18;
+            const qrX = 210 - 15 - qrSize;
+            doc.setFillColor(255, 255, 255);
+            doc.setDrawColor(200, 200, 200);
+            doc.setLineWidth(0.1);
+            doc.roundedRect(qrX, 75 - qrSize - 5, qrSize, qrSize, 2, 2, 'DF');
+            doc.setFontSize(6);
+            doc.setTextColor(150);
+            doc.text("QR SCAN", qrX + qrSize / 2, 75 - qrSize / 2 - 5, { align: 'center' });
+
+            // --- 3. Main Content Grid ---
+            let y = 95;
+            const gridGap = 10;
+            const gridWidth = (210 - 30 - gridGap) / 2; // (PageWidth - Margins - Gap) / 2
+
+            // --- Box 1: Billed To ---
+            drawCard(doc, 15, y, gridWidth, 40, "Billed To",
+                currentUserProfile ? currentUserProfile.full_name : "Valued Member",
+                `Club ID: ${currentUserProfile ? currentUserProfile.member_id : 'N/A'}`);
+
+            // --- Box 2: Payment Method ---
+            drawCard(doc, 15 + gridWidth + gridGap, y, gridWidth, 40, "Payment Method",
+                "Online Transfer / Cash",
+                `Transaction ID: ${payId.substr(0, 8).toUpperCase()}`);
+
+            function drawCard(doc, x, y, w, h, label, title, subtitle) {
+                // Border/Bg
+                doc.setDrawColor(...colors.divider);
+                doc.setLineWidth(0.2);
+                doc.setFillColor(255, 255, 255);
+                doc.roundedRect(x, y, w, h, 3, 3, 'DF');
+
+                // Label
+                doc.setFontSize(8);
+                doc.setTextColor(...colors.outline);
+                doc.setFont("helvetica", "bold");
+                doc.text(label.toUpperCase(), x + 6, y + 8);
+
+                // Title
+                doc.setFontSize(12);
+                doc.setTextColor(...colors.textMain);
+                doc.setFont("helvetica", "bold");
+                doc.text(title, x + 6, y + 18);
+
+                // Subtitle
+                doc.setFontSize(9);
+                doc.setTextColor(...colors.textLight);
+                doc.setFont("helvetica", "normal");
+                doc.text(subtitle, x + 6, y + 26);
+            }
+
+            // --- 4. Line Items Table ---
+            y += 55;
+
+            // Table Header
+            doc.setDrawColor(240, 240, 240);
+            doc.line(15, y, 210 - 15, y); // Top Line
+
+            doc.setFontSize(8);
+            doc.setTextColor(...colors.outline);
+            doc.setFont("helvetica", "bold");
+            doc.text("DESCRIPTION", 15, y - 3);
+            doc.text("AMOUNT (LKR)", 210 - 15, y - 3, { align: "right" });
+
+            // Row 1
+            y += 10;
+            doc.setFontSize(10);
+            doc.setTextColor(...colors.textMain);
+            doc.setFont("helvetica", "bold");
+            doc.text("Monthly Membership Fee", 15, y);
+
+            doc.setFontSize(9);
+            doc.setTextColor(...colors.textLight);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Period: ${month}`, 15, y + 5);
+
+            doc.setFontSize(10);
+            doc.setTextColor(...colors.textMain);
+            doc.setFont("helvetica", "bold");
+            doc.text(`${amount}.00`, 210 - 15, y, { align: "right" });
+
+            // Row Bottom Border (Dashed)
+            y += 10;
+            doc.setDrawColor(...colors.divider);
+            doc.setLineDash([1, 1], 0);
+            doc.line(15, y, 210 - 15, y);
+            doc.setLineDash([]);
+
+
+            // --- 5. Total Card (Bottom Right) ---
+            y += 15;
+            const cardW = 90;
+            const cardH = 35; // increased height for content
+            const cardX = 210 - 15 - cardW;
+
+            // Dark Green Card
+            doc.setFillColor(...colors.primary);
+            doc.roundedRect(cardX, y, cardW, cardH, 4, 4, 'F');
+
+            // Text inside card
+            doc.setTextColor(...colors.onPrimary);
+
+            // Subtotal row
+            doc.setFontSize(8);
+            doc.setFont("helvetica", "normal");
+            doc.text("Subtotal", cardX + 5, y + 8);
+            doc.text(`${amount}.00`, cardX + cardW - 5, y + 8, { align: "right" });
+
+            // Divider inside card
+            doc.setDrawColor(255, 255, 255);
+            doc.setLineWidth(0.1);
+            doc.setGState(new doc.GState({ opacity: 0.3 }));
+            doc.line(cardX + 5, y + 12, cardX + cardW - 5, y + 12);
+            doc.setGState(new doc.GState({ opacity: 1 }));
+
+            // Total Heading
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "bold");
+            doc.text("TOTAL PAID", cardX + 5, y + 25);
+
+            // Total Value (Big)
+            doc.setFontSize(16);
+            doc.text(`LKR ${amount}.00`, cardX + cardW - 5, y + 25, { align: "right" });
+
+
+            // --- 6. Footer ---
+            const footerY = 270;
+
+            // Thank You Text
+            doc.setFillColor(240, 242, 240); // bg-[#f0f2f0]
+            doc.rect(0, 250, 210, 47, 'F'); // Footer BG
+
+            doc.setTextColor(100, 100, 100);
+            doc.setFontSize(9);
+            doc.setFont("helvetica", "italic");
+            doc.text('"Thank you for your valuable contribution to the club."', 105, 260, { align: 'center' });
+
+            // Dashed Divider
+            doc.setDrawColor(200, 200, 200);
+            doc.setLineDash([1, 1], 0);
+            doc.line(15, 270, 210 - 15, 270);
+            doc.setLineDash([]); // Reset
+
+            // Footer Details
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(8);
+            doc.setTextColor(150, 150, 150);
+
+            // Left
+            doc.text("Dream Makers Youth & Sports Club", 15, 280);
+            doc.text("Horana, Sri Lanka", 15, 284);
+
+            // Right
+            const timestamp = new Date().toLocaleString();
+            doc.setFont("courier", "normal");
+            doc.text(`Gen: ${timestamp}`, 210 - 15, 280, { align: 'right' });
+            doc.text("Auth: SYS-ADMIN", 210 - 15, 284, { align: 'right' });
+
+            doc.save(`DMYSC_Receipt_${month}.pdf`);
         }
 
+
+
+
+        */
         initPage();
     </script>
 

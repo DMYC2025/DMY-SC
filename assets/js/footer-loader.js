@@ -1,22 +1,36 @@
 // js/footer-loader.js
 
 async function loadGlobalFooter() {
+    // Check if Mobile (less than 768px width)
+    if (window.innerWidth < 768) {
+        // Hide footer placeholder on mobile
+        const footerPlaceholder = document.getElementById('global-footer-placeholder');
+        if (footerPlaceholder) footerPlaceholder.style.display = 'none';
+        return;
+    }
+
     try {
-        // 1. Fetch the footer HTML content
-        const response = await fetch('footer.html');
+        // Attempt to fetch footer.html, trying relative paths
+        let response = await fetch('footer.html');
+        if (!response.ok) {
+            response = await fetch('../footer.html');
+        }
+
+        if (!response.ok) throw new Error("Footer template not found");
+
         const footerHtml = await response.text();
 
-        // 2. Insert into the placeholder div
+        // Insert into the placeholder div
         const footerPlaceholder = document.getElementById('global-footer-placeholder');
         if (footerPlaceholder) {
             footerPlaceholder.innerHTML = footerHtml;
 
-            // 3. Initialize logic AFTER HTML is inserted
+            // Initialize logic AFTER HTML is inserted
             updateFooterYear();
             loadFooterContactData();
         }
     } catch (error) {
-        console.error('Error loading footer: - footer-loader.js:19', error);
+        console.error('Error loading footer:', error);
     }
 }
 

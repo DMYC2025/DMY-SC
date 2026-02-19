@@ -136,10 +136,15 @@ serve(async (req) => {
                         title: record.title,
                         body: record.message
                     },
+                    android: {
+                        priority: "high"
+                    },
                     webpush: {
-                        fcm_options: {
-                            link: "https://your-app-url.com/user/notifycation.html" // Update this later
-                        }
+                        headers: {
+                            "Urgency": "high",
+                            "TTL": "86400"
+                        },
+                        fcm_options: {}
                     },
                     data: {
                         priority: record.priority || 'normal',
