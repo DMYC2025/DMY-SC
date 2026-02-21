@@ -36,14 +36,20 @@ try {
                 return;
             }
 
-            // Ensure Service Worker is ready
             if (!navigator.serviceWorker) {
                 console.error('FCM: Service Worker not supported in this browser.');
                 return;
             }
 
-            // Ensure Service Worker is ready
-            const registration = await navigator.serviceWorker.ready;
+            // ජංගම දුරකථන සඳහා Service Worker එක අනිවාර්යයෙන්ම Register කිරීම
+            let registration;
+            try {
+                registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+                await navigator.serviceWorker.ready;
+            } catch (swError) {
+                console.error('FCM: Service Worker registration failed:', swError);
+                return;
+            }
 
             if (!registration) {
                 console.error('FCM: Service Worker registration not found.');
@@ -140,10 +146,8 @@ try {
         console.log('Message received in foreground: ', payload);
     });
 
-    // Initialize when DOM is ready
-    document.addEventListener('DOMContentLoaded', () => {
-        initFirebaseMessaging();
-    });
+    // Mobile උපාංග වල Permission දෝෂ මගහරවා ගැනීමට DOMContentLoaded හරහා ස්වයංක්‍රීයව ක්‍රියාත්මක වීම ඉවත් කර ඇත.
+    // පරිශීලකයා ලොගින් වන අවස්ථාවේදී අනිවාර්යයෙන්ම requestAndInitFCM() කෝල් කරන්න.
 
 } catch (e) {
     console.error("Firebase Initialization Error:", e);
