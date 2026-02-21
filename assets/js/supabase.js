@@ -15,4 +15,4 @@ const _supabase = window.supabase.createClient(supabaseUrl, supabaseKey, {
     }
 });
 
-console.log("Supabase Connected! - Session Persistence Enabled");
+// Supabase Connected!

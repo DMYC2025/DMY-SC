@@ -19,7 +19,7 @@ try {
     const VAPID_KEY = 'BB4pawo5SVgELPUmlfaCScNFzW5WnRC3xfWnZ_cHmaFaMCey0hDRKctHWTVhaoy2zU7Ei5La2BnPiwaCK828MOE';
 
     async function initFirebaseMessaging() {
-        console.log('FCM: Initializing...');
+        // FCM: Initializing
         try {
             if (!("Notification" in window)) {
                 console.log("FCM: Notifications not supported.");
@@ -42,7 +42,7 @@ try {
                 return;
             }
 
-            console.log('FCM: Waiting for Service Worker registration...');
+            // Ensure Service Worker is ready
             const registration = await navigator.serviceWorker.ready;
 
             if (!registration) {
@@ -53,8 +53,8 @@ try {
             // Small delay for mobile browsers to ensure internal state is settled
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             if (isMobile) {
-                console.log('FCM: Mobile detected, adding 1s delay...');
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                console.log('FCM: Mobile detected, adding 2s delay...');
+                await new Promise(resolve => setTimeout(resolve, 2000));
             }
 
             console.log('FCM: Requesting token...');
@@ -64,7 +64,6 @@ try {
             });
 
             if (token) {
-                console.log('FCM: Token retrieved successfully.');
                 saveTokenToSupabase(token);
             } else {
                 console.log('FCM: No registration token available.');
@@ -74,6 +73,8 @@ try {
             console.error('FCM Error:', error.code || error.message || error);
             if (error.code === 'messaging/permission-blocked') {
                 console.warn('FCM: Notifications blocked by browser settings.');
+            } else if (error.code === 'messaging/failed-service-worker-registration') {
+                console.error('FCM: Service worker registration failed or not found.');
             }
         }
     }
@@ -101,10 +102,10 @@ try {
     window.reInitFirebase = initFirebaseMessaging;
     window.requestAndInitFCM = requestAndInitFCM;
 
-    async function saveTokenToSupabase(token) {
+    async function saveTokenToSupabase(token, retryCount = 0) {
         if (typeof _supabase === 'undefined') {
             console.warn('Supabase not yet loaded, retrying in 1s...');
-            setTimeout(() => saveTokenToSupabase(token), 1000);
+            setTimeout(() => saveTokenToSupabase(token, retryCount), 1000);
             return;
         }
 
@@ -122,7 +123,12 @@ try {
                     console.log('FCM Token synced to database: ' + session.user.id);
                 }
             } else {
-                console.log('FCM: No active session to save token.');
+                if (retryCount < 5) {
+                    console.log(`FCM: No active session, retrying in 2s (Attempt ${retryCount + 1}/5)...`);
+                    setTimeout(() => saveTokenToSupabase(token, retryCount + 1), 2000);
+                } else {
+                    console.log('FCM: No active session to save token after retries.');
+                }
             }
         } catch (err) {
             console.error('FCM Token Save Error:', err);
