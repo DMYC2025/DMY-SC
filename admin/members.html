@@ -195,10 +195,16 @@
                                     class="material-symbols-rounded absolute right-4 top-1/2 -translate-y-1/2 text-[#8e918f] pointer-events-none">expand_more</span>
                             </div>
                             <button onclick="generatePDF()"
-                                class="w-full md:w-auto px-8 py-3.5 rounded-xl bg-[#3c2525]/80 hover:bg-[#3c2525] text-[#ffb4ab] font-bold text-sm shadow-lg hover:shadow-[#3c2525]/20 transition-all flex items-center justify-center gap-3 border border-[#ffb4ab]/10 group">
+                                class="w-full md:w-auto px-6 py-3.5 rounded-xl bg-[#3c2525]/80 hover:bg-[#3c2525] text-[#ffb4ab] font-bold text-sm shadow-lg hover:shadow-[#3c2525]/20 transition-all flex items-center justify-center gap-2 border border-[#ffb4ab]/10 group">
                                 <span
-                                    class="material-symbols-rounded group-hover:scale-110 transition-transform">picture_as_pdf</span>
-                                <span>Download PDF</span>
+                                    class="material-symbols-rounded group-hover:scale-110 transition-transform text-lg">picture_as_pdf</span>
+                                <span>PDF</span>
+                            </button>
+                            <button onclick="exportCSV()"
+                                class="w-full md:w-auto px-6 py-3.5 rounded-xl bg-[#062e6f]/80 hover:bg-[#062e6f] text-[#a8c7fa] font-bold text-sm shadow-lg hover:shadow-primary/10 transition-all flex items-center justify-center gap-2 border border-primary/10 group">
+                                <span
+                                    class="material-symbols-rounded group-hover:scale-110 transition-transform text-lg">description</span>
+                                <span>CSV Export</span>
                             </button>
                         </div>
                     </div>
@@ -389,7 +395,7 @@
         async function init() {
             if (typeof _supabase === 'undefined') return;
             const { data: { session } } = await _supabase.auth.getSession();
-            if (!session) return window.location.href = '../login.html';
+            if (!session) return window.location.href = '../auth/login.html';
             fetchMembers();
         }
 
@@ -406,6 +412,12 @@
                 allProfiles = data || [];
                 updateTabCounts();
                 runFilters();
+
+                // Check for auto-actions
+                const params = new URLSearchParams(window.location.search);
+                if (params.get('action') === 'export') {
+                    setTimeout(() => exportCSV(), 1000);
+                }
             } catch (err) {
                 console.error("Fetch Error:", err);
                 const tbody = document.getElementById('membersTable');
@@ -688,6 +700,57 @@
             }
 
             doc.save('DMYSC_Members_Report.pdf');
+        }
+
+        // --- CSV Export Logic ---
+        function exportCSV() {
+            // 1. Get Selected Members or All Filtered
+            const selectedIds = Array.from(document.querySelectorAll('.member-checkbox:checked')).map(cb => cb.value);
+            let dataToExport = [];
+
+            if (selectedIds.length > 0) {
+                dataToExport = allProfiles.filter(m => selectedIds.includes(m.id));
+            } else {
+                if (!confirm("No members selected. Export ALL currently visible members to CSV?")) return;
+                dataToExport = filteredMembers;
+            }
+
+            if (dataToExport.length === 0) { alert("No data to export."); return; }
+
+            // 2. Define Headers
+            const headers = ["Member ID", "Full Name", "NIC", "Gender", "DOB", "Phone", "WhatsApp", "Email", "Address", "Role", "Approved", "Joined Date"];
+
+            // 3. Map Data
+            const rows = dataToExport.map(m => [
+                m.member_id || '',
+                `"${(m.full_name || '').replace(/"/g, '""')}"`,
+                m.nic || '',
+                m.gender || '',
+                m.dob || '',
+                m.phone || '',
+                m.whatsapp || '',
+                m.email || '',
+                `"${(m.address || '').replace(/"/g, '""')}"`,
+                m.role || 'member',
+                m.is_approved ? 'Yes' : 'No',
+                m.created_at ? new Date(m.created_at).toLocaleDateString() : ''
+            ]);
+
+            // 4. Create CSV Content
+            const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+
+            // 5. Trigger Download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+
+            link.setAttribute("href", url);
+            link.setAttribute("download", `DMYSC_Members_${timestamp}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         // Helper to get Base64

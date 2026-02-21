@@ -193,13 +193,14 @@
                                     <th class="p-6 font-medium">Administrator</th>
                                     <th class="p-6 font-medium">Contact</th>
                                     <th class="p-6 font-medium">Status / Access</th>
+                                    <th class="p-6 font-medium text-center">Recorded By</th>
                                     <th class="p-6 font-medium text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="adminsTable"
                                 class="text-sm font-medium divide-y divide-[#353539] text-[#E3E3E3]">
                                 <tr>
-                                    <td colspan="4" class="p-10 text-center">
+                                    <td colspan="5" class="p-10 text-center">
                                         <div
                                             class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto">
                                         </div>
@@ -287,7 +288,7 @@
         async function init() {
             if (typeof _supabase === 'undefined') return;
             const { data: { session } } = await _supabase.auth.getSession();
-            if (!session) return window.location.href = '../login.html';
+            if (!session) return window.location.href = '../auth/login.html';
             fetchAdmins();
         }
 
@@ -295,7 +296,7 @@
             try {
                 const { data, error } = await _supabase
                     .from('profiles')
-                    .select('*')
+                    .select('*, recorder:recorded_by(full_name)')
                     .eq('role', 'admin')
                     .order('created_at', { ascending: false });
 
@@ -343,7 +344,7 @@
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-[#8e918f] italic bg-[#1E1E1E]">No records found for this criteria.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-[#8e918f] italic bg-[#1E1E1E]">No records found for this criteria.</td></tr>';
                 return;
             }
 
@@ -372,9 +373,10 @@
                             </div>
                         </td>
                         <td class="p-6">
-                            <div class="flex flex-col gap-2">
-                                <span class="bg-purple-900/20 text-purple-300 px-3 py-1 rounded-lg text-[10px] font-bold border border-purple-500/20 uppercase w-fit">Administrator</span>
-                            </div>
+                            <span class="bg-purple-900/20 text-purple-300 px-3 py-1 rounded-lg text-[10px] font-bold border border-purple-500/20 uppercase w-fit">Administrator</span>
+                        </td>
+                        <td class="p-6 text-center">
+                            <span class="text-[10px] font-bold text-primary uppercase bg-primary/5 px-3 py-1 rounded-full border border-primary/10">${m.recorder?.full_name || 'System'}</span>
                         </td>
                         <td class="p-6 text-right">
                              <div class="flex items-center justify-end gap-2">

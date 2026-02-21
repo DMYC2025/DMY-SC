@@ -309,7 +309,8 @@
                                 </div>
                                 <div>
                                     <h3 class="font-bold text-[#E3E3E3] text-lg">Admin Management</h3>
-                                    <p class="text-[#8e918f] text-xs mt-1">Manage platform administrators & roles</p>
+                                    <p class="text-[#8e918f] text-xs mt-1">Manage platform administrators &amp; roles
+                                    </p>
                                 </div>
                                 <div
                                     class="ml-auto text-[#8e918f] group-hover:text-[#E3E3E3] transition transform group-hover:translate-x-1">
@@ -317,11 +318,141 @@
                                 </div>
                             </div>
                         </a>
+
+                        <!-- Maintenance Mode Card -->
+                        <div onclick="openMaintenanceModal()"
+                            class="bg-[#252529] p-6 rounded-xl border border-white/5 hover:border-[#ffb783]/50 transition cursor-pointer group relative overflow-hidden">
+                            <div
+                                class="absolute inset-0 bg-[#ffb783]/5 opacity-0 group-hover:opacity-100 transition duration-500">
+                            </div>
+                            <div class="flex items-center gap-4 relative z-10">
+                                <div
+                                    class="w-14 h-14 rounded-xl bg-[#ffb783]/10 flex items-center justify-center text-[#ffb783] group-hover:bg-[#ffb783]/20 transition shadow-lg shadow-orange-500/5">
+                                    <span class="material-symbols-rounded text-3xl">construction</span>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="font-bold text-[#E3E3E3] text-lg">Maintenance Mode</h3>
+                                        <span id="maintStatusPill"
+                                            class="hidden text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#ffb783]/20 text-[#ffb783] border border-[#ffb783]/30">ACTIVE</span>
+                                    </div>
+                                    <p class="text-[#8e918f] text-xs mt-1">Schedule downtime or enable quick maintenance
+                                    </p>
+                                </div>
+                                <div
+                                    class="ml-auto text-[#8e918f] group-hover:text-[#E3E3E3] transition transform group-hover:translate-x-1">
+                                    <span class="material-symbols-rounded text-2xl">arrow_forward</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
             </div>
         </main>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- MAINTENANCE MODE MODAL                                  -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <div id="maintModal" class="fixed inset-0 z-[90] hidden">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeMaintenanceModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-[#1E1E1E] w-full max-w-lg rounded-2xl border border-white/10 shadow-2xl flex flex-col relative overflow-hidden transform scale-95 opacity-0 transition-all duration-300"
+                id="maintModalContent">
+
+                <!-- Header -->
+                <div class="p-6 border-b border-white/5 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-[#ffb783]/15 flex items-center justify-center text-[#ffb783]">
+                            <span class="material-symbols-rounded">construction</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-display font-medium text-[#E3E3E3]">Maintenance Mode</h3>
+                            <p class="text-[10px] text-[#8e918f]">Show maintenance page to all visitors</p>
+                        </div>
+                    </div>
+                    <button onclick="closeMaintenanceModal()"
+                        class="text-[#8e918f] hover:text-white p-2 rounded-full hover:bg-white/5 transition">
+                        <span class="material-symbols-rounded">close</span>
+                    </button>
+                </div>
+
+                <!-- Current status bar -->
+                <div class="px-6 pt-5">
+                    <div id="maintCurrentStatus"
+                        class="flex items-center gap-3 p-4 rounded-xl bg-[#252529] border border-white/5 mb-5">
+                        <span class="material-symbols-rounded text-[#8e918f]">info</span>
+                        <span class="text-sm text-[#8e918f]">Loading status…</span>
+                    </div>
+                </div>
+
+                <!-- Mode tabs -->
+                <div class="px-6">
+                    <div class="flex gap-2 mb-5 bg-[#252529] p-1 rounded-xl border border-white/5">
+                        <button onclick="setMaintTab('quick')" id="tabQuick"
+                            class="flex-1 py-2 rounded-lg text-sm font-medium transition bg-[#ffb783]/15 text-[#ffb783]">
+                            ⚡ Quick Mode
+                        </button>
+                        <button onclick="setMaintTab('schedule')" id="tabSchedule"
+                            class="flex-1 py-2 rounded-lg text-sm font-medium transition text-[#8e918f] hover:text-[#E3E3E3]">
+                            📅 Scheduled
+                        </button>
+                    </div>
+
+                    <!-- Quick Mode Panel -->
+                    <div id="panelQuick" class="mb-5">
+                        <div class="bg-[#252529] rounded-xl p-4 border border-white/5">
+                            <p class="text-sm text-[#C4C7C5] mb-1 font-medium">Enable immediately, disable manually</p>
+                            <p class="text-[11px] text-[#8e918f]">The maintenance page will be shown to all visitors
+                                until you turn it off. No countdown will be displayed.</p>
+                        </div>
+                    </div>
+
+                    <!-- Scheduled Mode Panel -->
+                    <div id="panelSchedule" class="mb-5 hidden">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-[#8e918f] uppercase mb-1">Start Date
+                                    &amp; Time</label>
+                                <input type="datetime-local" id="maintStart"
+                                    class="w-full bg-[#252529] border border-white/10 rounded-xl p-3 text-sm text-[#E3E3E3] focus:border-[#ffb783]/50 focus:outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-[#8e918f] uppercase mb-1">End Date &amp;
+                                    Time <span class="text-[#ffb783]">(Countdown Target)</span></label>
+                                <input type="datetime-local" id="maintEnd"
+                                    class="w-full bg-[#252529] border border-white/10 rounded-xl p-3 text-sm text-[#E3E3E3] focus:border-[#ffb783]/50 focus:outline-none transition">
+                            </div>
+                            <p class="text-[11px] text-[#8e918f]">Visitors will see a countdown timer. Page auto-reloads
+                                when countdown hits zero.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer buttons -->
+                <div class="p-6 border-t border-white/5 flex gap-3">
+                    <button onclick="enableMaintenance()" id="enableMaintBtn"
+                        class="flex-1 flex items-center justify-center gap-2 py-3 bg-[#ffb783]/15 hover:bg-[#ffb783]/25 text-[#ffb783] border border-[#ffb783]/25 rounded-full font-medium text-sm transition">
+                        <span class="material-symbols-rounded text-[18px]">construction</span> Enable Maintenance
+                    </button>
+                    <button onclick="disableMaintenance()" id="disableMaintBtn"
+                        class="flex-1 flex items-center justify-center gap-2 py-3 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/25 rounded-full font-medium text-sm transition">
+                        <span class="material-symbols-rounded text-[18px]">check_circle</span> Disable Now
+                    </button>
+                </div>
+
+                <!-- Link to maintenance page -->
+                <div class="px-6 pb-5 text-center">
+                    <a href="../maintenance.html" target="_blank"
+                        class="text-[10px] text-[#8e918f] hover:text-[#E3E3E3] transition underline underline-offset-2">
+                        Preview maintenance page &rarr;
+                    </a>
+                </div>
+
+            </div>
+        </div>
     </div>
 
     <!-- Removed AOS script reference to fix visibility issues if script fails to load -->
@@ -384,11 +515,23 @@
         // --- 1. Footer Contact Info Logic ---
         async function loadSettings() {
             if (typeof _supabase === 'undefined') return;
-            const { data } = await _supabase.from('site_settings').select('*').eq('id', 1).single();
+            const { data } = await _supabase.from('site_settings').select('*, recorder:recorded_by(full_name)').eq('id', 1).single();
             if (data) {
                 document.getElementById('address').value = data.address || '';
                 document.getElementById('phone').value = data.phone || '';
                 document.getElementById('email').value = data.email || '';
+
+                // Show last updater info
+                const recorderName = data.recorder?.full_name || 'System';
+                const settingsBtn = document.querySelector('#settingsForm button');
+                let infoEl = document.getElementById('settingsUpdaterInfo');
+                if (!infoEl) {
+                    infoEl = document.createElement('p');
+                    infoEl.id = 'settingsUpdaterInfo';
+                    infoEl.className = 'text-[10px] text-[#8e918f] mt-2 italic';
+                    settingsBtn.parentNode.insertBefore(infoEl, settingsBtn.nextSibling);
+                }
+                infoEl.innerHTML = `<span class="material-symbols-rounded text-[12px] align-middle">history</span> Last updated by: <span class="text-primary font-bold">${recorderName}</span>`;
             }
         }
 
@@ -397,10 +540,12 @@
             settingsForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 showLoading(true);
+                const { data: { session } } = await _supabase.auth.getSession();
                 const { error } = await _supabase.from('site_settings').update({
                     address: document.getElementById('address').value,
                     phone: document.getElementById('phone').value,
-                    email: document.getElementById('email').value
+                    email: document.getElementById('email').value,
+                    recorded_by: session?.user?.id
                 }).eq('id', 1);
 
                 showLoading(false);
@@ -441,7 +586,7 @@
             if (typeof _supabase === 'undefined') return;
             const { data, error } = await _supabase
                 .from('hero_slides')
-                .select('*')
+                .select('*, recorder:recorded_by(full_name)')
                 .order('order_index', { ascending: true });
 
             if (!error) {
@@ -476,7 +621,11 @@
                         </div>
                     </td>
                     <td class="p-4">
-                        <div class="text-xs font-mono text-[#8e918f] truncate max-w-[200px] md:max-w-[300px]" title="${slide.image_url}">${slide.image_url}</div>
+                        <div class="text-xs font-mono text-[#8e918f] truncate max-w-[150px] md:max-w-[200px]" title="${slide.image_url}">${slide.image_url}</div>
+                        <div class="text-[9px] text-primary/70 font-bold mt-1 uppercase flex items-center gap-1">
+                            <span class="material-symbols-rounded text-[10px]">person</span>
+                            By: ${slide.recorder?.full_name || 'System'}
+                        </div>
                     </td>
                     <td class="p-4 text-center">
                         <div class="flex items-center justify-center gap-1 bg-[#252529] rounded-lg p-1 w-fit mx-auto border border-white/5">
@@ -529,9 +678,11 @@
                     // Calculate new order index (last index + 1)
                     const newIndex = slidesData.length > 0 ? Math.max(...slidesData.map(s => s.order_index)) + 1 : 0;
 
+                    const { data: { session } } = await _supabase.auth.getSession();
                     const { error: dbError } = await _supabase.from('hero_slides').insert([{
                         image_url: imageUrl,
-                        order_index: newIndex
+                        order_index: newIndex,
+                        recorded_by: session?.user?.id
                     }]);
 
                     if (dbError) {
@@ -646,7 +797,123 @@
             fetchSlides();
         }
 
-        // Ensure DOM is ready before init
+        // ─── MAINTENANCE MODE ────────────────────────────────────
+        let _maintTab = 'quick';
+
+        function setMaintTab(tab) {
+            _maintTab = tab;
+            document.getElementById('panelQuick').classList.toggle('hidden', tab !== 'quick');
+            document.getElementById('panelSchedule').classList.toggle('hidden', tab !== 'schedule');
+            document.getElementById('tabQuick').className = tab === 'quick'
+                ? 'flex-1 py-2 rounded-lg text-sm font-medium transition bg-[#ffb783]/15 text-[#ffb783]'
+                : 'flex-1 py-2 rounded-lg text-sm font-medium transition text-[#8e918f] hover:text-[#E3E3E3]';
+            document.getElementById('tabSchedule').className = tab === 'schedule'
+                ? 'flex-1 py-2 rounded-lg text-sm font-medium transition bg-[#ffb783]/15 text-[#ffb783]'
+                : 'flex-1 py-2 rounded-lg text-sm font-medium transition text-[#8e918f] hover:text-[#E3E3E3]';
+        }
+
+        async function openMaintenanceModal() {
+            const modal = document.getElementById('maintModal');
+            const content = document.getElementById('maintModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+
+            // Pre-fill times
+            const now = new Date();
+            const toLocal = d => new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+            document.getElementById('maintStart').value = toLocal(now);
+            const def = new Date(now.getTime() + 2 * 3600000);
+            document.getElementById('maintEnd').value = toLocal(def);
+
+            // Load current status
+            await refreshMaintStatus();
+        }
+
+        function closeMaintenanceModal() {
+            const modal = document.getElementById('maintModal');
+            const content = document.getElementById('maintModalContent');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        async function refreshMaintStatus() {
+            const statusEl = document.getElementById('maintCurrentStatus');
+            const pill = document.getElementById('maintStatusPill');
+            try {
+                const { data } = await _supabase.from('site_settings').select('maintenance_mode, maintenance_end').eq('id', 1).single();
+                if (!data) throw new Error();
+                if (data.maintenance_mode) {
+                    const endStr = data.maintenance_end
+                        ? `· Ends ${new Date(data.maintenance_end).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}`
+                        : '(Quick Mode — no countdown)';
+                    statusEl.innerHTML = `<span class="material-symbols-rounded text-[#ffb783]">warning</span><span class="text-sm text-[#ffb783] font-medium">Maintenance is <strong>ACTIVE</strong> ${endStr}</span>`;
+                    statusEl.className = 'flex items-center gap-3 p-4 rounded-xl bg-[#ffb783]/10 border border-[#ffb783]/20 mb-5';
+                    pill.classList.remove('hidden');
+                } else {
+                    statusEl.innerHTML = `<span class="material-symbols-rounded text-primary">check_circle</span><span class="text-sm text-primary font-medium">Site is <strong>LIVE</strong> — maintenance mode is off</span>`;
+                    statusEl.className = 'flex items-center gap-3 p-4 rounded-xl bg-primary/10 border border-primary/20 mb-5';
+                    pill.classList.add('hidden');
+                }
+            } catch (e) {
+                statusEl.innerHTML = `<span class="material-symbols-rounded text-[#8e918f]">info</span><span class="text-sm text-[#8e918f]">Could not load status.</span>`;
+            }
+        }
+
+        async function enableMaintenance() {
+            const btn = document.getElementById('enableMaintBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-symbols-rounded animate-spin text-[18px]">progress_activity</span> Saving...';
+
+            let payload = { maintenance_mode: true, maintenance_end: null, maintenance_start: null };
+
+            if (_maintTab === 'schedule') {
+                const start = document.getElementById('maintStart').value;
+                const end = document.getElementById('maintEnd').value;
+                if (!end) {
+                    alert('Please set an end date/time for scheduled maintenance.');
+                    btn.disabled = false;
+                    btn.innerHTML = '<span class="material-symbols-rounded text-[18px]">construction</span> Enable Maintenance';
+                    return;
+                }
+                payload.maintenance_start = new Date(start).toISOString();
+                payload.maintenance_end = new Date(end).toISOString();
+            }
+
+            const { error } = await _supabase.from('site_settings').update(payload).eq('id', 1);
+            if (error) {
+                alert('Error: ' + error.message);
+            } else {
+                await refreshMaintStatus();
+            }
+            btn.disabled = false;
+            btn.innerHTML = '<span class="material-symbols-rounded text-[18px]">construction</span> Enable Maintenance';
+        }
+
+        async function disableMaintenance() {
+            const btn = document.getElementById('disableMaintBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-symbols-rounded animate-spin text-[18px]">progress_activity</span> Disabling...';
+
+            const { error } = await _supabase.from('site_settings').update({
+                maintenance_mode: false,
+                maintenance_end: null,
+                maintenance_start: null
+            }).eq('id', 1);
+
+            if (error) {
+                alert('Error: ' + error.message);
+            } else {
+                await refreshMaintStatus();
+            }
+            btn.disabled = false;
+            btn.innerHTML = '<span class="material-symbols-rounded text-[18px]">check_circle</span> Disable Now';
+        }
+
+        // ─── INIT ────────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', init);
 
     </script>

@@ -237,6 +237,9 @@
                 const { data, error } = await _supabase
                     .from('notifications')
                     .select('*, recorder:recorded_by(full_name)')
+                    .not('title', 'ilike', '%issue%')
+                    .not('message', 'ilike', '%issue%')
+                    .not('title', 'ilike', '%support%')
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;

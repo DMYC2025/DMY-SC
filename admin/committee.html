@@ -155,9 +155,22 @@
                                     <label class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">Member</label>
                                     <select id="member" class="w-full m3-input p-3 text-[#E3E3E3]"></select>
                                 </div>
-                                <div><label class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">Role /
-                                        Term</label><input type="text" id="term" placeholder="e.g. President 2026"
-                                        class="w-full m3-input p-3 text-[#E3E3E3]"></div>
+                                <div>
+                                    <label class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">Role /
+                                        Term</label>
+                                    <select id="roleSelect" class="w-full m3-input p-3 text-[#E3E3E3] mb-2"
+                                        onchange="toggleCustomRole()">
+                                        <option value="President">President</option>
+                                        <option value="Vice President">Vice President</option>
+                                        <option value="Secretary">Secretary</option>
+                                        <option value="Assistant Secretary">Assistant Secretary</option>
+                                        <option value="Treasurer">Treasurer</option>
+                                        <option value="Organizer">Organizer</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <input type="text" id="customRole" placeholder="Type your role here..."
+                                        class="w-full m3-input p-3 text-[#E3E3E3] hidden">
+                                </div>
                                 <div><label
                                         class="text-xs font-bold uppercase text-[#8e918f] mb-1 block">Date</label><input
                                         type="date" id="date" class="w-full m3-input p-3 text-[#E3E3E3]"></div>
@@ -268,7 +281,31 @@
                 return;
             }
 
-            list.innerHTML = data.map(c => {
+            // --- SORTING LOGIC ---
+            const ROLE_ORDER = {
+                'president': 1,
+                'vice president': 2,
+                'secretary': 3,
+                'assistant secretary': 4,
+                'treasurer': 5,
+                'organizer': 6
+            };
+
+            const sortedData = [...data].sort((a, b) => {
+                const roleA = (a.term_period || '').toLowerCase();
+                const roleB = (b.term_period || '').toLowerCase();
+
+                const getOrder = (role) => {
+                    for (const key in ROLE_ORDER) {
+                        if (role.includes(key)) return ROLE_ORDER[key];
+                    }
+                    return 100;
+                };
+
+                return getOrder(roleA) - getOrder(roleB);
+            });
+
+            list.innerHTML = sortedData.map(c => {
                 const prof = c.profile || {};
                 const recorderName = c.recorder?.full_name || 'System';
 
@@ -294,18 +331,45 @@
             }).join('');
         }
 
+        function toggleCustomRole() {
+            const roleSelect = document.getElementById('roleSelect');
+            const customInput = document.getElementById('customRole');
+            if (roleSelect.value === 'Other') {
+                customInput.classList.remove('hidden');
+                customInput.focus();
+            } else {
+                customInput.classList.add('hidden');
+            }
+        }
+
         document.getElementById('commForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const { data: { session } } = await _supabase.auth.getSession();
             if (!session) return;
 
-            await _supabase.from('executive_committee').insert({
+            const roleSelect = document.getElementById('roleSelect');
+            const customRole = document.getElementById('customRole');
+            const finalRole = roleSelect.value === 'Other' ? customRole.value : roleSelect.value;
+
+            if (!finalRole || finalRole.trim() === "") {
+                alert("Please select or enter a role.");
+                return;
+            }
+
+            const { error } = await _supabase.from('executive_committee').insert({
                 profile_id: document.getElementById('member').value,
-                term_period: document.getElementById('term').value,
+                term_period: finalRole,
                 appointed_date: document.getElementById('date').value,
                 recorded_by: session.user.id
             });
-            e.target.reset(); loadComm();
+
+            if (error) {
+                alert("Error: " + error.message);
+            } else {
+                e.target.reset();
+                document.getElementById('customRole').classList.add('hidden');
+                loadComm();
+            }
         });
 
         async function removeComm(id) {

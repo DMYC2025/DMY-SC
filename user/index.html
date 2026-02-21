@@ -70,6 +70,8 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase.js"></script>
+    <script src="../assets/js/maintenance-check.js"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
@@ -99,6 +101,12 @@
                     class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-[#353539] hover:bg-[#404045] transition text-xs font-medium border border-transparent">
                     <span class="material-symbols-rounded text-[18px]">sync</span> Checking...
                 </button>
+
+                <!-- Manage Button (exec members only) -->
+                <a href="manage.html" id="navManageBtn"
+                    class="hidden items-center gap-2 px-4 py-2 rounded-full bg-[#ffb783]/10 hover:bg-[#ffb783]/20 transition text-xs font-medium border border-[#ffb783]/20 text-[#ffb783]">
+                    <span class="material-symbols-rounded text-[18px]">manage_accounts</span> Manage
+                </a>
 
                 <!-- Report Issue Button -->
                 <button onclick="openIssueModal()"
@@ -348,6 +356,15 @@
                     <span class="material-symbols-rounded text-[20px]">info</span>
                 </div>
                 <span class="text-[10px] sm:text-xs font-medium text-[#E3E3E3] leading-tight">About</span>
+            </a>
+        </div>
+
+        <!-- Mobile Manage Button (exec members only - above Report Issue) -->
+        <div id="mobileManageBtn" class="hidden md:hidden" data-aos="fade-up" data-aos-delay="325">
+            <a href="manage.html"
+                class="w-full m3-card p-3 flex items-center justify-center gap-2 bg-[#ffb783]/10 border border-[#ffb783]/20 text-[#ffb783] rounded-[24px]">
+                <span class="material-symbols-rounded text-[20px]">manage_accounts</span>
+                <span class="text-sm font-medium">Club Management</span>
             </a>
         </div>
 
@@ -613,7 +630,6 @@
     </div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="../assets/js/supabase.js"></script>
     <!-- Firebase Push Notification SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
@@ -731,6 +747,8 @@
                     const { data: exData } = await _supabase.from('executive_committee').select('*').eq('profile_id', session.user.id).maybeSingle();
                     const { data: sportsData } = await _supabase.from('sports').select('name').eq('captain_id', session.user.id);
 
+                    const { data: teamData } = await _supabase.from('sport_team_members').select('role, sports(name)').eq('profile_id', session.user.id);
+
                     const verificationUrl = new URL('club_id.html', window.location.href).href + '?id=' + (profile.member_id || 'PENDING');
                     const age = calculateAge(profile.dob);
 
@@ -744,11 +762,25 @@
                         age: age,
                         isExec: !!exData,
                         execRole: exData ? exData.term_period : null,
-                        captainRoles: sportsData ? sportsData.map(t => t.name) : []
+                        captainRoles: sportsData ? sportsData.map(t => t.name) : [],
+                        teamRoles: teamData ? teamData.map(tm => {
+                            const sportName = tm.sports?.name || 'Sport';
+                            return tm.role ? `${tm.role} (${sportName})` : `${sportName} Player`;
+                        }) : []
                     };
 
                     checkPaymentStatus(session.user.id, profile.created_at);
                     checkNotifications();
+
+                    // Show Manage button for executive committee members only
+                    if (exData) {
+                        const navBtn = document.getElementById('navManageBtn');
+                        const mobileBtn = document.getElementById('mobileManageBtn');
+                        // PC nav: keep 'hidden' but add 'md:flex' → hidden on mobile, flex on md+
+                        if (navBtn) navBtn.classList.add('md:flex');
+                        // Mobile card: show above Report Issue button only
+                        if (mobileBtn) mobileBtn.classList.remove('hidden');
+                    }
                     if (profile.dob) {
                         const dobParts = profile.dob.split('-');
                         if (dobParts.length === 3) {
@@ -794,20 +826,72 @@
             return age;
         }
 
+        // ── NOTIFICATIONS: Real-time subscription + initial badge ─
+        let _realtimeNotifChannel = null;
+
         async function checkNotifications() {
             if (typeof _supabase === 'undefined') return;
             const { data: { session } } = await _supabase.auth.getSession();
             const userId = session?.user?.id;
+            if (!userId) return;
 
-            const { count, error } = await _supabase
+            // Initial unread count
+            await refreshNotifBadge(userId);
+
+            // ── Supabase Realtime: listen for new notifications ──
+            if (_realtimeNotifChannel) return; // already subscribed
+
+            _realtimeNotifChannel = _supabase
+                .channel('realtime-notifications-' + userId)
+                .on(
+                    'postgres_changes',
+                    {
+                        event: 'INSERT',
+                        schema: 'public',
+                        table: 'notifications',
+                        filter: `user_id=eq.${userId}`
+                    },
+                    (payload) => {
+                        const notif = payload.new;
+
+                        // 1. Show badge dot
+                        document.getElementById('notifBadgeDot')?.classList.remove('hidden');
+
+                        // 2. Browser push notification
+                        if ('Notification' in window && Notification.permission === 'granted') {
+                            if ('serviceWorker' in navigator) {
+                                navigator.serviceWorker.ready.then(reg => {
+                                    reg.showNotification(notif.title || 'DMYSC', {
+                                        body: notif.message || '',
+                                        icon: '../assets/images/logo_1.png',
+                                        badge: '../assets/images/logo_1.png',
+                                        tag: 'dmysc-notif-' + notif.id,
+                                        renotify: true,
+                                    });
+                                });
+                            }
+                        }
+
+                        // 3. If notification popup is open, reload it
+                        const popup = document.getElementById('notifPopup');
+                        if (popup && !popup.classList.contains('hidden')) {
+                            if (typeof fetchNotifsForPopup === 'function') fetchNotifsForPopup();
+                        }
+                    }
+                )
+                .subscribe();
+        }
+
+        async function refreshNotifBadge(userId) {
+            const { count } = await _supabase
                 .from('notifications')
                 .select('*', { count: 'exact', head: true })
                 .or(`user_id.eq.${userId},user_id.is.null`);
 
-            if (!error && count > 0) {
-                document.getElementById('notifBadgeDot').classList.remove('hidden');
+            if (count > 0) {
+                document.getElementById('notifBadgeDot')?.classList.remove('hidden');
             } else {
-                document.getElementById('notifBadgeDot').classList.add('hidden');
+                document.getElementById('notifBadgeDot')?.classList.add('hidden');
             }
         }
 
@@ -836,9 +920,25 @@
                 currentUserData.captainRoles.forEach(sport => {
                     const badge = document.createElement('div');
                     badge.className = "px-2 py-0.5 rounded-full bg-[#a0cfd0] text-[#003334] text-[8px] font-bold uppercase tracking-wider flex items-center gap-1";
-                    badge.innerHTML = `<span class="material-symbols-rounded text-[10px]">star</span> ${sport}`;
+                    badge.innerHTML = `<span class="material-symbols-rounded text-[10px]">star</span> ${sport} Captain`;
                     rolesContainer.appendChild(badge);
                 });
+            }
+
+            if (currentUserData.teamRoles && currentUserData.teamRoles.length > 0) {
+                currentUserData.teamRoles.forEach(roleText => {
+                    const badge = document.createElement('div');
+                    badge.className = "px-2 py-0.5 rounded-full bg-white/10 text-gray-300 text-[8px] font-bold uppercase tracking-wider flex items-center gap-1 border border-white/5";
+                    badge.innerHTML = `<span class="material-symbols-rounded text-[10px]">sports_score</span> ${roleText}`;
+                    rolesContainer.appendChild(badge);
+                });
+            }
+
+            if (!currentUserData.isExec && (!currentUserData.captainRoles || currentUserData.captainRoles.length === 0) && (!currentUserData.teamRoles || currentUserData.teamRoles.length === 0)) {
+                const badge = document.createElement('div');
+                badge.className = "px-2 py-0.5 rounded-full bg-[#a6f7bd] text-[#003915] text-[8px] font-bold uppercase tracking-wider flex items-center gap-1";
+                badge.innerHTML = `<span class="material-symbols-rounded text-[10px]">diversity_3</span> Member`;
+                rolesContainer.appendChild(badge);
             }
 
             container.innerHTML = '';
@@ -863,6 +963,13 @@
             window.paymentHistoryData = paidMonths;
             const now = new Date();
             const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+            // --- Arrears Start Logic (Jan 2026) ---
+            const systemStart = new Date('2026-01-01');
+            const userStart = joinDateStr ? new Date(joinDateStr) : systemStart;
+            const effectiveStart = userStart > systemStart ? userStart : systemStart;
+            effectiveStart.setDate(1);
+
             const isPaidCurrent = paidMonths.includes(currentMonth);
             const btn = document.getElementById('navPayBtn');
             btn.classList.remove('hidden');
@@ -888,7 +995,11 @@
         function openPayStatusModal() {
             const list = document.getElementById('payStatusList');
             const paidMonths = window.paymentHistoryData || [];
-            let start = window.userJoinDate ? new Date(window.userJoinDate) : new Date('2024-01-01');
+
+            // --- Arrears Start Logic (Jan 2026) ---
+            const systemStart = new Date('2026-01-01');
+            const userStart = window.userJoinDate ? new Date(window.userJoinDate) : systemStart;
+            const start = userStart > systemStart ? userStart : systemStart;
             start.setDate(1);
             const now = new Date();
             let html = '';

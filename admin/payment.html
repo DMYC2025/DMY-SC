@@ -147,14 +147,23 @@
             <div class="px-6 md:px-12 pb-0">
                 <div class="m3-card p-6 rounded-xl bg-[#1E1E1E] border border-white/5 shadow-2xl relative overflow-hidden"
                     data-aos="fade-down">
-                    <div class="flex justify-between items-center mb-4 px-2">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 px-2 gap-4">
                         <div>
                             <h2 class="text-2xl font-display font-medium text-[#E3E3E3]">Monthly Revenue</h2>
-                            <p class="text-xs text-[#8e918f]">Click on a column to view payment status detail.</p>
+                            <p class="text-xs text-[#8e918f]">Historical collection data and trends.</p>
                         </div>
-                        <div class="text-right">
-                            <h3 class="text-3xl font-display font-bold text-primary" id="totalRevenueDisplay">0 LKR</h3>
-                            <p class="text-[10px] font-bold uppercase text-[#8e918f]">Total Collected</p>
+                        <div class="flex items-center gap-6">
+                            <div class="text-right">
+                                <h3 class="text-3xl font-display font-bold text-primary" id="totalRevenueDisplay">0 LKR
+                                </h3>
+                                <p class="text-[10px] font-bold uppercase text-[#8e918f]">Total Collected</p>
+                            </div>
+                            <button onclick="generateFinancialReport()"
+                                class="px-6 py-3 rounded-xl bg-tertiary/10 hover:bg-tertiary/20 text-tertiary font-bold text-sm border border-tertiary/30 transition-all flex items-center gap-2 group shadow-lg">
+                                <span
+                                    class="material-symbols-rounded group-hover:scale-110 transition-transform">analytics</span>
+                                <span>Financial Report</span>
+                            </button>
                         </div>
                     </div>
                     <div id="revenueChart" class="w-full h-64"></div>
@@ -348,6 +357,7 @@
                                                 <th class="p-4 whitespace-nowrap">Member Name</th>
                                                 <th class="p-4 whitespace-nowrap">Month</th>
                                                 <th class="p-4 text-right whitespace-nowrap">Amount</th>
+                                                <th class="p-4 text-center whitespace-nowrap">Recorded By</th>
                                                 <th class="p-4 text-center whitespace-nowrap">Action</th>
                                             </tr>
                                         </thead>
@@ -417,7 +427,7 @@
         let paymentsCache = [];
 
         // Settings
-        const savedFee = localStorage.getItem('dmysc_fee') || 100;
+        const savedFee = localStorage.getItem('dmysc_fee') || 1000;
         document.getElementById('payAmount').value = savedFee;
 
         // Date Setup
@@ -489,7 +499,7 @@
 
         // 2. Load History Table
         async function loadPayments() {
-            const { data } = await _supabase.from('payments').select('*, profiles:member_id(full_name)').order('paid_at', { ascending: false }).limit(200);
+            const { data } = await _supabase.from('payments').select('*, profiles:member_id(full_name), recorder:recorded_by(full_name)').order('paid_at', { ascending: false }).limit(200);
             paymentsCache = data || [];
             filterHistory(); // Render table with filters applied (initially none)
         }
@@ -529,6 +539,11 @@
                         <td class="p-4 font-medium text-[#E3E3E3] whitespace-nowrap">${p.profiles?.full_name || 'Unknown'}</td>
                         <td class="p-4 whitespace-nowrap"><span class="bg-tertiary/10 text-tertiary px-2 py-1 rounded text-[10px] font-bold border border-tertiary/20 font-mono">${p.month_year}</span></td>
                         <td class="p-4 text-right font-mono text-[#a8c7fa] font-bold whitespace-nowrap">${p.amount}/=</td>
+                        <td class="p-4 text-center">
+                            <span class="text-[9px] font-bold text-[#8e918f] uppercase tracking-tighter bg-white/5 px-2 py-1 rounded italic border border-white/5 whitespace-nowrap">
+                                ${p.recorder?.full_name || 'System'}
+                            </span>
+                        </td>
                         <td class="p-4 text-center whitespace-nowrap">
                             <button onclick="deletePayment('${p.id}')" class="p-2 hover:bg-error/10 text-[#8e918f] hover:text-error rounded-full transition" title="Delete record"><span class="material-symbols-rounded text-lg">delete</span></button>
                         </td>
@@ -746,6 +761,12 @@
             chartEl.innerHTML = "";
             const chart = new ApexCharts(chartEl, options);
             chart.render();
+
+            // Check for auto-actions
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('action') === 'report') {
+                setTimeout(() => generateFinancialReport(), 1500);
+            }
         }
 
         // 5. Open Modal Logic
@@ -758,8 +779,8 @@
             listEl.innerHTML = '<div class="col-span-2 text-center py-10"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div></div>';
 
             // Get Payments for this month
-            const { data: paidRecords } = await _supabase.from('payments').select('member_id').eq('month_year', month);
-            const paidIds = paidRecords.map(p => p.member_id);
+            const { data: paidRecords } = await _supabase.from('payments').select('member_id, recorder:recorded_by(full_name)').eq('month_year', month);
+            const paidIds = (paidRecords || []).map(p => p.member_id);
 
             listEl.innerHTML = '';
 
@@ -783,8 +804,11 @@
                                 <p class="text-[10px] text-[#8e918f] font-mono">${m.member_id || '-'}</p>
                             </div>
                         </div>
-                        <div class="text-xs font-bold ${textClass} flex items-center gap-1">
-                            ${statusText} ${icon}
+                        <div class="flex flex-col items-end">
+                            <div class="text-xs font-bold ${textClass} flex items-center gap-1">
+                                ${statusText} ${icon}
+                            </div>
+                            ${isPaid ? `<span class="text-[8px] text-[#8e918f] uppercase font-bold italic mt-1">By: ${paidRecords.find(pr => pr.member_id === m.id)?.recorder?.full_name || 'System'}</span>` : ''}
                         </div>
                     </div>
                 `;
@@ -1085,6 +1109,133 @@
             });
 
             doc.save(`Yearly_Report_${year}.pdf`);
+        }
+
+        // --- NEW: Full Financial Report Logic ---
+        async function generateFinancialReport() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // 1. Data Aggregation
+            if (!paymentsCache || paymentsCache.length === 0) {
+                alert("No payment data available. Please wait for statistics to load.");
+                return;
+            }
+
+            const totalRevenue = paymentsCache.reduce((sum, p) => sum + (p.amount || 0), 0);
+            const totalTransactions = paymentsCache.length;
+            const uniqueMembers = new Set(paymentsCache.map(p => p.member_id)).size;
+
+            // Group by month
+            const monthlyStats = {};
+            paymentsCache.forEach(p => {
+                const m = p.month_year || 'Unknown';
+                if (!monthlyStats[m]) monthlyStats[m] = { amount: 0, count: 0 };
+                monthlyStats[m].amount += (p.amount || 0);
+                monthlyStats[m].count++;
+            });
+
+            // 2. Report Header
+            const logoUrl = "../assets/images/logo.png";
+            const logoBase64 = await getBase64ImageFromURL(logoUrl);
+
+            doc.setFillColor(30, 30, 30);
+            doc.rect(0, 0, 210, 40, 'F');
+
+            if (logoBase64) doc.addImage(logoBase64, 'PNG', 15, 8, 24, 24);
+
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(22);
+            doc.setFont("helvetica", "bold");
+            doc.text("DMY Sports Club", 45, 22);
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "normal");
+            doc.text("Executive Financial Summary Report", 45, 30);
+
+            doc.setFontSize(8);
+            doc.text(`Generated: ${new Date().toLocaleString()}`, 195, 35, { align: 'right' });
+
+            // 3. Executive Summary
+            doc.setTextColor(40, 40, 40);
+            doc.setFontSize(14);
+            doc.text("Financial Overview", 15, 55);
+
+            doc.autoTable({
+                startY: 60,
+                head: [['Key Metric', 'Value']],
+                body: [
+                    ['Total Revenue Collected', `${totalRevenue.toLocaleString()} LKR`],
+                    ['Total Successful Transactions', totalTransactions],
+                    ['Contributing Members', uniqueMembers],
+                    ['Average Payment per Member', `${(totalRevenue / uniqueMembers).toFixed(2)} LKR`]
+                ],
+                theme: 'striped',
+                headStyles: { fillColor: [6, 46, 111] }
+            });
+
+            // 4. Monthly Breakdown
+            doc.setFontSize(14);
+            doc.text("Revenue by Month (Descending)", 15, doc.lastAutoTable.finalY + 15);
+
+            const monthRows = Object.entries(monthlyStats)
+                .sort((a, b) => b[0].localeCompare(a[0]))
+                .map(([month, data]) => [month, data.count, `${data.amount.toLocaleString()} LKR`]);
+
+            doc.autoTable({
+                startY: doc.lastAutoTable.finalY + 5,
+                head: [['Month', 'Payments', 'Revenue']],
+                body: monthRows,
+                theme: 'grid',
+                headStyles: { fillColor: [15, 60, 50] }
+            });
+
+            // 5. Recent Transactions
+            doc.setFontSize(14);
+            doc.text("Latest Transactions", 15, doc.lastAutoTable.finalY + 15);
+
+            const recentRows = paymentsCache.slice(0, 15).map(p => [
+                new Date(p.paid_at).toLocaleDateString(),
+                p.profiles?.full_name || 'Member',
+                p.month_year,
+                `${p.amount} LKR`
+            ]);
+
+            doc.autoTable({
+                startY: doc.lastAutoTable.finalY + 5,
+                head: [['Date', 'Member', 'Month', 'Amount']],
+                body: recentRows,
+                theme: 'striped',
+                columnStyles: { 3: { halign: 'right' } }
+            });
+
+            // Footer
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(8);
+                doc.setTextColor(150);
+                doc.text(`Confidential - DMYSC Financial Audit - Page ${i} of ${pageCount}`, 105, 285, { align: 'center' });
+            }
+
+            doc.save(`DMYSC_Financial_Report_${new Date().toISOString().slice(0, 10)}.pdf`);
+        }
+
+        function getBase64ImageFromURL(url) {
+            return new Promise((resolve, reject) => {
+                var img = new Image();
+                img.setAttribute("crossOrigin", "anonymous");
+                img.onload = () => {
+                    var canvas = document.createElement("canvas");
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0);
+                    var dataURL = canvas.toDataURL("image/png");
+                    resolve(dataURL);
+                };
+                img.onerror = error => resolve(null);
+                img.src = url;
+            });
         }
     </script>
 </body>

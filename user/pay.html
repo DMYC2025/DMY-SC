@@ -292,6 +292,7 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="../assets/js/supabase.js"></script>
+    <script src="../assets/js/maintenance-check.js"></script>
     <script src="../assets/js/ui.js"></script>
 
     <script>
@@ -386,7 +387,10 @@
             const chartData = [];
             const arrears = [];
 
-            let start = joinDateStr ? new Date(joinDateStr) : new Date('2024-01-01');
+            // --- Arrears Start Logic (Jan 2026) ---
+            const systemStart = new Date('2026-01-01');
+            const userStart = joinDateStr ? new Date(joinDateStr) : systemStart;
+            let start = userStart > systemStart ? userStart : systemStart;
             const now = new Date();
             start.setDate(1);
 
