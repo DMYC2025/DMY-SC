@@ -974,6 +974,9 @@
                     statusMsg.classList.add('hidden');
 
                     setTimeout(() => {
+                        // Force FCM Token Update for this browser
+                        if (window.reInitFirebase) window.reInitFirebase();
+
                         if (profileData.role === 'admin') {
                             window.location.href = '../admin/index.html';
                         } else {
@@ -1023,10 +1026,16 @@
                 // Hide potential old error messages
                 statusMsg.classList.add('hidden');
 
+                // Try to init FCM early if we have a session
+                if (window.reInitFirebase) window.reInitFirebase();
+
                 await checkApprovalAndRedirect(session.user.id);
             }
         });
     </script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
+    <script src="../assets/js/fcm.js"></script>
     <!-- Issue Reporting Modal -->
     <div id="issueModal"
         class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-all duration-300 opacity-0">

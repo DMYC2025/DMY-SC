@@ -114,6 +114,81 @@
         .member-row:hover {
             background-color: rgba(166, 247, 189, 0.05);
         }
+
+        /* Executive Highlighting */
+        .exec-highlight {
+            background-color: rgba(166, 247, 189, 0.08) !important;
+            border-left: 4px solid #a6f7bd !important;
+        }
+
+        /* Responsive Table to Grid */
+        @media (max-width: 768px) {
+            .glass-card .overflow-x-auto {
+                overflow-x: visible;
+            }
+
+            table,
+            thead,
+            tbody,
+            th,
+            td,
+            tr {
+                display: block;
+            }
+
+            .member-table-header {
+                display: none;
+            }
+
+            #memberListBody {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .member-row {
+                background: rgba(24, 24, 27, 0.4) !important;
+                border: 1px solid rgba(255, 255, 255, 0.05) !important;
+                border-radius: 20px !important;
+                padding: 1.25rem !important;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .member-row td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.5rem 0 !important;
+                border: none !important;
+            }
+
+            .member-row td:first-child {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+                padding-top: 0 !important;
+                padding-bottom: 1rem !important;
+                margin-bottom: 0.5rem;
+            }
+
+            /* Labels for mobile */
+            .member-row td:not(:first-child)::before {
+                content: attr(data-label);
+                font-size: 10px;
+                font-weight: bold;
+                color: #8e918f;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+            }
+
+            .member-row td:last-child {
+                padding-bottom: 0 !important;
+            }
+
+            .member-row td .flex-col {
+                align-items: flex-end;
+            }
+        }
     </style>
 </head>
 
@@ -334,11 +409,13 @@
             <div class="glass-card overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
-                        <thead class="bg-black/20 text-xs uppercase font-bold text-gray-500 tracking-wider">
+                        <thead
+                            class="member-table-header bg-black/20 text-xs uppercase font-bold text-gray-500 tracking-wider">
                             <tr>
                                 <th class="px-6 py-5">Member Profile</th>
                                 <th class="px-6 py-5 text-center">Age</th>
-                                <th class="px-6 py-5 text-right">Status / Role</th>
+                                <th class="px-6 py-5 text-center">Status</th>
+                                <th class="px-6 py-5 text-right">Role</th>
                             </tr>
                         </thead>
                         <tbody id="memberListBody" class="divide-y divide-white/5 text-sm">
@@ -593,7 +670,7 @@
             const memberRoles = new Map(); // id -> array of {type, text}
 
             // 1. Executive Roles
-            const { data: execRoles } = await _supabase.from('executive_committee').select('term_period, profiles!inner(id)');
+            const { data: execRoles } = await _supabase.from('executive_committee').select('term_period, profiles!profile_id!inner(id)');
             if (execRoles) {
                 execRoles.forEach(r => {
                     if (r.profiles?.id) {
@@ -617,13 +694,13 @@
             }
 
             // 3. Sport Team Roles
-            const { data: teamMembers } = await _supabase.from('sport_team_members').select('role, sport_id, profiles!inner(id), sports(name)');
+            const { data: teamMembers } = await _supabase.from('sport_team_members').select('role, sport_id, profiles!profile_id!inner(id), sports(name)');
             if (teamMembers) {
                 teamMembers.forEach(tm => {
                     if (tm.profiles?.id) {
                         const roles = memberRoles.get(tm.profiles.id) || [];
                         const sportName = tm.sports?.name || 'Sport';
-                        const roleText = tm.role ? `${tm.role} (${sportName})` : `${sportName} Player`;
+                        const roleText = tm.role ? `${tm.role} - ${sportName}` : `${sportName} Team Member`;
                         roles.push({ type: 'sport', text: roleText });
                         memberRoles.set(tm.profiles.id, roles);
                     }
@@ -650,31 +727,50 @@
                     const age = calculateAge(m.dob);
                     const avatar = (m.avatar_url && m.avatar_url.trim() !== "") ? m.avatar_url : DEFAULT_AVATAR;
 
-                    // Aggregate Badges
+                    // Aggregate Roles
                     const roles = memberRoles.get(m.id) || [];
-                    let badgeHtml = '<div class="flex flex-col items-end gap-1.5">';
+                    let roleHtml = '<div class="flex flex-col items-end gap-1.5">';
 
                     if (roles.length === 0) {
-                        badgeHtml += `<span class="text-gray-500 text-[10px] font-medium uppercase tracking-wider">Member</span>`;
+                        roleHtml += `<span class="text-gray-500 text-[10px] font-medium uppercase tracking-wider italic">General Member</span>`;
                     } else {
                         roles.forEach(r => {
                             let style = 'bg-gray-800 text-gray-400 border-white/5';
-                            if (r.type === 'exec') style = 'bg-primary/10 text-primary border-primary/20';
-                            else if (r.type === 'captain') style = 'bg-tertiary/10 text-tertiary border-tertiary/20';
-                            else if (r.type === 'sport') style = 'bg-secondary/10 text-secondary border-secondary/20';
+                            let text = r.text;
 
-                            badgeHtml += `
+                            if (r.type === 'exec') {
+                                style = 'bg-primary/10 text-primary border-primary/20';
+                            } else if (r.type === 'captain') {
+                                style = 'bg-tertiary/10 text-tertiary border-tertiary/20';
+                                // text is already something like "Cricket Captain" from previous logic
+                                // But I can refine it here if needed.
+                            } else if (r.type === 'sport') {
+                                style = 'bg-secondary/10 text-secondary border-secondary/20';
+                            }
+
+                            roleHtml += `
                                 <span class="${style} border px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider whitespace-nowrap">
-                                    ${r.text}
+                                    ${text}
                                 </span>`;
                         });
                     }
-                    badgeHtml += '</div>';
+                    roleHtml += '</div>';
+
+                    // Status Logic: Verified Badge
+                    const statusHtml = `
+                        <div class="flex justify-center">
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[9px] font-bold uppercase tracking-tighter">
+                                <span class="material-symbols-rounded text-[12px]">verified</span>
+                                Verified
+                            </span>
+                        </div>
+                    `;
 
                     const hasSpecial = roles.length > 0;
+                    const isExec = roles.some(r => r.type === 'exec');
 
                     const row = `
-                        <tr class="member-row group">
+                        <tr class="member-row group ${isExec ? 'exec-highlight' : ''}">
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center gap-4">
                                     <div class="relative w-10 h-10">
@@ -684,10 +780,11 @@
                                     <span class="font-medium text-gray-200 text-sm group-hover:text-primary transition">${name}</span>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                            <td class="px-6 py-4 whitespace-nowrap text-center" data-label="Age">
                                 <span class="font-mono text-xs text-gray-500 bg-white/5 px-2 py-1 rounded">${age}</span>
                             </td>
-                            <td class="px-6 py-4 text-right">${badgeHtml}</td>
+                            <td class="px-6 py-4 whitespace-nowrap" data-label="Status">${statusHtml}</td>
+                            <td class="px-6 py-4 text-right" data-label="Role">${roleHtml}</td>
                         </tr>
                     `;
                     tbody.insertAdjacentHTML('beforeend', row);

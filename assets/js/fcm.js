@@ -19,49 +19,62 @@ try {
     const VAPID_KEY = 'BB4pawo5SVgELPUmlfaCScNFzW5WnRC3xfWnZ_cHmaFaMCey0hDRKctHWTVhaoy2zU7Ei5La2BnPiwaCK828MOE';
 
     async function initFirebaseMessaging() {
-        console.log('Initializing Firebase Messaging...');
+        console.log('FCM: Initializing...');
         try {
             if (!("Notification" in window)) {
-                console.log("This browser does not support desktop notification");
+                console.log("FCM: Notifications not supported.");
                 return;
             }
 
             if (Notification.permission === 'denied') {
-                console.warn('Notification permission is denied. Push notifications will not work.');
+                console.warn('FCM: Permission denied.');
                 return;
             }
 
-            // If permission is 'default', waiting for user interaction in UI
             if (Notification.permission === 'default') {
-                console.log('Notification permission is default. Waiting for user to enable in UI.');
+                console.log('FCM: Permission default. Waiting for user interaction.');
                 return;
             }
 
-            // Permission is granted if we are here
-            if (Notification.permission === 'granted') {
-                console.log('Notification permission granted.');
-            } else {
+            // Ensure Service Worker is ready
+            if (!navigator.serviceWorker) {
+                console.error('FCM: Service Worker not supported in this browser.');
                 return;
             }
 
-            // Get the Service Worker Registration
+            console.log('FCM: Waiting for Service Worker registration...');
             const registration = await navigator.serviceWorker.ready;
 
-            // Get the token
+            if (!registration) {
+                console.error('FCM: Service Worker registration not found.');
+                return;
+            }
+
+            // Small delay for mobile browsers to ensure internal state is settled
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            if (isMobile) {
+                console.log('FCM: Mobile detected, adding 1s delay...');
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+
+            console.log('FCM: Requesting token...');
             const token = await messaging.getToken({
                 vapidKey: VAPID_KEY,
                 serviceWorkerRegistration: registration
             });
 
             if (token) {
-                console.log('FCM Token:', token);
+                console.log('FCM: Token retrieved successfully.');
                 saveTokenToSupabase(token);
             } else {
-                console.log('No registration token available.');
+                console.log('FCM: No registration token available.');
             }
 
         } catch (error) {
-            console.error('An error occurred while retrieving token.', error);
+            console.error('FCM Error:', error.code || error.message || error);
+            if (error.code === 'messaging/permission-blocked') {
+                console.warn('FCM: Notifications blocked by browser settings.');
+            }
         }
     }
 
@@ -90,25 +103,29 @@ try {
 
     async function saveTokenToSupabase(token) {
         if (typeof _supabase === 'undefined') {
-            // Retry once after delay if supabase isn't ready
-            setTimeout(() => {
-                if (typeof _supabase !== 'undefined') saveTokenToSupabase(token);
-            }, 1000);
+            console.warn('Supabase not yet loaded, retrying in 1s...');
+            setTimeout(() => saveTokenToSupabase(token), 1000);
             return;
         }
 
-        const { data: { session } } = await _supabase.auth.getSession();
-        if (session) {
-            const { error } = await _supabase
-                .from('profiles')
-                .update({ fcm_token: token })
-                .eq('id', session.user.id);
+        try {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (session) {
+                const { error } = await _supabase
+                    .from('profiles')
+                    .update({ fcm_token: token })
+                    .eq('id', session.user.id);
 
-            if (error) {
-                console.error('Error saving FCM token:', error);
+                if (error) {
+                    console.error('Error saving FCM token:', error);
+                } else {
+                    console.log('FCM Token synced to database: ' + session.user.id);
+                }
             } else {
-                console.log('FCM Token saved to database successfully.');
+                console.log('FCM: No active session to save token.');
             }
+        } catch (err) {
+            console.error('FCM Token Save Error:', err);
         }
     }
 

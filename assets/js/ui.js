@@ -107,18 +107,24 @@ async function fetchNotifsForPopup() {
         }
 
         list.innerHTML = permBtn + data.map(n => {
-            const date = new Date(n.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            const dateObj = new Date(n.created_at);
+            const date = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            const time = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
             const isUrgent = n.priority === 'urgent';
+            const isPayment = n.title && n.title.includes('Payment');
+            const icon = isUrgent ? 'warning' : (isPayment ? 'payments' : 'info');
+            const iconBg = isUrgent ? 'bg-error text-[#690005]' : (isPayment ? 'bg-primary/20 text-primary' : 'bg-primary/10 text-primary');
+
             return `
                 <div class="p-3 rounded-2xl border ${isUrgent ? 'bg-[#3c2525] border-error/20' : 'bg-[#1E1E1E] border-white/5'} hover:border-primary/30 transition-all cursor-default text-left">
                     <div class="flex gap-3">
-                        <div class="w-8 h-8 rounded-full ${isUrgent ? 'bg-error text-[#690005]' : 'bg-primary/10 text-primary'} flex items-center justify-center shrink-0">
-                            <span class="material-symbols-rounded text-sm">${isUrgent ? 'warning' : 'info'}</span>
+                        <div class="w-8 h-8 rounded-full ${iconBg} flex items-center justify-center shrink-0">
+                            <span class="material-symbols-rounded text-sm">${icon}</span>
                         </div>
                         <div class="flex-1 min-w-0">
                             <div class="flex justify-between items-start gap-2">
                                 <h4 class="text-xs font-bold text-[#E3E3E3] truncate">${n.title}</h4>
-                                <span class="text-[9px] text-[#8e918f] font-mono whitespace-nowrap">${date}</span>
+                                <span class="text-[9px] text-[#8e918f] font-mono whitespace-nowrap">${date} • ${time}</span>
                             </div>
                             <p class="text-[10px] text-[#C4C7C5] line-clamp-2 mt-1 leading-relaxed">${n.message}</p>
                         </div>

@@ -991,7 +991,7 @@
                 .from('payments')
                 .select(`
                     id, month_year, amount, paid_at,
-                    member:member_id(full_name, member_id),
+                    member:member_id(id, full_name, member_id),
                     recorder:recorded_by(id, full_name)
                 `)
                 .order('paid_at', { ascending: false })
@@ -1250,7 +1250,6 @@
                             }))
                         );
                     }
-                    sendBrowserPush(`Event Updated 📅`, `"${payload.title}" on ${dateLabel} has been updated.`);
                     editingEventId = null;
                 }
             } else {
@@ -1271,7 +1270,6 @@
                             }))
                         );
                     }
-                    sendBrowserPush(`New Event 🎉`, `"${payload.title}" on ${dateLabel} added successfully.`);
                 }
             }
 
@@ -1328,11 +1326,10 @@
                 const mName = dateObj.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
                 await _supabase.from('notifications').insert({
                     user_id: memberId,
-                    title: 'Payment Recorded ✅',
-                    message: `Your payment for ${mName} has been recorded.`,
+                    title: 'Payment Confirmed ✅',
+                    message: `Your payment of ${amount} LKR for ${mName} has been successfully recorded.`,
                     priority: 'normal'
                 });
-                sendBrowserPush('Payment Recorded ✅', `Payment for ${mName} has been saved successfully.`);
             }
 
             btn.disabled = false;
@@ -1347,10 +1344,10 @@
             const { error } = await _supabase.from('payments').delete().eq('id', payId);
             if (error) { alert('Error: ' + error.message); return; }
 
-            // Remove associated notification
+            // Remove associated notification (handles both old and new titles)
             await _supabase.from('notifications').delete()
                 .eq('user_id', memberId)
-                .eq('title', 'Payment Recorded ✅');
+                .in('title', ['Payment Confirmed ✅', 'Payment Recorded ✅']);
 
             loadPaymentSummary(); // refreshes both stats and recent list
         }

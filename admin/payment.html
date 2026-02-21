@@ -665,7 +665,7 @@
                         const monthName = dateObj.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
                         await _supabase.from('notifications').insert([{
                             user_id: memberId,
-                            title: `Payment Confirmed: ${monthName}`,
+                            title: `Payment Confirmed ✅`,
                             message: `Your payment of ${amount} LKR for ${monthName} has been successfully recorded.`,
                             priority: 'normal'
                         }]);
@@ -699,7 +699,7 @@
                 // Delete associated notification first
                 await _supabase.from('notifications').delete().match({
                     user_id: p.member_id,
-                    title: notifTitle
+                    title: `Payment Confirmed ✅`
                 });
 
                 await _supabase.from('payments').delete().eq('id', id);

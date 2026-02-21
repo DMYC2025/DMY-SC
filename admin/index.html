@@ -764,7 +764,7 @@
                         <div onclick="window.location.href='issues.html'" class="p-3 hover:bg-white/5 rounded-lg cursor-pointer transition border-b border-white/5 last:border-0">
                             <div class="flex justify-between items-start mb-1">
                                 <span class="font-bold text-xs text-[#E3E3E3] truncate w-32">${issue.full_name}</span>
-                                <span class="text-[8px] text-[#8e918f] font-mono">${new Date(issue.created_at).toLocaleDateString()}</span>
+                                <span class="text-[8px] text-[#8e918f] font-mono">${new Date(issue.created_at).toLocaleDateString()} • ${new Date(issue.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                             </div>
                             <p class="text-[10px] text-[#C4C7C5] line-clamp-2 mb-1">${issue.description}</p>
                             <div class="flex items-center justify-between">

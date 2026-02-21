@@ -285,15 +285,16 @@
 
             data.forEach((n, index) => {
                 const isUrgent = n.priority === 'urgent';
+                const isPayment = n.title && n.title.includes('Payment');
                 const dateObj = new Date(n.created_at);
                 const date = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                 const time = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
                 // M3 Styling Logic - Refined for "Glassy/Modern" look
-                const icon = isUrgent ? 'warning' : 'info';
+                const icon = isUrgent ? 'warning' : (isPayment ? 'payments' : 'info');
 
                 // Color Palettes
-                const iconBg = isUrgent ? 'bg-[#3c2525] text-[#ffb4ab]' : 'bg-[#1b2e23] text-[#a6f7bd]';
+                const iconBg = isUrgent ? 'bg-[#3c2525] text-[#ffb4ab]' : (isPayment ? 'bg-[#1b2e23] text-primary border border-primary/20' : 'bg-[#1b2e23] text-[#a6f7bd]');
                 const cardBorder = isUrgent ? 'border-[#533535] bg-[#2d1f1f]' : 'bg-[#1E1E1E]'; // Slight red tint for urgent background
                 const titleColor = isUrgent ? 'text-[#ffb4ab]' : 'text-[#E3E3E3]';
                 const badge = isUrgent

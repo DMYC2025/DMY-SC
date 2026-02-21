@@ -2,8 +2,12 @@
   "name": "Dream Makers Youth & Sports Club",
   "short_name": "DMYSC",
   "description": "Official App for Dream Makers Youth & Sports Club. Stay updated with sports, events, and club activities.",
-  "categories": ["sports", "social", "productivity"],
-  "gcm_sender_id": "103953800507",
+  "categories": [
+    "sports",
+    "social",
+    "productivity"
+  ],
+  "gcm_sender_id": "1058857878265",
   "start_url": "user/index.html",
   "display": "standalone",
   "background_color": "#121212",

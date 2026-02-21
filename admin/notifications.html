@@ -248,9 +248,10 @@
                 if (data && data.length > 0) {
                     data.forEach(n => {
                         const isUrgent = n.priority === 'urgent';
-                        const border = isUrgent ? 'border-error' : 'border-primary';
-                        const bgIcon = isUrgent ? 'bg-error/10 text-error' : 'bg-primary/10 text-primary';
-                        const icon = isUrgent ? 'priority_high' : 'info';
+                        const isPayment = n.title && n.title.includes('Payment');
+                        const border = isUrgent ? 'border-error' : (isPayment ? 'border-primary' : 'border-primary');
+                        const bgIcon = isUrgent ? 'bg-error/10 text-error' : (isPayment ? 'bg-primary/20 text-primary' : 'bg-primary/10 text-primary');
+                        const icon = isUrgent ? 'priority_high' : (isPayment ? 'payments' : 'info');
                         const recorder = n.recorder?.full_name || 'System';
 
                         list.innerHTML += `
