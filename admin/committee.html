@@ -72,6 +72,10 @@
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">group</span> Members
                 </a>
+                <a href="member-files.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">folder_shared</span> Member Files
+                </a>
                 <a href="payment.html"
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">payments</span> Payments
@@ -207,37 +211,99 @@
         }
 
         async function init() {
-            if (typeof _supabase === 'undefined') {
-                console.error("Supabase not loaded.");
-                return;
-            }
-            const { data: { session } } = await _supabase.auth.getSession();
-            if (!session) return window.location.href = '../auth/login.html';
+            try {
+                if (typeof _supabase === 'undefined') {
+                    console.error("Supabase not loaded.");
+                    return;
+                }
+                const { data: { session } } = await _supabase.auth.getSession();
+                if (!session) return window.location.href = '../auth/login.html';
 
-            const { data: members } = await _supabase.from('profiles').select('id, full_name').order('full_name');
-            document.getElementById('member').innerHTML = members.map(m => `<option value="${m.id}" class="bg-[#252529] text-[#E3E3E3]">${m.full_name}</option>`).join('');
-            loadComm();
+                const { data: members, error } = await _supabase.from('profiles').select('id, full_name').order('full_name');
+                if (error) throw error;
+
+                const memberSelect = document.getElementById('member');
+                if (members && members.length > 0) {
+                    memberSelect.innerHTML = members.map(m => `<option value="${m.id}" class="bg-[#252529] text-[#E3E3E3]">${m.full_name}</option>`).join('');
+                } else {
+                    memberSelect.innerHTML = '<option value="">No members found</option>';
+                }
+
+                loadComm();
+            } catch (err) {
+                console.error("Initialization Error:", err);
+            }
         }
 
         async function loadComm() {
-            const { data } = await _supabase.from('executive_committee').select('*, profiles(full_name)');
-            document.getElementById('commList').innerHTML = data.map(c => `
-                <div class="bg-[#252529] p-4 rounded-xl flex justify-between items-center border border-white/5 shadow-sm group hover:bg-[#303036] transition">
-                    <div>
-                        <h4 class="font-display font-medium text-[#E3E3E3] text-lg">${c.profiles.full_name}</h4>
-                        <p class="text-xs text-secondary font-bold uppercase tracking-wide opacity-90">${c.term_period}</p>
-                        <p class="text-[10px] text-[#8e918f] mt-1 font-mono">Appointed: ${c.appointed_date}</p>
+            const list = document.getElementById('commList');
+            try {
+                // Fetch committee with profile and record info
+                // We use explicit joins to avoid ambiguity
+                const { data, error } = await _supabase
+                    .from('executive_committee')
+                    .select('*, profile:profile_id(full_name, avatar_url), recorder:recorded_by(full_name)');
+
+                if (error) {
+                    console.warn("Load Error (Audit Trail might be missing):", error.message);
+                    // Fallback to basic load if audit column is missing
+                    const fallback = await _supabase
+                        .from('executive_committee')
+                        .select('*, profile:profile_id(full_name, avatar_url)');
+                    if (fallback.error) throw fallback.error;
+                    renderCommList(fallback.data);
+                } else {
+                    renderCommList(data);
+                }
+            } catch (err) {
+                console.error("Error loading committee:", err);
+                list.innerHTML = '<div class="text-center py-10 text-error">Failed to load board data.</div>';
+            }
+        }
+
+        function renderCommList(data) {
+            const list = document.getElementById('commList');
+            if (!data || data.length === 0) {
+                list.innerHTML = '<div class="text-center py-10 text-[#8e918f]">No board members found.</div>';
+                return;
+            }
+
+            list.innerHTML = data.map(c => {
+                const prof = c.profile || {};
+                const recorderName = c.recorder?.full_name || 'System';
+
+                const avatar = prof.avatar_url
+                    ? `<img src="${prof.avatar_url}" class="w-12 h-12 rounded-full object-cover">`
+                    : `<div class="w-12 h-12 rounded-full bg-secondary/10 text-secondary flex items-center justify-center font-bold text-lg">${prof.full_name ? prof.full_name.charAt(0) : '?'}</div>`;
+
+                return `
+                <div class="bg-[#252529] p-4 rounded-xl flex justify-between items-center border border-white/5 shadow-sm group hover:bg-[#303036] transition" data-aos="fade-up">
+                    <div class="flex items-center gap-4">
+                        ${avatar}
+                        <div>
+                            <h4 class="font-display font-medium text-[#E3E3E3] text-lg">${prof.full_name || 'Removed User'}</h4>
+                            <p class="text-xs text-secondary font-bold uppercase tracking-wide opacity-90">${c.term_period}</p>
+                            <div class="flex items-center gap-2 mt-1">
+                                <p class="text-[10px] text-[#8e918f] font-mono">Appointed: ${c.appointed_date || '-'}</p>
+                                <span class="bg-primary/10 text-primary text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter">By: ${recorderName}</span>
+                            </div>
+                        </div>
                     </div>
-                    <button onclick="removeComm('${c.id}')" class="text-[#8e918f] hover:text-error p-2 rounded-full transition"><span class="material-symbols-rounded text-xl">delete</span></button>
-                </div>`).join('');
+                    <button onclick="removeComm('${c.id}')" class="text-[#8e918f] hover:text-error p-2 rounded-full transition" title="Delete Account"><span class="material-symbols-rounded text-xl">delete</span></button>
+                </div>`;
+            }).join('');
         }
 
         document.getElementById('commForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) return;
+
             await _supabase.from('executive_committee').insert({
                 profile_id: document.getElementById('member').value,
                 term_period: document.getElementById('term').value,
-                appointed_date: document.getElementById('date').value
+                appointed_date: document.getElementById('date').value,
+                recorded_by: session.user.id
             });
             e.target.reset(); loadComm();
         });

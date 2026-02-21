@@ -69,6 +69,10 @@
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">group</span> Members
                 </a>
+                <a href="member-files.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">folder_shared</span> Member Files
+                </a>
                 <a href="payment.html"
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">payments</span> Payments
@@ -202,49 +206,53 @@
 
         async function loadIssues() {
             const list = document.getElementById('issuesList');
-            const { data, error } = await _supabase
-                .from('login_issues')
-                .select('*')
-                .order('created_at', { ascending: false });
+            try {
+                const { data, error } = await _supabase
+                    .from('login_issues')
+                    .select('*')
+                    .order('created_at', { ascending: false });
 
-            if (error) {
-                console.error("Error fetching issues:", error);
-                list.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-error">Failed to load issues: ${error.message}</td></tr>`;
-                return;
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    list.innerHTML = `<tr><td colspan="5" class="p-20 text-center text-[#8e918f] italic bg-white/5 rounded-b-xl animate-fade-in"><span class="material-symbols-rounded text-5xl block mb-2 opacity-10">check_circle</span>No pending issues reported.</td></tr>`;
+                    return;
+                }
+
+                list.innerHTML = data.map(issue => `
+                    <tr class="hover:bg-white/5 transition group border-b border-white/5 last:border-0" data-aos="fade-up">
+                        <td class="p-4 whitespace-nowrap text-[#8e918f] font-mono text-[10px]">
+                            ${new Date(issue.created_at).toLocaleString()}
+                        </td>
+                        <td class="p-4">
+                            <div class="font-bold text-[#E3E3E3] text-sm">${issue.full_name}</div>
+                            ${issue.club_id ? `<div class="text-[9px] text-primary font-mono bg-primary/10 px-1.5 py-0.5 rounded w-fit mt-1 border border-primary/20 uppercase font-bold">Member ID: ${issue.club_id}</div>` : ''}
+                        </td>
+                        <td class="p-4">
+                            <div class="flex flex-col gap-1.5 text-[10px]">
+                                <a href="mailto:${issue.email}" class="flex items-center gap-1.5 hover:text-primary transition"><span class="material-symbols-rounded text-[14px] opacity-60">mail</span> ${issue.email}</a>
+                                <a href="https://wa.me/${issue.whatsapp_number.replace(/[^0-9]/g, '')}" target="_blank" class="flex items-center gap-1.5 hover:text-[#25D366] transition"><span class="material-symbols-rounded text-[14px] opacity-60">chat</span> ${issue.whatsapp_number}</a>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <div class="text-[11px] text-[#C4C7C5] bg-[#252529] p-3 rounded-lg border border-white/5 max-h-24 overflow-y-auto custom-scrollbar leading-relaxed">
+                                ${issue.description}
+                            </div>
+                        </td>
+                        <td class="p-4 text-center">
+                            <button onclick="deleteIssue('${issue.id}')" class="w-9 h-9 flex items-center justify-center rounded-full text-[#8e918f] hover:text-error hover:bg-error/10 transition" title="Delete Issue">
+                                <span class="material-symbols-rounded">delete</span>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                setTimeout(() => typeof AOS !== 'undefined' && AOS.refresh(), 100);
+
+            } catch (err) {
+                console.error("Load Issues Error:", err);
+                list.innerHTML = `<tr><td colspan="5" class="p-10 text-center text-error italic">Failed to load reports.</td></tr>`;
             }
-
-            if (!data || data.length === 0) {
-                list.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-[#8e918f] italic">No issues reported yet.</td></tr>`;
-                return;
-            }
-
-            list.innerHTML = data.map(issue => `
-                <tr class="hover:bg-white/5 transition group">
-                    <td class="p-4 whitespace-nowrap text-[#8e918f] font-mono text-xs">
-                        ${new Date(issue.created_at).toLocaleString()}
-                    </td>
-                    <td class="p-4">
-                        <div class="font-bold text-[#E3E3E3]">${issue.full_name}</div>
-                        ${issue.club_id ? `<div class="text-xs text-primary font-mono bg-primary/10 px-1.5 py-0.5 rounded w-fit mt-1">ID: ${issue.club_id}</div>` : ''}
-                    </td>
-                    <td class="p-4">
-                        <div class="flex flex-col gap-1 text-xs">
-                            <a href="mailto:${issue.email}" class="flex items-center gap-1 hover:text-primary transition"><span class="material-symbols-rounded text-sm">mail</span> ${issue.email}</a>
-                            <a href="https://wa.me/${issue.whatsapp_number.replace(/[^0-9]/g, '')}" target="_blank" class="flex items-center gap-1 hover:text-[#25D366] transition"><span class="material-symbols-rounded text-sm">chat</span> ${issue.whatsapp_number}</a>
-                        </div>
-                    </td>
-                    <td class="p-4">
-                        <div class="text-sm text-[#E3E3E3] bg-[#252529] p-3 rounded-lg border border-white/5 max-h-32 overflow-y-auto custom-scrollbar">
-                            ${issue.description}
-                        </div>
-                    </td>
-                    <td class="p-4 text-center">
-                        <button onclick="deleteIssue('${issue.id}')" class="p-2 rounded-full text-[#8e918f] hover:text-error hover:bg-error/10 transition" title="Delete Issue">
-                            <span class="material-symbols-rounded">delete</span>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
         }
 
         async function deleteIssue(id) {

@@ -72,6 +72,10 @@
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">group</span> Members
                 </a>
+                <a href="member-files.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">folder_shared</span> Member Files
+                </a>
                 <a href="payment.html"
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">payments</span> Payments
@@ -221,39 +225,58 @@
         function toggleDates() { document.getElementById('dates').classList.toggle('hidden', document.getElementById('type').value === 'always'); }
 
         async function loadLinks() {
-            if (typeof _supabase === 'undefined') {
-                console.error("Supabase not loaded.");
-                return;
+            const list = document.getElementById('linkList');
+            try {
+                if (typeof _supabase === 'undefined') return;
+
+                const { data: { session } } = await _supabase.auth.getSession();
+                if (!session) return window.location.href = '../auth/login.html';
+
+                const { data, error } = await _supabase
+                    .from('quick_links')
+                    .select('*, recorder:recorded_by(full_name)');
+
+                if (error) throw error;
+
+                list.innerHTML = data.map(l => {
+                    const recorder = l.recorder?.full_name || 'System';
+                    return `
+                        <div class="bg-[#252529] p-4 rounded-xl flex justify-between items-center border border-white/5 shadow-sm group hover:bg-[#303036] transition" data-aos="fade-up">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-lg bg-[#1E1E1E] flex items-center justify-center border border-white/5 shrink-0 overflow-hidden">
+                                    ${l.image_url ? `<img src="${l.image_url}" class="w-full h-full object-cover">` : '<span class="material-symbols-rounded text-xl text-[#8e918f]">link</span>'}
+                                </div>
+                                <div>
+                                    <h4 class="font-display font-medium text-[#E3E3E3] text-sm">${l.title}</h4>
+                                    <p class="text-[10px] text-primary font-mono truncate w-40 md:w-56 opacity-80">${l.url}</p>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        ${l.display_type === 'scheduled' ? `<span class="text-[8px] bg-tertiary/20 text-tertiary px-1.5 py-0.5 rounded uppercase font-bold">Scheduled</span>` : ''}
+                                        <span class="text-[9px] font-bold text-[#8e918f] uppercase italic bg-white/5 px-2 py-0.5 rounded border border-white/5">By: ${recorder}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button onclick="delLink('${l.id}')" class="w-9 h-9 flex items-center justify-center text-[#8e918f] hover:text-error hover:bg-error/10 rounded-full transition" title="Delete"><span class="material-symbols-rounded text-xl">delete</span></button>
+                        </div>`;
+                }).join('');
+            } catch (err) {
+                console.error("Load Links Error:", err);
+                list.innerHTML = '<div class="py-10 text-center text-error italic text-xs">Failed to load links.</div>';
             }
-
-            // Check auth first
-            const { data: { session } } = await _supabase.auth.getSession();
-            if (!session) return window.location.href = '../auth/login.html';
-
-            const { data } = await _supabase.from('quick_links').select('*');
-            document.getElementById('linkList').innerHTML = data.map(l => `
-                <div class="bg-[#252529] p-4 rounded-xl flex justify-between items-center border border-white/5 shadow-sm group hover:bg-[#303036] transition">
-                    <div class="flex items-center gap-4">
-                        ${l.image_url ? `<img src="${l.image_url}" class="w-12 h-12 rounded-lg object-cover">` : '<div class="w-12 h-12 rounded-lg bg-[#1E1E1E] flex items-center justify-center"><span class="material-symbols-rounded text-xl text-[#8e918f]">link</span></div>'}
-                        <div>
-                            <h4 class="font-display font-medium text-[#E3E3E3]">${l.title}</h4>
-                            <p class="text-xs text-primary font-mono truncate w-48 md:w-64 opacity-90">${l.url}</p>
-                            ${l.display_type === 'scheduled' ? `<span class="text-[10px] bg-tertiary/20 text-tertiary px-2 py-0.5 rounded-full font-bold mt-1 inline-block">Scheduled</span>` : ''}
-                        </div>
-                    </div>
-                    <button onclick="delLink('${l.id}')" class="text-[#8e918f] hover:text-error p-2 rounded-full transition"><span class="material-symbols-rounded text-xl">delete</span></button>
-                </div>`).join('');
         }
 
         document.getElementById('linkForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) return;
+
             await _supabase.from('quick_links').insert({
                 title: document.getElementById('title').value,
                 url: document.getElementById('url').value,
                 image_url: document.getElementById('img').value,
                 display_type: document.getElementById('type').value,
                 start_date: document.getElementById('type').value === 'scheduled' ? document.getElementById('start').value : null,
-                end_date: document.getElementById('type').value === 'scheduled' ? document.getElementById('end').value : null
+                end_date: document.getElementById('type').value === 'scheduled' ? document.getElementById('end').value : null,
+                recorded_by: session.user.id
             });
             e.target.reset(); loadLinks();
         });

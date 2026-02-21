@@ -75,6 +75,10 @@
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">group</span> Members
                 </a>
+                <a href="member-files.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">folder_shared</span> Member Files
+                </a>
                 <a href="#" class="m3-nav-item active flex items-center gap-4 px-6 py-3.5 text-sm font-medium">
                     <span class="material-symbols-rounded text-[20px]">payments</span> Payments
                 </a>
@@ -445,7 +449,7 @@
 
         // 1. Load Members & Render Checkbox List
         async function loadMembers() {
-            const { data } = await _supabase.from('profiles').select('id, full_name, member_id').eq('role', 'member').order('full_name');
+            const { data } = await _supabase.from('profiles').select('id, full_name, member_id, avatar_url').neq('role', 'admin').order('full_name');
             if (data) {
                 membersCache = data;
                 renderMemberChecklist(data);
@@ -456,11 +460,16 @@
             const container = document.getElementById('memberCheckList');
             container.innerHTML = '';
             list.forEach(m => {
+                const avatar = m.avatar_url
+                    ? `<img src="${m.avatar_url}" class="w-8 h-8 rounded-full object-cover">`
+                    : `<div class="w-8 h-8 rounded-full bg-[#252529] flex items-center justify-center text-primary font-bold text-[10px] border border-white/5">${m.full_name ? m.full_name.charAt(0) : '?'}</div>`;
+
                 container.innerHTML += `
-                    <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-[#303036] cursor-pointer transition group">
-                        <input type="checkbox" value="${m.id}" class="member-checkbox w-4 h-4 rounded border-[#8e918f] bg-[#252529] text-primary focus:ring-offset-[#1E1E1E]">
-                        <div>
-                            <div class="text-xs font-medium text-[#E3E3E3] group-hover:text-white">${m.full_name}</div>
+                    <label class="flex items-center gap-3 p-2 rounded-xl hover:bg-[#303036] cursor-pointer transition group">
+                        <input type="checkbox" value="${m.id}" class="member-checkbox w-4 h-4 rounded border-[#353539] bg-[#1E1E1E] text-primary focus:ring-offset-[#1E1E1E]">
+                        ${avatar}
+                        <div class="flex-1 min-w-0">
+                            <div class="text-xs font-medium text-[#E3E3E3] group-hover:text-white truncate">${m.full_name}</div>
                             <div class="text-[10px] text-[#8e918f] font-mono">${m.member_id || 'No ID'}</div>
                         </div>
                     </label>
@@ -761,12 +770,14 @@
                 const icon = isPaid ? '<span class="material-symbols-rounded">check</span>' : '<span class="material-symbols-rounded">close</span>';
                 const statusText = isPaid ? 'PAID' : 'NOT PAID';
 
+                const avatar = m.avatar_url
+                    ? `<img src="${m.avatar_url}" class="w-8 h-8 rounded-full object-cover">`
+                    : `<div class="w-8 h-8 rounded-full ${isPaid ? 'bg-primary/20' : 'bg-error/20'} flex items-center justify-center ${textClass} font-bold text-xs">${m.full_name ? m.full_name.charAt(0) : '?'}</div>`;
+
                 listEl.innerHTML += `
                     <div class="flex items-center justify-between p-3 rounded-xl border ${bgClass}">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full ${isPaid ? 'bg-primary/20' : 'bg-error/20'} flex items-center justify-center ${textClass}">
-                                ${m.full_name.charAt(0)}
-                            </div>
+                            ${avatar}
                             <div>
                                 <h4 class="text-sm font-medium text-[#E3E3E3]">${m.full_name}</h4>
                                 <p class="text-[10px] text-[#8e918f] font-mono">${m.member_id || '-'}</p>

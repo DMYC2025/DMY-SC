@@ -72,6 +72,10 @@
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">group</span> Members
                 </a>
+                <a href="member-files.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">folder_shared</span> Member Files
+                </a>
                 <a href="payment.html"
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">payments</span> Payments
@@ -205,23 +209,45 @@
         }
 
         async function load() {
-            const { data } = await _supabase.from('about_info').select('*').single();
-            if (data) {
-                document.getElementById('vision').value = data.vision || '';
-                document.getElementById('mission').value = data.mission || '';
-                document.getElementById('constLink').value = data.constitution_link || '';
-                document.getElementById('constText').value = data.constitution_text || '';
+            try {
+                const { data, error } = await _supabase
+                    .from('about_info')
+                    .select('*, recorder:recorded_by(full_name)')
+                    .eq('id', 1)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') throw error;
+
+                if (data) {
+                    document.getElementById('vision').value = data.vision || '';
+                    document.getElementById('mission').value = data.mission || '';
+                    document.getElementById('constLink').value = data.constitution_link || '';
+                    document.getElementById('constText').value = data.constitution_text || '';
+
+                    if (data.recorder) {
+                        const info = document.createElement('div');
+                        info.className = "text-[10px] text-[#8e918f] italic mt-4 p-3 bg-white/5 rounded-lg border border-white/5";
+                        info.innerHTML = `Last updated by <span class="text-primary font-bold uppercase tracking-wider">${data.recorder.full_name}</span>`;
+                        document.getElementById('aboutForm').appendChild(info);
+                    }
+                }
+            } catch (err) {
+                console.error("Load About Error:", err);
             }
         }
 
         document.getElementById('aboutForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) return;
+
             const { error } = await _supabase.from('about_info').upsert({
                 id: 1,
                 vision: document.getElementById('vision').value,
                 mission: document.getElementById('mission').value,
                 constitution_link: document.getElementById('constLink').value,
-                constitution_text: document.getElementById('constText').value
+                constitution_text: document.getElementById('constText').value,
+                recorded_by: session.user.id
             });
             if (error) alert(error.message); else alert('Updated Successfully!');
         });

@@ -317,26 +317,26 @@
                 <span class="text-[10px] sm:text-xs font-medium text-[#E3E3E3] leading-tight">Sports</span>
             </a>
 
-            <!-- Profile -->
-            <a href="profile.html"
-                class="m3-card p-3 flex flex-col items-center justify-center text-center gap-2 group hover:bg-[#28282D] transition border border-white/5"
-                data-aos="fade-up" data-aos-delay="200">
-                <div
-                    class="w-10 h-10 rounded-full bg-[#2f2536] group-hover:bg-[#e7bdfb] text-[#e7bdfb] group-hover:text-[#4d0076] flex items-center justify-center transition-colors">
-                    <span class="material-symbols-rounded text-[20px]">person</span>
-                </div>
-                <span class="text-[10px] sm:text-xs font-medium text-[#E3E3E3] leading-tight">Profile</span>
-            </a>
-
             <!-- Payments -->
             <a href="pay.html"
                 class="m3-card p-3 flex flex-col items-center justify-center text-center gap-2 group hover:bg-[#28282D] transition border border-white/5"
-                data-aos="fade-up" data-aos-delay="250">
+                data-aos="fade-up" data-aos-delay="200">
                 <div
                     class="w-10 h-10 rounded-full bg-[#1b2e2b] group-hover:bg-[#6dd58c] text-[#6dd58c] group-hover:text-[#00391b] flex items-center justify-center transition-colors">
                     <span class="material-symbols-rounded text-[20px]">account_balance_wallet</span>
                 </div>
                 <span class="text-[10px] sm:text-xs font-medium text-[#E3E3E3] leading-tight">Payments</span>
+            </a>
+
+            <!-- My Files -->
+            <a href="files.html"
+                class="m3-card p-3 flex flex-col items-center justify-center text-center gap-2 group hover:bg-[#28282D] transition border border-white/5"
+                data-aos="fade-up" data-aos-delay="250">
+                <div
+                    class="w-10 h-10 rounded-full bg-[#3c362a] group-hover:bg-[#f7e6a6] text-[#f7e6a6] group-hover:text-[#392e00] flex items-center justify-center transition-colors">
+                    <span class="material-symbols-rounded text-[20px]">folder_open</span>
+                </div>
+                <span class="text-[10px] sm:text-xs font-medium text-[#E3E3E3] leading-tight">My Files</span>
             </a>
 
             <!-- About -->
@@ -428,6 +428,11 @@
                 </div>
                 <span class="text-[10px] font-medium text-[#E3E3E3]">Home</span>
             </button>
+            <button onclick="window.location.href='files.html'"
+                class="flex flex-col items-center gap-1 w-full text-[#C4C7C5]">
+                <span class="material-symbols-rounded">folder</span>
+                <span class="text-[10px] font-medium">Files</span>
+            </button>
             <button onclick="openCardModal()" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5]">
                 <span class="material-symbols-rounded">badge</span>
                 <span class="text-[10px] font-medium">ID</span>
@@ -436,7 +441,7 @@
                 class="flex flex-col items-center gap-1 w-full text-[#C4C7C5] relative">
                 <span class="material-symbols-rounded">account_balance_wallet</span>
                 <span class="text-[10px] font-medium">Pay</span>
-                <span id="mobilePayBadge" class="hidden absolute top-1 right-8 w-2 h-2 bg-error rounded-full"></span>
+                <span id="mobilePayBadge" class="hidden absolute top-1 right-6 w-2 h-2 bg-error rounded-full"></span>
             </button>
             <button onclick="openMobileProfileModal()" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5]">
                 <span class="material-symbols-rounded">person</span>
