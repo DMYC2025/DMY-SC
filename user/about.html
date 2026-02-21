@@ -430,6 +430,7 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="../assets/js/supabase.js"></script>
+    <script src="../assets/js/maintenance-check.js"></script>
     <script src="../assets/js/ui.js"></script>
     <script>
         AOS.init({
@@ -487,7 +488,7 @@
             // B. Executive Committee
             const { data: ex, error: exError } = await _supabase
                 .from('executive_committee')
-                .select('term_period, appointed_date, profiles(full_name, avatar_url, email, whatsapp)')
+                .select('term_period, appointed_date, profile:profile_id(full_name, avatar_url, email, whatsapp)')
                 .order('id');
 
             const grid = document.getElementById('committeeGrid');
@@ -496,8 +497,32 @@
             if (exError || !ex || ex.length === 0) {
                 grid.innerHTML = `<div class="col-span-full text-center text-gray-500 py-10">No committee members found.</div>`;
             } else {
-                ex.forEach((member, i) => {
-                    const profile = member.profiles || {};
+                // --- SORTING LOGIC ---
+                const ROLE_ORDER = {
+                    'president': 1,
+                    'vice president': 2,
+                    'secretary': 3,
+                    'assistant secretary': 4,
+                    'treasurer': 5,
+                    'organizer': 6
+                };
+
+                const sortedEx = [...ex].sort((a, b) => {
+                    const roleA = (a.term_period || '').toLowerCase();
+                    const roleB = (b.term_period || '').toLowerCase();
+
+                    const getOrder = (role) => {
+                        for (const key in ROLE_ORDER) {
+                            if (role.includes(key)) return ROLE_ORDER[key];
+                        }
+                        return 100; // Other roles go to bottom
+                    };
+
+                    return getOrder(roleA) - getOrder(roleB);
+                });
+
+                sortedEx.forEach((member, i) => {
+                    const profile = member.profile || {};
                     const name = profile.full_name || 'Unknown Member';
                     const avatar = (profile.avatar_url && profile.avatar_url.trim() !== "") ? profile.avatar_url : DEFAULT_AVATAR;
                     const role = member.term_period || 'Member';
@@ -564,13 +589,46 @@
                 });
             }
 
-            // --- FETCH SPECIAL ROLES ---
-            const roleMap = new Map();
-            const { data: execRoles } = await _supabase.from('executive_committee').select('term_period, profiles!inner(id)');
-            if (execRoles) execRoles.forEach(r => { if (r.profiles && r.profiles.id) roleMap.set(r.profiles.id, { type: 'exec', text: r.term_period }); });
+            // --- FETCH SPECIAL ROLES (Multi-role support) ---
+            const memberRoles = new Map(); // id -> array of {type, text}
 
-            const { data: sportsRoles } = await _supabase.from('sports').select('name, captain_id');
-            if (sportsRoles) sportsRoles.forEach(s => { if (s.captain_id && !roleMap.has(s.captain_id)) roleMap.set(s.captain_id, { type: 'captain', text: `Captain - ${s.name}` }); });
+            // 1. Executive Roles
+            const { data: execRoles } = await _supabase.from('executive_committee').select('term_period, profiles!inner(id)');
+            if (execRoles) {
+                execRoles.forEach(r => {
+                    if (r.profiles?.id) {
+                        const roles = memberRoles.get(r.profiles.id) || [];
+                        roles.push({ type: 'exec', text: r.term_period });
+                        memberRoles.set(r.profiles.id, roles);
+                    }
+                });
+            }
+
+            // 2. Captain Roles
+            const { data: sportsCaps } = await _supabase.from('sports').select('name, captain_id');
+            if (sportsCaps) {
+                sportsCaps.forEach(s => {
+                    if (s.captain_id) {
+                        const roles = memberRoles.get(s.captain_id) || [];
+                        roles.push({ type: 'captain', text: `${s.name} Captain` });
+                        memberRoles.set(s.captain_id, roles);
+                    }
+                });
+            }
+
+            // 3. Sport Team Roles
+            const { data: teamMembers } = await _supabase.from('sport_team_members').select('role, sport_id, profiles!inner(id), sports(name)');
+            if (teamMembers) {
+                teamMembers.forEach(tm => {
+                    if (tm.profiles?.id) {
+                        const roles = memberRoles.get(tm.profiles.id) || [];
+                        const sportName = tm.sports?.name || 'Sport';
+                        const roleText = tm.role ? `${tm.role} (${sportName})` : `${sportName} Player`;
+                        roles.push({ type: 'sport', text: roleText });
+                        memberRoles.set(tm.profiles.id, roles);
+                    }
+                });
+            }
 
             // C. Members Table
             const { data: mems, error: memError } = await _supabase
@@ -592,14 +650,28 @@
                     const age = calculateAge(m.dob);
                     const avatar = (m.avatar_url && m.avatar_url.trim() !== "") ? m.avatar_url : DEFAULT_AVATAR;
 
-                    // Role Badge
-                    const specialRole = roleMap.get(m.id);
-                    let badgeHtml = `<span class="text-gray-500 text-xs font-medium">Member</span>`;
+                    // Aggregate Badges
+                    const roles = memberRoles.get(m.id) || [];
+                    let badgeHtml = '<div class="flex flex-col items-end gap-1.5">';
 
-                    if (specialRole) {
-                        if (specialRole.type === 'exec') badgeHtml = `<span class="bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">${specialRole.text}</span>`;
-                        else if (specialRole.type === 'captain') badgeHtml = `<span class="bg-tertiary/10 text-tertiary border border-tertiary/20 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">${specialRole.text}</span>`;
+                    if (roles.length === 0) {
+                        badgeHtml += `<span class="text-gray-500 text-[10px] font-medium uppercase tracking-wider">Member</span>`;
+                    } else {
+                        roles.forEach(r => {
+                            let style = 'bg-gray-800 text-gray-400 border-white/5';
+                            if (r.type === 'exec') style = 'bg-primary/10 text-primary border-primary/20';
+                            else if (r.type === 'captain') style = 'bg-tertiary/10 text-tertiary border-tertiary/20';
+                            else if (r.type === 'sport') style = 'bg-secondary/10 text-secondary border-secondary/20';
+
+                            badgeHtml += `
+                                <span class="${style} border px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider whitespace-nowrap">
+                                    ${r.text}
+                                </span>`;
+                        });
                     }
+                    badgeHtml += '</div>';
+
+                    const hasSpecial = roles.length > 0;
 
                     const row = `
                         <tr class="member-row group">
@@ -607,7 +679,7 @@
                                 <div class="flex items-center gap-4">
                                     <div class="relative w-10 h-10">
                                         <img src="${avatar}" class="w-full h-full rounded-full object-cover border border-white/10 group-hover:border-primary transition">
-                                        ${specialRole ? '<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-[#18181B] flex items-center justify-center"><span class="material-symbols-rounded text-[8px] text-black">star</span></div>' : ''}
+                                        ${hasSpecial ? '<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-[#18181B] flex items-center justify-center"><span class="material-symbols-rounded text-[8px] text-black">star</span></div>' : ''}
                                     </div>
                                     <span class="font-medium text-gray-200 text-sm group-hover:text-primary transition">${name}</span>
                                 </div>
@@ -615,7 +687,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-center">
                                 <span class="font-mono text-xs text-gray-500 bg-white/5 px-2 py-1 rounded">${age}</span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right">${badgeHtml}</td>
+                            <td class="px-6 py-4 text-right">${badgeHtml}</td>
                         </tr>
                     `;
                     tbody.insertAdjacentHTML('beforeend', row);

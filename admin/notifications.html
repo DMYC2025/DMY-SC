@@ -72,6 +72,10 @@
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">group</span> Members
                 </a>
+                <a href="member-files.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">folder_shared</span> Member Files
+                </a>
                 <a href="payment.html"
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">payments</span> Payments
@@ -228,43 +232,66 @@
         }
 
         async function fetchNotifications() {
-            const { data } = await _supabase.from('notifications').select('*').order('created_at', { ascending: false });
             const list = document.getElementById('historyList');
-            list.innerHTML = '';
+            try {
+                const { data, error } = await _supabase
+                    .from('notifications')
+                    .select('*, recorder:recorded_by(full_name)')
+                    .not('title', 'ilike', '%issue%')
+                    .not('message', 'ilike', '%issue%')
+                    .not('title', 'ilike', '%support%')
+                    .order('created_at', { ascending: false });
 
-            if (data && data.length > 0) {
-                data.forEach(n => {
-                    const isUrgent = n.priority === 'urgent';
-                    const border = isUrgent ? 'border-error' : 'border-primary';
-                    const bgIcon = isUrgent ? 'bg-[#3c2525] text-[#ffb4ab]' : 'bg-[#062e6f] text-[#a8c7fa]';
-                    const icon = isUrgent ? 'priority_high' : 'info';
+                if (error) throw error;
 
-                    list.innerHTML += `
-                        <div class="bg-[#252529] p-5 rounded-xl border border-white/5 border-l-4 ${border} relative group hover:bg-[#303036] transition">
-                            <div class="flex justify-between items-start gap-4">
-                                <div class="flex gap-4">
-                                    <div class="w-10 h-10 rounded-full ${bgIcon} flex items-center justify-center shrink-0"><span class="material-symbols-rounded text-xl">${icon}</span></div>
-                                    <div>
-                                        <h4 class="font-display font-medium text-[#E3E3E3]">${n.title}</h4>
-                                        <p class="text-sm text-[#C4C7C5] mt-1">${n.message}</p>
-                                        <p class="text-[10px] text-[#8e918f] font-mono mt-2">${new Date(n.created_at).toLocaleString()}</p>
+                list.innerHTML = '';
+                if (data && data.length > 0) {
+                    data.forEach(n => {
+                        const isUrgent = n.priority === 'urgent';
+                        const border = isUrgent ? 'border-error' : 'border-primary';
+                        const bgIcon = isUrgent ? 'bg-error/10 text-error' : 'bg-primary/10 text-primary';
+                        const icon = isUrgent ? 'priority_high' : 'info';
+                        const recorder = n.recorder?.full_name || 'System';
+
+                        list.innerHTML += `
+                            <div class="bg-[#252529] p-5 rounded-xl border border-white/5 border-l-4 ${border} relative group hover:bg-[#303036] transition" data-aos="fade-up">
+                                <div class="flex justify-between items-start gap-4">
+                                    <div class="flex gap-4">
+                                        <div class="w-10 h-10 rounded-full ${bgIcon} flex items-center justify-center shrink-0 border border-white/5 shadow-inner">
+                                            <span class="material-symbols-rounded text-xl">${icon}</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-display font-medium text-[#E3E3E3] text-sm">${n.title}</h4>
+                                            <p class="text-xs text-[#C4C7C5] mt-1 line-clamp-2">${n.message}</p>
+                                            <div class="flex items-center gap-3 mt-2">
+                                                <p class="text-[9px] text-[#8e918f] font-mono">${new Date(n.created_at).toLocaleString()}</p>
+                                                <span class="text-[9px] font-bold text-[#8e918f] uppercase italic bg-white/5 px-2 py-0.5 rounded border border-white/5">By: ${recorder}</span>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <button onclick="deleteNote('${n.id}')" class="w-8 h-8 flex items-center justify-center text-[#8e918f] hover:text-error hover:bg-error/10 rounded-full transition" title="Delete"><span class="material-symbols-rounded text-lg">delete</span></button>
                                 </div>
-                                <button onclick="deleteNote('${n.id}')" class="text-[#8e918f] hover:text-error p-2 transition"><span class="material-symbols-rounded">delete</span></button>
-                            </div>
-                        </div>`;
-                });
-            } else {
-                list.innerHTML = `<div class="text-center py-10 text-[#8e918f]">No notifications sent yet.</div>`;
+                            </div>`;
+                    });
+                } else {
+                    list.innerHTML = `<div class="text-center py-20 opacity-40 italic text-sm">No notifications sent yet.</div>`;
+                }
+            } catch (err) {
+                console.error("Fetch Notifications Error:", err);
+                list.innerHTML = `<div class="text-center py-10 text-error italic text-xs">Failed to load history.</div>`;
             }
         }
 
         document.getElementById('notifyForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) return;
+
             const { error } = await _supabase.from('notifications').insert({
                 title: document.getElementById('title').value,
                 message: document.getElementById('message').value,
-                priority: document.getElementById('priority').value
+                priority: document.getElementById('priority').value,
+                recorded_by: session.user.id
             });
 
             if (error) alert("Error: " + error.message);

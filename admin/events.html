@@ -166,6 +166,10 @@
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">group</span> Members
                 </a>
+                <a href="member-files.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">folder_shared</span> Member Files
+                </a>
                 <a href="payment.html"
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">payments</span> Payments
@@ -397,38 +401,57 @@
         }
 
         async function fetchEvents() {
-            const { data, error } = await _supabase.from('events').select('*').order('event_date', { ascending: true });
-            if (error) { console.error(error); return; }
-            fetchedEvents = data || [];
-            renderEvents(data);
-            generateCalendar(currYear, currMonth);
+            try {
+                // Fetch events with recorder info
+                const { data, error } = await _supabase
+                    .from('events')
+                    .select('*, recorder:recorded_by(full_name)')
+                    .order('event_date', { ascending: true });
+
+                if (error) throw error;
+
+                fetchedEvents = data || [];
+                renderEvents(fetchedEvents);
+                generateCalendar(currYear, currMonth);
+            } catch (err) {
+                console.error("Fetch Events Error:", err);
+                const list = document.getElementById('eventsList');
+                if (list) list.innerHTML = '<div class="col-span-full py-10 text-center text-error italic text-xs">Failed to load events.</div>';
+            }
         }
 
         function renderEvents(events) {
             const list = document.getElementById('eventsList');
-            if (events.length === 0) { list.innerHTML = '<p class="col-span-full text-center py-10 opacity-50">No events found.</p>'; return; }
-            list.innerHTML = '';
-            events.forEach(ev => {
-                list.innerHTML += `
-                <div class="m3-card p-5 bg-[#1E1E1E] border border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 group">
+            if (!events || events.length === 0) {
+                list.innerHTML = '<div class="col-span-full text-center py-20 bg-white/5 rounded-3xl border border-dashed border-white/10 opacity-50 italic text-xs">No upcoming events found.</div>';
+                return;
+            }
+            list.innerHTML = events.map(ev => {
+                const recorder = ev.recorder?.full_name || 'System';
+                const eventDate = new Date(ev.event_date);
+                return `
+                <div class="m3-card p-5 bg-[#252529] border border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 group hover:shadow-xl transition" data-aos="fade-up">
                     <div class="flex gap-4 items-center">
-                        <div class="w-12 h-12 rounded-xl bg-[#252529] flex flex-col items-center justify-center border border-white/5 shrink-0">
-                            <span class="text-[10px] font-bold text-primary uppercase">${new Date(ev.event_date).toLocaleString('default', { month: 'short' })}</span>
-                            <span class="text-xl font-display font-bold text-[#E3E3E3]">${new Date(ev.event_date).getDate()}</span>
+                        <div class="w-12 h-12 rounded-xl bg-surface-container flex flex-col items-center justify-center border border-white/5 shrink-0 shadow-inner">
+                            <span class="text-[9px] font-bold text-primary uppercase">${eventDate.toLocaleString('default', { month: 'short' })}</span>
+                            <span class="text-xl font-display font-bold text-[#E3E3E3] leading-none">${eventDate.getDate()}</span>
                         </div>
                         <div>
                             <h4 class="text-base font-bold text-[#E3E3E3] group-hover:text-primary transition">${ev.title}</h4>
                             <div class="flex flex-wrap gap-2 mt-1">
-                                <span class="bg-[#252529] text-[#C4C7C5] text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1"><span class="material-symbols-rounded text-[14px]">schedule</span> ${ev.event_time ? ev.event_time.slice(0, 5) : 'TBA'}</span>
+                                <span class="bg-white/5 text-[#C4C7C5] text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 border border-white/5"><span class="material-symbols-rounded text-[14px] opacity-60">schedule</span> ${ev.event_time ? ev.event_time.slice(0, 5) : 'TBA'}</span>
+                                <span class="bg-white/5 text-[#8e918f] text-[9px] font-bold px-2 py-0.5 rounded-full italic border border-white/5">By: ${recorder}</span>
                             </div>
                         </div>
                     </div>
-                    <div class="flex gap-2 shrink-0">
-                        <button onclick='editEvent(${JSON.stringify(ev).replace(/'/g, "&apos;")})' class="p-2 rounded-full bg-[#353539] text-primary hover:bg-primary hover:text-on-primary transition"><span class="material-symbols-rounded">edit</span></button>
-                        <button onclick="deleteEvent('${ev.id}', '${ev.title.replace(/'/g, "\\\'")}')" class="p-2 rounded-full bg-[#353539] text-error hover:bg-error hover:text-on-error transition"><span class="material-symbols-rounded">delete</span></button>
+                    <div class="flex gap-2 shrink-0 md:opacity-0 group-hover:opacity-100 transition duration-300">
+                        <button onclick='editEvent(${JSON.stringify(ev).replace(/'/g, "&apos;")})' class="w-9 h-9 flex items-center justify-center rounded-full bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white transition" title="Edit"><span class="material-symbols-rounded text-lg">edit</span></button>
+                        <button onclick="deleteEvent('${ev.id}', '${ev.title.replace(/'/g, "\\\'")}')" class="w-9 h-9 flex items-center justify-center rounded-full bg-error/10 text-error hover:bg-error hover:text-white transition" title="Delete"><span class="material-symbols-rounded text-lg">delete</span></button>
                     </div>
                 </div>`;
-            });
+            }).join('');
+
+            setTimeout(() => typeof AOS !== 'undefined' && AOS.refresh(), 100);
         }
 
         function generateCalendar(year, month) {
@@ -542,6 +565,9 @@
         const eventForm = document.getElementById('eventForm');
         eventForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) return;
+
             const data = {
                 title: document.getElementById('title').value,
                 event_date: document.getElementById('date').value,
@@ -549,7 +575,8 @@
                 location: document.getElementById('location').value,
                 image_url: document.getElementById('image_url').value,
                 description: document.getElementById('description').value,
-                is_hidden: false
+                is_hidden: false,
+                recorded_by: session.user.id
             };
 
             let error;
@@ -564,7 +591,8 @@
                     await _supabase.from('notifications').insert([{
                         title: `New Event: ${data.title}`,
                         message: `Join us for "${data.title}" on ${new Date(data.event_date).toLocaleDateString()} at ${data.event_time}. Location: ${data.location}`,
-                        priority: 'normal'
+                        priority: 'normal',
+                        recorded_by: session.user.id
                     }]);
                 }
             }

@@ -177,8 +177,9 @@
                             <span
                                 class="text-[10px] font-display font-bold text-[#e4e2e2] tracking-widest opacity-50">DMYSC
                                 PASS</span>
-                            <span
-                                class="bg-[#a6f7bd] text-[#003915] text-[9px] font-bold px-2 py-0.5 rounded-md">MEMBER</span>
+                            <div id="mobileRolesContainer" class="flex flex-col items-end gap-1">
+                                <!-- Dynamic Roles -->
+                            </div>
                         </div>
 
                         <div
@@ -567,6 +568,7 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="../assets/js/supabase.js"></script>
+    <script src="../assets/js/maintenance-check.js"></script>
     <!-- Firebase Push Notification SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
@@ -684,41 +686,71 @@
                 if (document.getElementById('navAvatar')) document.getElementById('navAvatar').src = avatarUrl;
 
 
-                // --- ROLES & BADGES (Desktop) ---
-                const rolesContainer = document.getElementById('desktopRolesContainer');
-                if (rolesContainer) {
-                    rolesContainer.innerHTML = '';
-                    let hasRole = false;
+                // --- ROLES & BADGES (Desktop & Mobile) ---
+                const desktopRoles = document.getElementById('desktopRolesContainer');
+                const mobileRoles = document.getElementById('mobileRolesContainer');
 
-                    // Executive Badge
+                if (desktopRoles || mobileRoles) {
+                    const allRoles = [];
+
+                    // 1. Executive Badge
                     if (execData) {
-                        hasRole = true;
-                        rolesContainer.innerHTML += `
-                            <div class="px-2 py-0.5 rounded-md bg-tertiary/10 text-tertiary border border-tertiary/20 flex items-center gap-1">
-                                <span class="material-symbols-rounded text-xs">crown</span>
-                                <span class="text-[9px] font-bold uppercase tracking-wide">${execData.term_period || 'Exec'}</span>
-                            </div>`;
+                        allRoles.push({ type: 'exec', text: execData.term_period || 'Exec' });
                     }
 
-                    // Captain Badge
+                    // 2. Captain Badges
                     if (sportsData && sportsData.length > 0) {
-                        hasRole = true;
                         sportsData.forEach(sport => {
-                            rolesContainer.innerHTML += `
-                                <div class="px-2 py-0.5 rounded-md bg-secondary/10 text-secondary border border-secondary/20 flex items-center gap-1">
-                                    <span class="material-symbols-rounded text-xs">star</span>
-                                    <span class="text-[9px] font-bold uppercase tracking-wide">${sport.name} Cap</span>
-                                </div>`;
+                            allRoles.push({ type: 'captain', text: `${sport.name} Captain` });
                         });
                     }
 
-                    // Member Badge (Default)
-                    if (!hasRole) {
-                        rolesContainer.innerHTML += `
-                            <div class="px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20 flex items-center gap-1">
-                                <span class="material-symbols-rounded text-xs">diversity_3</span>
-                                <span class="text-[9px] font-bold uppercase tracking-wide">Member</span>
-                            </div>`;
+                    // 3. Sport Team Roles (Fetch current user memberships)
+                    const { data: teamData } = await _supabase
+                        .from('sport_team_members')
+                        .select('role, sports(name)')
+                        .eq('profile_id', userId);
+
+                    if (teamData) {
+                        teamData.forEach(tm => {
+                            const sportName = tm.sports?.name || 'Sport';
+                            const roleText = tm.role ? `${tm.role} (${sportName})` : `${sportName} Player`;
+                            allRoles.push({ type: 'sport', text: roleText });
+                        });
+                    }
+
+                    // 4. Default Member Badge
+                    if (allRoles.length === 0) {
+                        allRoles.push({ type: 'member', text: 'Member' });
+                    }
+
+                    // Render Desktop
+                    if (desktopRoles) {
+                        desktopRoles.innerHTML = allRoles.map(r => {
+                            let style = 'bg-primary/10 text-primary border-primary/20';
+                            let icon = 'diversity_3';
+                            if (r.type === 'exec') { style = 'bg-tertiary/10 text-tertiary border-tertiary/20'; icon = 'crown'; }
+                            if (r.type === 'captain') { style = 'bg-secondary/10 text-secondary border-secondary/20'; icon = 'star'; }
+                            if (r.type === 'sport') { style = 'bg-white/5 text-gray-400 border-white/10'; icon = 'sports_score'; }
+
+                            return `
+                                <div class="px-2 py-0.5 rounded-md ${style} border flex items-center gap-1">
+                                    <span class="material-symbols-rounded text-xs">${icon}</span>
+                                    <span class="text-[9px] font-bold uppercase tracking-wide">${r.text}</span>
+                                </div>`;
+                        }).join('');
+                    }
+
+                    // Render Mobile
+                    if (mobileRoles) {
+                        mobileRoles.innerHTML = allRoles.map(r => {
+                            let style = 'bg-primary/20 text-primary border-primary/30';
+                            if (r.type === 'exec') style = 'bg-tertiary/20 text-tertiary border-tertiary/30';
+                            if (r.type === 'captain') style = 'bg-secondary/20 text-secondary border-secondary/30';
+                            if (r.type === 'sport') style = 'bg-white/10 text-gray-300 border-white/20';
+
+                            return `<span class="${style} text-[8px] font-bold px-2 py-0.5 rounded-md border uppercase tracking-wider">${r.text}</span>`;
+                        }).join('');
                     }
                 }
 

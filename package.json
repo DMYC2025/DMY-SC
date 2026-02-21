@@ -1,0 +1,17 @@
+{
+  "name": "dmy-sc-main",
+  "version": "1.0.0",
+  "description": "Dream Makers Youth & Sports Club Management System",
+  "main": "sw.js",
+  "scripts": {
+    "start": "npx serve .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "dmysc",
+    "club-management",
+    "supabase"
+  ],
+  "author": "Dream Makers Youth & Sports Club",
+  "license": "ISC"
+}

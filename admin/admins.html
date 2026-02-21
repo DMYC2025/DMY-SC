@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMYSC - Admin Management</title>
+    <link rel="icon" type="image/png" href="../assets/images/logo_1.png">
+
+    <!-- External Admin CSS -->
+    <link rel="stylesheet" href="../assets/css/admin-style.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#121212',
+                        surface: '#1E1E1E',
+                        'surface-container': '#252529',
+                        'surface-bright': '#3b3b3f',
+                        primary: '#a8c7fa',
+                        'on-primary': '#062e6f',
+                        secondary: '#c2c9bd',
+                        tertiary: '#a0cfd0',
+                        error: '#ffb4ab',
+                        outline: '#8e918f'
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+
+<body class="bg-background text-slate-100 min-h-screen font-poppins overflow-hidden">
+
+    <div class="flex h-screen relative bg-background">
+
+        <div id="overlay" onclick="toggleSidebar()"
+            class="fixed inset-0 bg-black/60 z-40 hidden md:hidden backdrop-blur-sm"></div>
+
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 w-[300px] m3-drawer flex flex-col z-50 sidebar-closed md:relative md:translate-x-0 shadow-xl md:shadow-none pr-3">
+            <div class="p-6 pl-8 flex items-center justify-between h-20">
+                <div class="flex items-center gap-3">
+                    <img src="../assets/images/logo.png" class="h-8 w-8 object-contain">
+                    <div>
+                        <h2 class="font-display font-bold text-lg text-[#E3E3E3] tracking-tight">Admin<span
+                                class="text-primary">Panel</span></h2>
+                    </div>
+                </div>
+                <button onclick="toggleSidebar()" class="md:hidden text-[#C4C7C5] hover:text-white"><span
+                        class="material-symbols-rounded">close</span></button>
+            </div>
+
+            <nav class="flex-1 px-3 space-y-1 mt-2 overflow-y-auto custom-scrollbar">
+                <a href="index.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">dashboard</span> Dashboard
+                </a>
+                <a href="members.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">group</span> Members
+                </a>
+                <a href="member-files.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">folder_shared</span> Member Files
+                </a>
+                <a href="payment.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">payments</span> Payments
+                </a>
+                <a href="events.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">event</span> Events
+                </a>
+                <a href="sports.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">emoji_events</span> Sports
+                </a>
+                <a href="notifications.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">notifications</span> Notifications
+                </a>
+                <a href="quick_links.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">link</span> Quick Links
+                </a>
+                <a href="issues.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">report_problem</span> Support Issues
+                </a>
+                <a href="committee.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">diversity_3</span> Committee
+                </a>
+                <a href="about.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">info</span> About Info
+                </a>
+                <a href="settings.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">settings</span> Page Settings
+                </a>
+            </nav>
+
+            <div class="p-6 border-t border-[#353539]">
+                <button onclick="logout()"
+                    class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#3c2525] text-[#ffb4ab] hover:bg-[#533535] hover:text-white rounded-full transition duration-300 font-medium text-sm">
+                    <span class="material-symbols-rounded text-[20px]">logout</span> Logout
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto relative bg-[#121212]">
+            <button onclick="toggleSidebar()"
+                class="md:hidden absolute top-6 right-6 z-40 bg-[#1E1E1E] p-2 rounded-full text-[#E3E3E3] border border-white/10 shadow-lg"><span
+                    class="material-symbols-rounded text-2xl">menu</span></button>
+
+            <!-- M3 Header Section -->
+            <div class="relative px-6 md:px-12 pt-12 pb-8">
+                <div class="flex items-end justify-between" data-aos="fade-up">
+                    <div>
+                        <h1
+                            class="text-3xl md:text-5xl font-display font-medium text-[#E3E3E3] flex items-center gap-3">
+                            <span
+                                class="material-symbols-rounded text-4xl md:text-5xl text-primary">shield_person</span>
+                            Admin
+                            Management
+                        </h1>
+                        <p class="text-[#a8c7fa] text-sm font-medium mt-2 opacity-90 tracking-wide uppercase">Manage
+                            Platform Administrators</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 lg:px-8 relative z-10 pb-12">
+
+                <div class="m3-card p-4 rounded-xl mb-6 bg-[#1E1E1E] border border-white/5 flex flex-col gap-6"
+                    data-aos="fade-up">
+
+                    <!-- M3 Header Stats -->
+                    <div class="flex items-center gap-6 px-4 py-2 border-b border-[#353539]">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-rounded text-primary">verified_user</span>
+                            <span class="text-sm font-bold text-[#E3E3E3]">Total Admins:</span>
+                            <span id="count-admins" class="tab-badge">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Search and Actions -->
+                    <div class="flex flex-col lg:flex-row gap-4 px-4 pb-2">
+                        <div class="relative flex-1 group">
+                            <span
+                                class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-[#8e918f] group-focus-within:text-primary transition-colors">search</span>
+                            <input type="text" id="searchInput" onkeyup="runFilters()"
+                                placeholder="Search by Name, NIC, Email or ID..."
+                                class="w-full pl-12 pr-4 py-3.5 rounded-xl m3-input text-sm font-medium bg-[#252529]/50 border-white/5 focus:bg-[#252529] focus:border-primary/30 transition-all shadow-inner">
+                        </div>
+                        <div class="flex flex-wrap md:flex-nowrap gap-4 items-center">
+                            <div class="relative w-full md:w-64 group">
+                                <span
+                                    class="material-symbols-rounded absolute left-4 top-1/2 -translate-y-1/2 text-[#8e918f] group-focus-within:text-primary transition-colors">sort</span>
+                                <select id="sortSelect" onchange="runFilters()"
+                                    class="w-full pl-12 pr-10 py-3.5 rounded-xl m3-input text-sm font-medium bg-[#252529]/50 border-white/5 appearance-none cursor-pointer focus:border-primary/30 transition-all">
+                                    <option value="newest">Newest Added</option>
+                                    <option value="name_asc">Name (A-Z)</option>
+                                </select>
+                                <span
+                                    class="material-symbols-rounded absolute right-4 top-1/2 -translate-y-1/2 text-[#8e918f] pointer-events-none">expand_more</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admins Table -->
+                <div class="bg-[#1E1E1E] rounded-xl shadow-xl border border-white/5 overflow-hidden" data-aos="fade-up"
+                    data-aos-delay="100">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[800px]">
+                            <thead>
+                                <tr
+                                    class="bg-[#252529] border-b border-[#353539] text-xs uppercase tracking-wider text-[#C4C7C5]">
+                                    <th class="p-6 font-medium">Administrator</th>
+                                    <th class="p-6 font-medium">Contact</th>
+                                    <th class="p-6 font-medium">Status / Access</th>
+                                    <th class="p-6 font-medium text-center">Recorded By</th>
+                                    <th class="p-6 font-medium text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminsTable"
+                                class="text-sm font-medium divide-y divide-[#353539] text-[#E3E3E3]">
+                                <tr>
+                                    <td colspan="5" class="p-10 text-center">
+                                        <div
+                                            class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+        <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl p-4 max-h-[90vh] overflow-y-auto">
+            <div class="bg-[#1E1E1E] rounded-xl shadow-2xl border border-white/5 overflow-hidden">
+                <div class="p-6 border-b border-white/5 flex items-center justify-between">
+                    <h3 class="text-xl font-display font-medium text-[#E3E3E3]">Edit Admin Profile</h3>
+                    <button onclick="closeModal()" class="text-[#8e918f] hover:text-white transition"><span
+                            class="material-symbols-rounded">close</span></button>
+                </div>
+                <form id="editForm" class="p-6 space-y-6">
+                    <input type="hidden" id="editId">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold text-[#8e918f] uppercase mb-1">Full Name</label>
+                            <input type="text" id="editName" class="w-full m3-input p-3">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-[#8e918f] uppercase mb-1">Email</label>
+                            <input type="email" id="editEmail" readonly
+                                class="w-full m3-input p-3 opacity-50 cursor-not-allowed"
+                                title="Email cannot be changed here">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-[#8e918f] uppercase mb-1">Role</label>
+                            <select id="editRole" class="w-full m3-input p-3">
+                                <option value="admin">Administrator</option>
+                                <option value="member">Member</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-3 pt-4 border-t border-white/5">
+                        <button type="button" onclick="closeModal()"
+                            class="px-6 py-2.5 rounded-full text-sm font-medium text-[#C4C7C5] hover:bg-white/5 transition">Cancel</button>
+                        <button type="submit"
+                            class="px-8 py-2.5 rounded-full text-sm font-medium bg-[#062e6f] text-[#a8c7fa] hover:bg-primary hover:text-black transition shadow-lg">Save
+                            Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="../assets/js/supabase.js"></script>
+    <script>
+        AOS.init();
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('sidebar-closed');
+            sidebar.classList.toggle('sidebar-open');
+            overlay.classList.toggle('hidden');
+        }
+
+        async function logout() {
+            if (confirm("Are you sure you want to logout?")) {
+                try {
+                    if (typeof _supabase !== 'undefined') await _supabase.auth.signOut();
+                } catch (error) {
+                    console.error("Logout Error:", error);
+                }
+                window.location.href = '../auth/login.html';
+            }
+        }
+
+        let allAdmins = [];
+        let filteredAdmins = [];
+
+        async function init() {
+            if (typeof _supabase === 'undefined') return;
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) return window.location.href = '../auth/login.html';
+            fetchAdmins();
+        }
+
+        async function fetchAdmins() {
+            try {
+                const { data, error } = await _supabase
+                    .from('profiles')
+                    .select('*, recorder:recorded_by(full_name)')
+                    .eq('role', 'admin')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                allAdmins = data || [];
+                document.getElementById('count-admins').innerText = allAdmins.length;
+                runFilters();
+            } catch (err) {
+                console.error("Fetch Error:", err);
+                const tbody = document.getElementById('adminsTable');
+                if (tbody) tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-error">Failed to load admins.</td></tr>';
+            }
+        }
+
+        function runFilters() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            const sortVal = document.getElementById('sortSelect').value;
+            let filtered = [...allAdmins];
+
+            if (q) {
+                filtered = filtered.filter(m =>
+                    (m.full_name && m.full_name.toLowerCase().includes(q)) ||
+                    (m.nic && m.nic.toLowerCase().includes(q)) ||
+                    (m.email && m.email.toLowerCase().includes(q)) ||
+                    (m.member_id && m.member_id.toLowerCase().includes(q))
+                );
+            }
+
+            filtered.sort((a, b) => {
+                if (sortVal === 'newest') return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+                else if (sortVal === 'name_asc') {
+                    const nameA = a.full_name || '';
+                    const nameB = b.full_name || '';
+                    return nameA.localeCompare(nameB);
+                }
+                return 0;
+            });
+
+            renderAdmins(filtered);
+        }
+
+        function renderAdmins(data) {
+            const tbody = document.getElementById('adminsTable');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-[#8e918f] italic bg-[#1E1E1E]">No records found for this criteria.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.map(m => {
+                const avatar = m.avatar_url
+                    ? `<img src="${m.avatar_url}" class="w-full h-full object-cover">`
+                    : `<div class="w-full h-full bg-primary/10 text-primary flex items-center justify-center font-bold text-lg">${m.full_name ? m.full_name.charAt(0) : '?'}</div>`;
+
+                return `
+                    <tr class="hover:bg-[#252529] transition duration-200 group border-b border-white/5 last:border-0">
+                        <td class="p-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full border border-white/10 overflow-hidden shadow-inner shrink-0">
+                                    ${avatar}
+                                </div>
+                                <div>
+                                    <div class="font-bold text-[#E3E3E3] text-sm">${m.full_name || '<span class="italic opacity-50">No Name</span>'}</div>
+                                    <div class="text-[10px] text-[#8e918f] font-mono mt-0.5">ID: ${m.member_id || '-'}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-6">
+                            <div class="text-[11px] space-y-1 text-[#C4C7C5]">
+                                <div class="flex items-center gap-2"><span class="material-symbols-rounded text-primary text-sm opacity-60">email</span> ${m.email || '-'}</div>
+                                <div class="flex items-center gap-2"><span class="material-symbols-rounded text-blue-400 text-sm opacity-60">call</span> ${m.phone || '-'}</div>
+                            </div>
+                        </td>
+                        <td class="p-6">
+                            <span class="bg-purple-900/20 text-purple-300 px-3 py-1 rounded-lg text-[10px] font-bold border border-purple-500/20 uppercase w-fit">Administrator</span>
+                        </td>
+                        <td class="p-6 text-center">
+                            <span class="text-[10px] font-bold text-primary uppercase bg-primary/5 px-3 py-1 rounded-full border border-primary/10">${m.recorder?.full_name || 'System'}</span>
+                        </td>
+                        <td class="p-6 text-right">
+                             <div class="flex items-center justify-end gap-2">
+                                <button onclick="openEditModal('${m.id}')" title="Edit Access" class="h-9 w-9 flex items-center justify-center rounded-full bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition">
+                                    <span class="material-symbols-rounded text-lg">edit</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`;
+            }).join('');
+        }
+
+        function openEditModal(id) {
+            const m = allAdmins.find(x => x.id === id);
+            if (m) {
+                document.getElementById('editId').value = id;
+                document.getElementById('editName').value = m.full_name || '';
+                document.getElementById('editEmail').value = m.email || '';
+                document.getElementById('editRole').value = m.role || 'admin';
+                document.getElementById('editModal').classList.remove('hidden');
+            }
+        }
+
+        function closeModal() { document.getElementById('editModal').classList.add('hidden'); }
+
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const updates = {
+                full_name: document.getElementById('editName').value,
+                role: document.getElementById('editRole').value
+            };
+            const id = document.getElementById('editId').value;
+            const { error } = await _supabase.from('profiles').update(updates).eq('id', id);
+            if (error) alert("Error Updating: " + error.message);
+            else { alert("Updated successfully!"); closeModal(); fetchAdmins(); }
+        });
+
+        init();
+    </script>
+</body>
+
+</html>

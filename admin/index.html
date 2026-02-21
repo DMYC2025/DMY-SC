@@ -91,6 +91,10 @@
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">group</span> Members
                 </a>
+                <a href="member-files.html"
+                    class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
+                    <span class="material-symbols-rounded text-[20px]">folder_shared</span> Member Files
+                </a>
                 <a href="payment.html"
                     class="m3-nav-item flex items-center gap-4 px-6 py-3.5 text-sm font-medium text-[#C4C7C5]">
                     <span class="material-symbols-rounded text-[20px]">payments</span> Payments
@@ -162,7 +166,7 @@
             </div>
 
             <!-- M3 Header Section (Simplified) -->
-            <div class="relative px-6 md:px-12 pt-6 pb-4">
+            <div class="relative px-6 md:px-12 pt-6 pb-4 z-40">
                 <div class="flex items-end justify-between" data-aos="fade-up">
                     <div>
                         <div class="flex items-center gap-2 mb-1">
@@ -182,23 +186,6 @@
                                 <span id="adminNotifBadge"
                                     class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-[#1E1E1E] hidden"></span>
                             </button>
-                            <!-- Popup -->
-                            <div id="adminNotifPopup"
-                                class="hidden absolute right-0 mt-3 w-80 bg-[#252529] border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden transform origin-top-right transition-all">
-                                <div
-                                    class="p-4 border-b border-white/5 flex justify-between items-center bg-[#1E1E1E]/50">
-                                    <h4 class="font-display font-bold text-[#E3E3E3] text-sm flex items-center gap-2">
-                                        <span class="material-symbols-rounded text-primary text-sm">notifications</span>
-                                        Notifications
-                                    </h4>
-                                    <a href="notifications.html"
-                                        class="text-[10px] font-bold uppercase tracking-wider text-primary hover:text-white transition">View
-                                        All</a>
-                                </div>
-                                <div id="adminNotifList" class="max-h-64 overflow-y-auto custom-scrollbar p-1">
-                                    <div class="p-4 text-center text-xs text-[#8e918f]">No new issues reported</div>
-                                </div>
-                            </div>
                         </div>
 
                         <!-- Profile Icon -->
@@ -292,38 +279,49 @@
                         Quick Actions
                     </h3>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <a href="members.html"
                             class="flex items-center gap-4 p-4 rounded-xl bg-[#252529] hover:bg-[#303036] hover:shadow-lg transition group border border-white/5">
                             <div
-                                class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition">
-                                <span class="material-symbols-rounded text-2xl">person_add</span>
+                                class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition shrink-0">
+                                <span class="material-symbols-rounded text-xl">person_add</span>
                             </div>
                             <div>
-                                <h4 class="font-bold text-[#E3E3E3] text-sm">Manage Members</h4>
-                                <p class="text-[10px] text-[#8e918f] uppercase font-bold">Review & Approve</p>
+                                <h4 class="font-bold text-[#E3E3E3] text-sm">Members</h4>
+                                <p class="text-[9px] text-[#8e918f] uppercase font-bold">Review & Approve</p>
+                            </div>
+                        </a>
+                        <a href="members.html?action=export"
+                            class="flex items-center gap-4 p-4 rounded-xl bg-[#252529] hover:bg-[#303036] hover:shadow-lg transition group border border-white/5">
+                            <div
+                                class="w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center group-hover:scale-110 transition shrink-0">
+                                <span class="material-symbols-rounded text-xl">description</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-[#E3E3E3] text-sm">CSV Export</h4>
+                                <p class="text-[9px] text-[#8e918f] uppercase font-bold">Member Backup</p>
+                            </div>
+                        </a>
+                        <a href="payment.html?action=report"
+                            class="flex items-center gap-4 p-4 rounded-xl bg-[#252529] hover:bg-[#303036] hover:shadow-lg transition group border border-white/5">
+                            <div
+                                class="w-10 h-10 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center group-hover:scale-110 transition shrink-0">
+                                <span class="material-symbols-rounded text-xl">analytics</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-[#E3E3E3] text-sm">Finance KPI</h4>
+                                <p class="text-[9px] text-[#8e918f] uppercase font-bold">Revenue Report</p>
                             </div>
                         </a>
                         <a href="notifications.html"
                             class="flex items-center gap-4 p-4 rounded-xl bg-[#252529] hover:bg-[#303036] hover:shadow-lg transition group border border-white/5">
                             <div
-                                class="w-12 h-12 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center group-hover:scale-110 transition">
-                                <span class="material-symbols-rounded text-2xl">send</span>
+                                class="w-10 h-10 rounded-full bg-purple-500/10 text-purple-500 flex items-center justify-center group-hover:scale-110 transition shrink-0">
+                                <span class="material-symbols-rounded text-xl">campaign</span>
                             </div>
                             <div>
-                                <h4 class="font-bold text-[#E3E3E3] text-sm">Send Alert</h4>
-                                <p class="text-[10px] text-[#8e918f] uppercase font-bold">Notify Everyone</p>
-                            </div>
-                        </a>
-                        <a href="events.html"
-                            class="flex items-center gap-4 p-4 rounded-xl bg-[#252529] hover:bg-[#303036] hover:shadow-lg transition group border border-white/5">
-                            <div
-                                class="w-12 h-12 rounded-full bg-purple-500/10 text-purple-500 flex items-center justify-center group-hover:scale-110 transition">
-                                <span class="material-symbols-rounded text-2xl">event_note</span>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-[#E3E3E3] text-sm">New Event</h4>
-                                <p class="text-[10px] text-[#8e918f] uppercase font-bold">Schedule Activity</p>
+                                <h4 class="font-bold text-[#E3E3E3] text-sm">Broadcast</h4>
+                                <p class="text-[9px] text-[#8e918f] uppercase font-bold">Send Alert</p>
                             </div>
                         </a>
                     </div>
@@ -719,23 +717,14 @@
 
         // --- NEW: Admin Notification Logic (Normal Notifications) ---
         function toggleAdminNotif() {
-            const popup = document.getElementById('adminNotifPopup');
-            popup.classList.toggle('hidden');
-            if (!popup.classList.contains('hidden')) {
+            const modal = document.getElementById('adminNotifModal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
                 // Mark badge as seen (hide it) when opened
                 document.getElementById('adminNotifBadge').classList.add('hidden');
                 fetchRecentNotifications();
             }
         }
-
-        // Close popup when clicking outside
-        document.addEventListener('click', function (event) {
-            const popup = document.getElementById('adminNotifPopup');
-            const btn = document.querySelector('button[onclick="toggleAdminNotif()"]');
-            if (popup && !popup.classList.contains('hidden') && !popup.contains(event.target) && !btn.contains(event.target)) {
-                popup.classList.add('hidden');
-            }
-        });
 
         // Helper to determine redirect link based on content
         function getNotificationLink(title, message) {
@@ -750,44 +739,53 @@
             return 'notifications.html';
         }
 
-        // Fetch Normal Notifications (Not Issues)
+        // Fetch Recent Support Issues
         async function fetchRecentNotifications() {
             if (typeof _supabase === 'undefined') return;
 
-            // Fetch from 'notifications' table (Messages, Payments, etc.)
-            const { data, error } = await _supabase
-                .from('notifications')
-                .select('*')
-                .order('created_at', { ascending: false })
-                .limit(3);
-
             const list = document.getElementById('adminNotifList');
-            const permBtn = getAdminPermissionBtn();
+            try {
+                // Fetch from 'login_issues' table
+                const { data, error } = await _supabase
+                    .from('login_issues')
+                    .select('*')
+                    .eq('status', 'open')
+                    .order('created_at', { ascending: false })
+                    .limit(5);
 
-            let content = permBtn;
+                if (error) throw error;
 
-            if (data && data.length > 0) {
-                content += data.map(note => {
-                    const targetLink = getNotificationLink(note.title, note.message);
-                    return `
-                    <div onclick="window.location.href='${targetLink}'" class="p-3 hover:bg-white/5 rounded-lg cursor-pointer transition border-b border-white/5 last:border-0">
-                        <div class="flex justify-between items-start mb-1">
-                            <span class="font-bold text-xs text-[#E3E3E3] truncate w-40">${note.title}</span>
-                            <span class="text-[9px] text-[#8e918f] font-mono">${new Date(note.created_at).toLocaleDateString()}</span>
+                const permBtn = getAdminPermissionBtn();
+                let content = permBtn;
+
+                if (data && data.length > 0) {
+                    content += data.map(issue => {
+                        return `
+                        <div onclick="window.location.href='issues.html'" class="p-3 hover:bg-white/5 rounded-lg cursor-pointer transition border-b border-white/5 last:border-0">
+                            <div class="flex justify-between items-start mb-1">
+                                <span class="font-bold text-xs text-[#E3E3E3] truncate w-32">${issue.full_name}</span>
+                                <span class="text-[8px] text-[#8e918f] font-mono">${new Date(issue.created_at).toLocaleDateString()}</span>
+                            </div>
+                            <p class="text-[10px] text-[#C4C7C5] line-clamp-2 mb-1">${issue.description}</p>
+                            <div class="flex items-center justify-between">
+                                <span class="px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-400 text-[8px] font-bold uppercase tracking-wider">
+                                    ${issue.status || 'Open'}
+                                </span>
+                                <span class="text-[8px] text-[#8e918f] uppercase font-bold italic tracking-tighter">Support Request</span>
+                            </div>
                         </div>
-                        <p class="text-[11px] text-[#C4C7C5] line-clamp-2">${note.message}</p>
-                        <span class="mt-1.5 inline-block px-1.5 py-0.5 rounded ${note.priority === 'urgent' ? 'bg-error/10 text-error' : 'bg-primary/10 text-primary'} text-[9px] font-bold uppercase tracking-wider">
-                            ${note.priority || 'Normal'}
-                        </span>
-                    </div>
-                `}).join('');
-            } else {
-                content += `<div class="p-6 text-center">
-                    <span class="material-symbols-rounded text-[#353539] text-4xl mb-2 block">notifications_off</span>
-                    <p class="text-xs text-[#8e918f]">No recent notifications.</p>
-                </div>`;
+                    `}).join('');
+                } else {
+                    content += `<div class="p-6 text-center">
+                        <span class="material-symbols-rounded text-[#353539] text-4xl mb-2 block">task_alt</span>
+                        <p class="text-xs text-[#8e918f]">No pending issues.</p>
+                    </div>`;
+                }
+                list.innerHTML = content;
+            } catch (err) {
+                console.warn("Issues Load Error:", err);
+                list.innerHTML = `<div class="p-4 text-center text-error text-[10px]">Error loading issues.</div>`;
             }
-            list.innerHTML = content;
         }
 
         let issuesSubscription = null;
@@ -800,7 +798,7 @@
             if (issuesSubscription) _supabase.removeChannel(issuesSubscription);
             if (notifSubscription) _supabase.removeChannel(notifSubscription);
 
-            // 1. Listen for New Report Issues (Updates TICKER Only)
+            // 1. Listen for New Report Issues (Updates TICKER & BELL)
             issuesSubscription = _supabase.channel('admin-issues-ticker-v2')
                 .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'login_issues' }, payload => {
                     // Update Ticker
@@ -810,20 +808,23 @@
                         ticker.classList.remove('hidden');
                         text.innerText = `${payload.new.full_name}: ${payload.new.description}`;
                     }
-                })
-                .subscribe();
 
-            // 2. Listen for New Notifications (Updates BELL Only)
-            notifSubscription = _supabase.channel('admin-notifications-bell-v2')
-                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, payload => {
                     // Show notification badge
                     document.getElementById('adminNotifBadge').classList.remove('hidden');
 
-                    // If popup is open, refresh it
-                    const popup = document.getElementById('adminNotifPopup');
-                    if (popup && !popup.classList.contains('hidden')) {
+                    // If modal is open, refresh it
+                    const modal = document.getElementById('adminNotifModal');
+                    if (modal && !modal.classList.contains('hidden')) {
                         fetchRecentNotifications();
                     }
+                })
+                .subscribe();
+
+            // 2. Listen for New Notifications (Updates BADGE only for general stuff)
+            notifSubscription = _supabase.channel('admin-notifications-bell-v2')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, payload => {
+                    // Still show badge if some other system notification comes in
+                    document.getElementById('adminNotifBadge').classList.remove('hidden');
                 })
                 .subscribe();
         }
@@ -883,8 +884,8 @@
                 if (!error && profiles) {
                     allProfilesCache = profiles;
 
-                    const m = profiles.filter(p => p.role === 'member').length;
-                    const p = profiles.filter(p => p.is_approved === false).length;
+                    const m = profiles.filter(p => p.role !== 'admin').length;
+                    const p = profiles.filter(p => p.role !== 'admin' && p.is_approved === false).length;
 
                     document.getElementById('totalMembers').innerText = m || 0;
                     document.getElementById('pendingMembers').innerText = p || 0;
@@ -901,7 +902,7 @@
         // ----------------------------------------------------
         function renderGrowthChart(data) {
             dailyMemberData = {}; // Reset cache
-            const membersOnly = data.filter(m => m.role === 'member').sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+            const membersOnly = data.filter(m => m.role !== 'admin').sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
             if (membersOnly.length === 0) {
                 document.querySelector("#growthChart").innerHTML = `<div class="flex items-center justify-center h-full text-[#8e918f] text-sm font-display">Waiting for member registrations...</div>`;
@@ -1025,12 +1026,14 @@
             list.innerHTML = '';
 
             members.forEach(m => {
+                const avatar = m.avatar_url
+                    ? `<img src="${m.avatar_url}" class="w-8 h-8 rounded-full object-cover">`
+                    : `<div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs">${m.full_name ? m.full_name.charAt(0) : '?'}</div>`;
+
                 list.innerHTML += `
                     <div class="flex items-center justify-between bg-[#1E1E1E] p-3 rounded-xl border border-white/5 animate-fade-in-up">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs">
-                                ${m.full_name.charAt(0)}
-                            </div>
+                            ${avatar}
                             <div>
                                 <h4 class="text-[#E3E3E3] text-sm font-bold">${m.full_name}</h4>
                                 <p class="text-[10px] text-[#8e918f]">Registered: ${new Date(m.created_at).toLocaleDateString()}</p>
@@ -1059,17 +1062,13 @@
             content.innerHTML = '<div class="text-center py-8"><span class="material-symbols-rounded animate-spin text-3xl text-primary">progress_activity</span><p class="text-xs mt-2 text-[#8e918f]">Fetching System Logs...</p></div>';
 
             try {
-                // Fetch All Profiles with required fields
-                // Note: 'last_sign_in_at' and 'auth_provider' usually exist in 'auth.users' which is restricted client-side.
-                // However, often 'profiles' table is synced. We will fetch '*' to get everything available.
                 const { data: users, error } = await _supabase
                     .from('profiles')
-                    .select('*')
+                    .select('*, recorder:recorded_by(full_name)')
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
 
-                // Date Formatter
                 const formatTime = (isoString) => {
                     if (!isoString) return '<span class="text-slate-600">N/A</span>';
                     const d = new Date(isoString);
@@ -1086,6 +1085,7 @@
                                 <tr>
                                     <th class="p-4">User</th>
                                     <th class="p-4">Auth / Email</th>
+                                    <th class="p-4">Managed By</th>
                                     <th class="p-4">Account Created</th>
                                     <th class="p-4">Last Login</th>
                                 </tr>
@@ -1094,22 +1094,18 @@
                 `;
 
                 if (!users || users.length === 0) {
-                    tableHTML += `<tr><td colspan="4" class="p-6 text-center text-slate-500">No logs found.</td></tr>`;
+                    tableHTML += `<tr><td colspan="5" class="p-6 text-center text-slate-500">No logs found.</td></tr>`;
                 } else {
-                    users.forEach(u => {
-                        // Avatar Logic
+                    tableHTML += users.map(u => {
                         const avatar = u.avatar_url
                             ? `<img src="${u.avatar_url}" class="w-8 h-8 rounded-full object-cover">`
                             : `<div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-white text-xs font-bold">${u.full_name ? u.full_name.charAt(0) : '?'}</div>`;
 
-                        // Status Dot
                         const roleColor = u.role === 'admin' ? 'bg-red-500' : 'bg-green-500';
-
-                        // Auth Method - Try to deduce or show email
-                        // If 'last_sign_in_at' is missing in public table, we show 'N/A'
+                        const recorderName = u.recorder?.full_name || '<span class="text-[9px] opacity-30 italic">System</span>';
                         const lastLoginDisplay = u.last_sign_in_at ? formatTime(u.last_sign_in_at) : '<span class="text-[10px] text-slate-600 italic">Data not synced</span>';
 
-                        tableHTML += `
+                        return `
                             <tr class="hover:bg-slate-800/50 transition">
                                 <td class="p-4">
                                     <div class="flex items-center gap-3">
@@ -1125,9 +1121,12 @@
                                 </td>
                                 <td class="p-4">
                                     <div class="flex items-center gap-2">
-                                        <i class="ph-fill ph-envelope-simple text-blue-400"></i>
+                                        <span class="material-symbols-rounded text-sm text-primary">mail</span>
                                         <span class="text-xs truncate max-w-[150px]" title="${u.email}">${u.email || 'No Email'}</span>
                                     </div>
+                                </td>
+                                <td class="p-4">
+                                    <span class="text-[10px] font-bold text-primary uppercase bg-primary/5 px-2 py-1 rounded-full">${recorderName}</span>
                                 </td>
                                 <td class="p-4">
                                     ${formatTime(u.created_at)}
@@ -1137,7 +1136,7 @@
                                 </td>
                             </tr>
                         `;
-                    });
+                    }).join('');
                 }
 
                 tableHTML += `</tbody></table></div>`;
@@ -1145,7 +1144,10 @@
 
             } catch (err) {
                 console.error(err);
-                content.innerHTML = `<div class="text-center text-red-400 py-4">Error loading system logs.<br><span class="text-xs text-slate-500">${err.message}</span></div>`;
+                content.innerHTML = `<div class="text-center text-error py-8">
+                    <span class="material-symbols-rounded text-4xl opacity-20">error</span>
+                    <p class="text-xs mt-2">Error loading system logs. Please try again.</p>
+                </div>`;
             }
         }
 
@@ -1172,12 +1174,14 @@
                 list.innerHTML = "<div class='text-[#8e918f] text-center py-4'>No pending requests.</div>";
             } else {
                 pending.forEach(m => {
+                    const avatar = m.avatar_url
+                        ? `<img src="${m.avatar_url}" class="w-10 h-10 rounded-full object-cover">`
+                        : `<div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm">${m.full_name ? m.full_name.charAt(0) : '?'}</div>`;
+
                     list.innerHTML += `
                         <div class="flex items-center justify-between bg-[#1E1E1E] p-4 rounded-xl border border-white/5 hover:bg-[#252529] transition">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm">
-                                    ${m.full_name.charAt(0)}
-                                </div>
+                                ${avatar}
                                 <div>
                                     <h4 class="text-[#E3E3E3] text-sm font-bold">${m.full_name}</h4>
                                     <p class="text-[10px] text-[#8e918f]">${m.email}</p>
@@ -1201,7 +1205,13 @@
         async function approveMember(id) {
             if (!confirm("Approve this member?")) return;
 
-            const { error } = await _supabase.from('profiles').update({ is_approved: true }).eq('id', id);
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (!session) return;
+
+            const { error } = await _supabase.from('profiles').update({
+                is_approved: true,
+                recorded_by: session.user.id
+            }).eq('id', id);
 
             if (error) {
                 alert("Error: " + error.message);
@@ -1215,51 +1225,59 @@
 
         // Load Members for Report Table
         async function loadDashboardMembers() {
+            const tbody = document.getElementById('dashboardMemberTable');
             try {
                 const { data, error } = await _supabase
                     .from('profiles')
                     .select('*')
-                    .eq('role', 'member')
+                    .neq('role', 'admin')
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
 
-                memberDataCache = data;
-                const tbody = document.getElementById('dashboardMemberTable');
+                memberDataCache = data || [];
                 tbody.innerHTML = '';
 
-                if (!data || data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center">No members found.</td></tr>';
+                if (memberDataCache.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-[#8e918f] italic">No members found.</td></tr>';
                     return;
                 }
 
-                data.forEach(m => {
-                    const isApproved = m.is_approved;
-                    const statusBadge = isApproved
-                        ? `<span class="bg-green-500/10 text-green-400 px-2 py-1 rounded text-[10px] font-bold border border-green-500/20">Active</span>`
-                        : `<span class="bg-orange-500/10 text-orange-400 px-2 py-1 rounded text-[10px] font-bold border border-orange-500/20">Pending</span>`;
+                tbody.innerHTML = memberDataCache.map(m => {
+                    const statusBadge = m.is_approved
+                        ? `<span class="bg-green-500/10 text-green-400 px-2.5 py-1 rounded-full text-[9px] font-bold border border-green-500/20 uppercase">Active</span>`
+                        : `<span class="bg-orange-500/10 text-orange-400 px-2.5 py-1 rounded-full text-[9px] font-bold border border-orange-500/20 uppercase pulsate">Pending</span>`;
 
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-slate-800/50 transition">
+                    const avatar = m.avatar_url
+                        ? `<img src="${m.avatar_url}" class="w-8 h-8 rounded-full object-cover">`
+                        : `<div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-[10px] text-white font-bold">${m.full_name ? m.full_name.charAt(0) : '?'}</div>`;
+
+                    return `
+                        <tr class="hover:bg-active/20 transition group">
                             <td class="p-4">
-                                <input type="checkbox" class="member-checkbox rounded border-slate-600 bg-slate-700 text-brand-green focus:ring-offset-slate-900" value="${m.id}">
+                                <input type="checkbox" class="member-checkbox rounded border-slate-600 bg-slate-700 text-primary focus:ring-offset-slate-900 w-4 h-4 cursor-pointer" value="${m.id}">
                             </td>
                             <td class="p-4 font-bold text-white flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs text-white">${m.full_name ? m.full_name.charAt(0) : '?'}</div>
-                                ${m.full_name || 'Unknown'}
+                                <div class="relative">${avatar}</div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm">${m.full_name || 'Unknown'}</span>
+                                    <span class="text-[9px] text-[#8e918f] font-mono">${m.member_id || 'NOT-SET'}</span>
+                                </div>
                             </td>
-                            <td class="p-4 font-mono text-xs">${m.phone || '-'}</td>
-                            <td class="p-4 font-mono text-xs">${m.nic || '-'}</td>
-                            <td class="p-4">${m.address ? m.address.split(',')[0] : '-'}</td>
+                            <td class="p-4 font-mono text-[10px] text-[#E3E3E3]">${m.phone || '-'}</td>
+                            <td class="p-4 font-mono text-[10px] text-[#E3E3E3]">${m.nic || '-'}</td>
+                            <td class="p-4 text-xs text-[#C4C7C5] truncate max-w-[120px]" title="${m.address}">${m.address ? m.address.split(',')[0] : '-'}</td>
                             <td class="p-4 text-center">${statusBadge}</td>
                         </tr>
                     `;
-                });
+                }).join('');
 
-                // IMPORTANT: Refresh AOS after data loads to catch new elements
-                setTimeout(() => AOS.refresh(), 100);
+                setTimeout(() => typeof AOS !== 'undefined' && AOS.refresh(), 200);
 
-            } catch (err) { console.error("Error loading members:", err); }
+            } catch (err) {
+                console.error("Dashboard Members Error:", err);
+                tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-error">Failed to load member list.</td></tr>';
+            }
         }
 
         // Select All Logic
@@ -1373,6 +1391,7 @@
                     .from('profiles')
                     .select('*')
                     .eq('is_approved', true) // Only Active
+                    .neq('role', 'admin')
                     .order('full_name', { ascending: true });
 
                 if (error) throw error;
@@ -1633,6 +1652,40 @@
 
         initAdmin();
     </script>
+    <!-- Notification Modal -->
+    <div id="adminNotifModal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="toggleAdminNotif()">
+        </div>
+        <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-4 animate-in fade-in zoom-in duration-300">
+            <div class="bg-[#1E1E1E] rounded-2xl shadow-2xl border border-white/10 overflow-hidden">
+                <div class="p-5 border-b border-white/5 flex justify-between items-center bg-[#252529]">
+                    <h4 class="font-display font-bold text-[#E3E3E3] flex items-center gap-3">
+                        <span class="material-symbols-rounded text-primary">report_problem</span>
+                        Reported Issues
+                    </h4>
+                    <button onclick="toggleAdminNotif()"
+                        class="text-[#8e918f] hover:text-white transition rounded-full p-1 hover:bg-white/5">
+                        <span class="material-symbols-rounded">close</span>
+                    </button>
+                </div>
+                <div id="adminNotifList" class="max-h-[60vh] overflow-y-auto custom-scrollbar p-2">
+                    <div class="p-10 text-center text-[#8e918f]">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                        <p class="text-xs">Loading alerts...</p>
+                    </div>
+                </div>
+                <div class="p-4 bg-[#252529] border-t border-white/5">
+                    <a href="issues.html"
+                        class="flex items-center justify-center gap-2 w-full py-3 bg-primary/10 text-primary hover:bg-primary hover:text-[#003915] rounded-xl font-bold text-xs uppercase tracking-widest transition shadow-lg">
+                        <span class="material-symbols-rounded text-sm">settings_suggest</span>
+                        Manage All Issues
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
 
 </html>
