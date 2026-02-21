@@ -20,7 +20,6 @@
         }
     </script>
 
-    <!-- External Auth CSS -->
     <link rel="stylesheet" href="../assets/css/auth-style.css">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -48,7 +47,6 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- Responsive Styles for Mobile & Desktop -->
     <style>
         /* ========================================
            MOBILE-FIRST BASE STYLES
@@ -468,13 +466,9 @@
         </button>
     </div>
 
-    <!-- Glass Container -->
-    <!-- Mobile: Full width, stacked (w-full max-w-[90%]) -->
-    <!-- PC (1920x1080): Fixed width centered (md:w-[450px] md:max-w-none) -->
     <div
         class="relative z-10 w-full max-w-[90%] md:w-[480px] md:max-w-none bg-[#1E1E1E]/40 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] rounded-[32px] overflow-hidden transform transition-all hover:shadow-[0_8px_32px_0_rgba(166,247,189,0.1)]">
 
-        <!-- PC: Glow effects -->
         <div
             class="absolute -top-20 -left-20 w-40 h-40 bg-primary/20 rounded-full blur-[60px] pointer-events-none hidden md:block">
         </div>
@@ -561,13 +555,11 @@
 
 
 
-    <!-- Login Instructions Modal -->
     <div id="loginInstructionsModal"
         class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-all duration-300 opacity-0">
         <div
             class="bg-[#1E1E1E] border border-white/5 rounded-[28px] shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden relative transform scale-95">
 
-            <!-- Header -->
             <div
                 class="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-6 border-b border-white/5 sticky top-0 z-10 backdrop-blur-sm">
                 <div class="flex items-center justify-between">
@@ -589,10 +581,8 @@
                 </div>
             </div>
 
-            <!-- Content -->
             <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)] custom-scrollbar">
 
-                <!-- Introduction -->
                 <div class="mb-8 p-4 bg-primary/5 border border-primary/10 rounded-2xl">
                     <p class="text-[#C4C7C5] text-sm leading-relaxed mb-2">
                         <span class="font-bold text-primary">Welcome Back!</span> Choose from multiple login methods to
@@ -604,7 +594,6 @@
                     </p>
                 </div>
 
-                <!-- Method 1: Password Login -->
                 <div class="mb-6 instruction-step" data-step="1">
                     <div class="flex items-start gap-4">
                         <div
@@ -649,7 +638,6 @@
 
 
 
-                <!-- Method 2: Google Login -->
                 <div class="mb-6 instruction-step" data-step="2">
                     <div class="flex items-start gap-4">
                         <div
@@ -692,7 +680,6 @@
                     </div>
                 </div>
 
-                <!-- Important Notes -->
                 <div
                     class="bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-2xl p-5">
                     <div class="flex items-start gap-3">
@@ -718,7 +705,6 @@
 
             </div>
 
-            <!-- Footer -->
             <div class="p-4 border-t border-white/5 bg-[#252529]/50 backdrop-blur-sm">
                 <button id="closeLoginInstructionsBtn2"
                     class="w-full py-3 rounded-full bg-primary text-[#003915] font-bold uppercase tracking-wider text-xs shadow-lg shadow-primary/20 hover:bg-[#b1fcc5] active:scale-[0.98] transition flex items-center justify-center gap-2">
@@ -887,6 +873,12 @@
             e.preventDefault();
             isManualLogin = true;
 
+            // --- නව FCM කේතය (Mobile Permission සඳහා) ---
+            if (window.requestAndInitFCM) {
+                await window.requestAndInitFCM();
+            }
+            // ----------------------------------------
+
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
@@ -930,6 +922,13 @@
         // --- 3. Google Login Logic ---
         async function signInWithGoogle() {
             const googleBtn = document.getElementById('googleLoginBtn');
+
+            // --- නව FCM කේතය (Mobile Permission සඳහා) ---
+            if (window.requestAndInitFCM) {
+                await window.requestAndInitFCM();
+            }
+            // ----------------------------------------
+
             try {
                 googleBtn.disabled = true;
                 googleBtn.innerHTML = '<span class="material-symbols-rounded animate-spin">progress_activity</span> Verifying Account...';
@@ -1036,7 +1035,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
     <script src="../assets/js/fcm.js"></script>
-    <!-- Issue Reporting Modal -->
     <div id="issueModal"
         class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-all duration-300 opacity-0">
         <div
