@@ -199,30 +199,47 @@
     <main class="max-w-7xl mx-auto px-4 py-6 no-print space-y-6">
 
         <!-- Hero Section ("At A Glance" Style) -->
-        <!-- Hero Section ("At A Glance" Style) -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3" data-aos="fade-up">
             <!-- Greeting Card -->
-            <div class="col-span-1 md:col-span-2 m3-card p-5 relative overflow-hidden bg-[#252529]">
+            <div
+                class="col-span-1 md:col-span-2 m3-card p-5 relative overflow-hidden bg-[#252529] border border-white/5 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
+
+                <!-- Background Slideshow Container -->
+                <div id="greetingSlideContainer"
+                    class="absolute inset-0 w-full h-full z-0 opacity-60 blur-[0px] pointer-events-none transition-opacity duration-1000">
+                </div>
+
+                <!-- Gradient Overlay -->
+                <div
+                    class="absolute inset-0 bg-gradient-to-r from-[#252529] via-[#252529]/80 to-[#252529]/30 z-0 pointer-events-none">
+                </div>
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-[#252529] via-[#252529]/40 to-transparent z-0 pointer-events-none">
+                </div>
+
                 <div class="relative z-10 flex flex-col justify-between h-full min-h-[150px]">
                     <div>
-                        <div class="flex items-center gap-2 text-primary font-display font-medium text-xs mb-1">
+                        <div
+                            class="flex items-center gap-2 text-primary font-display font-medium text-xs mb-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                             <span class="material-symbols-rounded text-[16px]">calendar_today</span>
                             <span id="dateDisplay">Loading...</span>
                         </div>
-                        <h1 class="text-2xl md:text-4xl font-display font-normal text-[#E3E3E3] leading-tight mt-1">
+                        <h1
+                            class="text-2xl md:text-4xl font-display font-normal text-[#E3E3E3] leading-tight mt-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                             <span id="greeting">Hello</span>,<br>
-                            <span id="dashName" class="text-primary font-medium">Member</span>
+                            <span id="dashName" class="text-primary font-bold text-3xl md:text-5xl">Member</span>
                         </h1>
 
                         <!-- Mobile-Only Weather Info (Compact) -->
-                        <div class="mt-3 flex items-center gap-3 md:hidden animate-fade-in">
+                        <div
+                            class="mt-3 flex items-center gap-3 md:hidden animate-fade-in drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] bg-[#121212]/40 px-3 py-2 rounded-xl backdrop-blur-sm w-max border border-white/10">
                             <div class="flex items-center gap-2">
                                 <span class="material-symbols-rounded text-[24px] text-primary"
                                     id="mobileWeatherIcon">wb_sunny</span>
                                 <span class="text-xl font-display font-medium text-[#E3E3E3]"
                                     id="mobileWeatherTemp">--°C</span>
                             </div>
-                            <div class="h-6 w-[1px] bg-white/10"></div>
+                            <div class="h-6 w-[1px] bg-white/30"></div>
                             <div class="flex flex-col">
                                 <span class="text-[9px] text-primary font-bold uppercase tracking-wider">Horana</span>
                                 <span class="text-[9px] text-[#C4C7C5]" id="mobileWeatherDesc">Weather</span>
@@ -230,29 +247,27 @@
                         </div>
 
                     </div>
-                    <div class="mt-3 flex flex-wrap items-center gap-3">
-                        <span class="px-2.5 py-1 bg-[#353539] rounded-lg text-[10px] font-mono text-[#C4C7C5]"
+                    <div class="mt-3 flex flex-wrap items-center gap-3 relative z-20">
+                        <span
+                            class="px-2.5 py-1 bg-[#121212]/60 border border-white/10 backdrop-blur-sm shadow-sm rounded-lg text-[10px] font-mono text-[#E3E3E3]"
                             id="clockDisplay">00:00:00</span>
 
                         <!-- Social Links from Footer -->
                         <div class="flex items-center gap-2 ml-auto">
                             <a href="https://www.facebook.com/profile.php?id=61585478932161" target="_blank"
-                                class="w-7 h-7 rounded-full bg-[#353539] hover:bg-[#1877F2] flex items-center justify-center text-[#C4C7C5] hover:text-white transition duration-300">
-                                <i class="ph-fill ph-facebook-logo text-base"></i>
+                                class="w-8 h-8 rounded-full bg-[#121212]/60 border border-white/10 backdrop-blur-sm hover:scale-110 hover:bg-[#1877F2] flex items-center justify-center text-[#E3E3E3] hover:text-white transition-all shadow-sm">
+                                <i class="ph-fill ph-facebook-logo text-lg"></i>
                             </a>
                             <a href="https://whatsapp.com/channel/0029Vb7AQ1bEKyZKwmjeYt0F" target="_blank"
-                                class="w-7 h-7 rounded-full bg-[#353539] hover:bg-[#25D366] flex items-center justify-center text-[#C4C7C5] hover:text-white transition duration-300">
-                                <i class="ph-fill ph-whatsapp-logo text-base"></i>
+                                class="w-8 h-8 rounded-full bg-[#121212]/60 border border-white/10 backdrop-blur-sm hover:scale-110 hover:bg-[#25D366] flex items-center justify-center text-[#E3E3E3] hover:text-white transition-all shadow-sm">
+                                <i class="ph-fill ph-whatsapp-logo text-lg"></i>
                             </a>
                             <a href="https://www.youtube.com/channel/UCbeh371G6OERp1zaAUMyuBQ" target="_blank"
-                                class="w-7 h-7 rounded-full bg-[#353539] hover:bg-[#FF0000] flex items-center justify-center text-[#C4C7C5] hover:text-white transition duration-300">
-                                <i class="ph-fill ph-youtube-logo text-base"></i>
+                                class="w-8 h-8 rounded-full bg-[#121212]/60 border border-white/10 backdrop-blur-sm hover:scale-110 hover:bg-[#FF0000] flex items-center justify-center text-[#E3E3E3] hover:text-white transition-all shadow-sm">
+                                <i class="ph-fill ph-youtube-logo text-lg"></i>
                             </a>
                         </div>
                     </div>
-                </div>
-                <!-- Decorative Circles (Google Style) -->
-                <div class="absolute top-[-20px] right-[-20px] w-40 h-40 bg-primary opacity-5 rounded-full blur-3xl">
                 </div>
             </div>
 
@@ -377,61 +392,66 @@
             </button>
         </div>
 
-        <!-- Desktop Slideshow & ID (Compact) -->
-        <div class="hidden lg:grid grid-cols-3 gap-3 h-[320px]">
-
-            <!-- Slideshow (Rounded Corners) -->
-            <div class="col-span-2 relative bg-[#1E1E1E] rounded-[24px] overflow-hidden group">
-                <div id="mainSlideContainer" class="w-full h-full slide-content"></div>
-
-                <!-- Google Style FABs for arrows -->
-                <button onclick="prevSlide()"
-                    class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#252529]/80 hover:bg-[#a6f7bd] hover:text-[#003915] text-[#E3E3E3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all z-20">
-                    <span class="material-symbols-rounded">chevron_left</span>
-                </button>
-                <button onclick="nextSlide()"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#252529]/80 hover:bg-[#a6f7bd] hover:text-[#003915] text-[#E3E3E3] rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-all z-20">
-                    <span class="material-symbols-rounded">chevron_right</span>
-                </button>
+        <!-- ID Card Download Widget (Standalone Banner) -->
+        <div class="m3-card relative overflow-hidden bg-gradient-to-r from-[#1b2e23] to-[#252529] border border-[#233f2e] p-5 flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg hover:shadow-xl transition-shadow"
+            data-aos="fade-up" data-aos-delay="400">
+            <!-- Decorative Pattern -->
+            <div
+                class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none mix-blend-overlay">
             </div>
 
-            <div class="col-span-1 flex flex-col gap-3 h-full">
-                <!-- Next Preview -->
-                <div class="relative flex-1 bg-[#252529] rounded-[24px] overflow-hidden">
-                    <div id="nextSlideContainer" class="w-full h-full opacity-60 slide-content grayscale"></div>
-                    <div class="absolute bottom-3 right-3 bg-[#121212]/80 px-2 py-0.5 rounded-md">
-                        <span class="text-[9px] font-bold text-white uppercase">Next</span>
-                    </div>
-                </div>
-
-                <!-- ID Card Download Widget (Compact) -->
+            <div class="flex items-center gap-4 relative z-10 w-full md:w-auto">
                 <div
-                    class="h-32 bg-[#1b2e23] rounded-[24px] p-3 flex flex-col items-center justify-center text-center relative overflow-hidden group border border-[#233f2e]">
-                    <span
-                        class="material-symbols-rounded text-[32px] text-[#a6f7bd] mb-1 group-hover:scale-110 transition">badge</span>
-                    <h4 class="text-xs font-medium text-[#E3E3E3] mb-2">Digital ID Pass</h4>
-                    <button onclick="openCardModal()"
-                        class="m3-btn-primary px-3 py-1.5 text-[10px] flex items-center gap-1">
-                        <span class="material-symbols-rounded text-[14px]">download</span> Save
-                    </button>
+                    class="w-14 h-14 rounded-full bg-[#a6f7bd]/10 border border-[#a6f7bd]/30 flex items-center justify-center text-[#a6f7bd] shrink-0">
+                    <span class="material-symbols-rounded text-[28px]">badge</span>
+                </div>
+                <div>
+                    <h4 class="text-base font-display font-medium text-[#E3E3E3]">Digital ID Pass</h4>
+                    <p class="text-xs text-[#C4C7C5]">View and save your club membership identity card</p>
                 </div>
             </div>
-        </div>
 
-        <!-- Mobile Slideshow -->
-        <div class="lg:hidden w-full aspect-video rounded-[28px] overflow-hidden bg-[#1E1E1E] relative group">
-            <div id="mobileSlideContainer" class="w-full h-full slide-content"></div>
-            <button onclick="prevSlide()"
-                class="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#121212]/50 text-white rounded-full flex items-center justify-center z-20">
-                <span class="material-symbols-rounded">chevron_left</span>
-            </button>
-            <button onclick="nextSlide()"
-                class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-[#121212]/50 text-white rounded-full flex items-center justify-center z-20">
-                <span class="material-symbols-rounded">chevron_right</span>
+            <button onclick="openCardModal()"
+                class="w-full md:w-auto relative z-10 bg-[#a6f7bd] hover:bg-[#8ceaae] text-[#003915] font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(166,247,189,0.2)]">
+                <span class="material-symbols-rounded text-[20px]">file_download</span> Save ID Pass
             </button>
         </div>
 
     </main>
+
+    <!-- Auto Scrolling Highlight Gallery -->
+    <div class="w-full bg-[#1E1E1E] py-8 border-y border-[#353539] relative overflow-hidden no-print" data-aos="fade-up"
+        data-aos-delay="500">
+        <h3 class="text-center text-sm font-display font-bold text-[#E3E3E3] uppercase tracking-widest mb-6">Club
+            Highlights</h3>
+        <!-- Gradient masks for fading edges -->
+        <div
+            class="absolute top-0 bottom-0 left-0 w-8 md:w-24 bg-gradient-to-r from-[#1E1E1E] to-transparent z-10 pointer-events-none">
+        </div>
+        <div
+            class="absolute top-0 bottom-0 right-0 w-8 md:w-24 bg-gradient-to-l from-[#1E1E1E] to-transparent z-10 pointer-events-none">
+        </div>
+
+        <!-- The Scrolling Container -->
+        <div class="relative w-full flex items-center pb-4">
+            <div id="scrollingGalleryWrapper"
+                class="flex items-center gap-4 overflow-x-auto custom-scrollbar scroll-smooth px-[50%] md:px-[40%] hide-scrollbar">
+                <!-- Images will be injected here via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Style for hiding scrollbar -->
+    <style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
 
     <div id="global-footer-placeholder" class="no-print pb-20 md:pb-0"></div>
 
@@ -575,6 +595,65 @@
             </div>
         </div>
     </div>
+    <!-- Photo Gallery Modal -->
+    <div id="galleryModal"
+        class="fixed inset-0 z-[110] hidden flex flex-col items-center justify-center bg-black/95 backdrop-blur-md opacity-0 transition-opacity duration-500 no-print">
+
+        <!-- Controls Header -->
+        <div
+            class="absolute top-0 left-0 w-full px-4 py-6 md:p-6 flex justify-between items-center z-20 bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
+            <div class="text-white font-display font-medium text-base flex items-center gap-2 pointer-events-auto">
+                <span class="material-symbols-rounded text-primary">photo_library</span>
+                <span id="galleryCounter" class="tracking-widest font-mono">1 / 1</span>
+            </div>
+            <div class="flex items-center gap-4 pointer-events-auto">
+                <button onclick="shareCurrentGalleryPhoto()"
+                    class="w-12 h-12 rounded-full bg-white/10 hover:bg-primary hover:text-[#003915] text-white flex items-center justify-center transition-all group backdrop-blur-sm relative shadow-lg"
+                    title="Share">
+                    <span class="material-symbols-rounded text-[24px]">share</span>
+                </button>
+                <button onclick="downloadCurrentGalleryPhoto()"
+                    class="w-12 h-12 rounded-full bg-white/10 hover:bg-primary hover:text-[#003915] text-white flex items-center justify-center transition-all group backdrop-blur-sm relative shadow-lg"
+                    title="Download">
+                    <span class="material-symbols-rounded text-[24px]">download</span>
+                </button>
+                <button onclick="closeGalleryModal()"
+                    class="w-12 h-12 rounded-full bg-white/10 hover:bg-error hover:text-white text-white flex items-center justify-center transition-all backdrop-blur-sm shadow-lg"
+                    title="Close">
+                    <span class="material-symbols-rounded text-[24px]">close</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Image Container -->
+        <div
+            class="relative w-full max-w-6xl h-full flex flex-1 items-center justify-center px-0 md:px-16 pt-16 pb-28 md:pb-32">
+
+            <div id="galleryImageContainer" class="w-full h-full flex items-center justify-center relative group">
+                <!-- Image goes here -->
+                <img id="galleryMainImage" src=""
+                    class="max-w-full max-h-full object-contain rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.5)] transition-all duration-500 transform scale-95 opacity-0 pointer-events-auto">
+
+                <!-- Navigation Arrows -->
+                <button onclick="prevGallerySlide()"
+                    class="absolute left-4 md:-left-8 top-1/2 -translate-y-1/2 w-14 h-14 bg-black/60 hover:bg-primary hover:text-[#003915] text-white rounded-full flex items-center justify-center shadow-2xl transition-all z-20 backdrop-blur-md md:opacity-0 md:group-hover:opacity-100 border border-white/10 pointer-events-auto">
+                    <span class="material-symbols-rounded text-[32px]">chevron_left</span>
+                </button>
+                <button onclick="nextGallerySlide()"
+                    class="absolute right-4 md:-right-8 top-1/2 -translate-y-1/2 w-14 h-14 bg-black/60 hover:bg-primary hover:text-[#003915] text-white rounded-full flex items-center justify-center shadow-2xl transition-all z-20 backdrop-blur-md md:opacity-0 md:group-hover:opacity-100 border border-white/10 pointer-events-auto">
+                    <span class="material-symbols-rounded text-[32px]">chevron_right</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Thumbnails -->
+        <div class="absolute bottom-4 md:bottom-8 w-full px-4 overflow-x-auto custom-scrollbar flex items-center justify-start md:justify-center gap-3 pb-2 min-h-[5rem]"
+            id="galleryThumbnails">
+            <!-- Thumbnails injected here -->
+        </div>
+
+    </div>
+
     <!-- Issue Reporting Modal -->
     <div id="issueModal"
         class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-all duration-300 opacity-0">
@@ -638,6 +717,313 @@
     <script src="../assets/js/ui.js"></script>
 
     <script>
+        // --- Scrolling Highlight Gallery Logic ---
+        function buildScrollingGallery() {
+            const wrapper = document.getElementById('scrollingGalleryWrapper');
+            if (!wrapper || slides.length === 0) return;
+            wrapper.innerHTML = '';
+
+            // Clone the slides array multiple times to create a long seamless chain effect 
+            // The user requested: "maha thappara 3kata sarayakma photos tika change venna one" (jump every 3s - already done)
+            // and "photo tika ivara vuna gaman next looping round ekata e pilivelatama photos tika order karanna" (loop continuously in order)
+            // We append the array to itself to ensure there's always a "next" photo visually ready
+
+            // For a smooth chain, we'll repeat the slides array 3 times.
+            const displaySlides = [...slides, ...slides, ...slides];
+
+            displaySlides.forEach((slide, loopIdx) => {
+                // The actual index in the original slides array for opening the modal correctly
+                const realIdx = loopIdx % slides.length;
+
+                const url = slide.image_url;
+                let thumbSrc = url;
+                const ytId = getYouTubeId(url);
+                if (ytId) thumbSrc = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+                else if (url.match(/\.(mp4|webm|ogg)$/i)) thumbSrc = '../assets/images/logo_1.png';
+
+                const btn = document.createElement('button');
+                btn.className = `gallery-scroll-item shrink-0 w-48 h-32 md:w-64 md:h-40 rounded-2xl overflow-hidden border-2 border-transparent transition-all duration-1000 ease-[cubic-bezier(0.25,0.8,0.25,1)] opacity-50 scale-90 hover:opacity-80 relative select-none cursor-pointer group`;
+                btn.dataset.index = realIdx;
+
+                const overlay = document.createElement('div');
+                overlay.className = "absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none";
+                overlay.innerHTML = '<span class="material-symbols-rounded text-white text-[32px] drop-shadow-lg">open_in_full</span>';
+
+                let startX, startY;
+                btn.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                }, { passive: true });
+
+                btn.addEventListener('touchend', (e) => {
+                    if (startX === undefined || startY === undefined) return;
+                    const diffX = Math.abs(e.changedTouches[0].clientX - startX);
+                    const diffY = Math.abs(e.changedTouches[0].clientY - startY);
+                    if (diffX < 10 && diffY < 10) openGalleryModal(realIdx);
+                });
+
+                btn.addEventListener('click', (e) => {
+                    if (typeof isDragging !== 'undefined' && isDragging) return;
+                    openGalleryModal(realIdx);
+                });
+
+                const img = document.createElement('img');
+                img.src = thumbSrc;
+                img.className = "w-full h-full object-cover pointer-events-none";
+
+                btn.appendChild(img);
+                btn.appendChild(overlay);
+                wrapper.appendChild(btn);
+            });
+
+            // Set up IntersectionObserver to highlight the center item
+            const observerOptions = {
+                root: wrapper,
+                rootMargin: '0px -50% 0px -50%', // strict horizontal center line
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.replace('opacity-50', 'opacity-100');
+                        entry.target.classList.replace('scale-90', 'scale-110');
+                        entry.target.classList.replace('border-transparent', 'border-primary');
+                        entry.target.classList.add('shadow-[0_0_30px_rgba(166,247,189,0.5)]', 'z-10');
+                    } else {
+                        entry.target.classList.replace('opacity-100', 'opacity-50');
+                        entry.target.classList.replace('scale-110', 'scale-90');
+                        entry.target.classList.replace('border-primary', 'border-transparent');
+                        entry.target.classList.remove('shadow-[0_0_30px_rgba(166,247,189,0.5)]', 'z-10');
+                    }
+                });
+            }, observerOptions);
+
+            Array.from(wrapper.children).forEach(child => observer.observe(child));
+
+            // Auto-scrolling logic (Infinite Loop Chain)
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+            let autoScrollTimer;
+
+            const startAutoScroll = () => {
+                clearInterval(autoScrollTimer);
+                autoScrollTimer = setInterval(() => {
+                    if (!isDown) {
+                        const item = wrapper.querySelector('.gallery-scroll-item');
+                        if (item) {
+                            // Scroll by one item's width + gap
+                            wrapper.scrollBy({ left: item.offsetWidth + 16, behavior: 'smooth' });
+
+                            // Infinite logic: When reaching the end, dynamically move the first element to the back
+                            setTimeout(() => {
+                                if (wrapper.scrollLeft + wrapper.clientWidth >= wrapper.scrollWidth - 10) {
+                                    const firstChild = wrapper.firstElementChild;
+                                    wrapper.appendChild(firstChild); // move first to last
+                                    wrapper.scrollLeft -= (firstChild.offsetWidth + 16); // adjust scroll seamlessly
+                                }
+                            }, 500); // wait for smooth scroll to finish before dom move
+                        }
+                    }
+                }, 3000); // 3 seconds per image jump
+            };
+
+            let isDragging = false;
+            wrapper.addEventListener('mousedown', (e) => {
+                isDown = true;
+                isDragging = false; // Reset drag detection flag
+                wrapper.classList.add('cursor-grabbing');
+                startX = e.pageX - wrapper.offsetLeft;
+                scrollLeft = wrapper.scrollLeft;
+            });
+            wrapper.addEventListener('mouseleave', () => { isDown = false; wrapper.classList.remove('cursor-grabbing'); });
+            wrapper.addEventListener('mouseup', (e) => {
+                isDown = false;
+                wrapper.classList.remove('cursor-grabbing');
+
+                // If the user actually dragged a distance, prevent click from firing.
+                // We handle this flag over in the click event listener.
+            });
+            wrapper.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+
+                isDragging = true; // They moved the mouse while down, it's a drag not a click
+
+                const x = e.pageX - wrapper.offsetLeft;
+                const walk = (x - startX) * 2;
+                wrapper.scrollLeft = scrollLeft - walk;
+            });
+
+            setTimeout(() => {
+                // start in the middle set of images so we can scroll left or right infinitely
+                const middleStart = wrapper.children[slides.length];
+                if (middleStart) {
+                    middleStart.scrollIntoView({ behavior: 'auto', inline: 'center', block: 'nearest' });
+                }
+                startAutoScroll();
+            }, 500);
+        }
+
+        // Gallery Modal Logic
+        const galleryModal = document.getElementById('galleryModal');
+        const galleryMainImage = document.getElementById('galleryMainImage');
+        let currentGalleryIndex = 0;
+
+        function openGalleryModal(startIndex = 0) {
+            if (!slides || slides.length === 0) {
+                alert("No photos available at the moment.");
+                return;
+            }
+            galleryModal.classList.remove('hidden');
+            // Trigger reflow
+            void galleryModal.offsetWidth;
+            galleryModal.classList.remove('opacity-0');
+
+            buildGalleryThumbnails();
+            showGallerySlide(startIndex);
+        }
+
+        function closeGalleryModal() {
+            galleryModal.classList.add('opacity-0');
+            setTimeout(() => {
+                galleryModal.classList.add('hidden');
+                galleryMainImage.src = ''; // reset
+            }, 500);
+        }
+
+        function showGallerySlide(index) {
+            if (slides.length === 0) return;
+            currentGalleryIndex = (index + slides.length) % slides.length;
+
+            const currentImgUrl = slides[currentGalleryIndex].image_url;
+
+            // Animation out
+            galleryMainImage.classList.remove('scale-100', 'opacity-100');
+            galleryMainImage.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                const ytId = getYouTubeId(currentImgUrl);
+                if (ytId) {
+                    galleryMainImage.src = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
+                } else if (currentImgUrl.match(/\.(mp4|webm|ogg)$/i)) {
+                    galleryMainImage.src = '../assets/images/logo_1.png'; // fallback for video
+                } else {
+                    galleryMainImage.src = currentImgUrl;
+                }
+
+                galleryMainImage.onload = () => {
+                    galleryMainImage.classList.remove('scale-95', 'opacity-0');
+                    galleryMainImage.classList.add('scale-100', 'opacity-100');
+                };
+
+                document.getElementById('galleryCounter').innerText = `${currentGalleryIndex + 1} / ${slides.length}`;
+                updateGalleryThumbnails();
+            }, 300);
+        }
+
+        function nextGallerySlide() { showGallerySlide(currentGalleryIndex + 1); }
+        function prevGallerySlide() { showGallerySlide(currentGalleryIndex - 1); }
+
+        function buildGalleryThumbnails() {
+            const container = document.getElementById('galleryThumbnails');
+            container.innerHTML = '';
+            slides.forEach((slide, idx) => {
+                const url = slide.image_url;
+                let thumbSrc = url;
+                const ytId = getYouTubeId(url);
+                if (ytId) thumbSrc = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+                else if (url.match(/\.(mp4|webm|ogg)$/i)) thumbSrc = '../assets/images/logo_1.png';
+
+                const btn = document.createElement('button');
+                btn.className = `w-20 h-14 md:w-24 md:h-16 rounded-xl overflow-hidden border-[3px] transition-all duration-300 flex-shrink-0 shadow-lg ${idx === currentGalleryIndex ? 'border-primary shadow-[0_0_15px_rgba(166,247,189,0.5)] scale-110' : 'border-transparent opacity-50 hover:opacity-100'}`;
+                btn.onclick = () => showGallerySlide(idx);
+
+                const img = document.createElement('img');
+                img.src = thumbSrc;
+                img.className = "w-full h-full object-cover";
+                btn.appendChild(img);
+
+                container.appendChild(btn);
+            });
+        }
+
+        function updateGalleryThumbnails() {
+            const container = document.getElementById('galleryThumbnails');
+            Array.from(container.children).forEach((btn, idx) => {
+                if (idx === currentGalleryIndex) {
+                    btn.className = "w-20 h-14 md:w-24 md:h-16 rounded-xl overflow-hidden border-[3px] transition-all duration-300 flex-shrink-0 border-primary shadow-[0_0_15px_rgba(166,247,189,0.5)] scale-110";
+                    btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                } else {
+                    btn.className = "w-20 h-14 md:w-24 md:h-16 rounded-xl overflow-hidden border-[3px] transition-all duration-300 flex-shrink-0 border-transparent opacity-50 hover:opacity-100 scale-100";
+                }
+            });
+        }
+
+        function downloadCurrentGalleryPhoto() {
+            if (slides.length === 0) return;
+            const currentImgUrl = slides[currentGalleryIndex].image_url;
+
+            if (currentImgUrl.includes('youtube.com') || currentImgUrl.match(/\.(mp4|webm|ogg)$/i)) {
+                alert("Cannot direct download videos. Please download photos instead.");
+                return;
+            }
+
+            // Trigger download via fetch to bypass CORS where possible, or fallback
+            fetch(currentImgUrl)
+                .then(response => {
+                    if (!response.ok) throw new Error("Network response was not ok");
+                    return response.blob();
+                })
+                .then(blob => {
+                    const blobUrl = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = blobUrl;
+                    a.download = `DMYSC_Highlight_${currentGalleryIndex + 1}.jpg`;
+                    document.body.appendChild(a);
+                    a.click();
+                    setTimeout(() => {
+                        window.URL.revokeObjectURL(blobUrl);
+                        a.remove();
+                    }, 100);
+                })
+                .catch(() => {
+                    // Fallback to opening in new tab
+                    window.open(currentImgUrl, '_blank');
+                });
+        }
+
+        async function shareCurrentGalleryPhoto() {
+            if (slides.length === 0) return;
+            const currentImgUrl = slides[currentGalleryIndex].image_url;
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'DMYSC Highlight',
+                        text: 'Check out this highlight from DMYSC!',
+                        url: currentImgUrl
+                    });
+                } catch (err) {
+                    console.error("Error sharing:", err);
+                }
+            } else {
+                alert("Sharing is not supported on this browser. You can copy the link manually.");
+                navigator.clipboard.writeText(currentImgUrl);
+            }
+        }
+
+        // Keyboard navigation for gallery
+        document.addEventListener('keydown', (e) => {
+            if (!galleryModal.classList.contains('hidden')) {
+                if (e.key === 'ArrowRight') nextGallerySlide();
+                else if (e.key === 'ArrowLeft') prevGallerySlide();
+                else if (e.key === 'Escape') closeGalleryModal();
+            }
+        });
+
         // Issue Modal Logic
         const issueModal = document.getElementById('issueModal');
 
@@ -1042,6 +1428,7 @@
                 slides = data;
                 updateSlideView();
                 startSlideShow();
+                buildScrollingGallery(); // Hook here to build the scrolling gallery
             }
         }
 
@@ -1076,19 +1463,22 @@
         }
 
         function updateSlideView() {
-            const mainContainers = [document.getElementById('mainSlideContainer'), document.getElementById('mobileSlideContainer')];
-            mainContainers.forEach(c => {
-                if (c) {
-                    c.innerHTML = '';
-                    c.appendChild(createMediaElement(slides[currentSlide].image_url));
-                }
-            });
+            const greetingContainer = document.getElementById('greetingSlideContainer');
+            if (greetingContainer && slides.length > 0) {
+                const newMedia = createMediaElement(slides[currentSlide].image_url);
+                newMedia.style.opacity = '0';
+                newMedia.style.transition = 'opacity 1s ease-in-out';
+                greetingContainer.appendChild(newMedia);
 
-            const nextContainer = document.getElementById('nextSlideContainer');
-            if (nextContainer && slides.length > 1) {
-                const nextIndex = (currentSlide + 1) % slides.length;
-                nextContainer.innerHTML = '';
-                nextContainer.appendChild(createMediaElement(slides[nextIndex].image_url));
+                setTimeout(() => {
+                    newMedia.style.opacity = '1';
+                }, 50);
+
+                setTimeout(() => {
+                    while (greetingContainer.childNodes.length > 1) {
+                        greetingContainer.removeChild(greetingContainer.firstChild);
+                    }
+                }, 1000);
             }
         }
 
