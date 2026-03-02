@@ -1172,7 +1172,33 @@
                         if (dobParts.length === 3) {
                             const today = new Date();
                             if (parseInt(dobParts[1]) === (today.getMonth() + 1) && parseInt(dobParts[2]) === today.getDate()) {
-                                document.getElementById('birthdayCard').classList.remove('hidden');
+                                const age = calculateAge(profile.dob);
+                                const todayStr = today.toISOString().split('T')[0];
+
+                                // Check if a birthday notification was already sent today
+                                _supabase.from('notifications')
+                                    .select('id')
+                                    .eq('user_id', session.user.id)
+                                    .ilike('title', '%Birthday%')
+                                    .gte('created_at', todayStr + 'T00:00:00Z')
+                                    .then(({ data }) => {
+                                        if (!data || data.length === 0) {
+                                            let suffix = 'th';
+                                            if (age % 10 === 1 && age !== 11) suffix = 'st';
+                                            else if (age % 10 === 2 && age !== 12) suffix = 'nd';
+                                            else if (age % 10 === 3 && age !== 13) suffix = 'rd';
+                                            const birthYear = dobParts[0];
+
+                                            _supabase.from('notifications').insert({
+                                                user_id: session.user.id,
+                                                title: 'Happy Birthday! 🎉',
+                                                message: `Best wishes from DMYSC for your ${age}${suffix} Birthday! Born in ${birthYear}. Have a wonderful day!`,
+                                                priority: 'normal'
+                                            }).then(() => {
+                                                checkNotifications();
+                                            });
+                                        }
+                                    });
                             }
                         }
                     }

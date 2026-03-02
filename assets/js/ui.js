@@ -94,9 +94,18 @@ async function fetchNotifsForPopup() {
 
         if (error) throw error;
 
+        // Filter out public birthday notifications so users only see their own private ones
+        const filteredData = data.filter(n => {
+            if (n.user_id !== null) return true; // Keep ALL personal notifications
+            const t = (n.title || '').toLowerCase();
+            const m = (n.message || '').toLowerCase();
+            if (t.includes('birthday') || m.includes('birthday')) return false; // Hide public birthdays
+            return true;
+        });
+
         const permBtn = getPermissionBtn();
 
-        if (!data || data.length === 0) {
+        if (!filteredData || filteredData.length === 0) {
             list.innerHTML = permBtn + `
                 <div class="flex flex-col items-center justify-center py-10 opacity-60">
                     <span class="material-symbols-rounded text-3xl mb-2">notifications_off</span>
@@ -106,7 +115,7 @@ async function fetchNotifsForPopup() {
             return;
         }
 
-        list.innerHTML = permBtn + data.map(n => {
+        list.innerHTML = permBtn + filteredData.map(n => {
             const dateObj = new Date(n.created_at);
             const date = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             const time = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });

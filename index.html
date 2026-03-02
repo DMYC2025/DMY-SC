@@ -706,7 +706,7 @@
             if (!feed.innerHTML.trim()) feed.innerHTML = `<div class="text-center py-10"><span class="material-symbols-rounded animate-spin text-3xl text-primary mb-2">sync</span><p class="text-xs text-[#8e918f] uppercase tracking-widest">Loading Alerts...</p></div>`;
 
             try {
-                const { data, error } = await _supabase.from('notifications').select('*').order('created_at', { ascending: false });
+                const { data, error } = await _supabase.from('notifications').select('*').is('user_id', null).order('created_at', { ascending: false });
                 feed.innerHTML = '';
 
                 if (!data || data.length === 0) {
@@ -732,7 +732,7 @@
         }
 
         async function checkBadge() {
-            const { count } = await _supabase.from('notifications').select('*', { count: 'exact', head: true });
+            const { count } = await _supabase.from('notifications').select('*', { count: 'exact', head: true }).is('user_id', null);
             if (count > 0) document.getElementById('notify-badge')?.classList.remove('hidden');
         }
 
@@ -831,6 +831,7 @@
 
                 // 2. If Not Logged In + Running as PWA/Shortcut (Standalone) -> Go to Login Page
                 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || ("standalone" in window.navigator && window.navigator.standalone === true);
+
 
                 if (isStandalone) {
                     window.location.href = 'auth/login.html';
