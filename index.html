@@ -21,16 +21,13 @@
         content="Official website of Dream Makers Youth & Sports Club. Empowering the next generation through sports and leadership.">
     <meta property="og:image" content="https://dmyc.space/assets/images/logo_1.png">
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://dmyc.space/">
-    <meta property="twitter:title" content="Dream Makers Youth & Sports Club (DMYSC)">
-    <meta property="twitter:description"
-        content="Official website of Dream Makers Youth & Sports Club. Empowering the next generation through sports and leadership.">
-    <meta property="twitter:image" content="https://dmyc.space/assets/images/logo_1.png">
-
     <!-- External Home CSS -->
     <link rel="stylesheet" href="assets/css/home-style.css">
+
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -39,15 +36,11 @@
             theme: {
                 extend: {
                     colors: {
-                        // DMYSC M3 Palette
-                        background: '#121212',
+                        background: '#0a150f', // Darker nature-inspired tint
                         surface: '#1E1E1E',
                         'surface-container': '#252529',
-                        brand: {
-                            green: '#a6f7bd',
-                            dark: '#121212',
-                        },
-                        primary: '#a6f7bd',
+                        brand: { green: '#a6f7bd', dark: '#121212' },
+                        primary: '#1ED760', // Adjusted to match the vibrant green in the template
                         secondary: '#c2c9bd',
                         tertiary: '#a0cfd0',
                         error: '#ffb4ab',
@@ -58,28 +51,24 @@
                     },
                     animation: {
                         'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
                         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                         'shimmer': 'shimmer 2s infinite',
-                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
-                        'gradient-x': 'gradient-x 3s ease infinite',
+                        'glow': 'glow 3s ease-in-out infinite alternate',
                     },
                     keyframes: {
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-20px)' },
                         },
+                        glow: {
+                            'from': { boxShadow: '0 0 10px -10px #a6f7bd' },
+                            'to': { boxShadow: '0 0 20px 5px rgba(166, 247, 189, 0.6)' },
+                        },
                         shimmer: {
                             '0%': { transform: 'translateX(-100%)' },
                             '100%': { transform: 'translateX(100%)' }
-                        },
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' }
-                        },
-                        'gradient-x': {
-                            '0%, 100%': { 'background-size': '200% 200%', 'background-position': 'left center' },
-                            '50%': { 'background-size': '200% 200%', 'background-position': 'right center' },
-                        },
+                        }
                     }
                 }
             }
@@ -91,6 +80,65 @@
     <script src="assets/js/supabase.js"></script>
     <script src="assets/js/maintenance-check.js"></script>
 
+    <style>
+        /* Modern Liquid Glass Effect overrides */
+        body {
+            /* Background image to make the glass effect visible and match the template vibe */
+            background-image: url('https://images.unsplash.com/photo-1550147760-44c9966d6bc7?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Dark overlay for better text readability */
+        .body-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 21, 15, 0.6);
+            backdrop-filter: blur(10px);
+            z-index: -1;
+        }
+
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        /* Scoped styles for the slideshow inside the box */
+        #hero-slideshow .slide-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+        }
+
+        #hero-slideshow .slide-bg.active {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .text-shadow-custom {
+            text-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+    </style>
 
     <script>
         if ('serviceWorker' in navigator) {
@@ -104,10 +152,20 @@
 </head>
 
 <body
-    class="bg-background text-[#E3E3E3] selection:bg-primary selection:text-[#003915] overflow-x-hidden flex flex-col min-h-screen">
+    class="text-[#E3E3E3] selection:bg-primary selection:text-[#003915] overflow-x-hidden flex flex-col min-h-screen relative">
+    <div class="body-overlay"></div>
+
+    <!-- Animated Background Elements -->
+    <div
+        class="fixed top-[-10%] left-[-10%] w-96 h-96 bg-primary/10 rounded-full blur-[100px] animate-float pointer-events-none z-[-1]">
+    </div>
+    <div
+        class="fixed bottom-[-10%] right-[-10%] w-96 h-96 bg-tertiary/10 rounded-full blur-[100px] animate-float-delayed pointer-events-none z-[-1]">
+    </div>
 
     <!-- --- PRELOADER --- -->
-    <div id="preloader">
+    <div id="preloader"
+        class="fixed inset-0 z-[999] bg-[#0a150f] flex items-center justify-center transition-opacity duration-500">
         <div class="relative flex flex-col items-center justify-center text-center p-4">
             <div class="typewriter relative z-10 mb-8">
                 <h1 class="text-lg md:text-3xl font-display font-bold text-white uppercase tracking-widest">
@@ -117,7 +175,7 @@
             <div
                 class="w-48 md:w-80 h-1 bg-[#252529] rounded-full overflow-hidden relative backdrop-blur-sm border border-white/5">
                 <div id="progress-bar"
-                    class="absolute top-0 left-0 h-full bg-primary w-0 transition-all duration-100 ease-out shadow-[0_0_15px_rgba(166,247,189,0.4)]">
+                    class="absolute top-0 left-0 h-full bg-primary w-0 transition-all duration-100 ease-out shadow-[0_0_15px_rgba(28,215,96,0.4)]">
                     <div class="absolute inset-0 bg-white/50 w-full animate-[shimmer_0.8s_infinite]"></div>
                 </div>
             </div>
@@ -126,178 +184,142 @@
         </div>
     </div>
 
-    <!-- Background Elements -->
-    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div
-            class="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-primary opacity-5 rounded-full blur-[120px] animate-pulse-slow">
-        </div>
-        <div
-            class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-tertiary opacity-5 rounded-full blur-[120px] animate-pulse-slow">
-        </div>
-    </div>
+    <!-- MAIN UI LAYOUT (Liquid Glassmorphism) -->
+    <main class="relative min-h-screen flex flex-col items-center justify-center py-10 px-4 md:px-8 z-10 flex-grow">
 
-    <!-- UPDATED NAV: Floating Pill Style (Material 3) -->
-    <nav class="fixed top-6 z-50 w-full px-4" data-aos="fade-down" data-aos-duration="800">
-        <div
-            class="max-w-6xl mx-auto m3-navbar px-3 py-2 flex justify-between items-center bg-[#1E1E1E]/80 backdrop-blur-xl border border-white/10 shadow-lg">
+        <!-- The Glass Container -->
+        <div class="liquid-glass w-full max-w-[1500px] min-h-[85vh] rounded-[40px] p-6 md:p-12 flex flex-col relative"
+            data-aos="fade-up" data-aos-duration="1000">
 
-            <!-- Left: Logo & Name -->
-            <div class="flex items-center gap-4 pl-3 group cursor-pointer" onclick="window.location.reload()">
-                <div
-                    class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-300 shadow-sm border border-white/10 overflow-hidden relative p-1 group-hover:scale-105">
-                    <img src="assets/images/logo_2.png"
-                        class="w-full h-full object-contain relative z-10 drop-shadow-sm filter contrast-125">
+            <!-- Minimalist Header inside the glass -->
+            <header class="flex justify-between items-center w-full mb-12" data-aos="fade-down" data-aos-delay="100">
+                <!-- Logo / Title -->
+                <div class="flex items-center gap-3 cursor-pointer group" onclick="window.location.reload()">
+                    <span
+                        class="text-xl md:text-2xl font-display font-black text-white tracking-[0.3em] group-hover:text-primary transition-colors duration-300">D M Y & S C</span>
                 </div>
-                <div class="flex flex-col">
-                    <span
-                        class="text-sm font-display font-medium text-[#E3E3E3] tracking-wide group-hover:text-white">Dream
-                        Makers</span>
-                    <span
-                        class="text-[10px] text-primary tracking-wider font-bold uppercase transition-all group-hover:tracking-widest">Home</span>
+
+                <!-- Right Actions (Icons only, Nav Links removed per request) -->
+                <div class="flex items-center gap-4">
+                    <!-- Notification Bell -->
+                    <button onclick="openModal('notificationModal'); fetchNotifications();"
+                        class="relative text-white/80 hover:text-white transition-all transform hover:scale-110 active:scale-95">
+                        <span class="material-symbols-rounded text-2xl md:text-3xl">search</span>
+                    </button>
+                    <button onclick="openModal('notificationModal'); fetchNotifications();"
+                        class="relative text-white/80 hover:text-white transition-all transform hover:scale-110 active:scale-95 hover:animate-glow rounded-full">
+                        <span class="material-symbols-rounded text-2xl md:text-3xl">notifications</span>
+                        <span id="notify-badge"
+                            class="absolute top-0 right-0 w-2.5 h-2.5 bg-error rounded-full border-2 border-transparent hidden"></span>
+                    </button>
+
+                    <!-- Login / Account Icon -->
+                    <a href="auth/login.html"
+                        class="text-white/80 hover:text-white transition-all transform hover:scale-110 active:scale-95 group">
+                        <span
+                            class="material-symbols-rounded text-2xl md:text-3xl group-hover:text-primary transition-colors">login</span>
+                    </a>
                 </div>
-            </div>
+            </header>
 
-            <!-- Right: Actions -->
-            <div class="flex items-center gap-2">
+            <!-- Grid Layout for Content & Slideshow -->
+            <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
 
-                <!-- Notification Bell -->
-                <button onclick="openModal('notificationModal'); fetchNotifications();"
-                    class="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition text-[#C4C7C5] hover:text-white active:scale-95">
-                    <span class="material-symbols-rounded">notifications</span>
-                    <span id="notify-badge"
-                        class="absolute top-2.5 right-2.5 w-2 h-2 bg-error rounded-full animate-pulse border border-[#1E1E1E] hidden"></span>
-                </button>
+                <!-- Left Column (Typography) -->
+                <div class="lg:col-span-5 flex flex-col justify-center items-start z-10">
+                    <span class="text-xs md:text-sm font-bold tracking-[0.4em] uppercase mb-4 text-white/80"
+                        data-aos="fade-right" data-aos-delay="200">
+                        Pride of Dikhengama
+                    </span>
 
-                <!-- Login Button (Pill style) -->
-                <a href="auth/login.html"
-                    class="hidden md:flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-[#003915] font-medium text-sm hover:bg-[#b1fcc5] transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 group">
-                    <span
-                        class="material-symbols-rounded text-[20px] group-hover:rotate-12 transition-transform">login</span>
-                    <span>Login</span>
-                </a>
+                    <!-- Large Bold Typography like 'N.A.T.U.R.E' -->
+                    <h1 class="text-[5rem] sm:text-[7rem] lg:text-[8.5rem] font-display font-black leading-[0.85] tracking-tighter text-shadow-custom mb-6"
+                        data-aos="fade-up" data-aos-delay="400">
+                        <span class="text-white block">DREAM</span>
+                        <span class="text-primary block relative">
+                            MAKERS
+                            <!-- Aesthetic element -->
+                            <div class="absolute -left-4 top-1/2 w-2 h-1/2 bg-white rounded-full mix-blend-overlay">
+                            </div>
+                        </span>
+                    </h1>
 
-                <!-- Mobile Login Icon -->
-                <a href="auth/login.html"
-                    class="flex md:hidden w-10 h-10 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 items-center justify-center transition text-primary hover:text-white active:scale-95">
-                    <span class="material-symbols-rounded text-[20px]">login</span>
-                </a>
-            </div>
-        </div>
-    </nav>
+                    <p class="text-sm md:text-base text-white/70 max-w-md mb-10 leading-relaxed font-light"
+                        data-aos="fade-up" data-aos-delay="600">
+                        At Dream Makers Youth & Sports Club, we are committed to safeguarding our youth's future. Our
+                        mission is to raise awareness, drive action, and inspire positive change through sports,
+                        education, and social leadership.
+                    </p>
 
-    <main class="relative min-h-screen flex items-center justify-center pt-24 group/hero flex-grow overflow-hidden">
-
-        <!-- Slideshow Container (High Opacity) -->
-        <div id="hero-slideshow" class="absolute inset-0 -z-10">
-            <!-- Slides injected by JS -->
-            <div class="slide-bg active"
-                style="background-image: url('https://img.freepik.com/free-vector/modern-abstract-dark-violate-pink-background_84443-2788.jpg');">
-            </div>
-        </div>
-
-        <!-- Gradient Overlay for Legibility -->
-        <div class="absolute inset-0 hero-overlay pointer-events-none -z-10"></div>
-
-        <!-- Arrows (Hidden on Mobile) -->
-        <button id="prevSlideBtn"
-            class="absolute left-6 top-1/2 -translate-y-1/2 z-20 w-14 h-14 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-white hover:bg-primary hover:text-[#003915] transition-all duration-300 hover:scale-110 opacity-0 group-hover/hero:opacity-100 cursor-pointer hidden md:flex shadow-xl">
-            <span class="material-symbols-rounded text-3xl">chevron_left</span>
-        </button>
-        <button id="nextSlideBtn"
-            class="absolute right-6 top-1/2 -translate-y-1/2 z-20 w-14 h-14 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-white hover:bg-primary hover:text-[#003915] transition-all duration-300 hover:scale-110 opacity-0 group-hover/hero:opacity-100 cursor-pointer hidden md:flex shadow-xl">
-            <span class="material-symbols-rounded text-3xl">chevron_right</span>
-        </button>
-
-        <div class="container mx-auto px-4 text-center relative z-20">
-
-            <!-- Floating Badge -->
-            <div class="relative overflow-hidden inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-primary font-bold text-[10px] md:text-sm mb-6 shadow-glow hover:bg-white/10 transition-colors duration-300 cursor-default"
-                data-aos="fade-down">
-                <span class="material-symbols-rounded text-base animate-pulse">emoji_events</span>
-                <span class="tracking-[0.2em] uppercase">Pride of Dikhenagama</span>
-            </div>
-
-            <!-- Main Heading (Material 3 Typography) -->
-            <h1 class="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-display font-bold mb-6 leading-[0.9] drop-shadow-2xl tracking-tight"
-                data-aos="zoom-in" data-aos-duration="1000">
-                <span
-                    class="text-white block md:inline hover:text-primary/50 transition-colors duration-500">DREAM</span>
-                <span
-                    class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-tertiary inline-block filter drop-shadow-md">MAKERS</span>
-            </h1>
-
-            <p class="text-sm md:text-xl text-[#E3E3E3] max-w-xl md:max-w-3xl mx-auto mb-10 leading-relaxed font-light px-4 drop-shadow-md"
-                data-aos="fade-up" data-aos-delay="200">
-                Empowering the next generation through <b class="text-primary font-medium">Sports</b>,
-                <b class="text-tertiary font-medium">Education</b>, and <b
-                    class="text-[#e7bdfb] font-medium">Leadership</b>.
-            </p>
-
-            <!-- CTA Buttons -->
-            <div class="flex flex-col md:flex-row gap-4 justify-center items-center w-full max-w-lg mx-auto mb-16"
-                data-aos="fade-up" data-aos-delay="400">
-
-                <a href="auth/login.html"
-                    class="w-full md:w-auto px-8 py-3 rounded-full bg-primary text-[#003915] hover:bg-[#b1fcc5] shadow-lg hover:shadow-primary/40 transition-all duration-300 transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3 group">
-                    <span class="material-symbols-rounded text-2xl bg-white/20 p-2 rounded-full">login</span>
-                    <div class="flex flex-col text-left">
-                        <span class="font-bold text-sm uppercase tracking-wider leading-none">Access Account</span>
-                        <span class="text-[11px] font-semibold leading-tight normal-case mt-0.5">Login to your
-                            dashboard</span>
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="800">
+                        <a href="auth/login.html"
+                            class="px-8 py-3.5 rounded-[14px] bg-gradient-to-r from-primary to-[#10b04a] text-black font-bold text-sm uppercase tracking-wider shadow-[0_10px_30px_rgba(30,215,96,0.3)] hover:shadow-[0_10px_40px_rgba(30,215,96,0.5)] transition-all transform hover:-translate-y-1">
+                            Get Started
+                        </a>
+                        <a href="auth/reg.html"
+                            class="px-8 py-3.5 rounded-[14px] bg-white/10 border border-white/20 text-white font-bold text-sm uppercase tracking-wider hover:bg-white/20 transition-all transform hover:-translate-y-1 backdrop-blur-sm">
+                            Join Club
+                        </a>
                     </div>
-                </a>
+                </div>
 
-                <a href="auth/reg.html"
-                    class="w-full md:w-auto px-8 py-3 rounded-full bg-[#353539] border border-white/10 text-white hover:bg-[#444449] hover:border-white/30 transition-all duration-300 transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3 shadow-lg group">
-                    <span class="material-symbols-rounded text-2xl bg-white/10 p-2 rounded-full">person_add</span>
-                    <div class="flex flex-col text-left">
-                        <span class="font-bold text-sm uppercase tracking-wider leading-none">Join Club</span>
-                        <span class="text-[11px] font-semibold text-gray-300 leading-tight normal-case mt-0.5">Become a
-                            new member</span>
+                <!-- Right Column (1920x1080 Image Box with Slideshow) -->
+                <div class="lg:col-span-7 w-full flex justify-center lg:justify-end" data-aos="zoom-in"
+                    data-aos-delay="500">
+                    <!-- Specific Box sized maintaining 1920x1080 ratio (16:9) -->
+                    <div class="relative w-full max-w-4xl rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-[4px] border-white/10 bg-black/20 group/slider"
+                        style="aspect-ratio: 1920 / 1080;">
+
+                        <!-- Slideshow Container -->
+                        <div id="hero-slideshow" class="absolute inset-0 w-full h-full">
+                            <!-- Slides injected by JS -->
+                            <div class="slide-bg active" style="background-color: #1a1a1a;"></div>
+                        </div>
+
+                        <!-- Gradient Overlay inside image to make text/arrows readable if needed -->
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10 pointer-events-none">
+                        </div>
+
+                        <!-- Arrows (Appears on hover) -->
+                        <button id="prevSlideBtn"
+                            class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white hover:bg-primary hover:text-black transition-all duration-300 opacity-0 group-hover/slider:opacity-100 cursor-pointer shadow-xl transform -translate-x-4 group-hover/slider:translate-x-0">
+                            <span class="material-symbols-rounded">chevron_left</span>
+                        </button>
+                        <button id="nextSlideBtn"
+                            class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white hover:bg-primary hover:text-black transition-all duration-300 opacity-0 group-hover/slider:opacity-100 cursor-pointer shadow-xl transform translate-x-4 group-hover/slider:translate-x-0">
+                            <span class="material-symbols-rounded">chevron_right</span>
+                        </button>
                     </div>
-                </a>
+                </div>
+
             </div>
+        </div>
 
-            <!-- Stats Grid (Material 3 Cards) -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-5xl mx-auto px-2" data-aos="fade-up"
-                data-aos-delay="600">
-
-                <div class="m3-card p-5 group cursor-default">
-                    <h3 id="statMembers"
-                        class="text-2xl md:text-4xl font-display font-bold text-white group-hover:text-primary transition-colors">
-                        500+</h3>
-                    <p
-                        class="text-[10px] md:text-xs text-[#8e918f] uppercase tracking-widest font-bold mt-1 group-hover:text-white transition-colors">
-                        Members</p>
-                </div>
-
-                <div class="m3-card p-5 group cursor-default">
-                    <h3 id="statEvents"
-                        class="text-2xl md:text-4xl font-display font-bold text-white group-hover:text-tertiary transition-colors">
-                        20+</h3>
-                    <p
-                        class="text-[10px] md:text-xs text-[#8e918f] uppercase tracking-widest font-bold mt-1 group-hover:text-white transition-colors">
-                        Events</p>
-                </div>
-
-                <div class="m3-card p-5 group cursor-default">
-                    <h3 id="statSports"
-                        class="text-2xl md:text-4xl font-display font-bold text-white group-hover:text-[#e7bdfb] transition-colors">
-                        5</h3>
-                    <p
-                        class="text-[10px] md:text-xs text-[#8e918f] uppercase tracking-widest font-bold mt-1 group-hover:text-white transition-colors">
-                        Sports Teams</p>
-                </div>
-
-                <div class="m3-card p-5 group cursor-default">
-                    <h3
-                        class="text-2xl md:text-4xl font-display font-bold text-white group-hover:text-secondary transition-colors">
-                        100%</h3>
-                    <p
-                        class="text-[10px] md:text-xs text-[#8e918f] uppercase tracking-widest font-bold mt-1 group-hover:text-white transition-colors">
-                        Unity</p>
-                </div>
-
+        <!-- Stats Grid (Moved below the glass card to keep the template clean) -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 w-full max-w-[1400px] mt-12 px-4" data-aos="fade-up"
+            data-aos-delay="600">
+            <div
+                class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 text-center shadow-lg hover:bg-white/10 transition">
+                <h3 id="statMembers" class="text-3xl md:text-4xl font-display font-black text-primary">500+</h3>
+                <p class="text-[10px] md:text-xs text-white/60 uppercase tracking-widest font-bold mt-2">Members</p>
+            </div>
+            <div
+                class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 text-center shadow-lg hover:bg-white/10 transition">
+                <h3 id="statEvents" class="text-3xl md:text-4xl font-display font-black text-white">20+</h3>
+                <p class="text-[10px] md:text-xs text-white/60 uppercase tracking-widest font-bold mt-2">Events</p>
+            </div>
+            <div
+                class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 text-center shadow-lg hover:bg-white/10 transition">
+                <h3 id="statSports" class="text-3xl md:text-4xl font-display font-black text-white">5</h3>
+                <p class="text-[10px] md:text-xs text-white/60 uppercase tracking-widest font-bold mt-2">Sports Teams
+                </p>
+            </div>
+            <div
+                class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 text-center shadow-lg hover:bg-white/10 transition">
+                <h3 class="text-3xl md:text-4xl font-display font-black text-white">100%</h3>
+                <p class="text-[10px] md:text-xs text-white/60 uppercase tracking-widest font-bold mt-2">Unity</p>
             </div>
         </div>
     </main>
@@ -485,21 +507,18 @@
                     </div>
                     <div class="px-6 py-6 text-[#C4C7C5] text-sm leading-relaxed overflow-y-auto custom-scrollbar">
                         <p class="mb-4 text-xs font-mono text-[#8e918f]">Last Updated: <span
-                                class="text-[#E3E3E3]">February
-                                2026</span></p>
+                                class="text-[#E3E3E3]">February 2026</span></p>
 
                         <h4 class="text-[#E3E3E3] font-bold mb-2">1. Information We Collect</h4>
                         <p class="mb-4">
                             To provide our services at <strong>Dream Makers Youth & Sports Club (DMYSC)</strong>, we
-                            collect
-                            the following types of information:
+                            collect the following types of information:
                         <ul class="list-disc pl-5 space-y-1 mt-2 opacity-80">
                             <li><strong>Personal Information:</strong> Full Name, NIC Number, Date of Birth, and Address
                                 (e.g., No. **/*, Dikhengama, Munagama).</li>
                             <li><strong>Contact Details:</strong> Phone/WhatsApp number and Email address.</li>
                             <li><strong>Membership Data:</strong> Profile pictures, team assignments, and payment
-                                records of
-                                monthly fees.</li>
+                                records of monthly fees.</li>
                         </ul>
                         </p>
 
@@ -517,18 +536,15 @@
                         <h4 class="text-[#E3E3E3] font-bold mb-2">3. Data Sharing & Security</h4>
                         <p class="mb-4">
                             We prioritize your privacy. We <strong>do not</strong> sell or share your personal data with
-                            third-party advertisers.
-                            Data is stored securely using industry-standard encryption. Access is restricted to
-                            authorized
-                            club administrators only.
+                            third-party advertisers. Data is stored securely using industry-standard encryption. Access
+                            is restricted to authorized club administrators only.
                         </p>
 
                         <h4 class="text-[#E3E3E3] font-bold mb-2">4. Contact Us</h4>
                         <p class="mb-4">
-                            If you have questions about your data, please contact us at
-                            <a href="mailto:info@dmysc.lk" id="privacyEmail"
-                                class="text-primary hover:underline">info@dmysc.lk</a> or call us at <strong
-                                id="privacyPhone">+94 XX XXX XXXX</strong>.
+                            If you have questions about your data, please contact us at <a href="mailto:info@dmysc.lk"
+                                id="privacyEmail" class="text-primary hover:underline">info@dmysc.lk</a> or call us at
+                            <strong id="privacyPhone">+94 XX XXX XXXX</strong>.
                         </p>
                     </div>
                     <div class="px-6 py-4 flex justify-end border-t border-[#353539]">
@@ -565,9 +581,8 @@
                         <h4 class="text-[#E3E3E3] font-bold mb-2">1. Acceptance of Terms</h4>
                         <p class="mb-4">
                             By accessing the DMYSC website or registering as a member, you agree to comply with the
-                            club's
-                            Constitution and these Terms of Service. If you do not agree, you may not use our digital
-                            services.
+                            club's Constitution and these Terms of Service. If you do not agree, you may not use our
+                            digital services.
                         </p>
 
                         <h4 class="text-[#E3E3E3] font-bold mb-2">2. Membership Responsibilities</h4>
@@ -579,23 +594,21 @@
                                 membership fee to maintain active status.</li>
                             <li><strong>Conduct:</strong> You agree to uphold the spirit of sportsmanship and unity.
                                 Harassment, hate speech, or disruptive behavior on this platform will result in
-                                immediate
-                                account suspension.</li>
+                                immediate account suspension.</li>
                         </ul>
                         </p>
 
                         <h4 class="text-[#E3E3E3] font-bold mb-2">3. Intellectual Property</h4>
                         <p class="mb-4">
                             All content on this site, including the DMYSC logo, photos from events, and the web design,
-                            is
-                            the property of Dream Makers Youth & Sports Club. Unauthorized reproduction is prohibited.
+                            is the property of Dream Makers Youth & Sports Club. Unauthorized reproduction is
+                            prohibited.
                         </p>
 
                         <h4 class="text-[#E3E3E3] font-bold mb-2">4. Account Security</h4>
                         <p class="mb-4">
                             You are responsible for maintaining the confidentiality of your login credentials. Notify
-                            the
-                            administration immediately of any unauthorized use of your account.
+                            the administration immediately of any unauthorized use of your account.
                         </p>
                     </div>
                     <div class="px-6 py-4 flex justify-end border-t border-[#353539]">
@@ -642,34 +655,29 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init({ once: true, duration: 800 });
-        document.documentElement.classList.add('dark');
 
-        // --- FASTER PRELOADER LOGIC ---
+        // --- PRELOADER LOGIC ---
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
             const progressBar = document.getElementById('progress-bar');
-
             let percentage = 0;
             const intervalTime = 15;
-
             const interval = setInterval(() => {
                 if (percentage >= 100) {
                     clearInterval(interval);
                     if (progressBar) progressBar.style.width = "100%";
-
                     setTimeout(() => {
-                        preloader.classList.add('hide');
-                        setTimeout(() => { preloader.style.display = 'none'; }, 600);
+                        preloader.classList.add('opacity-0');
+                        setTimeout(() => { preloader.style.display = 'none'; }, 500);
                     }, 200);
-
                 } else {
-                    const increment = Math.random() * 3 + 1;
-                    percentage = Math.min(percentage + increment, 100);
+                    percentage = Math.min(percentage + (Math.random() * 3 + 1), 100);
                     if (progressBar) progressBar.style.width = percentage + "%";
                 }
             }, intervalTime);
         });
 
+        // Modals logic
         function openModal(modalId) {
             const modal = document.getElementById(modalId);
             const backdrop = modal.querySelector('.modal-backdrop');
@@ -698,14 +706,63 @@
             }
         }
 
-        // Supabase Client is initialized in js/supabase.js as '_supabase'
+        // Slideshow logic (Updated to target the new box inside the Glass UI)
+        let slideInterval;
+        let slideIndex = 0;
 
+        async function initSlideshow() {
+            try {
+                // If supabase is disconnected/missing, we render a fallback image for demo
+                let slides = [
+                    { image_url: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=1920&auto=format&fit=crop' },
+                    { image_url: 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?q=80&w=1920&auto=format&fit=crop' }
+                ];
 
+                if (typeof _supabase !== 'undefined') {
+                    const { data, error } = await _supabase.from('hero_slides').select('image_url').order('order_index', { ascending: true });
+                    if (!error && data && data.length > 0) slides = data;
+                }
+
+                const container = document.getElementById('hero-slideshow');
+                const prevBtn = document.getElementById('prevSlideBtn');
+                const nextBtn = document.getElementById('nextSlideBtn');
+
+                if (slides.length > 0) {
+                    container.innerHTML = slides.map((slide, index) =>
+                        `<div class="slide-bg ${index === 0 ? 'active' : ''}" style="background-image: url('${slide.image_url}')"></div>`
+                    ).join('');
+
+                    if (slides.length > 1) {
+                        startAutoSlide(slides.length);
+                        prevBtn.onclick = () => { changeSlide(-1, slides.length); resetAutoSlide(slides.length); };
+                        nextBtn.onclick = () => { changeSlide(1, slides.length); resetAutoSlide(slides.length); };
+                    } else {
+                        prevBtn.style.display = 'none'; nextBtn.style.display = 'none';
+                    }
+                }
+            } catch (err) { console.error("Slideshow Error:", err); }
+        }
+
+        function changeSlide(direction, total) {
+            const slideElements = document.querySelectorAll('#hero-slideshow .slide-bg');
+            if (slideElements.length === 0) return;
+            slideElements[slideIndex].classList.remove('active');
+            slideIndex += direction;
+            if (slideIndex >= total) slideIndex = 0;
+            else if (slideIndex < 0) slideIndex = total - 1;
+            slideElements[slideIndex].classList.add('active');
+        }
+
+        function startAutoSlide(total) { slideInterval = setInterval(() => changeSlide(1, total), 5000); }
+        function resetAutoSlide(total) { clearInterval(slideInterval); startAutoSlide(total); }
+
+        // Data loading halei (original) functions restored
         async function fetchNotifications() {
             const feed = document.getElementById('notificationFeedModal');
             if (!feed.innerHTML.trim()) feed.innerHTML = `<div class="text-center py-10"><span class="material-symbols-rounded animate-spin text-3xl text-primary mb-2">sync</span><p class="text-xs text-[#8e918f] uppercase tracking-widest">Loading Alerts...</p></div>`;
 
             try {
+                if (typeof _supabase === 'undefined') return;
                 const { data, error } = await _supabase.from('notifications').select('*').is('user_id', null).order('created_at', { ascending: false });
                 feed.innerHTML = '';
 
@@ -732,47 +789,15 @@
         }
 
         async function checkBadge() {
-            const { count } = await _supabase.from('notifications').select('*', { count: 'exact', head: true }).is('user_id', null);
-            if (count > 0) document.getElementById('notify-badge')?.classList.remove('hidden');
-        }
-
-        let slideInterval;
-        let slideIndex = 0;
-
-        async function initSlideshow() {
+            if (typeof _supabase === 'undefined') return;
             try {
-                const { data: slides, error } = await _supabase.from('hero_slides').select('image_url').order('order_index', { ascending: true });
-                const container = document.getElementById('hero-slideshow');
-                const prevBtn = document.getElementById('prevSlideBtn');
-                const nextBtn = document.getElementById('nextSlideBtn');
-
-                if (!error && slides && slides.length > 0) {
-                    container.innerHTML = slides.map((slide, index) => `<div class="slide-bg ${index === 0 ? 'active' : ''}" style="background-image: url('${slide.image_url}')"></div>`).join('');
-                    if (slides.length > 1) {
-                        startAutoSlide(slides.length);
-                        prevBtn.onclick = () => { changeSlide(-1, slides.length); resetAutoSlide(slides.length); };
-                        nextBtn.onclick = () => { changeSlide(1, slides.length); resetAutoSlide(slides.length); };
-                    } else {
-                        prevBtn.style.display = 'none'; nextBtn.style.display = 'none';
-                    }
-                }
-            } catch (err) { console.error("Slideshow Error:", err); }
+                const { count } = await _supabase.from('notifications').select('*', { count: 'exact', head: true }).is('user_id', null);
+                if (count > 0) document.getElementById('notify-badge')?.classList.remove('hidden');
+            } catch (err) { console.error(err); }
         }
-
-        function changeSlide(direction, total) {
-            const slideElements = document.querySelectorAll('.slide-bg');
-            if (slideElements.length === 0) return;
-            slideElements[slideIndex].classList.remove('active');
-            slideIndex += direction;
-            if (slideIndex >= total) slideIndex = 0;
-            else if (slideIndex < 0) slideIndex = total - 1;
-            slideElements[slideIndex].classList.add('active');
-        }
-
-        function startAutoSlide(total) { slideInterval = setInterval(() => changeSlide(1, total), 5000); }
-        function resetAutoSlide(total) { clearInterval(slideInterval); startAutoSlide(total); }
 
         async function loadStats() {
+            if (typeof _supabase === 'undefined') return;
             try {
                 const { count: membersCount } = await _supabase.from('profiles').select('*', { count: 'exact', head: true });
                 document.getElementById('statMembers').innerText = (membersCount || 500) + '+';
@@ -784,6 +809,7 @@
         }
 
         async function loadFooterData() {
+            if (typeof _supabase === 'undefined') return;
             try {
                 const { data } = await _supabase.from('site_settings').select('address, phone, email').eq('id', 1).single();
                 if (data) {
@@ -805,11 +831,8 @@
             } catch (err) { console.error(err); }
         }
 
-        initSlideshow();
-        loadStats();
-        loadFooterData();
-        checkBadge();
         async function checkAutoLogin() {
+            if (typeof _supabase === 'undefined') return;
             try {
                 const { data: { session } } = await _supabase.auth.getSession();
 
@@ -841,6 +864,12 @@
                 console.error("Auto-login check failed", error);
             }
         }
+
+        // Init
+        initSlideshow();
+        loadStats();
+        loadFooterData();
+        checkBadge();
         checkAutoLogin();
     </script>
 </body>

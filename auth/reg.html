@@ -50,15 +50,70 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
+    <style>
+        /* Modern Liquid Glass Effect overrides from index.html */
+        body {
+            /* Background image to make the glass effect visible and match the template vibe */
+            background-image: url('https://images.unsplash.com/photo-1550147760-44c9966d6bc7?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Dark overlay for better text readability */
+        .body-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 21, 15, 0.6);
+            backdrop-filter: blur(10px);
+            z-index: -1;
+        }
+
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.05) !important;
+            backdrop-filter: blur(24px) !important;
+            -webkit-backdrop-filter: blur(24px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.05) !important;
+        }
+
+        /* Desktop: Floating animation for background blobs */
+        .animate-float-bg {
+            animation: floatDesktop 8s ease-in-out infinite;
+        }
+
+        .animate-float-bg-delayed {
+            animation: floatDesktop 8s ease-in-out 4s infinite;
+        }
+
+        @keyframes floatDesktop {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -30px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+        }
+    </style>
 </head>
 
-<body class="min-h-screen flex items-center justify-center p-3 md:p-4 overflow-x-hidden relative no-tap-highlight">
+<body
+    class="text-[#E3E3E3] selection:bg-primary selection:text-[#003915] min-h-screen flex items-center justify-center p-3 md:p-4 overflow-x-hidden relative no-tap-highlight">
+
+    <div class="body-overlay"></div>
 
     <div
-        class="absolute inset-0 bg-[url('https://tnrqasiiywcvtwkwytqe.supabase.co/storage/v1/object/public/slides/DSC03348.jpg')] bg-cover bg-center opacity-20 fixed">
+        class="absolute top-0 left-0 w-96 h-96 bg-primary opacity-5 rounded-full blur-[80px] animate-float-bg pointer-events-none z-[-1]">
     </div>
-    <div class="absolute inset-0 fixed"
-        style="background: linear-gradient(to top, var(--color-background), color-mix(in srgb, var(--color-background), transparent 5%), color-mix(in srgb, var(--color-background), transparent 20%));">
+    <div
+        class="absolute bottom-0 right-0 w-96 h-96 bg-secondary opacity-5 rounded-full blur-[80px] animate-float-bg-delayed pointer-events-none z-[-1]">
     </div>
 
     <div class="fixed top-4 right-4 md:top-6 md:right-6 flex gap-2 z-50">
@@ -95,7 +150,7 @@
         <!-- High-Performance Glass Container -->
         <!-- PC (1920x1080): Fixed width (md:w-[800px]), centered -->
         <div
-            class="w-full md:w-[800px] md:max-w-none bg-[#1E1E1E]/40 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] rounded-[32px] overflow-hidden p-6 md:p-10 relative transform transition-all hover:shadow-[0_8px_32px_0_rgba(166,247,189,0.1)]">
+            class="liquid-glass w-full md:w-[800px] md:max-w-none rounded-[32px] overflow-hidden p-6 md:p-10 relative transform transition-all hover:shadow-[0_8px_32px_0_rgba(166,247,189,0.1)]">
 
             <!-- PC: Glow effects -->
             <div
@@ -136,7 +191,7 @@
 
             <form id="regForm" class="space-y-6 md:space-y-8 relative z-10">
 
-                <div class="space-y-4">
+                <div class="space-y-4" data-aos="fade-up" data-aos-delay="100">
                     <h3
                         class="text-[#E3E3E3] font-display font-medium text-sm md:text-base flex items-center gap-2 border-b border-white/5 pb-2">
                         <span class="material-symbols-rounded text-primary">person</span> Personal Details
@@ -159,19 +214,19 @@
                                 class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] focus:border-primary/50 focus:bg-black/40 outline-none transition font-medium text-xs md:text-sm text-[#8e918f] focus:text-[#E3E3E3] backdrop-blur-sm shadow-inner">
                         </div>
 
-                        <div class="group">
+                        <div class="group" data-aos="fade-up" data-aos-delay="250">
                             <label
                                 class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">NIC
                                 No</label>
                             <input type="text" id="nic" required placeholder="NIC Number"
-                                class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] placeholder-white/20 focus:border-primary/50 focus:bg-black/40 outline-none transition font-medium text-xs md:text-sm backdrop-blur-sm shadow-inner">
+                                class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] placeholder-white/20 focus:border-primary/50 focus:bg-black/40 outline-none transition-all font-medium text-xs md:text-sm backdrop-blur-sm shadow-inner group-hover:border-white/20">
                         </div>
 
-                        <div class="group">
+                        <div class="group" data-aos="fade-up" data-aos-delay="300">
                             <label
                                 class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Gender</label>
                             <select id="gender" required
-                                class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] focus:border-primary/50 focus:bg-black/40 outline-none transition font-medium text-xs md:text-sm appearance-none backdrop-blur-sm shadow-inner">
+                                class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] focus:border-primary/50 focus:bg-black/40 outline-none transition-all font-medium text-xs md:text-sm appearance-none backdrop-blur-sm shadow-inner group-hover:border-white/20">
                                 <option value="" class="bg-[#1E1E1E] text-[#8e918f]">Select</option>
                                 <option value="Male" class="bg-[#1E1E1E]">Male</option>
                                 <option value="Female" class="bg-[#1E1E1E]">Female</option>
@@ -195,32 +250,32 @@
                     </div>
                 </div>
 
-                <div class="space-y-4">
+                <div class="space-y-4" data-aos="fade-up" data-aos-delay="450">
                     <h3
                         class="text-[#E3E3E3] font-display font-medium text-sm md:text-base flex items-center gap-2 border-b border-white/5 pb-2">
                         <span class="material-symbols-rounded text-primary">lock</span> Login Details
                     </h3>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
-                        <div class="group">
+                        <div class="group" data-aos="fade-up" data-aos-delay="500">
                             <label
                                 class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Email</label>
                             <input type="email" id="email" required placeholder="you@mail.com"
-                                class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] placeholder-white/20 focus:border-primary/50 focus:bg-black/40 outline-none transition font-medium text-xs md:text-sm backdrop-blur-sm shadow-inner">
+                                class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] placeholder-white/20 focus:border-primary/50 focus:bg-black/40 outline-none transition-all font-medium text-xs md:text-sm backdrop-blur-sm shadow-inner group-hover:border-white/20">
                         </div>
 
-                        <div class="group">
+                        <div class="group" data-aos="fade-up" data-aos-delay="550">
                             <label
                                 class="block text-[10px] font-bold text-[#8e918f] uppercase tracking-wider mb-1 ml-1">Password</label>
                             <input type="password" id="password" required minlength="6" placeholder="******"
-                                class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] placeholder-white/20 focus:border-primary/50 focus:bg-black/40 outline-none transition font-medium text-xs md:text-sm backdrop-blur-sm shadow-inner">
+                                class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-[#E3E3E3] placeholder-white/20 focus:border-primary/50 focus:bg-black/40 outline-none transition-all font-medium text-xs md:text-sm backdrop-blur-sm shadow-inner group-hover:border-white/20">
                         </div>
                     </div>
                 </div>
 
-                <div class="pt-4">
+                <div class="pt-4" data-aos="zoom-in" data-aos-delay="600">
                     <button type="submit" id="submitBtn"
-                        class="w-full bg-primary text-[#003915] font-bold uppercase tracking-wider py-4 rounded-full shadow-lg shadow-primary/20 hover:bg-[#b1fcc5] active:scale-[0.98] transition flex justify-center items-center gap-2 text-sm">
+                        class="w-full bg-primary text-[#003915] font-bold uppercase tracking-wider py-4 rounded-full shadow-lg shadow-primary/20 hover:bg-[#b1fcc5] active:scale-[0.98] transition transform flex justify-center items-center gap-2 text-sm hover:shadow-[0_0_20px_rgba(166,247,189,0.4)]">
                         <span class="material-symbols-rounded">send</span> Register
                     </button>
                     <p id="loadingText"
