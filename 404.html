@@ -3,70 +3,407 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Page Not Found | DMYSC</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        background: '#121212',
-                        surface: '#1E1E1E',
-                        primary: '#a6f7bd',
-                    },
-                    fontFamily: {
-                        sans: ['Roboto', 'sans-serif'],
-                        display: ['Outfit', 'sans-serif']
-                    }
-                }
-            }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>404 – Page Not Found | DMYSC</title>
+    <meta name="description" content="Oops! The page you're looking for doesn't exist. Dream Makers Youth & Sports Club.">
+    <meta name="theme-color" content="#030305">
+    <link rel="icon" type="image/png" href="assets/images/logo_1.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <!-- Cache Control (Force latest version) -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <style>
+        :root {
+            --bg-base: #030305;
+            --accent-green: #a6f7bd;
+            --accent-green-dim: rgba(166, 247, 189, 0.15);
+            --accent-teal: #a0cfd0;
+            --accent-peach: #ffb783;
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --glass-bg: rgba(15, 15, 20, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.07);
+            --glass-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
         }
-    </script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Roboto:wght@300;400;500&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100svh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Noise Overlay ── */
+        .noise-overlay {
+            position: fixed; inset: 0; z-index: 1;
+            opacity: 0.03; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* ── Background Gradient ── */
+        .bg-gradient {
+            position: fixed; inset: 0; z-index: 0;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(166, 247, 189, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(160, 207, 208, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(255, 183, 131, 0.03) 0%, transparent 50%);
+            animation: pulse-bg 10s ease-in-out infinite alternate;
+        }
+        @keyframes pulse-bg {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* ── Floating Orbs ── */
+        .orb {
+            position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+            filter: blur(80px); animation: floatOrb 8s ease-in-out infinite alternate;
+        }
+        .orb-1 { width: 400px; height: 400px; top: -10%; left: -10%; background: rgba(166,247,189,0.06); animation-delay: 0s; }
+        .orb-2 { width: 350px; height: 350px; bottom: -10%; right: -10%; background: rgba(160,207,208,0.05); animation-delay: -3s; }
+        .orb-3 { width: 250px; height: 250px; top: 40%; right: 20%; background: rgba(255,183,131,0.04); animation-delay: -6s; }
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, -40px) scale(1.1); }
+        }
+
+        /* ── Particle Canvas ── */
+        #particleCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+        /* ── Intro Loader ── */
+        .intro-loader {
+            position: fixed; inset: 0; background: var(--bg-base); z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), visibility 1s;
+        }
+        .intro-loader.fade-out { opacity: 0; visibility: hidden; }
+
+        .loader-ring {
+            width: 72px; height: 72px; border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: var(--accent-green);
+            border-right-color: var(--accent-teal);
+            animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+            position: relative; margin-bottom: 2rem;
+        }
+        .loader-ring::before {
+            content: ''; position: absolute; inset: 8px; border-radius: 50%;
+            border: 2px solid transparent;
+            border-bottom-color: var(--accent-peach);
+            border-left-color: var(--accent-green);
+            animation: spin 2s linear infinite reverse;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* ── Main Card ── */
+        .main-card {
+            position: relative; z-index: 10; text-align: center;
+            width: clamp(320px, 90%, 640px);
+            padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.5rem, 5vw, 3.5rem);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 36px;
+            backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
+            box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            opacity: 0; transform: translateY(40px) scale(0.97);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+        .main-card::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, -20%), rgba(255,255,255,0.04), transparent 40%);
+            z-index: 0; pointer-events: none;
+        }
+        .main-card.reveal { opacity: 1; transform: translateY(0) scale(1); }
+        .content-wrapper { position: relative; z-index: 1; }
+
+        /* ── Staggered Reveal ── */
+        .reveal-item {
+            opacity: 0; transform: translateY(22px);
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-item.show { opacity: 1; transform: translateY(0); }
+
+        /* ── 404 Number ── */
+        .error-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(5rem, 18vw, 9rem);
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-teal));
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            opacity: 0.25;
+            letter-spacing: -0.05em;
+            display: block;
+        }
+
+        /* ── Icon Pulse ── */
+        .icon-wrap {
+            width: 80px; height: 80px;
+            background: var(--accent-green-dim);
+            border: 1px solid rgba(166, 247, 189, 0.3);
+            border-radius: 24px; margin: -1.5rem auto 1.5rem;
+            display: flex; align-items: center; justify-content: center;
+            animation: icon-float 4s ease-in-out infinite;
+        }
+        .icon-wrap .material-symbols-rounded {
+            font-size: 38px; color: var(--accent-green);
+            filter: drop-shadow(0 0 12px rgba(166,247,189,0.5));
+        }
+        @keyframes icon-float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
+        }
+
+        /* ── Badge ── */
+        .badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(255,68,68,0.08); border: 1px solid rgba(255,68,68,0.2);
+            color: #ff8080; padding: 6px 16px; border-radius: 100px;
+            font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+            text-transform: uppercase; margin-bottom: 1.25rem;
+        }
+        .badge-dot {
+            width: 6px; height: 6px;
+            background: #ff8080; border-radius: 50%;
+            box-shadow: 0 0 8px #ff8080;
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.4; }
+        }
+
+        /* ── Typography ── */
+        h1 {
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            font-weight: 800; line-height: 1.15;
+            margin-bottom: 0.75rem; letter-spacing: -0.03em;
+        }
+        h1 span {
+            background: linear-gradient(to right, var(--accent-green), var(--accent-teal));
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            font-size: clamp(0.875rem, 2vw, 1rem);
+            color: var(--text-muted); line-height: 1.65;
+            margin-bottom: 2rem; max-width: 440px; margin-inline: auto;
+        }
+
+        /* ── Divider ── */
+        .divider {
+            height: 1px; margin: 1.75rem 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+        }
+
+        /* ── Action Buttons ── */
+        .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn-primary-card {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 28px; border-radius: 100px;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-teal));
+            color: #002b10; font-weight: 700; font-size: 14px;
+            font-family: 'Outfit', sans-serif; text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(166,247,189,0.25);
+        }
+        .btn-primary-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 32px rgba(166,247,189,0.35);
+            filter: brightness(1.08);
+        }
+        .btn-outline-card {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 28px; border-radius: 100px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-main); font-weight: 600; font-size: 14px;
+            font-family: 'Outfit', sans-serif; text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-card:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        /* ── Quick Links ── */
+        .quick-links {
+            display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+            margin-top: 1.5rem;
+        }
+        .quick-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 14px; border-radius: 100px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: var(--text-muted); font-size: 12px; font-weight: 600;
+            text-decoration: none; letter-spacing: 0.03em;
+            transition: all 0.3s ease;
+        }
+        .quick-link:hover {
+            background: var(--accent-green-dim);
+            border-color: rgba(166,247,189,0.3);
+            color: var(--accent-green);
+            transform: translateY(-2px);
+        }
+        .quick-link .material-symbols-rounded { font-size: 14px; }
+
+        /* ── Footer ── */
+        .foot-note {
+            position: fixed; bottom: 20px; left: 50%;
+            transform: translateX(-50%); font-size: 11px;
+            color: rgba(255, 255, 255, 0.2); z-index: 10;
+            letter-spacing: 0.05em; text-align: center; width: 100%;
+        }
+    </style>
 </head>
 
-<body class="bg-background text-[#E3E3E3] font-sans h-screen flex items-center justify-center overflow-hidden">
+<body>
 
-    <!-- Background Elements -->
-    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div class="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-primary opacity-5 rounded-full blur-[120px]">
-        </div>
-        <div
-            class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-primary opacity-5 rounded-full blur-[120px]">
+    <div class="noise-overlay"></div>
+    <div class="bg-gradient"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Loader -->
+    <div id="introLoader" class="intro-loader">
+        <div class="loader-ring"></div>
+        <p style="font-size:12px; font-weight:700; letter-spacing:0.2em; color:var(--accent-green); text-transform:uppercase;">Loading...</p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="main-card" id="mainCard">
+        <div class="content-wrapper">
+
+            <span class="error-num reveal-item">404</span>
+
+            <div class="icon-wrap reveal-item">
+                <span class="material-symbols-rounded">running_with_errors</span>
+            </div>
+
+            <div class="badge reveal-item">
+                <div class="badge-dot"></div>
+                Page Not Found
+            </div>
+
+            <h1 class="reveal-item">Lost in the <span>Field?</span></h1>
+
+            <p class="subtitle reveal-item">
+                The page you're looking for might have been moved, renamed, or doesn't exist. Let's get you back on track.
+            </p>
+
+            <div class="btn-row reveal-item">
+                <a href="index.html" class="btn-primary-card">
+                    <span class="material-symbols-rounded" style="font-size:18px;">home</span>
+                    Back to Home
+                </a>
+                <a href="auth/login.html" class="btn-outline-card">
+                    <span class="material-symbols-rounded" style="font-size:18px;">login</span>
+                    Member Login
+                </a>
+            </div>
+
+            <div class="divider reveal-item"></div>
+
+            <p class="reveal-item" style="font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.12em; font-weight:700; margin-bottom:0.75rem;">Quick Navigation</p>
+            <div class="quick-links reveal-item">
+                <a href="all/about.html" class="quick-link"><span class="material-symbols-rounded">info</span>About</a>
+                <a href="all/sport.html" class="quick-link"><span class="material-symbols-rounded">sports_cricket</span>Sports</a>
+                <a href="all/gallery.html" class="quick-link"><span class="material-symbols-rounded">photo_library</span>Photos</a>
+                <a href="all/event.html" class="quick-link"><span class="material-symbols-rounded">event</span>Events</a>
+            </div>
+
         </div>
     </div>
 
-    <div class="text-center px-4">
-        <h1 class="text-9xl font-display font-bold text-primary mb-4 opacity-20">404</h1>
-        <div class="relative -mt-24 mb-8">
-            <span class="material-symbols-rounded text-8xl text-primary animate-bounce">running_with_errors</span>
-        </div>
-        <h2 class="text-3xl md:text-5xl font-display font-bold mb-4">Lost in the Field?</h2>
-        <p class="text-[#C4C7C5] max-w-md mx-auto mb-10 leading-relaxed font-light">
-            The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
-        </p>
+    <p class="foot-note">© <span id="yr"></span> Dream Makers Youth & Sports Club · Dikhengama</p>
 
-        <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
-            <a href="index.html"
-                class="px-8 py-3 rounded-full bg-primary text-[#003915] font-bold hover:bg-[#b1fcc5] transition-all flex items-center gap-2 group">
-                <span
-                    class="material-symbols-rounded translate-x-0 group-hover:-translate-x-1 transition-transform">arrow_back</span>
-                Back to Home
-            </a>
-            <a href="auth/login.html"
-                class="px-8 py-3 rounded-full bg-[#1E1E1E] border border-white/10 text-white font-bold hover:bg-white/5 transition-all flex items-center gap-2">
-                <span class="material-symbols-rounded">login</span>
-                Member Login
-            </a>
-        </div>
-    </div>
+    <script>
+        document.getElementById('yr').textContent = new Date().getFullYear();
+
+        // ── Intro Loader ──
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('introLoader');
+            setTimeout(() => {
+                loader.classList.add('fade-out');
+                const card = document.getElementById('mainCard');
+                card.classList.add('reveal');
+                // Stagger reveal items
+                document.querySelectorAll('.reveal-item').forEach((el, i) => {
+                    setTimeout(() => el.classList.add('show'), 200 + i * 100);
+                });
+            }, 700);
+        });
+
+        // ── Mouse Spotlight ──
+        const card = document.getElementById('mainCard');
+        document.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            card.style.setProperty('--mouse-x', ((e.clientX - rect.left) / rect.width * 100) + '%');
+            card.style.setProperty('--mouse-y', ((e.clientY - rect.top) / rect.height * 100) + '%');
+        });
+
+        // ── Particle System ──
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        function createParticle() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
+                radius: Math.random() * 1.5 + 0.3,
+                opacity: Math.random() * 0.4 + 0.05,
+                life: 0, maxLife: Math.random() * 300 + 200
+            };
+        }
+
+        for (let i = 0; i < 60; i++) particles.push(createParticle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, i) => {
+                p.x += p.vx; p.y += p.vy; p.life++;
+                const fade = p.life < 30 ? p.life / 30 : p.life > p.maxLife - 30 ? (p.maxLife - p.life) / 30 : 1;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(166, 247, 189, ${p.opacity * fade})`;
+                ctx.fill();
+                if (p.life >= p.maxLife) particles[i] = createParticle();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+    </script>
 
 </body>
-
 </html>

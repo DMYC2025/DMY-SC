@@ -15,8 +15,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
+    <!-- Cache Control (Force latest version) -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase.js"></script>
+    <script src="assets/js/supabase.js?v=4"></script>
 
     <style>
         :root {
@@ -77,6 +82,19 @@
         @keyframes pulse-bg {
             0% { transform: scale(1); opacity: 0.8; }
             100% { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* ── Floating Orbs (matching index.html) ── */
+        .orb {
+            position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+            filter: blur(90px); animation: floatOrb 8s ease-in-out infinite alternate;
+        }
+        .orb-1 { width: 450px; height: 450px; top: -12%; left: -12%; background: rgba(166,247,189,0.05); animation-delay: 0s; }
+        .orb-2 { width: 380px; height: 380px; bottom: -12%; right: -12%; background: rgba(160,207,208,0.05); animation-delay: -3s; }
+        .orb-3 { width: 280px; height: 280px; top: 50%; right: 15%; background: rgba(255,183,131,0.03); animation-delay: -5s; }
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, -40px) scale(1.08); }
         }
 
         #particleCanvas {
@@ -260,6 +278,7 @@
         h1 span {
             background: linear-gradient(to right, var(--accent-green), var(--accent-teal));
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             position: relative;
             display: inline-block;
@@ -640,6 +659,9 @@
 
     <div class="noise-overlay"></div>
     <div class="bg-gradient"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
     <canvas id="particleCanvas"></canvas>
 
     <!-- Loader -->

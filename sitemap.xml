@@ -4,13 +4,170 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
 
+  <!-- ═══ Root Pages ═══ -->
+  <url>
+    <loc>https://dmyc.space/</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
 
-<url>
-  <loc>https://dmyc.space/</loc>
-  <lastmod>2025-12-26T20:36:29+00:00</lastmod>
-</url>
+  <url>
+    <loc>https://dmyc.space/404.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
+  </url>
 
+  <url>
+    <loc>https://dmyc.space/maintenance.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
+  </url>
+
+  <!-- ═══ Public Pages (/all/) ═══ -->
+  <url>
+    <loc>https://dmyc.space/all/about.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/all/event.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/all/gallery.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/all/sport.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ═══ Auth Pages (/auth/) ═══ -->
+  <url>
+    <loc>https://dmyc.space/auth/login.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/auth/reg.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/auth/forget_pass.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- ═══ Member Pages (/user/) — requires login ═══ -->
+  <url>
+    <loc>https://dmyc.space/user/index.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/user/about.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/user/event.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/user/sport.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/user/sport_detail.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/user/profile.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/user/club_id.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/user/files.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/user/notifycation.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/user/pay.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/user/quicklink.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/user/manage.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://dmyc.space/user/verify.html</loc>
+    <lastmod>2026-03-21T12:05:10+05:30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
 
 </urlset>

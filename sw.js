@@ -1,16 +1,16 @@
-const CACHE_NAME = 'dmysc-v3';
+const CACHE_NAME = 'dmysc-v4';
 const ASSETS_TO_CACHE = [
-    './',
-    './index.html',
-    './assets/css/home-style.css',
-    './assets/css/admin-style.css',
-    './assets/css/animations.css',
-    './admin/index.html',
-    './assets/js/supabase.js',
+    './?v=4',
+    './index.html?v=4',
+    './assets/css/home-style.css?v=4',
+    './assets/css/admin-style.css?v=4',
+    './assets/css/animations.css?v=4',
+    './admin/index.html?v=4',
+    './assets/js/supabase.js?v=4',
     './assets/images/logo_2.png',
-    './manifest.json',
-    './user/index.html',
-    './auth/login.html'
+    './manifest.json?v=4',
+    './user/index.html?v=4',
+    './auth/login.html?v=4'
 ];
 
 // --- FIREBASE PUSH NOTIFICATION SETUP ---

@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photos - DMYSC Gallery</title>
+    <meta name="description"
+        content="Our memories at DMYSC. Capturing moments of joy and achievement.">
+    <link rel="icon" type="image/png" href="../assets/images/logo_1.png">
+    <link rel="manifest" href="../manifest.json">
+
+    <!-- External Home CSS -->
+    <link rel="stylesheet" href="../assets/css/home-style.css">
+
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#0a150f',
+                        surface: '#1E1E1E',
+                        'surface-container': '#252529',
+                        brand: { green: '#a6f7bd', dark: '#121212' },
+                        primary: '#1ED760',
+                        secondary: '#c2c9bd',
+                        tertiary: '#a0cfd0',
+                        error: '#ffb4ab',
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase.js"></script>
+    <script src="../assets/js/maintenance-check.js"></script>
+
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1550147760-44c9966d6bc7?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .body-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 21, 15, 0.6);
+            backdrop-filter: blur(10px);
+            z-index: -1;
+        }
+
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .gallery-item {
+            aspect-ratio: 16 / 9;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+            border-color: rgba(30, 215, 96, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-item:hover img {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* Lightbox Overlay */
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        #lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        #lightbox img {
+            max-width: 90%;
+            max-height: 80vh;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+            transform: scale(0.95);
+            transition: transform 0.4s ease;
+        }
+
+        #lightbox.active img {
+            transform: scale(1);
+        }
+
+        .lb-controls {
+            position: absolute;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            top: 20px;
+            left: 0;
+            z-index: 200;
+        }
+
+        .lb-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 40px;
+            pointer-events: none;
+        }
+
+        .lb-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s;
+            pointer-events: auto;
+        }
+
+        .lb-btn:hover {
+            background: #1ED760;
+            color: black;
+            transform: scale(1.1);
+        }
+        
+        .lb-actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .action-chip {
+            padding: 10px 24px;
+            border-radius: 99px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .action-chip:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #1ED760;
+        }
+
+        /* Share Menu Popup */
+        #shareMenu {
+            display: none;
+            position: absolute;
+            bottom: 80px;
+            background: #1E1E1E;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 15px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            z-index: 300;
+        }
+
+        #shareMenu.active { display: grid; }
+
+        .share-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .share-item:hover { background: rgba(255, 255, 255, 0.05); color: #1ED760; }
+    </style>
+</head>
+
+<body
+    class="text-[#E3E3E3] selection:bg-primary selection:text-[#003915] overflow-x-hidden flex flex-col min-h-screen relative">
+    <div class="body-overlay"></div>
+
+    <div
+        class="fixed top-[-10%] left-[-10%] w-96 h-96 bg-primary/10 rounded-full blur-[100px] animate-float pointer-events-none z-[-1]">
+    </div>
+    <div
+        class="fixed bottom-[-10%] right-[-10%] w-96 h-96 bg-tertiary/10 rounded-full blur-[100px] animate-float-delayed pointer-events-none z-[-1]">
+    </div>
+
+    <main class="relative min-h-screen flex flex-col items-center justify-center py-10 px-4 md:px-8 z-10 flex-grow">
+
+        <div class="liquid-glass w-full max-w-[1500px] min-h-[85vh] rounded-[40px] p-6 md:p-12 flex flex-col relative"
+            data-aos="fade-up" data-aos-duration="1000">
+
+            <header class="flex justify-between items-center w-full mb-12" data-aos="fade-down" data-aos-delay="100">
+                <div class="flex items-center gap-3 cursor-pointer group" onclick="window.location.href='../index.html'">
+                    <span
+                        class="text-xl md:text-2xl font-display font-black text-white tracking-[0.3em] group-hover:text-primary transition-colors duration-300">D M Y & S C</span>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <nav class="hidden lg:flex items-center gap-6 mr-6">
+                        <a href="../index.html" class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary transition-colors">Home</a>
+                        <a href="about.html" class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary transition-colors">About</a>
+                        <a href="sport.html" class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary transition-colors">Sports</a>
+                        <a href="gallery.html" class="text-sm font-bold uppercase tracking-wider text-primary transition-colors">Photos</a>
+                        <a href="event.html" class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary transition-colors">Event</a>
+                    </nav>
+
+                    <button class="relative text-white/80 hover:text-white transition-all transform hover:scale-110 active:scale-95">
+                        <span class="material-symbols-rounded text-2xl md:text-3xl">search</span>
+                    </button>
+                    
+                    <a href="../auth/login.html"
+                        class="text-white/80 hover:text-white transition-all transform hover:scale-110 active:scale-95 group">
+                        <span
+                            class="material-symbols-rounded text-2xl md:text-3xl group-hover:text-primary transition-colors">login</span>
+                    </a>
+                    <!-- Hamburger Button (Mobile only) -->
+                    <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="lg:hidden relative text-white/80 hover:text-white transition-all transform hover:scale-110 active:scale-95" aria-label="Toggle Menu">
+                        <span id="menuIconOpen" class="material-symbols-rounded text-2xl md:text-3xl">menu</span>
+                        <span id="menuIconClose" class="material-symbols-rounded text-2xl md:text-3xl hidden">close</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Mobile Navigation Panel (lg:hidden) -->
+            <div id="mobileNavPanel" class="lg:hidden overflow-hidden transition-all duration-300 ease-in-out" style="max-height:0;">
+                <nav class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[20px] p-4 mb-8 flex flex-col gap-1">
+                    <a href="../index.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span class="material-symbols-rounded text-lg">home</span>Home</a>
+                    <a href="about.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span class="material-symbols-rounded text-lg">info</span>About</a>
+                    <a href="sport.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span class="material-symbols-rounded text-lg">sports_cricket</span>Sports</a>
+                    <a href="gallery.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-primary bg-primary/10"><span class="material-symbols-rounded text-lg">photo_library</span>Photos</a>
+                    <a href="event.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span class="material-symbols-rounded text-lg">event</span>Event</a>
+                </nav>
+            </div>
+
+            <div class="flex-1">
+                <div class="text-center mb-16">
+                    <h1 class="text-5xl md:text-7xl font-display font-black text-white mb-4 uppercase tracking-tighter" data-aos="fade-up">
+                        Captured <span class="text-primary">Moments</span>
+                    </h1>
+                    <p class="text-white/50 text-sm md:text-base max-w-xl mx-auto font-light" data-aos="fade-up" data-aos-delay="200">
+                        Dive into our visual history. Memories that define our community and spirit.
+                    </p>
+                </div>
+                
+                <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Loading State -->
+                    <div class="col-span-full py-32 text-center opacity-40">
+                         <span class="material-symbols-rounded animate-spin text-4xl mb-2">sync</span>
+                         <p class="text-xs uppercase tracking-widest font-bold">Assembling Gallery Grid...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+
+    <!-- FOOTER START -->
+    <footer
+        class="liquid-glass pt-12 pb-8 mt-auto z-30 font-sans relative overflow-hidden no-print w-full max-w-[1500px] rounded-[40px] mt-12">
+
+        <div
+            class="absolute top-0 left-1/4 w-64 h-64 bg-primary opacity-5 rounded-full blur-[100px] pointer-events-none">
+        </div>
+        <div
+            class="absolute bottom-0 right-1/4 w-64 h-64 bg-tertiary opacity-5 rounded-full blur-[100px] pointer-events-none">
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+
+                <div class="space-y-4 text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start gap-3 mb-4">
+                        <img src="../assets/images/logo.png" class="h-10 w-auto" alt="Logo">
+                        <div class="flex flex-col">
+                            <span
+                                class="text-lg font-display font-bold text-[#E3E3E3] tracking-tight uppercase">DMYSC</span>
+                            <span class="text-[10px] text-primary font-bold tracking-widest">EST 2025</span>
+                        </div>
+                    </div>
+                    <p class="text-[#C4C7C5] text-sm leading-relaxed font-light opacity-80">
+                        Empowering youth through sports, unity, and community service.
+                    </p>
+                    <div class="flex gap-3 pt-2 justify-center md:justify-start">
+                        <a href="https://www.facebook.com/profile.php?id=61585478932161" target="_blank"
+                            class="w-10 h-10 rounded-full bg-[#252529] border border-[#353539] flex items-center justify-center text-[#C4C7C5] hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition duration-300 group">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                            </svg>
+                        </a>
+                        <a href="https://whatsapp.com/channel/0029Vb7AQ1bEKyZKwmjeYt0F" target="_blank"
+                            class="w-10 h-10 rounded-full bg-[#252529] border border-[#353539] flex items-center justify-center text-[#C4C7C5] hover:bg-[#25D366] hover:text-white hover:border-[#25D366] transition duration-300">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                                <path
+                                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
+                            </svg>
+                        </a>
+                        <a href="https://www.youtube.com/channel/UCbeh371G6OERp1zaAUMyuBQ" target="_blank"
+                            class="w-10 h-10 rounded-full bg-[#252529] border border-[#353539] flex items-center justify-center text-[#C4C7C5] hover:bg-[#FF0000] hover:text-white hover:border-[#FF0000] transition duration-300">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                                <path
+                                    d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="hidden">
+                    <h4 class="text-[#E3E3E3] font-display font-bold uppercase tracking-wider mb-6 text-sm">Quick Links
+                    </h4>
+                    <ul class="space-y-3 text-sm text-[#C4C7C5]">
+                        <li><a href="../index.html"
+                                class="hover:text-primary transition flex items-center gap-2 group"><span
+                                    class="material-symbols-rounded text-sm text-[#353539] group-hover:text-primary transition">chevron_right</span>
+                                Dashboard</a></li>
+                        <li><a href="event.html"
+                                class="hover:text-primary transition flex items-center gap-2 group"><span
+                                    class="material-symbols-rounded text-sm text-[#353539] group-hover:text-primary transition">chevron_right</span>
+                                Events</a></li>
+                        <li><a href="sport.html"
+                                class="hover:text-primary transition flex items-center gap-2 group"><span
+                                    class="material-symbols-rounded text-sm text-[#353539] group-hover:text-primary transition">chevron_right</span>
+                                Sports Teams</a></li>
+                        <li><a href="about.html"
+                                class="hover:text-primary transition flex items-center gap-2 group"><span
+                                    class="material-symbols-rounded text-sm text-[#353539] group-hover:text-primary transition">chevron_right</span>
+                                About Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="text-center md:text-left">
+                    <h4 class="text-[#E3E3E3] font-display font-bold uppercase tracking-wider mb-6 text-sm">Contact Us
+                    </h4>
+                    <ul class="space-y-4 text-sm text-[#C4C7C5]">
+                        <li class="flex items-start gap-3 justify-center md:justify-start">
+                            <span class="material-symbols-rounded text-primary text-lg mt-0.5">location_on</span>
+                            <span id="footerAddress" class="font-light">Loading...</span>
+                        </li>
+                        <li class="flex items-center gap-3 justify-center md:justify-start">
+                            <span class="material-symbols-rounded text-primary text-lg">call</span>
+                            <span id="footerPhone" class="font-mono">Loading...</span>
+                        </li>
+                        <li class="flex items-center gap-3 justify-center md:justify-start">
+                            <span class="material-symbols-rounded text-primary text-lg">mail</span>
+                            <span id="footerEmail">Loading...</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="text-center md:text-left">
+                    <h4 class="text-[#E3E3E3] font-display font-bold uppercase tracking-wider mb-6 text-sm">Partners
+                    </h4>
+                    <div class="flex flex-wrap gap-4 items-center justify-center md:justify-start">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/1200px-Flag_of_Sri_Lanka.svg.png"
+                            class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300"
+                            alt="SL Flag">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Emblem_of_Sri_Lanka.svg"
+                            class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300"
+                            alt="SL Emblem">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Western_Province_Flag_%28SRI_LANKA%29.png/330px-Western_Province_Flag_%28SRI_LANKA%29.png"
+                            class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300"
+                            alt="WP Flag">
+                        <img src="../assets/images/119.png"
+                            class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300"
+                            alt="119">
+                    </div>
+                </div>
+
+            </div>
+
+            <div
+                class="border-t border-[#353539] bg-[#252529]/30 rounded-2xl p-4 mb-6 flex flex-col md:flex-row flex-wrap items-center justify-between gap-4 backdrop-blur-sm">
+
+                <a href="https://dilnuka13.github.io/my/" target="_blank" rel="noreferrer"
+                    class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 hover:bg-white/10 transition cursor-pointer group">
+                    <span
+                        class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider group-hover:text-white transition">Developed
+                        by</span>
+                    <img src="https://dilnuka13.github.io/my/titlebar.png" class="h-5 w-auto object-contain"
+                        alt="Isara">
+                    <span
+                        class="text-[11px] font-bold text-[#E3E3E3] group-hover:text-primary transition leading-none">Isara
+                        Dilnuka</span>
+                </a>
+
+                <a href="https://gemini.google.com" target="_blank" rel="noreferrer"
+                    class="flex items-center gap-2 bg-white rounded-full px-4 py-1.5 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:scale-105 transition cursor-pointer">
+                    <span
+                        class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider group-hover:text-black transition">Co-piloted
+                        by</span>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Google_Gemini_logo_2025.svg/330px-Google_Gemini_logo_2025.svg.png"
+                        class="h-5 w-auto object-contain" alt="Gemini AI">
+                </a>
+
+                <a href="https://supabase.com/" target="_blank" rel="noreferrer"
+                    class="flex items-center gap-2 bg-white rounded-full px-4 py-1.5 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:scale-105 transition cursor-pointer">
+                    <span
+                        class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider group-hover:text-black transition">Powered
+                        by</span>
+                    <img src="https://wp.logos-download.com/wp-content/uploads/2023/02/Supabase_Logo.png?dl"
+                        class="h-5 w-auto object-contain" alt="Supabase">
+                </a>
+            </div>
+
+            <div class="border-t border-[#353539] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-[#8e918f] text-xs text-center md:text-left">
+                    &copy; <span id="year">2026</span> DMYSC. All rights reserved.
+                </p>
+                <div class="flex gap-6 text-xs text-[#8e918f] font-medium">
+                    <button onclick="openModal('privacyModal')"
+                        class="hover:text-[#E3E3E3] transition focus:outline-none">Privacy Policy</button>
+                    <button onclick="openModal('termsModal')"
+                        class="hover:text-[#E3E3E3] transition focus:outline-none">Terms of Service</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Privacy Policy Modal -->
+        <div id="privacyModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog"
+            aria-modal="true">
+            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 modal-backdrop">
+            </div>
+            <div class="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center p-4">
+                <div
+                    class="bg-[#252529] rounded-[28px] max-w-2xl w-full relative shadow-2xl border border-[#353539] transform scale-95 opacity-0 transition-all modal-panel flex flex-col max-h-[85vh]">
+                    <div
+                        class="px-6 py-5 border-b border-[#353539] flex justify-between items-center bg-[#1E1E1E] rounded-t-[28px]">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-rounded text-primary">policy</span>
+                            <h3 class="text-lg font-display font-medium text-[#E3E3E3]">Privacy Policy</h3>
+                        </div>
+                        <button onclick="closeModal('privacyModal')"
+                            class="w-8 h-8 rounded-full hover:bg-[#353539] text-[#C4C7C5] flex items-center justify-center transition">
+                            <span class="material-symbols-rounded">close</span>
+                        </button>
+                    </div>
+                    <div class="px-6 py-6 text-[#C4C7C5] text-sm leading-relaxed overflow-y-auto custom-scrollbar">
+                        <p class="mb-4 text-xs font-mono text-[#8e918f]">Last Updated: <span
+                                class="text-[#E3E3E3]">February 2026</span></p>
+
+                        <h4 class="text-[#E3E3E3] font-bold mb-2">1. Information We Collect</h4>
+                        <p class="mb-4">
+                            To provide our services at <strong>Dream Makers Youth & Sports Club (DMYSC)</strong>, we
+                            collect the following types of information:
+                        <ul class="list-disc pl-5 space-y-1 mt-2 opacity-80">
+                            <li><strong>Personal Information:</strong> Full Name, NIC Number, Date of Birth, and Address
+                                (e.g., No. **/*, Dikhengama, Munagama).</li>
+                            <li><strong>Contact Details:</strong> Phone/WhatsApp number and Email address.</li>
+                            <li><strong>Membership Data:</strong> Profile pictures, team assignments, and payment
+                                records of monthly fees.</li>
+                        </ul>
+                        </p>
+
+                        <h4 class="text-[#E3E3E3] font-bold mb-2">2. How We Use Your Data</h4>
+                        <p class="mb-4">
+                            Your data is strictly used for club administration purposes:
+                        <ul class="list-disc pl-5 space-y-1 mt-2 opacity-80">
+                            <li>To verify your identity and eligibility for membership.</li>
+                            <li>To issue your Digital Member ID card.</li>
+                            <li>To communicate club announcements, events, and match schedules.</li>
+                            <li>To maintain transparency in fee collections and club funds.</li>
+                        </ul>
+                        </p>
+
+                        <h4 class="text-[#E3E3E3] font-bold mb-2">3. Data Sharing & Security</h4>
+                        <p class="mb-4">
+                            We prioritize your privacy. We <strong>do not</strong> sell or share your personal data with
+                            third-party advertisers. Data is stored securely using industry-standard encryption. Access
+                            is restricted to authorized club administrators only.
+                        </p>
+
+                        <h4 class="text-[#E3E3E3] font-bold mb-2">4. Contact Us</h4>
+                        <p class="mb-4">
+                            If you have questions about your data, please contact us at <a href="mailto:info@dmysc.lk"
+                                id="privacyEmail" class="text-primary hover:underline">info@dmysc.lk</a> or call us at
+                            <strong id="privacyPhone">+94 XX XXX XXXX</strong>.
+                        </p>
+                    </div>
+                    <div class="px-6 py-4 flex justify-end border-t border-[#353539]">
+                        <button onclick="closeModal('privacyModal')"
+                            class="px-6 py-2 rounded-full bg-primary text-[#003915] font-medium text-sm hover:bg-[#b1fcc5] transition">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terms of Service Modal -->
+        <div id="termsModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog"
+            aria-modal="true">
+            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 modal-backdrop">
+            </div>
+            <div class="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center p-4">
+                <div
+                    class="bg-[#252529] rounded-[28px] max-w-2xl w-full relative shadow-2xl border border-[#353539] transform scale-95 opacity-0 transition-all modal-panel flex flex-col max-h-[85vh]">
+                    <div
+                        class="px-6 py-5 border-b border-[#353539] flex justify-between items-center bg-[#1E1E1E] rounded-t-[28px]">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-rounded text-primary">gavel</span>
+                            <h3 class="text-lg font-display font-medium text-[#E3E3E3]">Terms of Service</h3>
+                        </div>
+                        <button onclick="closeModal('termsModal')"
+                            class="w-8 h-8 rounded-full hover:bg-[#353539] text-[#C4C7C5] flex items-center justify-center transition">
+                            <span class="material-symbols-rounded">close</span>
+                        </button>
+                    </div>
+                    <div class="px-6 py-6 text-[#C4C7C5] text-sm leading-relaxed overflow-y-auto custom-scrollbar">
+                        <p class="mb-4 text-xs font-mono text-[#8e918f]">Effective Date: <span
+                                class="text-[#E3E3E3]">February 2026</span></p>
+
+                        <h4 class="text-[#E3E3E3] font-bold mb-2">1. Acceptance of Terms</h4>
+                        <p class="mb-4">
+                            By accessing the DMYSC website or registering as a member, you agree to comply with the
+                            club's Constitution and these Terms of Service. If you do not agree, you may not use our
+                            digital services.
+                        </p>
+
+                        <h4 class="text-[#E3E3E3] font-bold mb-2">2. Membership Responsibilities</h4>
+                        <p class="mb-4">
+                        <ul class="list-disc pl-5 space-y-1 mt-2 opacity-80">
+                            <li><strong>Accuracy:</strong> You agree to provide true and accurate information during
+                                registration. Fake accounts or impersonation is strictly prohibited.</li>
+                            <li><strong>Fees:</strong> Members are responsible for the timely payment of the monthly
+                                membership fee to maintain active status.</li>
+                            <li><strong>Conduct:</strong> You agree to uphold the spirit of sportsmanship and unity.
+                                Harassment, hate speech, or disruptive behavior on this platform will result in
+                                immediate account suspension.</li>
+                        </ul>
+                        </p>
+
+                        <h4 class="text-[#E3E3E3] font-bold mb-2">3. Intellectual Property</h4>
+                        <p class="mb-4">
+                            All content on this site, including the DMYSC logo, photos from events, and the web design,
+                            is the property of Dream Makers Youth & Sports Club. Unauthorized reproduction is
+                            prohibited.
+                        </p>
+
+                        <h4 class="text-[#E3E3E3] font-bold mb-2">4. Account Security</h4>
+                        <p class="mb-4">
+                            You are responsible for maintaining the confidentiality of your login credentials. Notify
+                            the administration immediately of any unauthorized use of your account.
+                        </p>
+                    </div>
+                    <div class="px-6 py-4 flex justify-end border-t border-[#353539]">
+                        <button onclick="closeModal('termsModal')"
+                            class="px-6 py-2 rounded-full bg-[#353539] text-[#E3E3E3] font-medium text-sm hover:bg-[#45454a] transition">I
+                            Agree</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Modal -->
+        <div id="notificationModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog"
+            aria-modal="true">
+            <div class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 modal-backdrop"></div>
+            <div class="fixed inset-0 z-10 overflow-y-auto">
+                <div class="flex min-h-full items-center justify-center p-4 text-center">
+                    <div
+                        class="relative transform overflow-hidden rounded-[28px] bg-[#1E1E1E] border border-white/5 text-left shadow-2xl transition-all w-full max-w-xl scale-95 opacity-0 modal-panel flex flex-col max-h-[80vh]">
+                        <div
+                            class="bg-[#252529] px-6 py-4 border-b border-white/5 flex justify-between items-center shrink-0">
+                            <div class="flex items-center gap-2"><span
+                                    class="material-symbols-rounded text-primary">notifications_active</span>
+                                <h3 class="text-lg font-display font-bold text-[#E3E3E3]">Club Alerts</h3>
+                            </div>
+                            <button onclick="closeModal('notificationModal')"
+                                class="text-[#C4C7C5] hover:text-white transition"><span
+                                    class="material-symbols-rounded">close</span></button>
+                        </div>
+                        <div class="px-4 py-4 overflow-y-auto custom-scrollbar flex-grow" id="notificationFeedModal">
+                        </div>
+                        <div
+                            class="bg-[#252529] px-6 py-3 flex justify-between items-center border-t border-white/5 shrink-0 text-xs text-[#8e918f]">
+                            <span>Stay updated with latest news</span>
+                            <button onclick="closeModal('notificationModal')"
+                                class="rounded-full bg-[#353539] px-4 py-2 text-xs font-bold text-[#E3E3E3] hover:bg-[#45454a] transition">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox">
+        <div class="lb-controls">
+            <span class="text-[10px] font-black uppercase tracking-[0.4em] text-white/40" id="lb-counter">IMG 1 / 10</span>
+            <button class="lb-btn" onclick="closeLightbox()">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+
+        <div class="lb-nav">
+            <button class="lb-btn" onclick="navigateLightbox(-1)">
+                <span class="material-symbols-rounded">chevron_left</span>
+            </button>
+            <button class="lb-btn" onclick="navigateLightbox(1)">
+                <span class="material-symbols-rounded">chevron_right</span>
+            </button>
+        </div>
+
+        <img id="lb-img" src="" alt="DMYSC Memory">
+
+        <div class="lb-actions relative">
+            <button class="action-chip" onclick="downloadImage()">
+                <span class="material-symbols-rounded text-sm">download</span> Download
+            </button>
+            <button class="action-chip" onclick="shareImage()">
+                <span class="material-symbols-rounded text-sm">ios_share</span> Share
+            </button>
+
+        </div>
+    </div>
+
+    <!-- Modals (Required) -->
+    <div id="privacyModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 modal-backdrop"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center p-4">
+            <div class="bg-[#252529] rounded-[28px] max-w-2xl w-full relative shadow-2xl border border-[#353539] transform scale-95 opacity-0 transition-all modal-panel flex flex-col max-h-[85vh]">
+                <div class="px-6 py-5 border-b border-[#353539] flex justify-between items-center bg-[#1E1E1E] rounded-t-[28px]">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-rounded text-primary">policy</span>
+                        <h3 class="text-lg font-display font-medium text-[#E3E3E3]">Privacy Policy</h3>
+                    </div>
+                    <button onclick="closeModal('privacyModal')" class="w-8 h-8 rounded-full hover:bg-[#353539] text-[#C4C7C5] flex items-center justify-center transition">
+                        <span class="material-symbols-rounded">close</span>
+                    </button>
+                </div>
+                <div class="px-6 py-6 text-[#C4C7C5] text-sm leading-relaxed overflow-y-auto custom-scrollbar">
+                    <p>Terms of Privacy policy go here...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="termsModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 modal-backdrop"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center p-4">
+            <div class="bg-[#252529] rounded-[28px] max-w-2xl w-full relative shadow-2xl border border-[#353539] transform scale-95 opacity-0 transition-all modal-panel flex flex-col max-h-[85vh]">
+                <div class="px-6 py-5 border-b border-[#353539] flex justify-between items-center bg-[#1E1E1E] rounded-t-[28px]">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-rounded text-primary">gavel</span>
+                        <h3 class="text-lg font-display font-medium text-[#E3E3E3]">Terms of Service</h3>
+                    </div>
+                    <button onclick="closeModal('termsModal')" class="w-8 h-8 rounded-full hover:bg-[#353539] text-[#C4C7C5] flex items-center justify-center transition">
+                        <span class="material-symbols-rounded">close</span>
+                    </button>
+                </div>
+                <div class="px-6 py-6 text-[#C4C7C5] text-sm leading-relaxed overflow-y-auto custom-scrollbar">
+                    <p>Terms of service go here...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ once: true, duration: 800 });
+
+        function toggleMobileMenu() {
+            const panel = document.getElementById('mobileNavPanel');
+            const iconOpen = document.getElementById('menuIconOpen');
+            const iconClose = document.getElementById('menuIconClose');
+            const isOpen = panel.style.maxHeight !== '0px' && panel.style.maxHeight !== '';
+            panel.style.maxHeight = isOpen ? '0' : panel.scrollHeight + 'px';
+            iconOpen.classList.toggle('hidden', !isOpen);
+            iconClose.classList.toggle('hidden', isOpen);
+        }
+        
+        // Modal Logic
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const backdrop = modal.querySelector('.modal-backdrop');
+            const panel = modal.querySelector('.modal-panel');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+                panel.classList.remove('scale-95', 'opacity-0');
+                panel.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const backdrop = modal.querySelector('.modal-backdrop');
+            const panel = modal.querySelector('.modal-panel');
+            backdrop.classList.add('opacity-0');
+            panel.classList.remove('scale-100', 'opacity-100');
+            panel.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        let allImages = [];
+        let currentIndex = 0;
+
+        async function loadGalleryImages() {
+            if (typeof _supabase === 'undefined') return;
+            try {
+                const { data: slides, error } = await _supabase.from('hero_slides').select('id, image_url, created_at').order('created_at', { ascending: false });
+                if (error) throw error;
+                
+                allImages = slides;
+                const grid = document.getElementById('galleryGrid');
+                grid.innerHTML = '';
+                
+                slides.forEach((slide, i) => {
+                    const item = `
+                        <div class="gallery-item" data-aos="zoom-in" data-aos-delay="${i * 50}" onclick="openLightbox(${i})">
+                            <img src="${slide.image_url}" alt="DMYSC Moment" loading="lazy">
+                        </div>`;
+                    grid.insertAdjacentHTML('beforeend', item);
+                });
+            } catch (err) { console.error(err); }
+        }
+
+        function openLightbox(index) {
+            currentIndex = index;
+            const img = allImages[index];
+            const lb = document.getElementById('lightbox');
+            document.getElementById('lb-img').src = img.image_url;
+            document.getElementById('lb-counter').innerText = `PHOTO ${index + 1} / ${allImages.length}`;
+            lb.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Deep linking
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('photo', img.id);
+            window.history.pushState({}, '', newUrl);
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.getElementById('shareMenu').classList.remove('active');
+            document.body.style.overflow = '';
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.delete('photo');
+            window.history.pushState({}, '', newUrl);
+        }
+
+        function nextImage() { currentIndex = (currentIndex + 1) % allImages.length; openLightbox(currentIndex); }
+        function prevImage() { currentIndex = (currentIndex - 1 + allImages.length) % allImages.length; openLightbox(currentIndex); }
+
+        async function shareImage() {
+            const img = allImages[currentIndex];
+            const shareData = {
+                title: 'DMYSC Gallery',
+                text: 'Check out this moment from Dream Makers Youth & Sports Club!',
+                url: window.location.href
+            };
+
+            if (navigator.share) {
+                // Native device share sheet (mobile/Android/iOS)
+                try {
+                    await navigator.share(shareData);
+                } catch (e) {
+                    if (e.name !== 'AbortError') {
+                        // User cancelled or error — fall back to copy link
+                        navigator.clipboard.writeText(window.location.href)
+                            .then(() => showShareToast('Link copied to clipboard!'))
+                            .catch(() => {});
+                    }
+                }
+            } else {
+                // Desktop fallback: copy link + show toast
+                try {
+                    await navigator.clipboard.writeText(window.location.href);
+                    showShareToast('Link copied to clipboard!');
+                } catch (e) {
+                    showShareToast('Copy this link: ' + window.location.href);
+                }
+            }
+        }
+
+        function showShareToast(msg) {
+            let toast = document.getElementById('shareToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'shareToast';
+                toast.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(30,30,32,0.95);color:#E3E3E3;padding:12px 24px;border-radius:100px;font-size:13px;font-weight:600;z-index:9999;border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(12px);opacity:0;transition:all 0.3s ease;white-space:nowrap;';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = msg;
+            requestAnimationFrame(() => { toast.style.opacity = '1'; toast.style.transform = 'translateX(-50%) translateY(0)'; });
+            setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(-50%) translateY(10px)'; }, 2500);
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => showShareToast('Link copied!'));
+        }
+
+        async function downloadImage() {
+            const imgUrl = allImages[currentIndex].image_url;
+            window.open(imgUrl, '_blank');
+        }
+
+        async function loadFooterData() {
+            if (typeof _supabase === 'undefined') return;
+            try {
+                const { data } = await _supabase.from('site_settings').select('address, phone, email').eq('id', 1).single();
+                if (data) {
+                    document.getElementById('footerAddress').textContent = data.address || 'No. **/*, Dikhengama, Munagama';
+                    document.getElementById('footerPhone').textContent = data.phone || '+94 XX XXX XXXX';
+                    document.getElementById('footerEmail').textContent = data.email || 'info@dmysc.lk';
+
+                    // Privacy Policy placeholders
+                    const pEmail = document.getElementById('privacyEmail');
+                    const pPhone = document.getElementById('privacyPhone');
+                    if (pEmail) {
+                        pEmail.textContent = data.email || 'info@dmysc.lk';
+                        if (pEmail.tagName === 'A') pEmail.href = `mailto:${data.email || 'info@dmysc.lk'}`;
+                    }
+                    if (pPhone) pPhone.textContent = data.phone || '+94 XX XXX XXXX';
+
+                    document.getElementById('year').innerText = new Date().getFullYear();
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        loadGalleryImages();
+        loadFooterData();
+    </script>
+</body>
+
+</html>
