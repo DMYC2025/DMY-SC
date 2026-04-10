@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>404 – Page Not Found | DMYSC</title>
     <meta name="description" content="Oops! The page you're looking for doesn't exist. Dream Makers Youth & Sports Club.">
-    <meta name="theme-color" content="#030305">
+    <meta name="theme-color" content="#0a150f">
     <link rel="icon" type="image/png" href="assets/images/logo_1.png">
 
     <!-- Fonts -->
@@ -20,25 +20,54 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
 
+    <!-- Tailwind Config for UI Consistency -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#0a150f',
+                        primary: '#1ED760',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
         :root {
-            --bg-base: #030305;
-            --accent-green: #a6f7bd;
-            --accent-green-dim: rgba(166, 247, 189, 0.15);
-            --accent-teal: #a0cfd0;
+            --bg-base: #0a150f;
+            --accent-green: #1ED760;
+            --accent-green-dim: rgba(30, 215, 96, 0.15);
+            --accent-teal: #10b04a; /* Matching root gradient */
             --accent-peach: #ffb783;
-            --text-main: #f4f4f5;
-            --text-muted: #a1a1aa;
-            --glass-bg: rgba(15, 15, 20, 0.5);
-            --glass-border: rgba(255, 255, 255, 0.07);
-            --glass-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+            --text-main: #E3E3E3;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Outfit', sans-serif;
-            background: var(--bg-base);
+            background-image: url('https://images.unsplash.com/photo-1550147760-44c9966d6bc7?q=60&w=1600&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             color: var(--text-main);
             min-height: 100svh;
             display: flex;
@@ -50,38 +79,10 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── Noise Overlay ── */
-        .noise-overlay {
-            position: fixed; inset: 0; z-index: 1;
-            opacity: 0.03; pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-        }
-
-        /* ── Background Gradient ── */
-        .bg-gradient {
-            position: fixed; inset: 0; z-index: 0;
-            background:
-                radial-gradient(circle at 15% 50%, rgba(166, 247, 189, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(160, 207, 208, 0.04) 0%, transparent 50%),
-                radial-gradient(circle at 50% 80%, rgba(255, 183, 131, 0.03) 0%, transparent 50%);
-            animation: pulse-bg 10s ease-in-out infinite alternate;
-        }
-        @keyframes pulse-bg {
-            0% { transform: scale(1); opacity: 0.8; }
-            100% { transform: scale(1.1); opacity: 1; }
-        }
-
-        /* ── Floating Orbs ── */
-        .orb {
-            position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
-            filter: blur(80px); animation: floatOrb 8s ease-in-out infinite alternate;
-        }
-        .orb-1 { width: 400px; height: 400px; top: -10%; left: -10%; background: rgba(166,247,189,0.06); animation-delay: 0s; }
-        .orb-2 { width: 350px; height: 350px; bottom: -10%; right: -10%; background: rgba(160,207,208,0.05); animation-delay: -3s; }
-        .orb-3 { width: 250px; height: 250px; top: 40%; right: 20%; background: rgba(255,183,131,0.04); animation-delay: -6s; }
-        @keyframes floatOrb {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(30px, -40px) scale(1.1); }
+        .body-overlay {
+            position: fixed; inset: 0; z-index: -1;
+            background: rgba(10, 21, 15, 0.7);
+            backdrop-filter: blur(8px);
         }
 
         /* ── Particle Canvas ── */
@@ -112,16 +113,16 @@
         }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* ── Main Card ── */
+        /* ── Main Card (Liquid Glass style) ── */
         .main-card {
             position: relative; z-index: 10; text-align: center;
             width: clamp(320px, 90%, 640px);
             padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.5rem, 5vw, 3.5rem);
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 36px;
-            backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
-            box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            box-shadow: var(--glass-shadow), inset 0 0 20px rgba(255, 255, 255, 0.05);
             opacity: 0; transform: translateY(40px) scale(0.97);
             transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
             overflow: hidden;
@@ -158,14 +159,14 @@
         .icon-wrap {
             width: 80px; height: 80px;
             background: var(--accent-green-dim);
-            border: 1px solid rgba(166, 247, 189, 0.3);
+            border: 1px solid rgba(30, 215, 96, 0.3);
             border-radius: 24px; margin: -1.5rem auto 1.5rem;
             display: flex; align-items: center; justify-content: center;
             animation: icon-float 4s ease-in-out infinite;
         }
         .icon-wrap .material-symbols-rounded {
             font-size: 38px; color: var(--accent-green);
-            filter: drop-shadow(0 0 12px rgba(166,247,189,0.5));
+            filter: drop-shadow(0 0 12px rgba(30, 215, 96, 0.5));
         }
         @keyframes icon-float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -222,11 +223,11 @@
             color: #002b10; font-weight: 700; font-size: 14px;
             font-family: 'Outfit', sans-serif; text-decoration: none;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 24px rgba(166,247,189,0.25);
+            box-shadow: 0 8px 24px rgba(30, 215, 96, 0.25);
         }
         .btn-primary-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 16px 32px rgba(166,247,189,0.35);
+            box-shadow: 0 16px 32px rgba(30, 215, 96, 0.35);
             filter: brightness(1.08);
         }
         .btn-outline-card {
@@ -260,7 +261,7 @@
         }
         .quick-link:hover {
             background: var(--accent-green-dim);
-            border-color: rgba(166,247,189,0.3);
+            border-color: rgba(30, 215, 96, 0.3);
             color: var(--accent-green);
             transform: translateY(-2px);
         }
@@ -270,7 +271,7 @@
         .foot-note {
             position: fixed; bottom: 20px; left: 50%;
             transform: translateX(-50%); font-size: 11px;
-            color: rgba(255, 255, 255, 0.2); z-index: 10;
+            color: rgba(255, 255, 255, 0.4); z-index: 10;
             letter-spacing: 0.05em; text-align: center; width: 100%;
         }
     </style>
@@ -278,11 +279,12 @@
 
 <body>
 
-    <div class="noise-overlay"></div>
-    <div class="bg-gradient"></div>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
+    <div class="body-overlay"></div>
+    
+    <!-- Animated Tailwind Orbs matching index.html -->
+    <div class="fixed top-[-10%] left-[-10%] w-96 h-96 bg-primary/10 rounded-full blur-[100px] animate-float pointer-events-none z-[-1]"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-96 h-96 bg-[#a0cfd0]/10 rounded-full blur-[100px] animate-float-delayed pointer-events-none z-[-1]"></div>
+
     <canvas id="particleCanvas"></canvas>
 
     <!-- Loader -->
@@ -396,7 +398,7 @@
                 const fade = p.life < 30 ? p.life / 30 : p.life > p.maxLife - 30 ? (p.maxLife - p.life) / 30 : 1;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(166, 247, 189, ${p.opacity * fade})`;
+                ctx.fillStyle = `rgba(30, 215, 96, ${p.opacity * fade})`;
                 ctx.fill();
                 if (p.life >= p.maxLife) particles[i] = createParticle();
             });

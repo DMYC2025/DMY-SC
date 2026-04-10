@@ -88,8 +88,8 @@
     <style>
         /* Modern Liquid Glass Effect overrides */
         body {
-            /* Background image to make the glass effect visible and match the template vibe */
-            background-image: url('https://images.unsplash.com/photo-1550147760-44c9966d6bc7?q=80&w=2000&auto=format&fit=crop');
+            /* Background image optimized for speed (q=60, w=1600) */
+            background-image: url('https://images.unsplash.com/photo-1550147760-44c9966d6bc7?q=60&w=1600&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -99,15 +99,15 @@
         .body-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(10, 21, 15, 0.6);
-            backdrop-filter: blur(10px);
+            background: rgba(10, 21, 15, 0.7);
+            backdrop-filter: blur(8px); /* Reduced blur for performance */
             z-index: -1;
         }
 
         .liquid-glass {
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            backdrop-filter: blur(12px); /* Reduced from 24px to prevent scroll lag on mobile */
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.05);
         }
@@ -373,7 +373,6 @@
         </div>
         <br>
 
-    <!-- FOOTER START -->
     <!-- FOOTER START -->
         <footer
             class="liquid-glass pt-12 pb-8 mt-auto z-30 font-sans relative overflow-hidden no-print w-full max-w-[1500px] rounded-[40px] mt-12">
@@ -848,7 +847,8 @@
                 ];
 
                 if (typeof _supabase !== 'undefined') {
-                    const { data, error } = await _supabase.from('hero_slides').select('image_url').order('order_index', { ascending: true });
+                    // Limit the query to 5 slides to prevent heavy data usage on load
+                    const { data, error } = await _supabase.from('hero_slides').select('image_url').order('order_index', { ascending: true }).limit(5);
                     if (!error && data && data.length > 0) slides = data;
                 }
 
@@ -885,14 +885,15 @@
         function startAutoSlide(total) { slideInterval = setInterval(() => changeSlide(1, total), 5000); }
         function resetAutoSlide(total) { clearInterval(slideInterval); startAutoSlide(total); }
 
-        // Data loading halei (original) functions restored
+        // Data loading functions restored
         async function fetchNotifications() {
             const feed = document.getElementById('notificationFeedModal');
             if (!feed.innerHTML.trim()) feed.innerHTML = `<div class="text-center py-10"><span class="material-symbols-rounded animate-spin text-3xl text-primary mb-2">sync</span><p class="text-xs text-[#8e918f] uppercase tracking-widest">Loading Alerts...</p></div>`;
 
             try {
                 if (typeof _supabase === 'undefined') return;
-                const { data, error } = await _supabase.from('notifications').select('*').is('user_id', null).order('created_at', { ascending: false });
+                // Limit Notifications to 10 latest entries to speed up loading
+                const { data, error } = await _supabase.from('notifications').select('*').is('user_id', null).order('created_at', { ascending: false }).limit(10);
                 feed.innerHTML = '';
 
                 if (!data || data.length === 0) {
@@ -928,6 +929,7 @@
         async function loadStats() {
             if (typeof _supabase === 'undefined') return;
             try {
+                // Here "head: true" is used, so it's very optimized. It only gets the number, not the actual rows. No limit needed.
                 const { count: membersCount } = await _supabase.from('profiles').select('*', { count: 'exact', head: true });
                 document.getElementById('statMembers').innerText = (membersCount || 500) + '+';
                 const { count: eventsCount } = await _supabase.from('events').select('*', { count: 'exact', head: true });

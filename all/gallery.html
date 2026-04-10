@@ -18,6 +18,7 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         rel="stylesheet" />
 
+    <!-- Note: Production එකට දාද්දි Tailwind CLI පාවිච්චි කරන්න (Site speed එක වැඩි වෙන්න) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -60,7 +61,8 @@
 
     <style>
         body {
-            background-image: url('https://images.unsplash.com/photo-1550147760-44c9966d6bc7?q=80&w=2000&auto=format&fit=crop');
+            /* Optimized image quality and size for faster loading */
+            background-image: url('https://images.unsplash.com/photo-1550147760-44c9966d6bc7?q=60&w=1600&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -69,15 +71,15 @@
         .body-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(10, 21, 15, 0.6);
-            backdrop-filter: blur(10px);
+            background: rgba(10, 21, 15, 0.7); /* Slightly darkened to hide image noise */
+            backdrop-filter: blur(8px); /* Reduced blur for performance */
             z-index: -1;
         }
 
         .liquid-glass {
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            backdrop-filter: blur(12px); /* Reduced from 24px to prevent scroll lag on mobile */
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.05);
         }
@@ -328,9 +330,19 @@
                     <!-- Loading State -->
                     <div class="col-span-full py-32 text-center opacity-40">
                          <span class="material-symbols-rounded animate-spin text-4xl mb-2">sync</span>
-                         <p class="text-xs uppercase tracking-widest font-bold">Assembling Gallery Grid...</p>
+                         <p class="text-xs uppercase tracking-widest font-bold">පින්තූර ලබා ගනිමින්...</p>
                     </div>
                 </div>
+
+                <!-- Load More Button -->
+                <div id="loadMoreContainer" class="flex justify-center mt-12 hidden">
+                    <button onclick="loadMoreImages()" class="px-8 py-3 rounded-full bg-white/5 hover:bg-primary hover:text-black border border-white/10 transition-all font-bold text-sm tracking-wider uppercase backdrop-blur-md flex items-center gap-2 group">
+                        <span id="loadMoreSpinner" class="material-symbols-rounded animate-spin hidden">sync</span>
+                        <span class="material-symbols-rounded group-hover:translate-y-1 transition-transform">expand_more</span>
+                        Load More
+                    </button>
+                </div>
+
             </div>
         </div>
         <br>
@@ -631,36 +643,6 @@
             </div>
         </div>
 
-        <!-- Notification Modal -->
-        <div id="notificationModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog"
-            aria-modal="true">
-            <div class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 modal-backdrop"></div>
-            <div class="fixed inset-0 z-10 overflow-y-auto">
-                <div class="flex min-h-full items-center justify-center p-4 text-center">
-                    <div
-                        class="relative transform overflow-hidden rounded-[28px] bg-[#1E1E1E] border border-white/5 text-left shadow-2xl transition-all w-full max-w-xl scale-95 opacity-0 modal-panel flex flex-col max-h-[80vh]">
-                        <div
-                            class="bg-[#252529] px-6 py-4 border-b border-white/5 flex justify-between items-center shrink-0">
-                            <div class="flex items-center gap-2"><span
-                                    class="material-symbols-rounded text-primary">notifications_active</span>
-                                <h3 class="text-lg font-display font-bold text-[#E3E3E3]">Club Alerts</h3>
-                            </div>
-                            <button onclick="closeModal('notificationModal')"
-                                class="text-[#C4C7C5] hover:text-white transition"><span
-                                    class="material-symbols-rounded">close</span></button>
-                        </div>
-                        <div class="px-4 py-4 overflow-y-auto custom-scrollbar flex-grow" id="notificationFeedModal">
-                        </div>
-                        <div
-                            class="bg-[#252529] px-6 py-3 flex justify-between items-center border-t border-white/5 shrink-0 text-xs text-[#8e918f]">
-                            <span>Stay updated with latest news</span>
-                            <button onclick="closeModal('notificationModal')"
-                                class="rounded-full bg-[#353539] px-4 py-2 text-xs font-bold text-[#E3E3E3] hover:bg-[#45454a] transition">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </footer>
     </main>
 
@@ -691,48 +673,6 @@
             <button class="action-chip" onclick="shareImage()">
                 <span class="material-symbols-rounded text-sm">ios_share</span> Share
             </button>
-
-        </div>
-    </div>
-
-    <!-- Modals (Required) -->
-    <div id="privacyModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 modal-backdrop"></div>
-        <div class="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center p-4">
-            <div class="bg-[#252529] rounded-[28px] max-w-2xl w-full relative shadow-2xl border border-[#353539] transform scale-95 opacity-0 transition-all modal-panel flex flex-col max-h-[85vh]">
-                <div class="px-6 py-5 border-b border-[#353539] flex justify-between items-center bg-[#1E1E1E] rounded-t-[28px]">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-rounded text-primary">policy</span>
-                        <h3 class="text-lg font-display font-medium text-[#E3E3E3]">Privacy Policy</h3>
-                    </div>
-                    <button onclick="closeModal('privacyModal')" class="w-8 h-8 rounded-full hover:bg-[#353539] text-[#C4C7C5] flex items-center justify-center transition">
-                        <span class="material-symbols-rounded">close</span>
-                    </button>
-                </div>
-                <div class="px-6 py-6 text-[#C4C7C5] text-sm leading-relaxed overflow-y-auto custom-scrollbar">
-                    <p>Terms of Privacy policy go here...</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="termsModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 modal-backdrop"></div>
-        <div class="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center p-4">
-            <div class="bg-[#252529] rounded-[28px] max-w-2xl w-full relative shadow-2xl border border-[#353539] transform scale-95 opacity-0 transition-all modal-panel flex flex-col max-h-[85vh]">
-                <div class="px-6 py-5 border-b border-[#353539] flex justify-between items-center bg-[#1E1E1E] rounded-t-[28px]">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-rounded text-primary">gavel</span>
-                        <h3 class="text-lg font-display font-medium text-[#E3E3E3]">Terms of Service</h3>
-                    </div>
-                    <button onclick="closeModal('termsModal')" class="w-8 h-8 rounded-full hover:bg-[#353539] text-[#C4C7C5] flex items-center justify-center transition">
-                        <span class="material-symbols-rounded">close</span>
-                    </button>
-                </div>
-                <div class="px-6 py-6 text-[#C4C7C5] text-sm leading-relaxed overflow-y-auto custom-scrollbar">
-                    <p>Terms of service go here...</p>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -773,29 +713,88 @@
             setTimeout(() => { modal.classList.add('hidden'); }, 300);
         }
 
+        // --- NEW PAGINATION LOGIC ---
         let allImages = [];
         let currentIndex = 0;
+        let currentOffset = 0;
+        const ITEMS_PER_PAGE = 6; // පින්තූර 12 ගානෙ load වෙන්න හදලා තියෙන්නෙ
+        let isLoading = false;
 
-        async function loadGalleryImages() {
+        async function loadGalleryImages(isLoadMore = false) {
             if (typeof _supabase === 'undefined') return;
+            if (isLoading) return;
+
+            isLoading = true;
+            const grid = document.getElementById('galleryGrid');
+            const loadMoreBtnContainer = document.getElementById('loadMoreContainer');
+            const spinner = document.getElementById('loadMoreSpinner');
+
+            // මුලින්ම load වෙනකොට loading animation එක පෙන්වීම
+            if (!isLoadMore) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-32 text-center opacity-40">
+                         <span class="material-symbols-rounded animate-spin text-4xl mb-2">sync</span>
+                         <p class="text-xs uppercase tracking-widest font-bold">පින්තූර ලබා ගනිමින්...</p>
+                    </div>`;
+                currentOffset = 0;
+                allImages = [];
+            } else {
+                if(spinner) spinner.classList.remove('hidden');
+            }
+
             try {
-                const { data: slides, error } = await _supabase.from('hero_slides').select('id, image_url, created_at').order('created_at', { ascending: false });
+                // Supabase එකෙන් limit කරලා දත්ත ගන්න විදිය
+                const { data: slides, error, count } = await _supabase
+                    .from('hero_slides')
+                    .select('id, image_url, created_at', { count: 'exact' })
+                    .order('created_at', { ascending: false })
+                    .range(currentOffset, currentOffset + ITEMS_PER_PAGE - 1);
+
                 if (error) throw error;
-                
-                allImages = slides;
-                const grid = document.getElementById('galleryGrid');
-                grid.innerHTML = '';
-                
-                slides.forEach((slide, i) => {
-                    const item = `
-                        <div class="gallery-item" data-aos="zoom-in" data-aos-delay="${i * 50}" onclick="openLightbox(${i})">
-                            <img src="${slide.image_url}" alt="DMYSC Moment" loading="lazy">
-                        </div>`;
-                    grid.insertAdjacentHTML('beforeend', item);
-                });
-            } catch (err) { console.error(err); }
+
+                if (!isLoadMore) {
+                    grid.innerHTML = ''; // Loading animation එක අයින් කිරීම
+                }
+
+                if (slides && slides.length > 0) {
+                    slides.forEach((slide, i) => {
+                        const globalIndex = allImages.length;
+                        allImages.push(slide);
+
+                        const item = `
+                            <div class="gallery-item" data-aos="zoom-in" data-aos-delay="${(i % ITEMS_PER_PAGE) * 50}" onclick="openLightbox(${globalIndex})">
+                                <img src="${slide.image_url}" alt="DMYSC Moment" loading="lazy">
+                            </div>`;
+                        grid.insertAdjacentHTML('beforeend', item);
+                    });
+
+                    currentOffset += slides.length;
+
+                    // තවත් පින්තූර තියෙනවා නම් "Load More" button එක පෙන්නන්න
+                    if (count && currentOffset < count) {
+                        loadMoreBtnContainer.classList.remove('hidden');
+                    } else {
+                        loadMoreBtnContainer.classList.add('hidden');
+                    }
+                } else if (!isLoadMore) {
+                    grid.innerHTML = '<div class="col-span-full py-10 text-center text-white/50">පින්තූර නොමැත</div>';
+                    loadMoreBtnContainer.classList.add('hidden');
+                }
+
+            } catch (err) {
+                console.error(err);
+                if (!isLoadMore) grid.innerHTML = '<div class="col-span-full py-10 text-center text-red-400">පින්තූර ලබා ගැනීමේදී දෝෂයක් ඇති විය.</div>';
+            } finally {
+                isLoading = false;
+                if(spinner) spinner.classList.add('hidden');
+            }
         }
 
+        function loadMoreImages() {
+            loadGalleryImages(true);
+        }
+
+        // --- LIGHTBOX LOGIC ---
         function openLightbox(index) {
             currentIndex = index;
             const img = allImages[index];
@@ -805,7 +804,6 @@
             lb.classList.add('active');
             document.body.style.overflow = 'hidden';
             
-            // Deep linking
             const newUrl = new URL(window.location);
             newUrl.searchParams.set('photo', img.id);
             window.history.pushState({}, '', newUrl);
@@ -813,18 +811,18 @@
 
         function closeLightbox() {
             document.getElementById('lightbox').classList.remove('active');
-            document.getElementById('shareMenu').classList.remove('active');
             document.body.style.overflow = '';
             const newUrl = new URL(window.location);
             newUrl.searchParams.delete('photo');
             window.history.pushState({}, '', newUrl);
         }
 
-        function nextImage() { currentIndex = (currentIndex + 1) % allImages.length; openLightbox(currentIndex); }
-        function prevImage() { currentIndex = (currentIndex - 1 + allImages.length) % allImages.length; openLightbox(currentIndex); }
+        function navigateLightbox(direction) {
+            currentIndex = (currentIndex + direction + allImages.length) % allImages.length;
+            openLightbox(currentIndex);
+        }
 
         async function shareImage() {
-            const img = allImages[currentIndex];
             const shareData = {
                 title: 'DMYSC Gallery',
                 text: 'Check out this moment from Dream Makers Youth & Sports Club!',
@@ -832,26 +830,20 @@
             };
 
             if (navigator.share) {
-                // Native device share sheet (mobile/Android/iOS)
                 try {
                     await navigator.share(shareData);
                 } catch (e) {
                     if (e.name !== 'AbortError') {
-                        // User cancelled or error — fall back to copy link
-                        navigator.clipboard.writeText(window.location.href)
-                            .then(() => showShareToast('Link copied to clipboard!'))
-                            .catch(() => {});
+                        copyLink();
                     }
                 }
             } else {
-                // Desktop fallback: copy link + show toast
-                try {
-                    await navigator.clipboard.writeText(window.location.href);
-                    showShareToast('Link copied to clipboard!');
-                } catch (e) {
-                    showShareToast('Copy this link: ' + window.location.href);
-                }
+                copyLink();
             }
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => showShareToast('Link copied!'));
         }
 
         function showShareToast(msg) {
@@ -865,10 +857,6 @@
             toast.textContent = msg;
             requestAnimationFrame(() => { toast.style.opacity = '1'; toast.style.transform = 'translateX(-50%) translateY(0)'; });
             setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(-50%) translateY(10px)'; }, 2500);
-        }
-
-        function copyLink() {
-            navigator.clipboard.writeText(window.location.href).then(() => showShareToast('Link copied!'));
         }
 
         async function downloadImage() {
@@ -885,7 +873,6 @@
                     document.getElementById('footerPhone').textContent = data.phone || '+94 XX XXX XXXX';
                     document.getElementById('footerEmail').textContent = data.email || 'info@dmysc.lk';
 
-                    // Privacy Policy placeholders
                     const pEmail = document.getElementById('privacyEmail');
                     const pPhone = document.getElementById('privacyPhone');
                     if (pEmail) {
@@ -899,6 +886,7 @@
             } catch (err) { console.error(err); }
         }
 
+        // Initialize
         loadGalleryImages();
         loadFooterData();
     </script>
