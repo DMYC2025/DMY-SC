@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dmysc-v4';
+const CACHE_NAME = 'dmysc-v5';
 const ASSETS_TO_CACHE = [
     './?v=4',
     './index.html?v=4',
@@ -109,14 +109,24 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+    // API calls, Firebase, සහ Supabase requests cache කිරීමෙන් වළකින්න
+    if (event.request.method !== 'GET' || event.request.url.includes('supabase.co') || event.request.url.includes('firebase')) {
+        return;
+    }
+
     event.respondWith(
-        caches.match(event.request)
+        fetch(event.request)
             .then((response) => {
-                // Cache hit - return response
-                if (response) {
-                    return response;
-                }
-                return fetch(event.request);
+                // ඉන්ටර්නෙට් එකෙන් අලුත් ෆයිල් එක සාර්ථකව ගත්තොත්, Cache එකත් අලුත් කරනවා
+                const responseClone = response.clone();
+                caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, responseClone);
+                });
+                return response;
+            })
+            .catch(() => {
+                // ඉන්ටර්නෙට් නැත්නම් හෝ ෆේල් වුනොත් විතරක් Cache එකෙන් පෙන්නනවා
+                return caches.match(event.request);
             })
     );
 });
