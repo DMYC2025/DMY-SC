@@ -100,13 +100,15 @@
             position: fixed;
             inset: 0;
             background: rgba(10, 21, 15, 0.7);
-            backdrop-filter: blur(8px); /* Reduced blur for performance */
+            backdrop-filter: blur(8px);
+            /* Reduced blur for performance */
             z-index: -1;
         }
 
         .liquid-glass {
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px); /* Reduced from 24px to prevent scroll lag on mobile */
+            backdrop-filter: blur(12px);
+            /* Reduced from 24px to prevent scroll lag on mobile */
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.05);
@@ -226,7 +228,8 @@
 
                     <!-- Search Button -->
                     <button onclick="toggleSearch()" id="searchBtn"
-                        class="relative text-white/80 hover:text-white transition-all transform hover:scale-110 active:scale-95" aria-label="Search">
+                        class="relative text-white/80 hover:text-white transition-all transform hover:scale-110 active:scale-95"
+                        aria-label="Search">
                         <span class="material-symbols-rounded text-2xl md:text-3xl">search</span>
                     </button>
 
@@ -237,37 +240,53 @@
                             class="material-symbols-rounded text-2xl md:text-3xl group-hover:text-primary transition-colors">login</span>
                     </a>
                     <!-- Hamburger Button (Mobile only) -->
-                    <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="lg:hidden relative text-white/80 hover:text-white transition-all transform hover:scale-110 active:scale-95" aria-label="Toggle Menu">
+                    <button id="mobileMenuBtn" onclick="toggleMobileMenu()"
+                        class="lg:hidden relative text-white/80 hover:text-white transition-all transform hover:scale-110 active:scale-95"
+                        aria-label="Toggle Menu">
                         <span id="menuIconOpen" class="material-symbols-rounded text-2xl md:text-3xl">menu</span>
-                        <span id="menuIconClose" class="material-symbols-rounded text-2xl md:text-3xl hidden">close</span>
+                        <span id="menuIconClose"
+                            class="material-symbols-rounded text-2xl md:text-3xl hidden">close</span>
                     </button>
                 </div>
             </header>
 
             <!-- Mobile Navigation Panel (lg:hidden) -->
-            <div id="mobileNavPanel" class="lg:hidden overflow-hidden transition-all duration-300 ease-in-out" style="max-height:0;">
-                <nav class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[20px] p-4 mb-8 flex flex-col gap-1">
-                    <a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-primary bg-primary/10"><span class="material-symbols-rounded text-lg">home</span>Home</a>
-                    <a href="all/about.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span class="material-symbols-rounded text-lg">info</span>About</a>
-                    <a href="all/sport.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span class="material-symbols-rounded text-lg">sports_cricket</span>Sports</a>
-                    <a href="all/gallery.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span class="material-symbols-rounded text-lg">photo_library</span>Photos</a>
-                    <a href="all/event.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span class="material-symbols-rounded text-lg">event</span>Event</a>
+            <div id="mobileNavPanel" class="lg:hidden overflow-hidden transition-all duration-300 ease-in-out"
+                style="max-height:0;">
+                <nav
+                    class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[20px] p-4 mb-8 flex flex-col gap-1">
+                    <a href="index.html"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-primary bg-primary/10"><span
+                            class="material-symbols-rounded text-lg">home</span>Home</a>
+                    <a href="all/about.html"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span
+                            class="material-symbols-rounded text-lg">info</span>About</a>
+                    <a href="all/sport.html"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span
+                            class="material-symbols-rounded text-lg">sports_cricket</span>Sports</a>
+                    <a href="all/gallery.html"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span
+                            class="material-symbols-rounded text-lg">photo_library</span>Photos</a>
+                    <a href="all/event.html"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span
+                            class="material-symbols-rounded text-lg">event</span>Event</a>
                 </nav>
             </div>
 
             <!-- Search Panel (hidden by default) -->
             <div id="searchPanel" class="hidden mb-6">
-                <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[20px] p-4 flex items-center gap-3">
+                <div
+                    class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[20px] p-4 flex items-center gap-3">
                     <span class="material-symbols-rounded text-white/50 text-xl">search</span>
                     <input id="searchInput" type="text" placeholder="Search pages..."
                         class="flex-1 bg-transparent text-white placeholder-white/40 text-sm font-medium outline-none"
-                        oninput="handleSearch(this.value)"
-                        onkeydown="if(event.key==='Escape') toggleSearch()" />
+                        oninput="handleSearch(this.value)" onkeydown="if(event.key==='Escape') toggleSearch()" />
                     <button onclick="toggleSearch()" class="text-white/50 hover:text-white transition">
                         <span class="material-symbols-rounded text-xl">close</span>
                     </button>
                 </div>
-                <div id="searchResults" class="mt-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-[20px] overflow-hidden hidden">
+                <div id="searchResults"
+                    class="mt-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-[20px] overflow-hidden hidden">
                 </div>
             </div>
 
@@ -347,39 +366,59 @@
         </div>
 
         <!-- New Year Banner -->
-        <div class="w-full max-w-[1400px] mt-12 relative rounded-[32px] overflow-hidden group border border-primary/20 hover:border-primary/50 transition-all duration-500 shadow-2xl" data-aos="fade-up" data-aos-delay="300">
+        <div class="w-full max-w-[1400px] mt-12 relative rounded-[32px] overflow-hidden group border border-primary/20 hover:border-primary/50 transition-all duration-500 shadow-2xl"
+            data-aos="fade-up" data-aos-delay="300">
             <!-- Background Image Blended -->
-            <div class="absolute inset-0 bg-[url('spcial/2026%20avurudu/images/1.avif')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity duration-700 mix-blend-luminosity"></div>
+            <div class="absolute inset-0 bg-[url('spcial/2026%20avurudu/images/1.avif')] bg-cover bg-center"></div>
             <!-- Overlay Gradient -->
-            <div class="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent pointer-events-none"></div>
-            
+            <div
+                class="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent pointer-events-none">
+            </div>
+
             <div class="relative p-8 md:p-12 flex flex-col md:flex-row items-center justify-between z-10 gap-8">
                 <div class="flex-1">
                     <div class="flex items-center gap-2 text-primary mb-3">
                         <span class="material-symbols-rounded animate-pulse">celebration</span>
                         <span class="text-xs font-bold uppercase tracking-widest font-sans">Special Event</span>
                     </div>
-                    <h2 class="text-3xl md:text-5xl font-black mb-4 font-display text-white text-shadow-custom leading-tight">
+                    <h2
+                        class="text-3xl md:text-5xl font-black mb-4 font-display text-white text-shadow-custom leading-tight">
                         2026 අලුත් අවුරුදු <span class="text-primary block md:inline">නැකත්</span>
                     </h2>
                     <p class="text-sm md:text-base text-white/70 max-w-lg mb-6">
-                        Click here to view all auspicious times, rituals, and real-time countdowns for the upcoming Sinhala and Hindu New Year.
+                        Click here to view all auspicious times, rituals, and real-time countdowns for the upcoming
+                        Sinhala and Hindu New Year.
                     </p>
-                    <a href="spcial/2026 avurudu/index.html" class="inline-flex items-center gap-2 bg-primary text-black font-bold px-6 py-3 rounded-full hover:bg-white hover:text-black transition-colors transform hover:-translate-y-1">
+                    <a href="spcial/2026 avurudu/index.html"
+                        class="inline-flex items-center gap-2 bg-primary text-black font-bold px-6 py-3 rounded-full hover:bg-white hover:text-black transition-colors transform hover:-translate-y-1">
                         Explore Now
                         <span class="material-symbols-rounded text-lg">arrow_forward</span>
                     </a>
                 </div>
-                
+
                 <!-- Closest Nakatha (Dynamic) -->
-                <div class="shrink-0 bg-black/40 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-lg text-center min-w-[280px]">
-                    <span class="block text-[10px] text-white/60 uppercase tracking-widest mb-1 font-bold">Next Auspicious Time</span>
+                <div
+                    class="shrink-0 bg-black/40 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-lg text-center min-w-[280px]">
+                    <span class="block text-[10px] text-white/60 uppercase tracking-widest mb-1 font-bold">Next
+                        Auspicious Time</span>
                     <h3 class="text-xl font-bold text-white mb-4" id="homeNextNakathName">Loading...</h3>
                     <div class="flex justify-center gap-2" id="homeNextNakathTimer">
-                        <div class="bg-black/60 border border-primary/20 rounded-lg p-2 w-14"><div class="text-lg font-bold text-primary font-display" id="hn-days">00</div><div class="text-[8px] uppercase text-white/50">Days</div></div>
-                        <div class="bg-black/60 border border-primary/20 rounded-lg p-2 w-14"><div class="text-lg font-bold text-primary font-display" id="hn-hours">00</div><div class="text-[8px] uppercase text-white/50">Hours</div></div>
-                        <div class="bg-black/60 border border-primary/20 rounded-lg p-2 w-14"><div class="text-lg font-bold text-primary font-display" id="hn-mins">00</div><div class="text-[8px] uppercase text-white/50">Mins</div></div>
-                        <div class="bg-black/60 border border-primary/20 rounded-lg p-2 w-14"><div class="text-lg font-bold text-primary font-display" id="hn-secs">00</div><div class="text-[8px] uppercase text-white/50">Secs</div></div>
+                        <div class="bg-black/60 border border-primary/20 rounded-lg p-2 w-14">
+                            <div class="text-lg font-bold text-primary font-display" id="hn-days">00</div>
+                            <div class="text-[8px] uppercase text-white/50">Days</div>
+                        </div>
+                        <div class="bg-black/60 border border-primary/20 rounded-lg p-2 w-14">
+                            <div class="text-lg font-bold text-primary font-display" id="hn-hours">00</div>
+                            <div class="text-[8px] uppercase text-white/50">Hours</div>
+                        </div>
+                        <div class="bg-black/60 border border-primary/20 rounded-lg p-2 w-14">
+                            <div class="text-lg font-bold text-primary font-display" id="hn-mins">00</div>
+                            <div class="text-[8px] uppercase text-white/50">Mins</div>
+                        </div>
+                        <div class="bg-black/60 border border-primary/20 rounded-lg p-2 w-14">
+                            <div class="text-lg font-bold text-primary font-display" id="hn-secs">00</div>
+                            <div class="text-[8px] uppercase text-white/50">Secs</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -412,7 +451,7 @@
         </div>
         <br>
 
-    <!-- FOOTER START -->
+        <!-- FOOTER START -->
         <footer
             class="liquid-glass pt-12 pb-8 mt-auto z-30 font-sans relative overflow-hidden no-print w-full max-w-[1500px] rounded-[40px] mt-12">
 
@@ -564,7 +603,8 @@
                     </a>
                 </div>
 
-                <div class="border-t border-[#353539] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div
+                    class="border-t border-[#353539] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                     <p class="text-[#8e918f] text-xs text-center md:text-left">
                         &copy; <span id="year">2026</span> DMYSC. All rights reserved.
                     </p>
@@ -576,8 +616,10 @@
                     </div>
                 </div>
             </div>
+        </footer>
+    </main>
 
-            <!-- Privacy Policy Modal -->
+    <!-- Privacy Policy Modal -->
             <div id="privacyModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog"
                 aria-modal="true">
                 <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 modal-backdrop">
@@ -749,8 +791,33 @@
                     </div>
                 </div>
             </div>
-        </footer>
-    </main>
+
+    <!-- Ad Modal -->
+    <div id="adModal" class="fixed inset-0 z-[999] hidden" aria-labelledby="modal-title" role="dialog"
+        aria-modal="true">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md transition-opacity opacity-0 modal-backdrop"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center p-4">
+            <div
+                class="relative w-full max-w-sm sm:max-w-md transform scale-95 opacity-0 transition-all modal-panel bg-[#1E1E1E] rounded-[28px] overflow-hidden shadow-2xl border border-[#353539] flex flex-col items-center">
+                <div class="absolute top-4 left-4 z-20 bg-black/60 text-white/90 text-xs font-bold px-3 py-1 rounded-full border border-white/20 backdrop-blur-md">
+                    Closing in <span id="adTimer">30</span>s
+                </div>
+                <button onclick="closeModal('adModal')"
+                    class="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-black/50 text-white hover:bg-black flex items-center justify-center transition border border-white/20 hover:scale-110">
+                    <span class="material-symbols-rounded text-lg">close</span>
+                </button>
+                <img src="spcial/2026 avurudu/images/feed 4.jpg" alt="New Year Ad"
+                    class="w-full h-auto object-cover opacity-100">
+                <div class="p-6 w-full flex justify-center bg-[#1E1E1E]">
+                    <a href="spcial/2026 avurudu/index.html"
+                        class="inline-flex items-center justify-center w-full max-w-[200px] gap-2 bg-primary text-[#003915] font-bold px-6 py-3 rounded-full hover:bg-[#b1fcc5] transition-colors transform hover:-translate-y-1 shadow-[0_0_15px_rgba(28,215,96,0.2)]">
+                        Learn More
+                        <span class="material-symbols-rounded text-lg">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
@@ -836,6 +903,18 @@
                     setTimeout(() => {
                         preloader.classList.add('opacity-0');
                         setTimeout(() => { preloader.style.display = 'none'; }, 500);
+                        
+                        openModal('adModal');
+                        let timeLeft = 30;
+                        const timerEl = document.getElementById('adTimer');
+                        const adInterval = setInterval(() => {
+                            timeLeft--;
+                            if(timerEl) timerEl.innerText = timeLeft;
+                            if(timeLeft <= 0){
+                                clearInterval(adInterval);
+                                closeModal('adModal');
+                            }
+                        }, 1000);
                     }, 200);
                 } else {
                     percentage = Math.min(percentage + (Math.random() * 3 + 1), 100);
@@ -868,8 +947,9 @@
         }
 
         window.onclick = function (event) {
-            if (event.target.classList.contains('modal-backdrop')) {
-                closeModal(event.target.closest('[role="dialog"]').id);
+            const dialog = event.target.closest('[role="dialog"]');
+            if (dialog && !event.target.closest('.modal-panel')) {
+                closeModal(dialog.id);
             }
         }
 
@@ -1050,15 +1130,15 @@
                 { title: 'පැළ සිටුවීම', time: '2026-04-23T09:01:00+05:30' }
             ];
             const now = new Date();
-            const closest = nakathData.sort((a,b) => Date.parse(a.time) - Date.parse(b.time)).find(n => Date.parse(n.time) > now);
-            
+            const closest = nakathData.sort((a, b) => Date.parse(a.time) - Date.parse(b.time)).find(n => Date.parse(n.time) > now);
+
             const nameEl = document.getElementById('homeNextNakathName');
             const timerEl = document.getElementById('homeNextNakathTimer');
             if (nameEl) {
                 if (closest) {
                     nameEl.textContent = closest.title;
                     const total = Date.parse(closest.time) - Date.parse(now);
-                    if(total > 0) {
+                    if (total > 0) {
                         document.getElementById('hn-days').textContent = ('0' + Math.floor(total / (1000 * 60 * 60 * 24))).slice(-2);
                         document.getElementById('hn-hours').textContent = ('0' + Math.floor((total / (1000 * 60 * 60)) % 24)).slice(-2);
                         document.getElementById('hn-mins').textContent = ('0' + Math.floor((total / 1000 / 60) % 60)).slice(-2);
@@ -1068,7 +1148,7 @@
                     }
                 } else {
                     nameEl.textContent = "සියලුම නැකැත් අවසන්";
-                    if(timerEl) timerEl.style.display = 'none';
+                    if (timerEl) timerEl.style.display = 'none';
                 }
             }
         }
