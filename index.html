@@ -346,6 +346,45 @@
             </div>
         </div>
 
+        <!-- New Year Banner -->
+        <div class="w-full max-w-[1400px] mt-12 relative rounded-[32px] overflow-hidden group border border-primary/20 hover:border-primary/50 transition-all duration-500 shadow-2xl" data-aos="fade-up" data-aos-delay="300">
+            <!-- Background Image Blended -->
+            <div class="absolute inset-0 bg-[url('spcial/2026%20avurudu/images/1.avif')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity duration-700 mix-blend-luminosity"></div>
+            <!-- Overlay Gradient -->
+            <div class="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent pointer-events-none"></div>
+            
+            <div class="relative p-8 md:p-12 flex flex-col md:flex-row items-center justify-between z-10 gap-8">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 text-primary mb-3">
+                        <span class="material-symbols-rounded animate-pulse">celebration</span>
+                        <span class="text-xs font-bold uppercase tracking-widest font-sans">Special Event</span>
+                    </div>
+                    <h2 class="text-3xl md:text-5xl font-black mb-4 font-display text-white text-shadow-custom leading-tight">
+                        2026 අලුත් අවුරුදු <span class="text-primary block md:inline">නැකත්</span>
+                    </h2>
+                    <p class="text-sm md:text-base text-white/70 max-w-lg mb-6">
+                        Click here to view all auspicious times, rituals, and real-time countdowns for the upcoming Sinhala and Hindu New Year.
+                    </p>
+                    <a href="spcial/2026 avurudu/index.html" class="inline-flex items-center gap-2 bg-primary text-black font-bold px-6 py-3 rounded-full hover:bg-white hover:text-black transition-colors transform hover:-translate-y-1">
+                        Explore Now
+                        <span class="material-symbols-rounded text-lg">arrow_forward</span>
+                    </a>
+                </div>
+                
+                <!-- Closest Nakatha (Dynamic) -->
+                <div class="shrink-0 bg-black/40 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-lg text-center min-w-[280px]">
+                    <span class="block text-[10px] text-white/60 uppercase tracking-widest mb-1 font-bold">Next Auspicious Time</span>
+                    <h3 class="text-xl font-bold text-white mb-4" id="homeNextNakathName">Loading...</h3>
+                    <div class="flex justify-center gap-2" id="homeNextNakathTimer">
+                        <div class="bg-black/60 border border-primary/20 rounded-lg p-2 w-14"><div class="text-lg font-bold text-primary font-display" id="hn-days">00</div><div class="text-[8px] uppercase text-white/50">Days</div></div>
+                        <div class="bg-black/60 border border-primary/20 rounded-lg p-2 w-14"><div class="text-lg font-bold text-primary font-display" id="hn-hours">00</div><div class="text-[8px] uppercase text-white/50">Hours</div></div>
+                        <div class="bg-black/60 border border-primary/20 rounded-lg p-2 w-14"><div class="text-lg font-bold text-primary font-display" id="hn-mins">00</div><div class="text-[8px] uppercase text-white/50">Mins</div></div>
+                        <div class="bg-black/60 border border-primary/20 rounded-lg p-2 w-14"><div class="text-lg font-bold text-primary font-display" id="hn-secs">00</div><div class="text-[8px] uppercase text-white/50">Secs</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Stats Grid (Moved below the glass card to keep the template clean) -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 w-full max-w-[1400px] mt-12 px-4" data-aos="fade-up"
             data-aos-delay="600">
@@ -996,12 +1035,52 @@
             }
         }
 
+        // Home page Avurudu Nakath logic
+        function updateHomeNakath() {
+            const nakathData = [
+                { title: 'නව සඳ බැලීම', time: '2026-03-20T18:00:00+05:30' },
+                { title: 'තෙල් වළන් ලිප තැබීම', time: '2026-04-05T11:08:00+05:30' },
+                { title: 'පරණ අවුරුද්ද සඳහා ස්නානය', time: '2026-04-13T06:00:00+05:30' },
+                { title: 'පුණ්‍ය කාලය / නොනගතය', time: '2026-04-14T03:08:00+05:30' },
+                { title: 'අලුත් අවුරුදු උදාව', time: '2026-04-14T09:32:00+05:30' },
+                { title: 'ආහාර පිසීම හා ලිප ගිනි දැල්වීම', time: '2026-04-14T10:51:00+05:30' },
+                { title: 'වැඩ ඇල්ලීම, ගනුදෙනු කිරීම හා ආහාර අනුභවය', time: '2026-04-14T12:06:00+05:30' },
+                { title: 'හිසතෙල් ගෑම', time: '2026-04-15T06:55:00+05:30' },
+                { title: 'රැකියා සඳහා පිටත්ව යෑම', time: '2026-04-20T06:27:00+05:30' },
+                { title: 'පැළ සිටුවීම', time: '2026-04-23T09:01:00+05:30' }
+            ];
+            const now = new Date();
+            const closest = nakathData.sort((a,b) => Date.parse(a.time) - Date.parse(b.time)).find(n => Date.parse(n.time) > now);
+            
+            const nameEl = document.getElementById('homeNextNakathName');
+            const timerEl = document.getElementById('homeNextNakathTimer');
+            if (nameEl) {
+                if (closest) {
+                    nameEl.textContent = closest.title;
+                    const total = Date.parse(closest.time) - Date.parse(now);
+                    if(total > 0) {
+                        document.getElementById('hn-days').textContent = ('0' + Math.floor(total / (1000 * 60 * 60 * 24))).slice(-2);
+                        document.getElementById('hn-hours').textContent = ('0' + Math.floor((total / (1000 * 60 * 60)) % 24)).slice(-2);
+                        document.getElementById('hn-mins').textContent = ('0' + Math.floor((total / 1000 / 60) % 60)).slice(-2);
+                        document.getElementById('hn-secs').textContent = ('0' + Math.floor((total / 1000) % 60)).slice(-2);
+                    } else {
+                        setTimeout(updateHomeNakath, 1000);
+                    }
+                } else {
+                    nameEl.textContent = "සියලුම නැකැත් අවසන්";
+                    if(timerEl) timerEl.style.display = 'none';
+                }
+            }
+        }
+        setInterval(updateHomeNakath, 1000);
+
         // Init
         initSlideshow();
         loadStats();
         loadFooterData();
         checkBadge();
         checkAutoLogin();
+        updateHomeNakath();
     </script>
 </body>
 

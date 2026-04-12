@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="si" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 සිංහල සහ හින්දු අලුත් අවුරුදු - DMYSC</title>
+    <link rel="icon" type="image/png" href="../../assets/images/logo_1.png">    
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;600;800&family=Outfit:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../assets/js/supabase.js?v=5"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#1A0B09', // Warmer, traditional tone
+                        primary: '#FFB800', // Gold/Yellow for Avurudu vibe
+                        secondary: '#E8E4D5',
+                        tertiary: '#D13426', // Redish tone
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                        sinhala: ['"Noto Sans Sinhala"', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        body { background-color: #110705; }
+        @keyframes floatKaviliDiagonal {
+            0% { transform: translate(var(--start-x), var(--start-y)) rotate(0deg); opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity: 0; }
+        }
+        .anim-kavili {
+            position: absolute;
+            width: 70px;
+            left: 0; 
+            top: 0;
+            animation: floatKaviliDiagonal var(--k-dur) linear var(--k-delay) infinite;
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.6));
+            will-change: transform, opacity;
+            pointer-events: none;
+        }
+        #kawiliContainer {
+            transition: opacity 1s ease-in-out;
+            opacity: 1;
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        #kawiliContainer.hidden-sweets { opacity: 0; pointer-events: none; }
+
+        .liquid-glass {
+            background: rgba(40, 15, 10, 0.4);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 184, 0, 0.2);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255, 184, 0, 0.05);
+        }
+        .liquid-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .liquid-card:hover {
+            background: rgba(255, 184, 0, 0.08);
+            border: 1px solid rgba(255, 184, 0, 0.3);
+            transform: translateY(-5px);
+        }
+        .text-shadow-custom { text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8); }
+        .bg-slideshow {
+            position: fixed; inset: 0; z-index: -2;
+        }
+        .bg-slide {
+            position: absolute; inset: 0;
+            background-size: cover; background-position: center;
+            opacity: 0; transition: opacity 2s ease-in-out;
+            mix-blend-mode: luminosity;
+        }
+        .bg-slide.active { opacity: 0.4; }
+        .overlay {
+            position: fixed; inset: 0; z-index: -1;
+            background: radial-gradient(circle at center, transparent 0%, #110705 100%);
+        }
+        
+        .timer-box {
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,184,0,0.3);
+            border-radius: 12px; padding: 10px; min-width: 70px; text-align: center;
+        }
+        .timer-num { font-size: 1.5rem; font-weight: bold; color: #FFB800; font-family: 'Outfit'; }
+        .timer-label { font-size: 0.65rem; color: #E8E4D5; text-transform: uppercase; }
+        
+        /* Modal */
+        .modal-backdrop.active { opacity: 1; pointer-events: auto; }
+        .modal-panel.active { transform: scale(1); opacity: 1; }
+    </style>
+</head>
+<body class="text-[#E3E3E3] font-sinhala flex flex-col min-h-screen relative">
+    
+    <!-- Background Slideshow -->
+    <div class="bg-slideshow" id="bg-slideshow">
+        <div class="bg-slide active" style="background-image: url('images/1.avif')"></div>
+        <div class="bg-slide" style="background-image: url('images/2.avif')"></div>
+        <div class="bg-slide" style="background-image: url('images/3.avif')"></div>
+        <div class="bg-slide" style="background-image: url('images/4.avif')"></div>
+    </div>
+    <div class="overlay"></div>
+
+    <!-- Animated Elements -->
+    <div class="fixed top-[-10%] left-[-10%] w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-float pointer-events-none z-[-1]"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-96 h-96 bg-tertiary/20 rounded-full blur-[120px] animate-float-delayed pointer-events-none z-[-1]"></div>
+
+    <main class="relative min-h-screen flex flex-col items-center py-6 px-4 md:px-8 z-10 flex-grow w-full max-w-[1400px] mx-auto">
+        
+        <!-- Header -->
+        <header class="w-full flex justify-between items-center mb-8 relative z-[60]" data-aos="fade-down">
+            <a href="../../index.html" class="flex items-center gap-2 text-white/70 hover:text-primary transition group">
+                <span class="material-symbols-rounded group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                <span class="font-display font-bold uppercase tracking-wider text-sm hidden md:inline">Back to Home</span>
+            </a>
+            <div class="flex items-center gap-3">
+                <span class="text-xl md:text-2xl font-display font-black text-white tracking-[0.2em]">DM<span class="text-primary">YSC</span></span>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="kaviliToggle" class="w-10 h-10 rounded-full border border-primary/40 bg-primary/10 text-primary flex items-center justify-center hover:bg-primary/20 transition-colors shadow-[0_0_15px_rgba(255,184,0,0.2)] relative" title="Toggle Sweets Animation">
+                    <span class="material-symbols-rounded" id="kaviliIcon">pause</span>
+                </button>
+                <button id="langToggle" class="text-sm font-bold uppercase tracking-wider px-4 py-2 border border-white/20 rounded-full hover:bg-white/10 transition">English</button>
+            </div>
+        </header>
+
+        <!-- Main Banner -->
+        <div class="liquid-glass w-full rounded-[40px] p-8 md:p-14 flex flex-col items-center text-center relative mb-12" data-aos="fade-up">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-black mb-4 text-primary text-shadow-custom leading-tight" id="mainTitle">
+                සුභ අලුත් අවුරුද්දක් වේවා!
+            </h1>
+            <p class="text-lg md:text-xl text-white/80 max-w-2xl font-light mb-8" id="mainSubtitle">
+                2026 සිංහල සහ හින්දු අලුත් අවුරුදු නැකත් සීට්ටුව
+            </p>
+            
+            <!-- Banners Container -->
+            <div class="flex flex-col xl:flex-row gap-6 w-full max-w-5xl mt-4">
+                
+                <!-- Main Event Banner (New Year Dawn) -->
+                <div class="p-8 rounded-[32px] bg-gradient-to-br from-[#FEA31B]/20 to-black/60 border border-[#FEA31B]/50 shadow-[0_0_30px_rgba(254,163,27,0.2)] flex flex-col items-center justify-center w-full xl:w-1/2 relative overflow-hidden group hover:shadow-[0_0_50px_rgba(254,163,27,0.3)] transition-all duration-500 cursor-pointer" onclick="openModal('new_year')">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-[#FEA31B] opacity-20 rounded-full blur-[80px] pointer-events-none group-hover:opacity-40 transition-opacity duration-700"></div>
+                    <div class="flex items-center gap-2 mb-3 text-[#FEA31B] relative z-10">
+                        <span class="material-symbols-rounded animate-pulse text-2xl">festival</span>
+                        <span class="text-sm font-bold tracking-widest uppercase" id="mainEventLabel">අලුත් අවුරුදු උදාව</span>
+                    </div>
+                    <h3 class="text-3xl lg:text-4xl font-black mb-4 text-white relative z-10 text-shadow-custom text-center" id="mainEventName">Loading...</h3>
+                    
+                    <div class="flex gap-4 mb-4 relative z-10" id="nyCountdown">
+                        <div class="timer-box bg-white/5 border-[#FEA31B]/30"><div class="timer-num text-[#FEA31B]" id="ny-days">00</div><div class="timer-label text-white/50 lang-lbl-days">දින</div></div>
+                        <div class="timer-box bg-white/5 border-[#FEA31B]/30"><div class="timer-num text-[#FEA31B]" id="ny-hours">00</div><div class="timer-label text-white/50 lang-lbl-hours">පැය</div></div>
+                        <div class="timer-box bg-white/5 border-[#FEA31B]/30"><div class="timer-num text-[#FEA31B]" id="ny-mins">00</div><div class="timer-label text-white/50 lang-lbl-mins">මිනි</div></div>
+                        <div class="timer-box bg-white/5 border-[#FEA31B]/30"><div class="timer-num text-[#FEA31B]" id="ny-secs">00</div><div class="timer-label text-white/50 lang-lbl-secs">තත්</div></div>
+                    </div>
+
+                    <p class="text-sm text-white/70 relative z-10 font-bold max-w-sm text-center leading-relaxed" id="mainEventDesc">
+                        Loading...
+                    </p>
+                </div>
+
+                <!-- Closest Nakatha Banner -->
+                <div class="p-8 rounded-[32px] bg-black/40 border border-primary/30 shadow-[0_0_30px_rgba(255,184,0,0.15)] flex flex-col items-center justify-center w-full xl:w-1/2" id="closestNakathaBox">
+                    <div class="flex items-center gap-2 mb-4 text-primary">
+                        <span class="material-symbols-rounded animate-pulse">stars</span>
+                        <span class="text-sm font-bold tracking-widest uppercase" id="closestLabel">ළඟම එන නැකත</span>
+                    </div>
+                    <h3 class="text-2xl lg:text-3xl font-bold mb-6 text-white text-center" id="closestName">-</h3>
+                    
+                    <div class="flex gap-4 mb-2" id="closestCountdown">
+                        <div class="timer-box bg-white/5 border-white/10"><div class="timer-num text-white" id="c-days">00</div><div class="timer-label text-white/50" id="lbl-days">දින</div></div>
+                        <div class="timer-box bg-white/5 border-white/10"><div class="timer-num text-white" id="c-hours">00</div><div class="timer-label text-white/50" id="lbl-hours">පැය</div></div>
+                        <div class="timer-box bg-white/5 border-white/10"><div class="timer-num text-white" id="c-mins">00</div><div class="timer-label text-white/50" id="lbl-mins">මිනි</div></div>
+                        <div class="timer-box bg-white/5 border-white/10"><div class="timer-num text-white" id="c-secs">00</div><div class="timer-label text-white/50" id="lbl-secs">තත්</div></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Nakath Grid -->
+        <h2 class="text-2xl font-bold text-center mb-8 border-b border-white/10 pb-4 inline-block px-10" id="gridTitle">ඉදිරි නැකැත්</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mb-16" id="nakathGrid">
+            <!-- Dynamically Populated -->
+        </div>
+
+        <div id="completedSection" class="w-full hidden flex-col items-center mt-8">
+            <h2 class="text-xl font-bold text-center mb-8 border-b border-white/10 pb-4 inline-block px-10 text-white/50" id="completedTitle">ගෙවී ගිය නැකැත්</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500" id="completedGrid">
+                <!-- Dynamically Populated -->
+            </div>
+        </div>
+
+        <br>
+        <!-- FOOTER START -->
+        <footer class="liquid-glass pt-12 pb-8 mt-auto z-30 font-sans relative overflow-hidden no-print w-full max-w-[1500px] rounded-[40px] mt-12 mx-auto">
+            <div class="absolute top-0 left-1/4 w-64 h-64 bg-primary opacity-5 rounded-full blur-[100px] pointer-events-none"></div>
+            <div class="absolute bottom-0 right-1/4 w-64 h-64 bg-tertiary opacity-5 rounded-full blur-[100px] pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto px-6 relative z-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                    <div class="space-y-4 text-center md:text-left">
+                        <div class="flex items-center justify-center md:justify-start gap-3 mb-4">
+                            <img src="../../assets/images/logo_1.png" class="h-10 w-auto" alt="Logo">
+                            <div class="flex flex-col">
+                                <span class="text-lg font-display font-bold text-[#E3E3E3] tracking-tight uppercase">DMYSC</span>
+                                <span class="text-[10px] text-primary font-bold tracking-widest">EST 2025</span>
+                            </div>
+                        </div>
+                        <p class="text-[#C4C7C5] text-sm leading-relaxed font-light opacity-80">
+                            Empowering youth through sports, unity, and community service.
+                        </p>
+                        <div class="flex gap-3 pt-2 justify-center md:justify-start">
+                            <a href="https://www.facebook.com/profile.php?id=61585478932161" target="_blank" class="w-10 h-10 rounded-full bg-[#252529] border border-[#353539] flex items-center justify-center text-[#C4C7C5] hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition duration-300 group">
+                                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" /></svg>
+                            </a>
+                            <a href="https://whatsapp.com/channel/0029Vb7AQ1bEKyZKwmjeYt0F" target="_blank" class="w-10 h-10 rounded-full bg-[#252529] border border-[#353539] flex items-center justify-center text-[#C4C7C5] hover:bg-[#25D366] hover:text-white hover:border-[#25D366] transition duration-300">
+                                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" /></svg>
+                            </a>
+                            <a href="https://www.youtube.com/channel/UCbeh371G6OERp1zaAUMyuBQ" target="_blank" class="w-10 h-10 rounded-full bg-[#252529] border border-[#353539] flex items-center justify-center text-[#C4C7C5] hover:bg-[#FF0000] hover:text-white hover:border-[#FF0000] transition duration-300">
+                                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="hidden">
+                        <h4 class="text-[#E3E3E3] font-display font-bold uppercase tracking-wider mb-6 text-sm">Quick Links</h4>
+                        <ul class="space-y-3 text-sm text-[#C4C7C5]">
+                            <li><a href="../../index.html" class="hover:text-primary transition flex items-center gap-2 group"><span class="material-symbols-rounded text-sm text-[#353539] group-hover:text-primary transition">chevron_right</span> Dashboard</a></li>
+                            <li><a href="../../all/event.html" class="hover:text-primary transition flex items-center gap-2 group"><span class="material-symbols-rounded text-sm text-[#353539] group-hover:text-primary transition">chevron_right</span> Events</a></li>
+                            <li><a href="../../all/sport.html" class="hover:text-primary transition flex items-center gap-2 group"><span class="material-symbols-rounded text-sm text-[#353539] group-hover:text-primary transition">chevron_right</span> Sports Teams</a></li>
+                            <li><a href="../../all/about.html" class="hover:text-primary transition flex items-center gap-2 group"><span class="material-symbols-rounded text-sm text-[#353539] group-hover:text-primary transition">chevron_right</span> About Us</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="text-center md:text-left">
+                        <h4 class="text-[#E3E3E3] font-display font-bold uppercase tracking-wider mb-6 text-sm">Contact Us</h4>
+                        <ul class="space-y-4 text-sm text-[#C4C7C5]">
+                            <li class="flex items-start gap-3 justify-center md:justify-start">
+                                <span class="material-symbols-rounded text-primary text-lg mt-0.5">location_on</span>
+                                <span id="footerAddress" class="font-light">No. **/*, Dikhengama, Munagama</span>
+                            </li>
+                            <li class="flex items-center gap-3 justify-center md:justify-start">
+                                <span class="material-symbols-rounded text-primary text-lg">call</span>
+                                <span id="footerPhone" class="font-mono">+94 XX XXX XXXX</span>
+                            </li>
+                            <li class="flex items-center gap-3 justify-center md:justify-start">
+                                <span class="material-symbols-rounded text-primary text-lg">mail</span>
+                                <span id="footerEmail">info@dmysc.lk</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="text-center md:text-left">
+                        <h4 class="text-[#E3E3E3] font-display font-bold uppercase tracking-wider mb-6 text-sm">Partners</h4>
+                        <div class="flex flex-wrap gap-4 items-center justify-center md:justify-start">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/1200px-Flag_of_Sri_Lanka.svg.png" class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300" alt="SL Flag">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Emblem_of_Sri_Lanka.svg" class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300" alt="SL Emblem">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Western_Province_Flag_%28SRI_LANKA%29.png/330px-Western_Province_Flag_%28SRI_LANKA%29.png" class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300" alt="WP Flag">
+                            <img src="../../assets/images/119.png" class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300" alt="119">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-[#353539] bg-[#252529]/30 rounded-2xl p-4 mb-6 flex flex-col md:flex-row flex-wrap items-center justify-between gap-4 backdrop-blur-sm">
+                    <a href="https://dilnuka13.github.io/my/" target="_blank" rel="noreferrer" class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 hover:bg-white/10 transition cursor-pointer group">
+                        <span class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider group-hover:text-white transition">Developed by</span>
+                        <img src="https://dilnuka13.github.io/my/titlebar.png" class="h-5 w-auto object-contain" alt="Isara">
+                        <span class="text-[11px] font-bold text-[#E3E3E3] group-hover:text-primary transition leading-none">Isara Dilnuka</span>
+                    </a>
+                    <a href="https://gemini.google.com" target="_blank" rel="noreferrer" class="flex items-center gap-2 bg-white rounded-full px-4 py-1.5 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:scale-105 transition cursor-pointer">
+                        <span class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider group-hover:text-black transition">Co-piloted by</span>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Google_Gemini_logo_2025.svg/330px-Google_Gemini_logo_2025.svg.png" class="h-5 w-auto object-contain" alt="Gemini AI">
+                    </a>
+                    <a href="https://supabase.com/" target="_blank" rel="noreferrer" class="flex items-center gap-2 bg-white rounded-full px-4 py-1.5 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:scale-105 transition cursor-pointer">
+                        <span class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider group-hover:text-black transition">Powered by</span>
+                        <img src="https://wp.logos-download.com/wp-content/uploads/2023/02/Supabase_Logo.png?dl" class="h-5 w-auto object-contain" alt="Supabase">
+                    </a>
+                </div>
+
+                <div class="border-t border-[#353539] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="text-[#8e918f] text-xs text-center md:text-left">&copy; <span id="year">2026</span> DMYSC. All rights reserved.</p>
+                    <div class="flex gap-6 text-xs text-[#8e918f] font-medium">
+                        <button onclick="openFooterModal('privacyModal')" class="hover:text-[#E3E3E3] transition focus:outline-none">Privacy Policy</button>
+                        <button onclick="openFooterModal('termsModal')" class="hover:text-[#E3E3E3] transition focus:outline-none">Terms of Service</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Privacy Policy Modal -->
+            <div id="privacyModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 modal-backdrop" onclick="closeFooterModal('privacyModal')"></div>
+                <div class="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center p-4">
+                    <div class="bg-[#252529] rounded-[28px] max-w-2xl w-full relative shadow-2xl border border-[#353539] transform scale-95 opacity-0 transition-all modal-panel flex flex-col max-h-[85vh]">
+                        <div class="px-6 py-5 border-b border-[#353539] flex justify-between items-center bg-[#1E1E1E] rounded-t-[28px]">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-rounded text-primary">policy</span>
+                                <h3 class="text-lg font-display font-medium text-[#E3E3E3]">Privacy Policy</h3>
+                            </div>
+                            <button onclick="closeFooterModal('privacyModal')" class="w-8 h-8 rounded-full hover:bg-[#353539] text-[#C4C7C5] flex items-center justify-center transition">
+                                <span class="material-symbols-rounded">close</span>
+                            </button>
+                        </div>
+                        <div class="px-6 py-6 text-[#C4C7C5] text-sm leading-relaxed overflow-y-auto custom-scrollbar">
+                            <p class="mb-4 text-xs font-mono text-[#8e918f]">Last Updated: <span class="text-[#E3E3E3]">February 2026</span></p>
+                            <h4 class="text-[#E3E3E3] font-bold mb-2">1. Information We Collect</h4>
+                            <p class="mb-4">To provide our services at <strong>Dream Makers Youth & Sports Club (DMYSC)</strong>, we collect personal information, contact details, and membership data.</p>
+                            <h4 class="text-[#E3E3E3] font-bold mb-2">2. How We Use Your Data</h4>
+                            <p class="mb-4">Your data is strictly used for club administration purposes.</p>
+                            <h4 class="text-[#E3E3E3] font-bold mb-2">3. Data Sharing & Security</h4>
+                            <p class="mb-4">We prioritize your privacy. We <strong>do not</strong> sell or share your personal data with third-party advertisers.</p>
+                            <h4 class="text-[#E3E3E3] font-bold mb-2">4. Contact Us</h4>
+                            <p class="mb-4">If you have questions about your data, please contact us at <a href="mailto:info@dmysc.lk" id="privacyEmail" class="text-primary hover:underline">info@dmysc.lk</a> or call us at <strong id="privacyPhone">+94 XX XXX XXXX</strong>.</p>
+                        </div>
+                        <div class="px-6 py-4 flex justify-end border-t border-[#353539]">
+                            <button onclick="closeFooterModal('privacyModal')" class="px-6 py-2 rounded-full bg-primary text-[#003915] font-medium text-sm hover:bg-[#b1fcc5] transition">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terms of Service Modal -->
+            <div id="termsModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 modal-backdrop" onclick="closeFooterModal('termsModal')"></div>
+                <div class="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center p-4">
+                    <div class="bg-[#252529] rounded-[28px] max-w-2xl w-full relative shadow-2xl border border-[#353539] transform scale-95 opacity-0 transition-all modal-panel flex flex-col max-h-[85vh]">
+                        <div class="px-6 py-5 border-b border-[#353539] flex justify-between items-center bg-[#1E1E1E] rounded-t-[28px]">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-rounded text-primary">gavel</span>
+                                <h3 class="text-lg font-display font-medium text-[#E3E3E3]">Terms of Service</h3>
+                            </div>
+                            <button onclick="closeFooterModal('termsModal')" class="w-8 h-8 rounded-full hover:bg-[#353539] text-[#C4C7C5] flex items-center justify-center transition">
+                                <span class="material-symbols-rounded">close</span>
+                            </button>
+                        </div>
+                        <div class="px-6 py-6 text-[#C4C7C5] text-sm leading-relaxed overflow-y-auto custom-scrollbar">
+                            <p class="mb-4 text-xs font-mono text-[#8e918f]">Effective Date: <span class="text-[#E3E3E3]">February 2026</span></p>
+                            <h4 class="text-[#E3E3E3] font-bold mb-2">1. Acceptance of Terms</h4>
+                            <p class="mb-4">By accessing the DMYSC website or registering as a member, you agree to comply with the club's Constitution and these Terms of Service.</p>
+                            <h4 class="text-[#E3E3E3] font-bold mb-2">2. Membership Responsibilities</h4>
+                            <p class="mb-4">You agree to provide true information, pay fees on time, and uphold the spirit of sportsmanship and unity.</p>
+                        </div>
+                        <div class="px-6 py-4 flex justify-end border-t border-[#353539]">
+                            <button onclick="closeFooterModal('termsModal')" class="px-6 py-2 rounded-full bg-[#353539] text-[#E3E3E3] font-medium text-sm hover:bg-[#45454a] transition">I Agree</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Modal for Nakatha details -->
+    <div id="nakathaModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-md opacity-0 transition-opacity duration-300 modal-backdrop" onclick="closeModal()"></div>
+        <div class="bg-[#1A0B09] border border-primary/30 rounded-3xl p-6 md:p-8 max-w-md w-full relative z-10 scale-95 opacity-0 transition-all duration-300 transform modal-panel shadow-2xl">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-white/50 hover:text-white transition bg-black/40 rounded-full p-2">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+            <div class="text-primary mb-2 flex items-center gap-2">
+                <span class="material-symbols-rounded text-3xl" id="modalIcon">event</span>
+            </div>
+            <h3 class="text-2xl font-bold mb-1 text-white" id="modalTitle">Title</h3>
+            <p class="text-primary font-bold text-sm mb-4" id="modalTime">Date & Time</p>
+            
+            <div class="flex flex-wrap gap-2 mb-4 hidden" id="modalBadges"></div>
+            
+            <div class="bg-black/30 rounded-xl p-4 mb-6 border border-white/5">
+                <p class="text-white/80 text-sm leading-relaxed" id="modalDesc">Description</p>
+            </div>
+            
+            <div class="flex justify-center gap-3" id="modalCountdown">
+                <div class="timer-box"><div class="timer-num" id="m-days">00</div><div class="timer-label lang-lbl-days">දින</div></div>
+                <div class="timer-box"><div class="timer-num" id="m-hours">00</div><div class="timer-label lang-lbl-hours">පැය</div></div>
+                <div class="timer-box"><div class="timer-num" id="m-mins">00</div><div class="timer-label lang-lbl-mins">මිනි</div></div>
+                <div class="timer-box"><div class="timer-num" id="m-secs">00</div><div class="timer-label lang-lbl-secs">තත්</div></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ once: true, duration: 800 });
+
+        // Background blending
+        const slides = document.querySelectorAll('.bg-slide');
+        let currentSlide = 0;
+        setInterval(() => {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }, 5000);
+
+        // Nakath Data (Timezone: Sri Lanka +05:30)
+        const nakathData = [
+            {
+                id: 'new_moon',
+                time: '2026-03-20T18:00:00+05:30',
+                icon: 'dark_mode',
+                si: { 
+                    title: 'නව සඳ බැලීම', 
+                    desc: 'අභිනව චන්ද්‍ර වර්ෂය සඳහා මාර්තු මස 20 වන සිකුරාදා දින ද, අභිනව සූර්ය වර්ෂය සඳහා අප්‍රේල් මස 19 වන ඉරිදා දින ද, නව සඳ බැලීම මැනවි.'
+                },
+                en: { title: 'Viewing the New Moon', desc: 'Watch the new moon for the lunar year on March 20 (Friday) and for the solar year on April 19 (Sunday).' }
+            },
+            {
+                id: 'oil_pot',
+                time: '2026-04-05T11:08:00+05:30',
+                icon: 'local_fire_department',
+                si: { 
+                    title: 'තෙල් වළන් ලිප තැබීම', 
+                    desc: 'අප්‍රේල් මස 05 වන ඉරිදා දින පෙ.ව 11.08 ට රතු සහ කහ මිශ්‍ර හෝ තඹවන් පැහැයෙන් යුත් වස්ත්‍රයෙන් සැරසී දකුණු දිශාව බලා ලිප් බැඳ ගිනි මොළවා තෙල්වළං ලිප තබා අවුරුදු කැවිලි වර්ග පිස ගැනීම මැනවි.',
+                    color: 'රතු සහ කහ මිශ්‍ර හෝ තඹවන් පැහැය',
+                    direction: 'දකුණු දිශාව (South)'
+                },
+                en: { 
+                    title: 'Placing the Oil Pot', 
+                    desc: 'On April 05 (Sunday) at 11:08 AM, face South wearing red and yellow mixed or copper color clothes to light the hearth and prepare the oil pot for sweets.',
+                    color: 'Red & Yellow / Copper',
+                    direction: 'South'
+                }
+            },
+            {
+                id: 'old_year_bath',
+                time: '2026-04-13T06:00:00+05:30',
+                icon: 'shower',
+                si: { 
+                    title: 'පරණ අවුරුද්ද සඳහා ස්නානය', 
+                    desc: 'අප්‍රේල් මස 13 වන සඳුදා දින දිවුල්පත් යුෂ මිශ්‍ර නානු ගා ස්නානය කොට ඉෂ්ට දේවතා අනුස්මරණයෙහි යෙදී වාසය මැනවි.',
+                    medicine: 'දිවුල්පත් යුෂ මිශ්‍ර නානු'
+                },
+                en: { 
+                    title: 'Bathing for the Old Year', 
+                    desc: 'On April 13 (Monday), bathe with Nanu mixed with wood apple leaf juice and engage in religious activities.',
+                    medicine: 'Wood Apple leaf Nanu'
+                }
+            },
+            {
+                id: 'nonagathaya',
+                time: '2026-04-14T03:08:00+05:30', 
+                icon: 'do_not_disturb_on',
+                si: { 
+                    title: 'පුණ්‍ය කාලය / නොනගතය', 
+                    desc: 'අප්‍රේල් මස 14 වන අඟහරුවාදා පෙ.ව. 03.08 සිට ප.ව. 03.56 දක්වා පුණ්ය කාලය බැවින් ඊට පළමුව ආහාර පාන ගෙන සියලු වැඩ අතහැර ආගමික වතාවත් වල නිරත වන්න.' 
+                },
+                en: { 
+                    title: 'Punya Kalaya (Nonagathaya)', 
+                    desc: 'April 14 (Tuesday), 3:08 AM to 3:56 PM. Stop all work and engage in religious activities.' 
+                }
+            },
+            {
+                id: 'new_year',
+                time: '2026-04-14T09:32:00+05:30',
+                icon: 'calendar_month',
+                si: { 
+                    title: 'අලුත් අවුරුදු උදාව', 
+                    desc: 'අප්‍රේල් මස 14 වන අඟහරුවාදා දින පෙ.ව. 09.32 ට සිංහල අලුත් අවුරුද්ද උදාවෙයි.' 
+                },
+                en: { 
+                    title: 'New Year Dawn', 
+                    desc: 'The New Year dawns on April 14 (Tuesday) at 9:32 AM.' 
+                }
+            },
+            {
+                id: 'cooking',
+                time: '2026-04-14T10:51:00+05:30',
+                icon: 'outdoor_grill',
+                si: { 
+                    title: 'ආහාර පිසීම හා ලිප ගිනි දැල්වීම', 
+                    desc: 'අප්‍රේල් මස 14 වන අඟහරුවාදා පෙ.ව. 10.51 ට රක්ත වර්ණ වස්ත්‍රාභරණයෙන් සැරසී දකුණු දිශාව බලා ලිප් බැඳ ගිනි මොළවා කිරි බතක් ද කැවිලි වර්ගයක් ද දීකිරි සහ විලඳ ද පිළියෙල කරගැනීම මැනවි.',
+                    color: 'රක්ත වර්ණය (රතු)',
+                    direction: 'දකුණු දිශාව (South)',
+                    food: 'කිරිබත් ද කැවිලි වර්ගයක් ද දීකිරි සහ විලඳ'
+                },
+                en: { 
+                    title: 'Cooking Ritual', 
+                    desc: 'Begin cooking milk rice and sweets on April 14 at 10:51 AM.',
+                    color: 'Red (Raktha)',
+                    direction: 'South',
+                    food: 'Milk Rice, Sweets, Curd, Parched Rice'
+                }
+            },
+            {
+                id: 'work_eat',
+                time: '2026-04-14T12:06:00+05:30',
+                icon: 'handshake',
+                si: { 
+                    title: 'වැඩ ඇල්ලීම, ගනුදෙනු කිරීම හා ආහාර අනුභවය', 
+                    desc: 'අප්‍රේල් මස 14 වන අඟහරුවාදා ප.ව. 12.06 ට රක්ත වර්ණ වස්ත්‍රාභරණයෙන් සැරසී දකුණු දිශාව බලා සියලු වැඩ අල්ලා ගනුදෙනු කොට ආහාර අනුභව කිරීම මැනවි.',
+                    color: 'රක්ත වර්ණය (රතු)',
+                    direction: 'දකුණු දිශාව (South)'
+                },
+                en: { 
+                    title: 'Work, Transactions & Eating', 
+                    desc: 'Start work, make transactions, and enjoy the meal on April 14 at 12:06 PM.',
+                    color: 'Red (Raktha)',
+                    direction: 'South'
+                }
+            },
+            {
+                id: 'oil',
+                time: '2026-04-15T06:55:00+05:30',
+                icon: 'spa',
+                si: { 
+                    title: 'හිසතෙල් ගෑම', 
+                    desc: 'අප්‍රේල් මස 15 වන බදාදා පෙ.ව. 6.55 ට පච්ච වර්ණ හෙවත් කොළ පැහැති වස්ත්‍රාභරණයෙන් සැරසී නැගෙනහිර දිශාව බලා කොහොඹපත් යුෂ මිශ්‍ර නානු හා තෙල් ගා ස්නානය කිරීම මැනවි.',
+                    color: 'පච්ච වර්ණය (කොළ පැහැය)',
+                    direction: 'නැගෙනහිර දිශාව (East)',
+                    medicine: 'කොහොඹ පත් හා කොලොන් පත්'
+                },
+                en: { 
+                    title: 'Anointing Medical Oil', 
+                    desc: 'Anoint medicinal oil and bathe on April 15 (Wednesday) at 6:55 AM.',
+                    color: 'Green (Pachcha)',
+                    direction: 'East',
+                    medicine: 'Kohomba & Kolon Leaves'
+                }
+            },
+            {
+                id: 'work_leave',
+                time: '2026-04-20T06:27:00+05:30',
+                icon: 'directions_walk',
+                si: { 
+                    title: 'රැකී රක්ෂා සඳහා පිටත්ව යෑම', 
+                    desc: 'අප්‍රේල් 20 වන සඳුදා පෙ.ව. 06.27 ට ශ්වේත වර්ණ වස්ත්‍රාභරණයෙන් සැරසී කිරිබතක් ද, එළකිරි මිශ්‍ර කැවිලි වර්ගයක් ද අනුභව කර දකුණු දිශාව බලා හෝ, පෙ.ව. 06.50 ට මුතු හා ශ්වේත වර්ණ වස්ත්‍රාභරණයෙන් සැරසී නැගෙනහිර දිශාව බලා පිටත්ව යෑම මැනවි.',
+                    color: 'ශ්වේත වර්ණය (සුදු)',
+                    direction: 'දකුණු (South) හෝ නැගෙනහිර (East)',
+                    food: 'කිරිබත් හා එළකිරි මිශ්‍ර කැවිලි'
+                },
+                en: { 
+                    title: 'Leaving for Work', 
+                    desc: 'Leave for work facing South (6:27 AM) or East (6:50 AM) wearing white colored clothes on April 20.',
+                    color: 'White',
+                    direction: 'South or East',
+                    food: 'Milk Rice & Sweets'
+                }
+            },
+            {
+                id: 'planting',
+                time: '2026-04-23T09:01:00+05:30',
+                icon: 'nature',
+                si: { 
+                    title: 'පැළ සිටුවීම', 
+                    desc: 'අප්‍රේල් මස 23 වන බ්‍රහස්පතින්දා පෙ.ව. 09.01 ට රන්වන් පැහැති වස්ත්‍රාභරණයෙන් සැරසී උතුරු දිශාව බලා පැළ සිටුවීම මැනවි.',
+                    color: 'රන්වන් පැහැය (Gold)',
+                    direction: 'උතුරු දිශාව (North)'
+                },
+                en: { 
+                    title: 'Planting', 
+                    desc: 'Plant a sapling facing North wearing gold-colored clothes on April 23 (Thursday) at 09:01 AM.',
+                    color: 'Gold',
+                    direction: 'North'
+                }
+            }
+        ];
+
+        let currentLang = 'si';
+        const langToggle = document.getElementById('langToggle');
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'si' ? 'en' : 'si';
+            langToggle.textContent = currentLang === 'si' ? 'English' : 'සිංහල';
+            renderContent();
+        });
+
+        function renderContent() {
+            // Update Headers
+            document.getElementById('mainTitle').textContent = currentLang === 'si' ? 'සුභ අලුත් අවුරුද්දක් වේවා!' : 'Happy New Year!';
+            document.getElementById('mainSubtitle').textContent = currentLang === 'si' ? '2026 සිංහල සහ හින්දු අලුත් අවුරුදු නැකත් සීට්ටුව' : '2026 Sinhala & Tamil New Year Auspicious Times';
+            document.getElementById('gridTitle').textContent = currentLang === 'si' ? 'ඉදිරි නැකැත්' : 'Upcoming Auspicious Times';
+            document.getElementById('completedTitle').textContent = currentLang === 'si' ? 'ගෙවී ගිය නැකැත්' : 'Completed Auspicious Times';
+            document.getElementById('closestLabel').textContent = currentLang === 'si' ? 'ළඟම එන නැකත' : 'Next Auspicious Time';
+            
+            const nyData = nakathData.find(n => n.id === 'new_year');
+            if(nyData) {
+                document.getElementById('mainEventLabel').textContent = nyData[currentLang].title;
+                document.getElementById('mainEventName').textContent = parseTime(nyData.time);
+                
+                const isPassed = Date.parse(nyData.time) <= Date.now();
+                if(isPassed) {
+                    document.getElementById('mainEventDesc').textContent = currentLang === 'si' ? "නව වසර උදා විය! සුභ අලුත් අවුරුද්දක් වේවා!" : "The New Year has dawned! Happy New Year!";
+                } else {
+                    document.getElementById('mainEventDesc').textContent = nyData[currentLang].desc;
+                }
+            }
+
+            // Update Labels
+            const dayLbls = document.querySelectorAll('#lbl-days, .lang-lbl-days');
+            const hrLbls = document.querySelectorAll('#lbl-hours, .lang-lbl-hours');
+            const minLbls = document.querySelectorAll('#lbl-mins, .lang-lbl-mins');
+            const secLbls = document.querySelectorAll('#lbl-secs, .lang-lbl-secs');
+            
+            dayLbls.forEach(el => el.textContent = currentLang === 'si' ? 'දින' : 'Days');
+            hrLbls.forEach(el => el.textContent = currentLang === 'si' ? 'පැය' : 'Hours');
+            minLbls.forEach(el => el.textContent = currentLang === 'si' ? 'මිනි' : 'Mins');
+            secLbls.forEach(el => el.textContent = currentLang === 'si' ? 'තත්' : 'Secs');
+
+            renderGrid();
+            updateClosestNakatha();
+            if (activeModalId) {
+                openModal(activeModalId); // trigger update
+            }
+        }
+
+        function parseTime(iso) {
+            const d = new Date(iso);
+            const formatted = d.toLocaleDateString(currentLang === 'si' ? 'si-LK' : 'en-US', {
+                month: 'short', day: 'numeric', weekday: 'short',
+                hour: 'numeric', minute: '2-digit'
+            });
+            return formatted;
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('nakathGrid');
+            const compGrid = document.getElementById('completedGrid');
+            const compSection = document.getElementById('completedSection');
+            grid.innerHTML = '';
+            compGrid.innerHTML = '';
+            
+            let hasCompleted = false;
+            let activeCount = 0;
+            let compCount = 0;
+
+            nakathData.forEach((n, idx) => {
+                const title = n[currentLang].title;
+                const timeStr = parseTime(n.time);
+                
+                const isCompleted = Date.parse(n.time) <= Date.now();
+                
+                const card = document.createElement('div');
+                card.className = "liquid-card rounded-[32px] p-6 cursor-pointer flex flex-col relative overflow-hidden group hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-300 border border-white/5 hover:border-primary/30";
+                card.setAttribute('data-aos', 'fade-up');
+                card.setAttribute('data-aos-delay', ((isCompleted ? compCount : activeCount) * 100).toString());
+                card.onclick = () => openModal(n.id);
+                
+                let completedBadge = isCompleted ? `<span class="absolute top-4 right-4 bg-white/10 text-white/50 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider z-10">${currentLang === 'si' ? 'අවසන්' : 'Past'}</span>` : '';
+
+                const langData = n[currentLang];
+                const LBL = { si: { color: 'වර්ණය', direction: 'දිශාව', food: 'ආහාර', medicine: 'ඖෂධ / නානු' }, en: { color: 'Color', direction: 'Direction', food: 'Food', medicine: 'Medicine / Nanu' } };
+                let badgesHTML = '';
+                if(langData.color || langData.direction || langData.food || langData.medicine) {
+                    badgesHTML += `<div class="flex flex-col gap-2 w-full mt-5 pt-5 border-t border-white/5">`;
+                    if(langData.color) badgesHTML += `<div class="flex items-start gap-2 text-xs"><span class="material-symbols-rounded text-[14px] text-orange-400 mt-0.5 opacity-80 group-hover:opacity-100 transition-opacity">palette</span> <span class="text-white/70"><strong class="text-white/40 block text-[9px] uppercase tracking-wider mb-0.5">${LBL[currentLang].color}</strong>${langData.color}</span></div>`;
+                    if(langData.direction) badgesHTML += `<div class="flex items-start gap-2 text-xs"><span class="material-symbols-rounded text-[14px] text-blue-400 mt-0.5 opacity-80 group-hover:opacity-100 transition-opacity">explore</span> <span class="text-white/70"><strong class="text-white/40 block text-[9px] uppercase tracking-wider mb-0.5">${LBL[currentLang].direction}</strong>${langData.direction}</span></div>`;
+                    if(langData.food) badgesHTML += `<div class="flex items-start gap-2 text-xs"><span class="material-symbols-rounded text-[14px] text-green-400 mt-0.5 opacity-80 group-hover:opacity-100 transition-opacity">restaurant</span> <span class="text-white/70"><strong class="text-white/40 block text-[9px] uppercase tracking-wider mb-0.5">${LBL[currentLang].food}</strong>${langData.food}</span></div>`;
+                    if(langData.medicine) badgesHTML += `<div class="flex items-start gap-2 text-xs"><span class="material-symbols-rounded text-[14px] text-pink-400 mt-0.5 opacity-80 group-hover:opacity-100 transition-opacity">healing</span> <span class="text-white/70"><strong class="text-white/40 block text-[9px] uppercase tracking-wider mb-0.5">${LBL[currentLang].medicine}</strong>${langData.medicine}</span></div>`;
+                    badgesHTML += `</div>`;
+                }
+
+                card.innerHTML = `
+                    ${completedBadge}
+                    <div class="absolute -top-12 -right-12 w-32 h-32 bg-primary/10 rounded-full blur-[40px] group-hover:bg-primary/20 transition-colors pointer-events-none"></div>
+                    <div class="flex flex-col items-center text-center relative z-10 w-full mb-1">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-white/5 to-white/0 border border-white/10 flex items-center justify-center text-primary mb-4 shadow-lg group-hover:scale-110 group-hover:border-primary/30 transition-all duration-500">
+                            <span class="material-symbols-rounded text-[32px]">${n.icon}</span>
+                        </div>
+                        <h3 class="font-bold text-xl text-white mb-3 group-hover:text-primary transition-colors leading-snug">${title}</h3>
+                        <p class="text-[11px] text-primary bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20 uppercase tracking-widest font-bold">${timeStr}</p>
+                    </div>
+                    ${badgesHTML}
+                `;
+
+                if(isCompleted) {
+                    hasCompleted = true;
+                    compGrid.appendChild(card);
+                    compCount++;
+                } else {
+                    grid.appendChild(card);
+                    activeCount++;
+                }
+            });
+
+            if(hasCompleted) {
+                compSection.classList.remove('hidden');
+                compSection.classList.add('flex');
+            } else {
+                compSection.classList.add('hidden');
+                compSection.classList.remove('flex');
+            }
+
+            if(activeCount === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center text-white/50 text-xl font-bold py-10" id="noActiveLabel">${currentLang === 'si' ? 'සියලු නැකැත් ගෙවී අවසන්!' : 'All auspicious times have passed!'}</div>`;
+            }
+        }
+
+        // Countdown Logic
+        function getTimeRemaining(endtime) {
+            const total = Date.parse(endtime) - Date.parse(new Date());
+            const seconds = Math.floor((total / 1000) % 60);
+            const minutes = Math.floor((total / 1000 / 60) % 60);
+            const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+            const days = Math.floor(total / (1000 * 60 * 60 * 24));
+            return { total, days, hours, minutes, seconds };
+        }
+
+        let closestNakatha = null;
+        let activeModalId = null;
+
+        function updateClosestNakatha() {
+            const now = new Date();
+            // Find the first nakatha that is in the future
+            closestNakatha = nakathData.sort((a,b) => Date.parse(a.time) - Date.parse(b.time))
+                                       .find(n => Date.parse(n.time) > now);
+            
+            const closestNameEl = document.getElementById('closestName');
+            if (closestNakatha) {
+                closestNameEl.textContent = closestNakatha[currentLang].title;
+            } else {
+                closestNameEl.textContent = currentLang === 'si' ? "සියලුම නැකැත් අවසන්" : "All times passed";
+                document.getElementById('closestCountdown').style.display = 'none';
+            }
+        }
+        let fireworksInterval = null;
+
+        function updateCountdowns() {
+            const nyData = nakathData.find(n => n.id === 'new_year');
+            if(nyData) {
+                const nyT = getTimeRemaining(nyData.time);
+                const nyCd = document.getElementById('nyCountdown');
+                if (nyT.total > 0) {
+                    if(nyCd) nyCd.style.display = 'flex';
+                    document.getElementById('ny-days').textContent = ('0' + nyT.days).slice(-2);
+                    document.getElementById('ny-hours').textContent = ('0' + nyT.hours).slice(-2);
+                    document.getElementById('ny-mins').textContent = ('0' + nyT.minutes).slice(-2);
+                    document.getElementById('ny-secs').textContent = ('0' + nyT.seconds).slice(-2);
+                } else {
+                    if(nyCd) nyCd.style.display = 'none';
+                    const descEl = document.getElementById('mainEventDesc');
+                    descEl.textContent = currentLang === 'si' ? "නව වසර උදා විය! සුභ අලුත් අවුරුද්දක් වේවා!" : "The New Year has dawned! Happy New Year!";
+                    descEl.classList.remove('text-white/70', 'text-sm');
+                    descEl.classList.add('text-xl', 'text-[#FEA31B]', 'animate-pulse');
+                    
+                    if(!fireworksInterval && typeof confetti !== 'undefined') {
+                        var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 99 };
+                        function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+                        
+                        fireworksInterval = setInterval(function() {
+                            confetti(Object.assign({}, defaults, { 
+                                particleCount: 50, 
+                                origin: { x: randomInRange(0.1, 0.9), y: randomInRange(0.1, 0.5) },
+                                colors: ['#FEA31B', '#ff0000', '#ffffff', '#00ff00', '#ffff00']
+                            }));
+                        }, 800);
+                    }
+                }
+            }
+
+            if (closestNakatha) {
+                const t = getTimeRemaining(closestNakatha.time);
+                if (t.total > 0) {
+                    document.getElementById('c-days').textContent = ('0' + t.days).slice(-2);
+                    document.getElementById('c-hours').textContent = ('0' + t.hours).slice(-2);
+                    document.getElementById('c-mins').textContent = ('0' + t.minutes).slice(-2);
+                    document.getElementById('c-secs').textContent = ('0' + t.seconds).slice(-2);
+                } else {
+                    updateClosestNakatha(); // Recalculate
+                }
+            }
+
+            if (activeModalId) {
+                const data = nakathData.find(n => n.id === activeModalId);
+                if (data) {
+                    const t = getTimeRemaining(data.time);
+                    if (t.total > 0) {
+                        document.getElementById('m-days').textContent = ('0' + t.days).slice(-2);
+                        document.getElementById('m-hours').textContent = ('0' + t.hours).slice(-2);
+                        document.getElementById('m-mins').textContent = ('0' + t.minutes).slice(-2);
+                        document.getElementById('m-secs').textContent = ('0' + t.seconds).slice(-2);
+                    } else {
+                        document.getElementById('m-days').textContent = '00';
+                        document.getElementById('m-hours').textContent = '00';
+                        document.getElementById('m-mins').textContent = '00';
+                        document.getElementById('m-secs').textContent = '00';
+                    }
+                }
+            }
+        }
+
+        setInterval(updateCountdowns, 1000);
+
+        // Modal Control
+        const modal = document.getElementById('nakathaModal');
+        function openModal(id) {
+            activeModalId = id;
+            const data = nakathData.find(n => n.id === id);
+            if (!data) return;
+
+            document.getElementById('modalTitle').textContent = data[currentLang].title;
+            document.getElementById('modalDesc').textContent = data[currentLang].desc;
+            document.getElementById('modalTime').textContent = parseTime(data.time);
+            document.getElementById('modalIcon').textContent = data.icon;
+            
+            const badgesContainer = document.getElementById('modalBadges');
+            badgesContainer.innerHTML = '';
+            
+            const langData = data[currentLang];
+            const LBL = { 
+                si: { color: 'වර්ණය', direction: 'දිශාව', food: 'ආහාර', medicine: 'ඖෂධ / නානු' },
+                en: { color: 'Color', direction: 'Direction', food: 'Food', medicine: 'Medicine / Nanu' }
+            };
+
+            if(langData.color || langData.direction || langData.food || langData.medicine) {
+                badgesContainer.classList.remove('hidden');
+                badgesContainer.classList.add('flex');
+                if(langData.color) badgesContainer.innerHTML += `<div class="px-3 py-1.5 rounded-xl bg-orange-900/40 border border-orange-500/20 text-xs text-orange-200 flex items-center gap-1.5 shadow-inner"><span class="material-symbols-rounded text-[16px]">palette</span> ${LBL[currentLang].color}: ${langData.color}</div>`;
+                if(langData.direction) badgesContainer.innerHTML += `<div class="px-3 py-1.5 rounded-xl bg-blue-900/40 border border-blue-500/20 text-xs text-blue-200 flex items-center gap-1.5 shadow-inner"><span class="material-symbols-rounded text-[16px]">explore</span> ${LBL[currentLang].direction}: ${langData.direction}</div>`;
+                if(langData.food) badgesContainer.innerHTML += `<div class="px-3 py-1.5 rounded-xl bg-green-900/40 border border-green-500/20 text-xs text-green-200 flex items-center gap-1.5 shadow-inner"><span class="material-symbols-rounded text-[16px]">restaurant</span> ${LBL[currentLang].food}: ${langData.food}</div>`;
+                if(langData.medicine) badgesContainer.innerHTML += `<div class="px-3 py-1.5 rounded-xl bg-pink-900/40 border border-pink-500/20 text-xs text-pink-200 flex items-center gap-1.5 shadow-inner"><span class="material-symbols-rounded text-[16px]">healing</span> ${LBL[currentLang].medicine}: ${langData.medicine}</div>`;
+            } else {
+                badgesContainer.classList.add('hidden');
+                badgesContainer.classList.remove('flex');
+            }
+            
+            updateCountdowns(); // Initial immediate update
+            
+            modal.classList.remove('hidden');
+            // Small delay to allow display:block to apply before transition
+            setTimeout(() => {
+                modal.querySelector('.modal-backdrop').classList.add('active');
+                modal.querySelector('.modal-panel').classList.add('active');
+                modal.querySelector('.modal-panel').classList.remove('scale-95', 'opacity-0');
+            }, 10);
+        }
+
+        function closeModal() {
+            activeModalId = null;
+            modal.querySelector('.modal-backdrop').classList.remove('active');
+            modal.querySelector('.modal-panel').classList.remove('active');
+            modal.querySelector('.modal-panel').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Init
+        renderContent();
+
+        // --- Kavili Floating Animation Setup ---
+        const kawiliImages = ['k1.png', 'k2.png', 'k3.png', 'k4.png', 'k5.png', 'k6.png', 'k7.png'];
+        const kawiliContainer = document.createElement('div');
+        kawiliContainer.id = 'kawiliContainer';
+        
+        for (let i = 0; i < 40; i++) {
+            const img = document.createElement('img');
+            const randImage = kawiliImages[Math.floor(Math.random() * kawiliImages.length)];
+            img.src = `images/${randImage}`;
+            img.className = 'anim-kavili';
+            
+            const dur = Math.random() * 15 + 10; // 10s to 25s
+            img.style.setProperty('--k-dur', `${dur}s`);
+            img.style.setProperty('--k-delay', `-${Math.random() * 20}s`);
+
+            // Generate full random sweeping trajectories
+            const side = Math.floor(Math.random() * 4); // 0:Top, 1:Right, 2:Bottom, 3:Left
+            let startX, startY, endX, endY;
+            if (side === 0) { // Top to Bottom-ish
+                startX = Math.random() * 100 + 'vw';
+                startY = '-100px';
+                endX = (Math.random() * 200 - 50) + 'vw'; // Spread wider
+                endY = '110vh';
+            } else if (side === 1) { // Right to Left-ish
+                startX = '110vw';
+                startY = Math.random() * 100 + 'vh';
+                endX = '-100px';
+                endY = (Math.random() * 200 - 50) + 'vh';
+            } else if (side === 2) { // Bottom to Top-ish
+                startX = Math.random() * 100 + 'vw';
+                startY = '110vh';
+                endX = (Math.random() * 200 - 50) + 'vw';
+                endY = '-100px';
+            } else { // Left to Right-ish
+                startX = '-100px';
+                startY = Math.random() * 100 + 'vh';
+                endX = '110vw';
+                endY = (Math.random() * 200 - 50) + 'vh';
+            }
+
+            img.style.setProperty('--start-x', startX);
+            img.style.setProperty('--start-y', startY);
+            img.style.setProperty('--dx', endX);
+            img.style.setProperty('--dy', endY);
+            img.style.setProperty('--rot', `${Math.random() > 0.5 ? 360 : -360}deg`);
+            
+            kawiliContainer.appendChild(img);
+        }
+        document.body.appendChild(kawiliContainer);
+
+        // Auto pause after 4 seconds
+        let kaviliActive = true;
+        let kaviliTimer = setTimeout(() => {
+            toggleKavili(false);
+        }, 4000);
+
+        const kaviliToggleBtn = document.getElementById('kaviliToggle');
+        const kaviliIcon = document.getElementById('kaviliIcon');
+        
+        function toggleKavili(forceState) {
+            kaviliActive = forceState !== undefined ? forceState : !kaviliActive;
+            if (kaviliActive) {
+                kawiliContainer.classList.remove('hidden-sweets');
+                kaviliIcon.textContent = 'pause';
+                kaviliToggleBtn.classList.add('bg-primary/10', 'border-primary/40', 'text-primary');
+                kaviliToggleBtn.classList.remove('bg-white/5', 'border-white/10', 'text-white/50');
+                clearTimeout(kaviliTimer);
+            } else {
+                kawiliContainer.classList.add('hidden-sweets');
+                kaviliIcon.textContent = 'play_arrow';
+                kaviliToggleBtn.classList.remove('bg-primary/10', 'border-primary/40', 'text-primary');
+                kaviliToggleBtn.classList.add('bg-white/5', 'border-white/10', 'text-white/50');
+            }
+        }
+        
+        kaviliToggleBtn.addEventListener('click', () => toggleKavili());
+        // ---------------------------------------
+
+        function openFooterModal(modalId) {
+            const m = document.getElementById(modalId);
+            const backdrop = m.querySelector('.modal-backdrop');
+            const panel = m.querySelector('.modal-panel');
+            m.classList.remove('hidden');
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+                panel.classList.remove('scale-95', 'opacity-0');
+                panel.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeFooterModal(modalId) {
+            const m = document.getElementById(modalId);
+            const backdrop = m.querySelector('.modal-backdrop');
+            const panel = m.querySelector('.modal-panel');
+            backdrop.classList.add('opacity-0');
+            panel.classList.remove('scale-100', 'opacity-100');
+            panel.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => { m.classList.add('hidden'); }, 300);
+        }
+
+        async function loadFooterData() {
+            if (typeof _supabase === 'undefined') return;
+            try {
+                const { data } = await _supabase.from('site_settings').select('address, phone, email').eq('id', 1).single();
+                if (data) {
+                    document.getElementById('footerAddress').textContent = data.address || 'No. **/*, Dikhengama, Munagama';
+                    document.getElementById('footerPhone').textContent = data.phone || '+94 XX XXX XXXX';
+                    document.getElementById('footerEmail').textContent = data.email || 'info@dmysc.lk';
+
+                    const pEmail = document.getElementById('privacyEmail');
+                    const pPhone = document.getElementById('privacyPhone');
+                    if (pEmail) {
+                        pEmail.textContent = data.email || 'info@dmysc.lk';
+                        if (pEmail.tagName === 'A') pEmail.href = `mailto:${data.email || 'info@dmysc.lk'}`;
+                    }
+                    if (pPhone) pPhone.textContent = data.phone || '+94 XX XXX XXXX';
+
+                    document.getElementById('year').innerText = new Date().getFullYear();
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        loadFooterData();
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</body>
+</html>
