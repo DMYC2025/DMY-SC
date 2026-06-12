@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar - DMYSC</title>
+    <meta name="description"
+        content="Interactive event, announcement, and Sri Lankan holiday calendar for Dream Makers Youth & Sports Club.">
+    <link rel="icon" type="image/png" href="../assets/images/logo_1.png">
+    <link rel="manifest" href="../manifest.json">
+
+    <!-- External Home CSS -->
+    <link rel="stylesheet" href="../assets/css/home-style.css">
+
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#0a150f',
+                        surface: '#1E1E1E',
+                        'surface-container': '#252529',
+                        brand: { green: '#a6f7bd', dark: '#121212' },
+                        primary: '#1ED760',
+                        secondary: '#c2c9bd',
+                        tertiary: '#a0cfd0',
+                        error: '#ffb4ab',
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase.js"></script>
+    <script src="../assets/js/maintenance-check.js"></script>
+
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1550147760-44c9966d6bc7?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .body-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 21, 15, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: -1;
+        }
+
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        /* * New minimal calendar grid matching the image UI
+         */
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            row-gap: 4px; /* Reduced gap */
+            column-gap: 4px; /* Reduced gap */
+            padding: 5px 0;
+            text-align: center;
+        }
+
+        .cal-day-box {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            position: relative;
+            font-size: 0.8rem; /* Reduced font size */
+            color: #E3E3E3;
+            background: transparent;
+            border: 2px solid transparent;
+            user-select: none;
+        }
+
+        .cal-day-box:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: scale(1.1);
+        }
+
+        .cal-day-box.selected {
+            background: transparent; /* Invisible background */
+            color: #ffffff;
+            font-weight: 800;
+            border: 2px solid #ffffff; /* White frame */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.15); /* Soft white glow */
+            transform: scale(1.05);
+        }
+
+        .cal-day-box.today {
+            border-color: rgba(255, 255, 255, 0.3);
+            font-weight: bold;
+        }
+
+        .cal-day-box.other-month {
+            opacity: 0.3;
+        }
+
+        .cal-dots {
+            position: absolute;
+            bottom: 4px;
+            display: flex;
+            gap: 3px;
+        }
+
+        .cal-dot {
+            width: 4px; /* Slightly smaller dots */
+            height: 4px;
+            border-radius: 50%;
+        }
+
+        /* Custom frame for the small calendar container */
+        .calendar-frame {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+        }
+    </style>
+</head>
+
+<body
+    class="text-[#E3E3E3] selection:bg-primary selection:text-[#003915] overflow-x-hidden flex flex-col min-h-screen relative">
+    <div class="body-overlay"></div>
+
+    <!-- Animated Background Elements -->
+    <div
+        class="fixed top-[-10%] left-[-10%] w-96 h-96 bg-primary/10 rounded-full blur-[100px] animate-float pointer-events-none z-[-1]">
+    </div>
+    <div
+        class="fixed bottom-[-10%] right-[-10%] w-96 h-96 bg-tertiary/10 rounded-full blur-[100px] animate-float-delayed pointer-events-none z-[-1]">
+    </div>
+
+    <main class="relative min-h-screen flex flex-col items-center justify-center py-10 px-4 md:px-8 z-10 flex-grow">
+
+        <div class="liquid-glass w-full max-w-[1500px] min-h-[85vh] rounded-[40px] p-6 md:p-12 flex flex-col relative"
+            data-aos="fade-up" data-aos-duration="1000">
+
+            <!-- Minimalist Header inside the glass -->
+            <header class="flex justify-between items-center w-full mb-12" data-aos="fade-down" data-aos-delay="100">
+                <div class="flex items-center gap-3 cursor-pointer group" onclick="window.location.href='../index.html'">
+                    <span
+                        class="text-xl md:text-2xl font-display font-black text-white tracking-[0.3em] group-hover:text-primary transition-colors duration-300 uppercase">D M Y & S C</span>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <nav class="hidden lg:flex items-center gap-6 mr-6">
+                        <a href="../index.html"
+                            class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary desktop-nav-link">Home</a>
+                        <a href="about.html"
+                            class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary desktop-nav-link">About</a>
+                        <a href="sport.html"
+                            class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary desktop-nav-link">Sports</a>
+                        <a href="gallery.html"
+                            class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary desktop-nav-link">Photos</a>
+                        <a href="event.html"
+                            class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary desktop-nav-link">Event</a>
+                        <a href="calendar.html"
+                            class="text-sm font-bold uppercase tracking-wider text-primary desktop-nav-link active">Calendar</a>
+                    </nav>
+
+                    <button class="relative text-white/80 hover:text-white transition-all transform hover:scale-110 active:scale-95">
+                        <span class="material-symbols-rounded text-2xl md:text-3xl">search</span>
+                    </button>
+                    
+                    <a href="../auth/login.html"
+                        class="text-white/80 hover:text-white transition-all transform hover:scale-110 active:scale-95 group">
+                        <span
+                            class="material-symbols-rounded text-2xl md:text-3xl group-hover:text-primary transition-colors">login</span>
+                    </a>
+                    <!-- Hamburger Button (Mobile only) -->
+                    <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="lg:hidden relative text-white/80 hover:text-white transition-all transform hover:scale-110 active:scale-95" aria-label="Toggle Menu">
+                        <span id="menuIconOpen" class="material-symbols-rounded text-2xl md:text-3xl">menu</span>
+                        <span id="menuIconClose" class="material-symbols-rounded text-2xl md:text-3xl hidden">close</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Mobile Navigation Panel (lg:hidden) -->
+            <div id="mobileNavPanel" class="lg:hidden overflow-hidden transition-all duration-300 ease-in-out" style="max-height:0;">
+                <nav class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[20px] p-4 mb-8 flex flex-col gap-1">
+                    <a href="../index.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span class="material-symbols-rounded text-lg">home</span>Home</a>
+                    <a href="about.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span class="material-symbols-rounded text-lg">info</span>About</a>
+                    <a href="sport.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span class="material-symbols-rounded text-lg">sports_cricket</span>Sports</a>
+                    <a href="gallery.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span class="material-symbols-rounded text-lg">photo_library</span>Photos</a>
+                    <a href="event.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span class="material-symbols-rounded text-lg">event</span>Event</a>
+                    <a href="calendar.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-primary bg-primary/10"><span class="material-symbols-rounded text-lg">calendar_month</span>Calendar</a>
+                </nav>
+            </div>
+
+            <!-- Page Body -->
+            <div class="flex-1 flex flex-col">
+                <div class="text-center mb-10">
+                    <h1 class="text-5xl md:text-7xl font-display font-black text-white mb-4 uppercase tracking-tighter" data-aos="fade-up">
+                        Club & <span class="text-primary italic">Calendar</span>
+                    </h1>
+                    <p class="text-white/50 text-sm md:text-base max-w-xl mx-auto font-light" data-aos="fade-up" data-aos-delay="200">
+                        Explore upcoming activities, holidays, and notices scheduled across the DMYSC community.
+                    </p>
+                </div>
+
+                <!-- Main Layout Grid -->
+                <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-stretch w-full">
+                    
+                    <!-- Left Column (Calendar View UI matched to image) -->
+                    <div class="xl:col-span-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-[35px] p-5 md:p-8 shadow-2xl flex flex-col" data-aos="fade-right">
+                        
+                        <!-- Image-like Header Layout -->
+                        <div class="flex justify-between items-start mb-5 border-b border-white/10 pb-5">
+                            <div>
+                                <h1 id="bigSelectedDay" class="text-[3rem] md:text-[4rem] font-display font-bold text-white leading-none tracking-tighter mb-1 transition-all">--</h1>
+                                <h2 id="bigSelectedMonthYear" class="text-base md:text-lg font-medium text-white/80">Loading...</h2>
+                            </div>
+
+                            <div class="flex flex-col items-end gap-4">
+                                <!-- Stylized Calendar Graphic (Matching the provided Image UI) -->
+                                <div class="w-12 h-12 md:w-14 md:h-14 bg-white rounded-[14px] shadow-[0_10px_25px_rgba(0,0,0,0.3)] flex flex-col overflow-hidden transform rotate-2">
+                                    <div class="bg-[#E74C3C] h-3 md:h-4 w-full relative border-b border-red-600">
+                                        <!-- Note rings -->
+                                        <div class="absolute top-0.5 left-2 w-1 h-2 bg-gray-100 rounded-full shadow-sm border border-gray-300"></div>
+                                        <div class="absolute top-0.5 right-2 w-1 h-2 bg-gray-100 rounded-full shadow-sm border border-gray-300"></div>
+                                    </div>
+                                    <div class="flex-1 bg-white flex items-center justify-center">
+                                        <div class="w-6 h-6 md:w-7 md:h-7 rounded-full bg-gray-100 flex items-center justify-center">
+                                            <span class="material-symbols-rounded text-gray-400 text-sm md:text-base font-bold">schedule</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Month Controls -->
+                                <div class="flex items-center gap-2">
+                                    <button onclick="goToToday()" class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-wider text-primary hover:bg-white/10 transition shadow-lg">
+                                        Today
+                                    </button>
+                                    <div class="flex items-center gap-1 bg-white/5 border border-white/10 rounded-full p-1 shadow-lg">
+                                        <button onclick="changeMonth(-1)" class="w-6 h-6 md:w-7 md:h-7 rounded-full hover:bg-white/10 flex items-center justify-center text-white transition" aria-label="Previous Month">
+                                            <span class="material-symbols-rounded text-base">chevron_left</span>
+                                        </button>
+                                        <button onclick="changeMonth(1)" class="w-6 h-6 md:w-7 md:h-7 rounded-full hover:bg-white/10 flex items-center justify-center text-white transition" aria-label="Next Month">
+                                            <span class="material-symbols-rounded text-base">chevron_right</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Wrap the calendar grid and legend in a smaller container with a frame -->
+                        <div class="max-w-[300px] md:max-w-[380px] mx-auto w-full calendar-frame flex-grow flex flex-col justify-center">
+                            <!-- Legend/Filter Row (Without Birthdays) -->
+                            <div class="flex flex-wrap justify-center gap-3 mb-5 text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-white/70">
+                                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"></span> Holidays</span>
+                                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-yellow-400 shadow-[0_0_8px_rgba(250,204,21,0.5)]"></span> Poya Days</span>
+                                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#1ED760] shadow-[0_0_8px_rgba(30,215,96,0.5)]"></span> Events</span>
+                                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]"></span> Notices</span>
+                            </div>
+
+                            <!-- Weekday Labels -->
+                            <div class="grid grid-cols-7 text-center text-[10px] md:text-xs font-semibold text-[#c2c9bd] mb-2">
+                                <div class="text-[#D987A6]">Sun</div>
+                                <div class="text-[#B585D9]">Mon</div>
+                                <div class="text-[#85A6D9]">Tue</div>
+                                <div class="text-[#85D9CD]">Wed</div>
+                                <div class="text-[#D9C485]">Thu</div>
+                                <div class="text-[#D99A85]">Fri</div>
+                                <div class="text-[#A185D9]">Sat</div>
+                            </div>
+
+                            <!-- Day Grid -->
+                            <div id="calendarDaysGrid" class="cal-grid">
+                                <!-- Injected by Javascript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Bottom Button (Matching Image purple button) -->
+                        <div class="mt-6 flex justify-center pb-2">
+                            <button onclick="document.getElementById('selectedDateDetailsList').scrollIntoView({behavior: 'smooth'})" 
+                                class="w-full max-w-[300px] md:max-w-[380px] py-2.5 bg-[#9B62B3] hover:bg-[#864c9d] text-white rounded-full font-display font-semibold tracking-wide transition-all shadow-[0_8px_20px_rgba(155,98,179,0.3)] transform hover:-translate-y-1 active:translate-y-0 text-sm">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right Column (Details Preview) -->
+                    <div class="xl:col-span-6 flex flex-col gap-6 h-full" data-aos="fade-left">
+                        <div class="bg-white/3 border border-white/5 rounded-[35px] p-6 md:p-8 flex flex-col h-full min-h-[500px]">
+                            
+                            <!-- Half 1: Selected Date Details -->
+                            <div class="flex-1 flex flex-col min-h-0">
+                                <div class="border-b border-white/5 pb-3 mb-4">
+                                    <span class="text-[10px] text-primary font-bold uppercase tracking-widest block mb-1">Details For</span>
+                                    <h3 id="selectedDateLabel" class="text-lg md:text-xl font-display font-bold text-white uppercase tracking-wider">
+                                        Select a date
+                                    </h3>
+                                </div>
+
+                                <div id="selectedDateDetailsList" class="flex-1 overflow-y-auto custom-scrollbar space-y-3 pr-2 pb-4">
+                                    <div class="text-center py-8 text-[#8e918f] text-sm h-full flex flex-col items-center justify-center">
+                                        <span class="material-symbols-rounded text-3xl mb-2 opacity-50 block">calendar_today</span>
+                                        Select a date on the calendar.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Half 2: Month Summary -->
+                            <div class="flex-1 flex flex-col min-h-0 border-t border-white/5 pt-5 mt-2">
+                                <div class="pb-3 mb-3">
+                                    <span class="text-[10px] text-primary font-bold uppercase tracking-widest block mb-1">Month Summary</span>
+                                    <h3 id="monthOverviewLabel" class="text-lg font-display font-bold text-white uppercase tracking-wider">
+                                        Month Overview
+                                    </h3>
+                                </div>
+
+                                <div id="monthSummaryList" class="flex-1 overflow-y-auto custom-scrollbar space-y-3 pr-2">
+                                    <div class="text-center py-8 text-gray-500 text-xs h-full flex flex-col items-center justify-center">
+                                        <span class="material-symbols-rounded text-2xl block mb-1 opacity-50">event_busy</span>
+                                        No items scheduled.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <!-- FOOTER START -->
+        <footer
+            class="liquid-glass pt-12 pb-8 mt-auto z-30 font-sans relative overflow-hidden no-print w-full max-w-[1500px] rounded-[40px]">
+
+            <div
+                class="absolute top-0 left-1/4 w-64 h-64 bg-primary opacity-5 rounded-full blur-[100px] pointer-events-none">
+            </div>
+            <div
+                class="absolute bottom-0 right-1/4 w-64 h-64 bg-tertiary opacity-5 rounded-full blur-[100px] pointer-events-none">
+            </div>
+
+            <div class="max-w-7xl mx-auto px-6 relative z-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                    <div class="space-y-4 text-center md:text-left">
+                        <div class="flex items-center justify-center md:justify-start gap-3 mb-4">
+                            <img src="../assets/images/logo.png" class="h-10 w-auto" alt="Logo">
+                            <div class="flex flex-col">
+                                <span class="text-lg font-display font-bold text-[#E3E3E3] tracking-tight uppercase">DMYSC</span>
+                                <span class="text-[10px] text-primary font-bold tracking-widest">EST 2025</span>
+                            </div>
+                        </div>
+                        <p class="text-[#C4C7C5] text-sm leading-relaxed font-light opacity-80">
+                            Empowering youth through sports, unity, and community service.
+                        </p>
+                    </div>
+
+                    <div class="text-center md:text-left">
+                        <h4 class="text-[#E3E3E3] font-display font-bold uppercase tracking-wider mb-6 text-sm">Contact Us</h4>
+                        <ul class="space-y-4 text-sm text-[#C4C7C5]">
+                            <li class="flex items-start gap-3 justify-center md:justify-start">
+                                <span class="material-symbols-rounded text-primary text-lg mt-0.5">location_on</span>
+                                <span id="footerAddress" class="font-light">Loading...</span>
+                            </li>
+                            <li class="flex items-center gap-3 justify-center md:justify-start">
+                                <span class="material-symbols-rounded text-primary text-lg">call</span>
+                                <span id="footerPhone" class="font-mono">Loading...</span>
+                            </li>
+                            <li class="flex items-center gap-3 justify-center md:justify-start">
+                                <span class="material-symbols-rounded text-primary text-lg">mail</span>
+                                <span id="footerEmail">Loading...</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="text-center md:text-left">
+                        <h4 class="text-[#E3E3E3] font-display font-bold uppercase tracking-wider mb-6 text-sm">Partners</h4>
+                        <div class="flex flex-wrap gap-4 items-center justify-center md:justify-start">
+                            <img src="../assets/images/icon.svg" class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300" alt="SL Emblem">
+                            <img src="../assets/images/sl flag.webp" class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300" alt="SL Flag">
+                            <img src="../assets/images/western flag.png" class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300" alt="WP Flag">
+                            <img src="../assets/images/119.png" class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300" alt="119">
+                        </div>
+                    </div>
+
+                    <div class="text-center md:text-left">
+                        <h4 class="text-[#E3E3E3] font-display font-bold uppercase tracking-wider mb-6 text-sm">Location</h4>
+                        <div class="rounded-2xl overflow-hidden border border-white/10 shadow-lg">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3962.4795325852504!2d80.0809212!3d6.7163669!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae24bcd7c40b405%3A0xf3dc83861d8a4e14!2sDream%20Makers%20Youth%20%26%20Sports%20Club!5e0!3m2!1sen!2slk!4v1718220000000!5m2!1sen!2slk" width="100%" height="110" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                        <a href="https://maps.app.goo.gl/J2LKtQtdpBU2f6dF9" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-primary hover:underline mt-3 font-semibold">
+                            <span class="material-symbols-rounded text-sm">open_in_new</span> Open in Google Maps
+                        </a>
+                    </div>
+                </div>
+
+                <div class="border-t border-[#353539] bg-[#252529]/30 rounded-2xl p-4 mb-6 flex flex-col md:flex-row flex-wrap items-center justify-between gap-4 backdrop-blur-sm">
+                    <a href="https://dilnuka13.github.io/my/" target="_blank" rel="noreferrer" class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 hover:bg-white/10 transition cursor-pointer group">
+                        <span class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider group-hover:text-white transition">Developed by</span>
+                        <img src="https://dilnuka13.github.io/my/titlebar.png" class="h-5 w-auto object-contain" alt="Isara">
+                        <span class="text-[11px] font-bold text-[#E3E3E3] group-hover:text-primary transition leading-none">Isara Dilnuka</span>
+                    </a>
+
+                    <a href="https://gemini.google.com" target="_blank" rel="noreferrer" class="flex items-center gap-2 bg-white rounded-full px-4 py-1.5 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:scale-105 transition cursor-pointer">
+                        <span class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider group-hover:text-black transition">Co-piloted by</span>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Google_Gemini_logo_2025.svg/330px-Google_Gemini_logo_2025.svg.png" class="h-5 w-auto object-contain" alt="Gemini AI">
+                    </a>
+
+                    <a href="https://supabase.com/" target="_blank" rel="noreferrer" class="flex items-center gap-2 bg-white rounded-full px-4 py-1.5 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:scale-105 transition cursor-pointer">
+                        <span class="text-[10px] font-bold text-[#8e918f] uppercase tracking-wider group-hover:text-black transition">Powered by</span>
+                        <img src="https://wp.logos-download.com/wp-content/uploads/2023/02/Supabase_Logo.png?dl" class="h-5 w-auto object-contain" alt="Supabase">
+                    </a>
+                </div>
+
+                <div class="border-t border-[#353539] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="text-[#8e918f] text-xs text-center md:text-left">
+                        &copy; <span id="year">2026</span> DMYSC. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ once: true, duration: 800 });
+
+        function toggleMobileMenu() {
+            const panel = document.getElementById('mobileNavPanel');
+            const iconOpen = document.getElementById('menuIconOpen');
+            const iconClose = document.getElementById('menuIconClose');
+            const isOpen = panel.style.maxHeight !== '0px' && panel.style.maxHeight !== '';
+            panel.style.maxHeight = isOpen ? '0' : panel.scrollHeight + 'px';
+            iconOpen.classList.toggle('hidden', !isOpen);
+            iconClose.classList.toggle('hidden', isOpen);
+        }
+
+        async function loadFooterData() {
+            if (typeof _supabase === 'undefined') return;
+            try {
+                const { data } = await _supabase.from('site_settings').select('address, phone, email').eq('id', 1).single();
+                if (data) {
+                    document.getElementById('footerAddress').textContent = data.address || 'No. **/*, Dikhengama, Munagama';
+                    document.getElementById('footerPhone').textContent = data.phone || '+94 XX XXX XXXX';
+                    document.getElementById('footerEmail').textContent = data.email || 'info@dmysc.lk';
+                    document.getElementById('year').innerText = new Date().getFullYear();
+                }
+            } catch (err) { console.error(err); }
+        }
+        loadFooterData();
+
+        // ─── CALENDAR RENDERING ENGINE ────────────────────────────
+        let currentYear = new Date().getFullYear();
+        let currentMonth = new Date().getMonth();
+        let selectedDateStr = new Date().toISOString().split('T')[0];
+        
+        let localHolidays = [];
+        let dbEvents = [];
+        let dbNotifications = []; // Birthdays removed
+
+        // Fallback static holidays for Sri Lanka
+        const FALLBACK_SRI_LANKAN_HOLIDAYS = [
+            { date: "-01-14", name: "Tamil Thai Pongal Day", localName: "දෙමළ තෛපොංගල් දිනය" },
+            { date: "-02-04", name: "National Day (Independence Day)", localName: "නිදහස් දිනය" },
+            { date: "-04-12", name: "Day before Sinhala & Tamil New Year", localName: "අලුත් අවුරුදු පූර්ව දිනය" },
+            { date: "-04-13", name: "Sinhala & Tamil New Year Day", localName: "සිංහල සහ දෙමළ අලුත් අවුරුදු දිනය" },
+            { date: "-05-01", name: "May Day", localName: "මැයි දිනය" },
+            { date: "-12-25", name: "Christmas Day", localName: "නත්තල් දිනය" }
+        ];
+
+        async function fetchHolidays(year) {
+            try {
+                const response = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${year}/LK`);
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.map(h => ({
+                        date: h.date,
+                        name: h.name,
+                        localName: h.localName
+                    }));
+                }
+            } catch (err) {
+                console.warn("Holiday API unreachable, loading fallbacks.");
+            }
+            return FALLBACK_SRI_LANKAN_HOLIDAYS.map(h => ({
+                date: `${year}${h.date}`,
+                name: h.name,
+                localName: h.localName
+            }));
+        }
+
+        async function fetchClubData() {
+            if (typeof _supabase === 'undefined') return;
+            try {
+                // 1. Events
+                const { data: events } = await _supabase.from('events').select('*');
+                if (events) dbEvents = events;
+
+                // 2. Notifications/Announcements
+                const { data: { session } } = await _supabase.auth.getSession();
+                let notifyQuery = _supabase.from('notifications').select('title, message, created_at');
+                if (session) {
+                    notifyQuery = notifyQuery.or(`user_id.eq.${session.user.id},user_id.is.null`);
+                } else {
+                    notifyQuery = notifyQuery.is('user_id', null);
+                }
+                const { data: notifications } = await notifyQuery;
+                if (notifications) dbNotifications = notifications;
+
+            } catch (err) {
+                console.error("Error fetching calendar DB records:", err);
+            }
+        }
+
+        async function initCalendar() {
+            showDetailsLoading();
+            localHolidays = await fetchHolidays(currentYear);
+            await fetchClubData();
+            renderCalendar();
+            selectDate(selectedDateStr);
+        }
+
+        const MONTH_NAMES = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        function changeMonth(delta) {
+            currentMonth += delta;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+                updateYearHolidays();
+            } else if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+                updateYearHolidays();
+            }
+            
+            // Auto-select 1st of the month when navigating, or today if returning to current month
+            const today = new Date();
+            if (today.getMonth() === currentMonth && today.getFullYear() === currentYear) {
+                selectedDateStr = today.toISOString().split('T')[0];
+            } else {
+                selectedDateStr = formatDateString(currentYear, currentMonth, 1);
+            }
+            
+            renderCalendar();
+            selectDate(selectedDateStr);
+        }
+
+        async function updateYearHolidays() {
+            localHolidays = await fetchHolidays(currentYear);
+            renderCalendar();
+        }
+
+        function goToToday() {
+            currentYear = new Date().getFullYear();
+            currentMonth = new Date().getMonth();
+            selectedDateStr = new Date().toISOString().split('T')[0];
+            renderCalendar();
+            selectDate(selectedDateStr);
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendarDaysGrid');
+            grid.innerHTML = '';
+
+            const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay();
+            const prevMonthDaysCount = new Date(currentYear, currentMonth, 0).getDate();
+            const currentMonthDaysCount = new Date(currentYear, currentMonth + 1, 0).getDate();
+            
+            const todayStr = new Date().toISOString().split('T')[0];
+
+            // Render Previous Month's Days
+            for (let i = firstDayIndex - 1; i >= 0; i--) {
+                const day = prevMonthDaysCount - i;
+                const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+                const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+                const dateStr = formatDateString(prevYear, prevMonth, day);
+                grid.appendChild(createDayNode(day, dateStr, true));
+            }
+
+            // Render Current Month's Days
+            for (let day = 1; day <= currentMonthDaysCount; day++) {
+                const dateStr = formatDateString(currentYear, currentMonth, day);
+                const isToday = dateStr === todayStr;
+                grid.appendChild(createDayNode(day, dateStr, false, isToday));
+            }
+
+            // Render Next Month's Days to fill grid row
+            const totalCells = firstDayIndex + currentMonthDaysCount;
+            const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+            for (let day = 1; day <= remainingCells; day++) {
+                const nextMonth = currentMonth === 11 ? 0 : currentMonth + 1;
+                const nextYear = currentMonth === 11 ? currentYear + 1 : currentYear;
+                const dateStr = formatDateString(nextYear, nextMonth, day);
+                grid.appendChild(createDayNode(day, dateStr, true));
+            }
+
+            renderMonthSummary();
+        }
+
+        function formatDateString(year, monthIndex, day) {
+            return `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        }
+
+        // Clean UI Day Node matches the image
+        function createDayNode(dayNum, dateStr, isOtherMonth = false, isToday = false) {
+            const items = getItemsForDate(dateStr);
+            const cell = document.createElement('div');
+            
+            cell.className = `cal-day-box cursor-pointer ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''} ${dateStr === selectedDateStr ? 'selected' : ''}`;
+            cell.setAttribute('data-date', dateStr);
+            cell.onclick = () => selectDate(dateStr);
+
+            const numSpan = document.createElement('span');
+            numSpan.textContent = dayNum;
+            cell.appendChild(numSpan);
+
+            // Small indicator dots for events at the bottom of the number
+            if (items.length > 0) {
+                const dotsContainer = document.createElement('div');
+                dotsContainer.className = "cal-dots";
+                
+                // Show up to 3 dots to keep UI clean
+                items.slice(0, 3).forEach(item => {
+                    const dot = document.createElement('span');
+                    let dotClass = "";
+                    if (item.type === 'holiday') dotClass = "bg-red-500";
+                    else if (item.type === 'poya') dotClass = "bg-yellow-400";
+                    else if (item.type === 'event') dotClass = "bg-[#1ED760]";
+                    else if (item.type === 'announcement') dotClass = "bg-amber-500";
+
+                    dot.className = `cal-dot ${dotClass}`;
+                    dotsContainer.appendChild(dot);
+                });
+                cell.appendChild(dotsContainer);
+            }
+
+            return cell;
+        }
+
+        function getItemsForDate(dateStr) {
+            const results = [];
+            
+            // 1. Holidays & Poya Days
+            localHolidays.forEach(h => {
+                if (h.date === dateStr) {
+                    const isPoya = h.name.toLowerCase().includes('poya');
+                    results.push({
+                        type: isPoya ? 'poya' : 'holiday',
+                        title: h.name,
+                        subtitle: h.localName,
+                        desc: isPoya ? "Poya Day - Public Holiday in Sri Lanka" : "Public Sri Lankan Holiday"
+                    });
+                }
+            });
+
+            // 2. Events
+            dbEvents.forEach(e => {
+                if (e.event_date === dateStr) {
+                    results.push({
+                        type: 'event',
+                        title: e.title,
+                        subtitle: e.event_time ? e.event_time.slice(0, 5) : 'All Day',
+                        location: e.location || 'No Location',
+                        desc: e.description || 'No description available.'
+                    });
+                }
+            });
+
+            // 3. Notifications/Announcements
+            dbNotifications.forEach(n => {
+                if (n.created_at && n.created_at.startsWith(dateStr)) {
+                    results.push({
+                        type: 'announcement',
+                        title: n.title || 'Notice',
+                        subtitle: 'Announcement',
+                        desc: n.message || ''
+                    });
+                }
+            });
+
+            return results;
+        }
+
+        function selectDate(dateStr) {
+            selectedDateStr = dateStr;
+            
+            // Update the Image-like Header
+            const dateObj = new Date(dateStr);
+            document.getElementById('bigSelectedDay').textContent = dateObj.getDate();
+            document.getElementById('bigSelectedMonthYear').textContent = dateObj.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+            // Highlight active date cell
+            document.querySelectorAll('.cal-day-box').forEach(box => {
+                if (box.getAttribute('data-date') === dateStr) {
+                    box.classList.add('selected');
+                } else {
+                    box.classList.remove('selected');
+                }
+            });
+
+            // Set Details Sidebar Header
+            const dateLabel = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+            document.getElementById('selectedDateLabel').textContent = dateLabel;
+
+            // Load Details Items List
+            const list = document.getElementById('selectedDateDetailsList');
+            const items = getItemsForDate(dateStr);
+
+            if (items.length === 0) {
+                list.innerHTML = `
+                <div class="text-center py-8 text-gray-500 text-sm h-full flex flex-col items-center justify-center">
+                    <span class="material-symbols-rounded text-3xl mb-2 opacity-50 block">sentiment_satisfied</span>
+                    No events or holidays scheduled for this date.
+                </div>`;
+                return;
+            }
+
+            list.innerHTML = items.map(item => {
+                let badgeClass = "";
+                let icon = "";
+                
+                if (item.type === 'holiday') {
+                    badgeClass = "bg-red-500/10 text-red-400 border-red-500/20";
+                    icon = "flag";
+                } else if (item.type === 'poya') {
+                    badgeClass = "bg-yellow-500/10 text-yellow-400 border-yellow-500/20";
+                    icon = "dark_mode";
+                } else if (item.type === 'event') {
+                    badgeClass = "bg-[#1ED760]/10 text-primary border-[#1ED760]/20";
+                    icon = "event";
+                } else if (item.type === 'announcement') {
+                    badgeClass = "bg-amber-500/10 text-amber-400 border-amber-500/20";
+                    icon = "campaign";
+                }
+
+                return `
+                <div class="p-3 rounded-2xl bg-white/5 border border-white/5 space-y-2">
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-rounded text-lg ${item.type === 'event' ? 'text-primary' : 'text-gray-400'}">${icon}</span>
+                            <h4 class="text-sm font-bold text-white leading-snug">${item.title}</h4>
+                        </div>
+                        <span class="pill-badge uppercase tracking-wider text-[8px] font-extrabold px-2 py-0.5 rounded-full border ${badgeClass}">
+                            ${item.type}
+                        </span>
+                    </div>
+                    ${item.subtitle ? `<p class="text-[11px] text-primary/80 font-medium">${item.subtitle}</p>` : ''}
+                    ${item.location ? `
+                    <p class="flex items-center gap-1 text-[10px] text-[#c2c9bd]">
+                        <span class="material-symbols-rounded text-xs">location_on</span>
+                        ${item.location}
+                    </p>` : ''}
+                    ${item.desc ? `<p class="text-[11px] text-[#C4C7C5]/80 font-light leading-relaxed">${item.desc}</p>` : ''}
+                </div>`;
+            }).join('');
+        }
+
+        function showDetailsLoading() {
+            const list = document.getElementById('selectedDateDetailsList');
+            list.innerHTML = `
+            <div class="text-center py-8 text-gray-500 text-sm h-full flex flex-col items-center justify-center">
+                <span class="material-symbols-rounded animate-spin text-2xl block mb-2 text-primary">sync</span>
+                Fetching calendar events...
+            </div>`;
+        }
+
+        function renderMonthSummary() {
+            const monthSummaryList = document.getElementById('monthSummaryList');
+            const monthOverviewLabel = document.getElementById('monthOverviewLabel');
+            if (!monthSummaryList || !monthOverviewLabel) return;
+
+            monthOverviewLabel.textContent = `${MONTH_NAMES[currentMonth]} Overview`;
+
+            const monthItems = [];
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = formatDateString(currentYear, currentMonth, day);
+                const items = getItemsForDate(dateStr);
+                items.forEach(item => {
+                    monthItems.push({
+                        ...item,
+                        date: dateStr
+                    });
+                });
+            }
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const upcomingItems = [];
+            const passedItems = [];
+
+            monthItems.forEach(item => {
+                const parts = item.date.split('-');
+                const itemDate = new Date(parts[0], parts[1] - 1, parts[2]);
+                itemDate.setHours(0, 0, 0, 0);
+
+                if (itemDate >= today) {
+                    upcomingItems.push(item);
+                } else {
+                    passedItems.push(item);
+                }
+            });
+
+            upcomingItems.sort((a, b) => a.date.localeCompare(b.date));
+            passedItems.sort((a, b) => a.date.localeCompare(b.date));
+
+            if (upcomingItems.length === 0 && passedItems.length === 0) {
+                monthSummaryList.innerHTML = `
+                <div class="text-center py-8 text-gray-500 text-xs h-full flex flex-col items-center justify-center">
+                    <span class="material-symbols-rounded text-2xl block mb-1 opacity-50">event_busy</span>
+                    No items scheduled for this month.
+                </div>`;
+                return;
+            }
+
+            let html = '';
+
+            if (upcomingItems.length > 0) {
+                html += `
+                <div class="space-y-2">
+                    <div class="text-[10px] font-bold text-[#1ED760] uppercase tracking-wider mb-2 flex items-center gap-1.5 select-none">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#1ED760] animate-pulse"></span>
+                        Upcoming (${upcomingItems.length})
+                    </div>`;
+                upcomingItems.forEach(item => {
+                    html += renderSummaryItemHTML(item, false, today);
+                });
+                html += `</div>`;
+            }
+
+            if (passedItems.length > 0) {
+                if (upcomingItems.length > 0) {
+                    html += `<div class="h-3"></div>`;
+                }
+                html += `
+                <div class="space-y-2">
+                    <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5 select-none">
+                        <span class="material-symbols-rounded text-[10px]">history</span>
+                        Passed (${passedItems.length})
+                    </div>`;
+                passedItems.forEach(item => {
+                    html += renderSummaryItemHTML(item, true, today);
+                });
+                html += `</div>`;
+            }
+
+            monthSummaryList.innerHTML = html;
+        }
+
+        function renderSummaryItemHTML(item, isPassed, today) {
+            const parts = item.date.split('-');
+            const itemDate = new Date(parts[0], parts[1] - 1, parts[2]);
+            itemDate.setHours(0, 0, 0, 0);
+
+            const formattedDate = itemDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+            if (isPassed) {
+                return `
+                <div class="p-2.5 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between gap-3 opacity-60 hover:opacity-100 transition duration-300 cursor-pointer" onclick="selectDate('${item.date}')">
+                    <div class="flex items-center gap-2 overflow-hidden">
+                        <span class="material-symbols-rounded text-gray-400 text-base flex-shrink-0">history</span>
+                        <div class="truncate">
+                            <h4 class="text-[11px] font-bold text-white truncate">${item.title}</h4>
+                            <p class="text-[9px] text-gray-400 mt-0.5">${formattedDate}</p>
+                        </div>
+                    </div>
+                    <span class="text-[9px] font-medium text-gray-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full flex-shrink-0">
+                        Passed
+                    </span>
+                </div>`;
+            } else {
+                const diffTime = itemDate.getTime() - today.getTime();
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                let relativeText = "";
+                if (diffDays === 0) relativeText = "Today";
+                else if (diffDays === 1) relativeText = "Tomorrow";
+                else relativeText = `In ${diffDays} days`;
+
+                let itemIcon = "calendar_month";
+                if (item.type === 'poya') {
+                    itemIcon = "dark_mode";
+                }
+
+                return `
+                <div class="p-2.5 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between gap-3 hover:bg-white/10 transition duration-300 cursor-pointer" onclick="selectDate('${item.date}')">
+                    <div class="flex items-center gap-2 overflow-hidden">
+                        <span class="material-symbols-rounded ${item.type === 'poya' ? 'text-yellow-400' : 'text-primary'} text-base flex-shrink-0">${itemIcon}</span>
+                        <div class="truncate">
+                            <h4 class="text-[11px] font-bold text-white truncate">${item.title}</h4>
+                            <p class="text-[9px] text-gray-400 mt-0.5">${formattedDate}</p>
+                        </div>
+                    </div>
+                    <span class="text-[9px] font-bold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full flex-shrink-0">
+                        ${relativeText}
+                    </span>
+                </div>`;
+            }
+        }
+
+        initCalendar();
+    </script>
+</body>
+</html>

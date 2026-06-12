@@ -81,8 +81,8 @@
 
         .body-overlay {
             position: fixed; inset: 0; z-index: -1;
-            background: rgba(10, 21, 15, 0.7);
-            backdrop-filter: blur(8px);
+            background: rgba(10, 21, 15, 0.45);
+            backdrop-filter: blur(4px);
         }
 
         /* ── Particle Canvas ── */
@@ -297,10 +297,14 @@
     <div class="main-card" id="mainCard">
         <div class="content-wrapper">
 
-            <span class="error-num reveal-item">404</span>
+            <!-- 404 Number -->
+            <span class="error-num reveal-item mb-2">404</span>
 
-            <div class="icon-wrap reveal-item">
-                <span class="material-symbols-rounded">running_with_errors</span>
+            <!-- Gif Animation Container -->
+            <div class="reveal-item relative w-full h-[240px] rounded-3xl overflow-hidden mb-8 border border-white/5 bg-[#0a150f]/60 flex items-center justify-center">
+                <img src="https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif" 
+                     class="w-full h-full object-cover select-none pointer-events-none opacity-85" 
+                     style="filter: invert(1) hue-rotate(130deg) brightness(1.1) contrast(1.15); mix-blend-mode: screen;">
             </div>
 
             <div class="badge reveal-item">

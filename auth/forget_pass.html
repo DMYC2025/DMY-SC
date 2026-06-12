@@ -17,10 +17,10 @@
             theme: {
                 extend: {
                     colors: {
-                        background: '#121212',
+                        background: '#0a150f',
                         surface: '#1E1E1E',
                         'surface-container': '#252529',
-                        primary: '#a6f7bd',
+                        primary: '#1ED760',
                         'on-primary': '#003915',
                         secondary: '#c2c9bd',
                         error: '#ffb4ab',
@@ -50,8 +50,8 @@
         .body-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(10, 21, 15, 0.6);
-            backdrop-filter: blur(10px);
+            background: rgba(10, 21, 15, 0.45);
+            backdrop-filter: blur(4px);
             z-index: -1;
         }
 
@@ -88,7 +88,8 @@
             }
         }
     </style>
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+   </head>
 
 <body
     class="text-[#E3E3E3] selection:bg-primary selection:text-[#003915] min-h-screen flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-500 no-tap-highlight">

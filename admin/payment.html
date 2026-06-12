@@ -17,12 +17,12 @@
             theme: {
                 extend: {
                     colors: {
-                        background: '#121212',
+                        background: '#0a150f',
                         surface: '#1E1E1E',
                         'surface-container': '#252529',
                         'surface-bright': '#3b3b3f',
-                        primary: '#a8c7fa',
-                        'on-primary': '#062e6f',
+                        primary: '#1ED760',
+                        'on-primary': '#003915',
                         secondary: '#c2c9bd',
                         tertiary: '#a0cfd0',
                         error: '#ffb4ab',
@@ -44,9 +44,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
 
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+   </head>
 
-<body class="bg-[#121212] text-slate-100 min-h-screen font-sans overflow-hidden">
+<body class="bg-[#0a150f] text-slate-100 min-h-screen font-sans overflow-hidden">
 
     <div id="overlay" onclick="toggleSidebar()"
         class="fixed inset-0 bg-black/60 z-40 hidden md:hidden backdrop-blur-sm"></div>
@@ -123,7 +124,7 @@
             </div>
         </aside>
 
-        <main class="flex-1 overflow-y-auto relative bg-[#121212] scroll-smooth">
+        <main class="flex-1 overflow-y-auto relative bg-[#0a150f] scroll-smooth">
 
             <button onclick="toggleSidebar()"
                 class="md:hidden absolute top-6 right-6 z-40 bg-[#1E1E1E] p-2 rounded-full text-[#E3E3E3] border border-white/10 shadow-lg"><span
@@ -281,7 +282,7 @@
                                 </div>
 
                                 <button onclick="recordBulkPayment()"
-                                    class="w-full py-4 bg-[#062e6f] hover:bg-[#0b4ec7] text-[#a8c7fa] font-bold rounded-full shadow-lg transition transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 border border-[#a8c7fa]/20">
+                                    class="w-full py-4 bg-[#062e6f] hover:bg-[#0b4ec7] text-[#1ED760] font-bold rounded-full shadow-lg transition transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 border border-[#1ED760]/20">
                                     <span class="material-symbols-rounded">check_circle</span> Record Payments
                                 </button>
                             </div>
@@ -347,7 +348,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex-1 overflow-hidden rounded-xl border border-white/5 bg-[#121212]">
+                            <div class="flex-1 overflow-hidden rounded-xl border border-white/5 bg-[#0a150f]">
                                 <div class="overflow-x-auto h-full">
                                     <table class="w-full text-left text-sm text-[#C4C7C5]">
                                         <thead
@@ -538,7 +539,7 @@
                         <td class="p-4 font-mono text-xs text-[#C4C7C5] whitespace-nowrap">${new Date(p.paid_at).toLocaleDateString()}</td>
                         <td class="p-4 font-medium text-[#E3E3E3] whitespace-nowrap">${p.profiles?.full_name || 'Unknown'}</td>
                         <td class="p-4 whitespace-nowrap"><span class="bg-tertiary/10 text-tertiary px-2 py-1 rounded text-[10px] font-bold border border-tertiary/20 font-mono">${p.month_year}</span></td>
-                        <td class="p-4 text-right font-mono text-[#a8c7fa] font-bold whitespace-nowrap">${p.amount}/=</td>
+                        <td class="p-4 text-right font-mono text-[#1ED760] font-bold whitespace-nowrap">${p.amount}/=</td>
                         <td class="p-4 text-center">
                             <span class="text-[9px] font-bold text-[#8e918f] uppercase tracking-tighter bg-white/5 px-2 py-1 rounded italic border border-white/5 whitespace-nowrap">
                                 ${p.recorder?.full_name || 'System'}
@@ -884,7 +885,7 @@
             // Render Paid
             document.getElementById('countPaid').textContent = paidList.length;
             document.getElementById('listPaid').innerHTML = paidList.length ? paidList.map(m => `
-                <div class="flex items-center justify-between p-2 rounded bg-[#121212] border border-white/5">
+                <div class="flex items-center justify-between p-2 rounded bg-[#0a150f] border border-white/5">
                     <div>
                         <div class="text-xs font-bold text-[#E3E3E3]">${m.full_name}</div>
                         <div class="text-[9px] text-[#8e918f] font-mono">${m.member_id || '-'}</div>
@@ -895,7 +896,7 @@
             // Render Unpaid
             document.getElementById('countUnpaid').textContent = unpaidList.length;
             document.getElementById('listUnpaid').innerHTML = unpaidList.length ? unpaidList.map(m => `
-                <div class="flex items-center justify-between p-2 rounded bg-[#121212] border border-white/5">
+                <div class="flex items-center justify-between p-2 rounded bg-[#0a150f] border border-white/5">
                     <div>
                         <div class="text-xs font-bold text-[#E3E3E3]">${m.full_name}</div>
                         <div class="text-[9px] text-[#8e918f] font-mono">${m.member_id || '-'}</div>

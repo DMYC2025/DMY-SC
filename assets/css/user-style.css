@@ -7,16 +7,16 @@
 
 /* --- MATERIAL 3 DESIGN TOKENS --- */
 :root {
-    /* M3 Dark Theme Colors */
-    --md-sys-color-background: #121212;
-    --md-sys-color-surface: #1E1E1E;
-    --md-sys-color-surface-container: #252529;
-    --md-sys-color-primary: #a6f7bd;
+    /* M3 Dark Theme Colors (Nature Inspired) */
+    --md-sys-color-background: #0a150f;
+    --md-sys-color-surface: rgba(255, 255, 255, 0.05);
+    --md-sys-color-surface-container: rgba(255, 255, 255, 0.08);
+    --md-sys-color-primary: #1ED760;
     --md-sys-color-on-primary: #003915;
     --md-sys-color-secondary: #c2c9bd;
     --md-sys-color-tertiary: #a0cfd0;
     --md-sys-color-error: #ffb4ab;
-    --md-sys-color-outline: #8e918f;
+    --md-sys-color-outline: rgba(255, 255, 255, 0.15);
 
     /* Elevations */
     --md-sys-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
@@ -26,9 +26,24 @@
 
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: var(--md-sys-color-background);
+    background-image: url('https://images.unsplash.com/photo-1550147760-44c9966d6bc7?q=60&w=1600&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     color: #E3E3E3;
     overflow-x: hidden;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 21, 15, 0.45);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: -2;
+    pointer-events: none;
 }
 
 h1,
@@ -65,17 +80,20 @@ h6,
 
 /* --- MATERIAL 3 CARDS --- */
 .m3-card {
-    background-color: var(--md-sys-color-surface);
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
     border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), inset 0 0 10px rgba(255, 255, 255, 0.02) !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .m3-card:hover {
     transform: translateY(-4px);
-    box-shadow: var(--md-sys-elevation-3);
-    border-color: rgba(166, 247, 189, 0.2);
-    background-color: #232326;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(30, 215, 96, 0.3) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
 }
 
 /* --- CUSTOM SCROLLBAR --- */
@@ -99,17 +117,19 @@ h6,
 /* --- INPUTS --- */
 .m3-input {
     width: 100%;
-    background-color: #252529;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 12px;
     color: #E3E3E3;
     outline: none;
     transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
 }
 
 .m3-input:focus {
     border-color: var(--md-sys-color-primary);
-    background-color: #1E1E1E;
+    background-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(30, 215, 96, 0.15);
 }
 
 .m3-input:disabled {

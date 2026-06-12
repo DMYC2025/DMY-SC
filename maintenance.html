@@ -88,8 +88,8 @@
 
         .body-overlay {
             position: fixed; inset: 0; z-index: -1;
-            background: rgba(10, 21, 15, 0.7);
-            backdrop-filter: blur(8px);
+            background: rgba(10, 21, 15, 0.45);
+            backdrop-filter: blur(4px);
         }
 
         #particleCanvas {
@@ -308,7 +308,7 @@
             padding: clamp(0.8rem, 2vw, 1.25rem) clamp(1rem, 3vw, 1.5rem);
             min-width: clamp(70px, 15vw, 90px);
             position: relative;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(4px);
             transition: transform 0.3s ease, border-color 0.3s ease;
         }
 
@@ -498,7 +498,7 @@
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -534,7 +534,7 @@
         }
 
         .admin-panel {
-            background: rgba(10, 21, 15, 0.8);
+            background: rgba(10, 21, 15, 0.45);
             border: 1px solid var(--glass-border);
             border-top: 1px solid rgba(30, 215, 96, 0.3);
             border-radius: 40px;

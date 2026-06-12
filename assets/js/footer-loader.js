@@ -25,6 +25,12 @@ async function loadGlobalFooter() {
         if (footerPlaceholder) {
             footerPlaceholder.innerHTML = footerHtml;
 
+            // Fix dashboard link relative to /all/ folder if path contains /all/
+            if (window.location.pathname.includes('/all/')) {
+                const dashboardLink = footerPlaceholder.querySelector('a[href="index.html"]');
+                if (dashboardLink) dashboardLink.href = '../index.html';
+            }
+
             // Initialize logic AFTER HTML is inserted
             updateFooterYear();
             loadFooterContactData();
@@ -118,4 +124,3 @@ document.addEventListener('click', function (event) {
 
 window.openModal = openModal;
 window.closeModal = closeModal;
-

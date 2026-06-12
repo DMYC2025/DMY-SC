@@ -99,8 +99,8 @@
         .body-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(10, 21, 15, 0.7);
-            backdrop-filter: blur(8px);
+            background: rgba(10, 21, 15, 0.45);
+            backdrop-filter: blur(4px);
             /* Reduced blur for performance */
             z-index: -1;
         }
@@ -172,25 +172,26 @@
     <div
         class="fixed bottom-[-10%] right-[-10%] w-96 h-96 bg-tertiary/10 rounded-full blur-[100px] animate-float-delayed pointer-events-none z-[-1]">
     </div>
-
     <!-- --- PRELOADER --- -->
     <div id="preloader"
-        class="fixed inset-0 z-[999] bg-[#0a150f] flex items-center justify-center transition-opacity duration-500">
-        <div class="relative flex flex-col items-center justify-center text-center p-4">
+        class="fixed inset-0 z-[999] flex items-center justify-center transition-opacity duration-500"
+        style="background-image: url('https://images.unsplash.com/photo-1550147760-44c9966d6bc7?q=60&w=1600&auto=format&fit=crop'); background-size: cover; background-position: center;">
+        <!-- Dark overlay for readability + blur -->
+        <div class="absolute inset-0 bg-[#0a150f]/30 backdrop-blur-md z-0"></div>
+        <div class="relative flex flex-col items-center justify-center text-center p-4 z-10">
             <div class="typewriter relative z-10 mb-8">
-                <h1 class="text-lg md:text-3xl font-display font-bold text-white uppercase tracking-widest">
+                <h1 class="text-lg md:text-3xl font-display font-bold text-white uppercase tracking-widest drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]">
                     Welcome to <span class="text-primary">Dream Makers</span>
                 </h1>
             </div>
             <div
-                class="w-48 md:w-80 h-1 bg-[#252529] rounded-full overflow-hidden relative backdrop-blur-sm border border-white/5">
+                class="w-48 md:w-80 h-1 bg-[#252529]/80 rounded-full overflow-hidden relative backdrop-blur-sm border border-white/5">
                 <div id="progress-bar"
                     class="absolute top-0 left-0 h-full bg-primary w-0 transition-all duration-100 ease-out shadow-[0_0_15px_rgba(28,215,96,0.4)]">
                     <div class="absolute inset-0 bg-white/50 w-full animate-[shimmer_0.8s_infinite]"></div>
                 </div>
             </div>
-            <p class="text-[9px] text-secondary mt-4 tracking-[0.3em] uppercase animate-pulse font-medium">Initializing
-                System...</p>
+            <p class="text-[9px] text-secondary mt-4 tracking-[0.3em] uppercase animate-pulse font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)]">Initializing System...</p>
         </div>
     </div>
 
@@ -212,18 +213,19 @@
 
                 <!-- Right Actions (Icons only, Nav Links restored) -->
                 <div class="flex items-center gap-4">
-                    <!-- Navigation Links -->
                     <nav class="hidden lg:flex items-center gap-6 mr-6">
                         <a href="index.html"
-                            class="text-sm font-bold uppercase tracking-wider text-primary transition-colors">Home</a>
+                            class="text-sm font-bold uppercase tracking-wider text-primary desktop-nav-link active">Home</a>
                         <a href="all/about.html"
-                            class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary transition-colors">About</a>
+                            class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary desktop-nav-link">About</a>
                         <a href="all/sport.html"
-                            class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary transition-colors">Sports</a>
+                            class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary desktop-nav-link">Sports</a>
                         <a href="all/gallery.html"
-                            class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary transition-colors">Photos</a>
+                            class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary desktop-nav-link">Photos</a>
                         <a href="all/event.html"
-                            class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary transition-colors">Event</a>
+                            class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary desktop-nav-link">Event</a>
+                        <a href="all/calendar.html"
+                            class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary desktop-nav-link">Calendar</a>
                     </nav>
 
                     <!-- Search Button -->
@@ -270,6 +272,9 @@
                     <a href="all/event.html"
                         class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span
                             class="material-symbols-rounded text-lg">event</span>Event</a>
+                    <a href="all/calendar.html"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span
+                            class="material-symbols-rounded text-lg">calendar_month</span>Calendar</a>
                 </nav>
             </div>
 
@@ -365,64 +370,7 @@
             </div>
         </div>
 
-        <!-- New Year Banner -->
-        <div class="w-full max-w-[1400px] mt-12 relative rounded-[32px] overflow-hidden group border border-primary/20 hover:border-primary/50 transition-all duration-500 shadow-2xl"
-            data-aos="fade-up" data-aos-delay="300">
-            <!-- Background Image Blended -->
-            <div class="absolute inset-0 bg-[url('spcial/2026%20avurudu/images/1.avif')] bg-cover bg-center"></div>
-            <!-- Overlay Gradient -->
-            <div
-                class="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent pointer-events-none">
-            </div>
 
-            <div class="relative p-8 md:p-12 flex flex-col md:flex-row items-center justify-between z-10 gap-8">
-                <div class="flex-1">
-                    <div class="flex items-center gap-2 text-primary mb-3">
-                        <span class="material-symbols-rounded animate-pulse">celebration</span>
-                        <span class="text-xs font-bold uppercase tracking-widest font-sans">Special Event</span>
-                    </div>
-                    <h2
-                        class="text-3xl md:text-5xl font-black mb-4 font-display text-white text-shadow-custom leading-tight">
-                        2026 අලුත් අවුරුදු <span class="text-primary block md:inline">නැකත්</span>
-                    </h2>
-                    <p class="text-sm md:text-base text-white/70 max-w-lg mb-6">
-                        Click here to view all auspicious times, rituals, and real-time countdowns for the upcoming
-                        Sinhala and Hindu New Year.
-                    </p>
-                    <a href="spcial/2026 avurudu/index.html"
-                        class="inline-flex items-center gap-2 bg-primary text-black font-bold px-6 py-3 rounded-full hover:bg-white hover:text-black transition-colors transform hover:-translate-y-1">
-                        Explore Now
-                        <span class="material-symbols-rounded text-lg">arrow_forward</span>
-                    </a>
-                </div>
-
-                <!-- Closest Nakatha (Dynamic) -->
-                <div
-                    class="shrink-0 bg-black/40 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-lg text-center min-w-[280px]">
-                    <span class="block text-[10px] text-white/60 uppercase tracking-widest mb-1 font-bold">Next
-                        Auspicious Time</span>
-                    <h3 class="text-xl font-bold text-white mb-4" id="homeNextNakathName">Loading...</h3>
-                    <div class="flex justify-center gap-2" id="homeNextNakathTimer">
-                        <div class="bg-black/60 border border-primary/20 rounded-lg p-2 w-14">
-                            <div class="text-lg font-bold text-primary font-display" id="hn-days">00</div>
-                            <div class="text-[8px] uppercase text-white/50">Days</div>
-                        </div>
-                        <div class="bg-black/60 border border-primary/20 rounded-lg p-2 w-14">
-                            <div class="text-lg font-bold text-primary font-display" id="hn-hours">00</div>
-                            <div class="text-[8px] uppercase text-white/50">Hours</div>
-                        </div>
-                        <div class="bg-black/60 border border-primary/20 rounded-lg p-2 w-14">
-                            <div class="text-lg font-bold text-primary font-display" id="hn-mins">00</div>
-                            <div class="text-[8px] uppercase text-white/50">Mins</div>
-                        </div>
-                        <div class="bg-black/60 border border-primary/20 rounded-lg p-2 w-14">
-                            <div class="text-lg font-bold text-primary font-display" id="hn-secs">00</div>
-                            <div class="text-[8px] uppercase text-white/50">Secs</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Stats Grid (Moved below the glass card to keep the template clean) -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 w-full max-w-[1400px] mt-12 px-4" data-aos="fade-up"
@@ -468,7 +416,7 @@
 
                     <div class="space-y-4 text-center md:text-left">
                         <div class="flex items-center justify-center md:justify-start gap-3 mb-4">
-                            <img src="../assets/images/logo.png" class="h-10 w-auto" alt="Logo">
+                            <img src="assets/images/logo.png" class="h-10 w-auto" alt="Logo">
                             <div class="flex flex-col">
                                 <span
                                     class="text-lg font-display font-bold text-[#E3E3E3] tracking-tight uppercase">DMYSC</span>
@@ -509,19 +457,19 @@
                             Links
                         </h4>
                         <ul class="space-y-3 text-sm text-[#C4C7C5]">
-                            <li><a href="../index.html"
+                            <li><a href="index.html"
                                     class="hover:text-primary transition flex items-center gap-2 group"><span
                                         class="material-symbols-rounded text-sm text-[#353539] group-hover:text-primary transition">chevron_right</span>
                                     Dashboard</a></li>
-                            <li><a href="event.html"
+                            <li><a href="all/event.html"
                                     class="hover:text-primary transition flex items-center gap-2 group"><span
                                         class="material-symbols-rounded text-sm text-[#353539] group-hover:text-primary transition">chevron_right</span>
                                     Events</a></li>
-                            <li><a href="sport.html"
+                            <li><a href="all/sport.html"
                                     class="hover:text-primary transition flex items-center gap-2 group"><span
                                         class="material-symbols-rounded text-sm text-[#353539] group-hover:text-primary transition">chevron_right</span>
                                     Sports Teams</a></li>
-                            <li><a href="about.html"
+                            <li><a href="all/about.html"
                                     class="hover:text-primary transition flex items-center gap-2 group"><span
                                         class="material-symbols-rounded text-sm text-[#353539] group-hover:text-primary transition">chevron_right</span>
                                     About Us</a></li>
@@ -552,19 +500,29 @@
                         <h4 class="text-[#E3E3E3] font-display font-bold uppercase tracking-wider mb-6 text-sm">Partners
                         </h4>
                         <div class="flex flex-wrap gap-4 items-center justify-center md:justify-start">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/1200px-Flag_of_Sri_Lanka.svg.png"
-                                class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300"
-                                alt="SL Flag">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Emblem_of_Sri_Lanka.svg"
+                            <img src="assets/images/icon.svg"
                                 class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300"
                                 alt="SL Emblem">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Western_Province_Flag_%28SRI_LANKA%29.png/330px-Western_Province_Flag_%28SRI_LANKA%29.png"
+                            <img src="assets/images/sl flag.webp"
+                                class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300"
+                                alt="SL Flag">
+                            <img src="assets/images/western flag.png"
                                 class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300"
                                 alt="WP Flag">
-                            <img src="../assets/images/119.png"
+                            <img src="assets/images/119.png"
                                 class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300"
                                 alt="119">
                         </div>
+                    </div>
+
+                    <div class="text-center md:text-left">
+                        <h4 class="text-[#E3E3E3] font-display font-bold uppercase tracking-wider mb-6 text-sm">Location</h4>
+                        <div class="rounded-2xl overflow-hidden border border-white/10 shadow-lg">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3962.4795325852504!2d80.0809212!3d6.7163669!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae24bcd7c40b405%3A0xf3dc83861d8a4e14!2sDream%20Makers%20Youth%20%26%20Sports%20Club!5e0!3m2!1sen!2slk!4v1718220000000!5m2!1sen!2slk" width="100%" height="110" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                        <a href="https://maps.app.goo.gl/J2LKtQtdpBU2f6dF9" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-primary hover:underline mt-3 font-semibold">
+                            <span class="material-symbols-rounded text-sm">open_in_new</span> Open in Google Maps
+                        </a>
                     </div>
 
                 </div>
@@ -792,32 +750,7 @@
                 </div>
             </div>
 
-    <!-- Ad Modal -->
-    <div id="adModal" class="fixed inset-0 z-[999] hidden" aria-labelledby="modal-title" role="dialog"
-        aria-modal="true">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-md transition-opacity opacity-0 modal-backdrop"></div>
-        <div class="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center p-4">
-            <div
-                class="relative w-full max-w-sm sm:max-w-md transform scale-95 opacity-0 transition-all modal-panel bg-[#1E1E1E] rounded-[28px] overflow-hidden shadow-2xl border border-[#353539] flex flex-col items-center">
-                <div class="absolute top-4 left-4 z-20 bg-black/60 text-white/90 text-xs font-bold px-3 py-1 rounded-full border border-white/20 backdrop-blur-md">
-                    Closing in <span id="adTimer">30</span>s
-                </div>
-                <button onclick="closeModal('adModal')"
-                    class="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-black/50 text-white hover:bg-black flex items-center justify-center transition border border-white/20 hover:scale-110">
-                    <span class="material-symbols-rounded text-lg">close</span>
-                </button>
-                <img src="spcial/2026 avurudu/images/feed 4.jpg" alt="New Year Ad"
-                    class="w-full h-auto object-cover opacity-100">
-                <div class="p-6 w-full flex justify-center bg-[#1E1E1E]">
-                    <a href="spcial/2026 avurudu/index.html"
-                        class="inline-flex items-center justify-center w-full max-w-[200px] gap-2 bg-primary text-[#003915] font-bold px-6 py-3 rounded-full hover:bg-[#b1fcc5] transition-colors transform hover:-translate-y-1 shadow-[0_0_15px_rgba(28,215,96,0.2)]">
-                        Learn More
-                        <span class="material-symbols-rounded text-lg">arrow_forward</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
@@ -889,7 +822,6 @@
             }
             resultsEl.classList.remove('hidden');
         }
-
         // --- PRELOADER LOGIC ---
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
@@ -903,18 +835,6 @@
                     setTimeout(() => {
                         preloader.classList.add('opacity-0');
                         setTimeout(() => { preloader.style.display = 'none'; }, 500);
-                        
-                        openModal('adModal');
-                        let timeLeft = 30;
-                        const timerEl = document.getElementById('adTimer');
-                        const adInterval = setInterval(() => {
-                            timeLeft--;
-                            if(timerEl) timerEl.innerText = timeLeft;
-                            if(timeLeft <= 0){
-                                clearInterval(adInterval);
-                                closeModal('adModal');
-                            }
-                        }, 1000);
                     }, 200);
                 } else {
                     percentage = Math.min(percentage + (Math.random() * 3 + 1), 100);
@@ -1115,44 +1035,7 @@
             }
         }
 
-        // Home page Avurudu Nakath logic
-        function updateHomeNakath() {
-            const nakathData = [
-                { title: 'නව සඳ බැලීම', time: '2026-03-20T18:00:00+05:30' },
-                { title: 'තෙල් වළන් ලිප තැබීම', time: '2026-04-05T11:08:00+05:30' },
-                { title: 'පරණ අවුරුද්ද සඳහා ස්නානය', time: '2026-04-13T06:00:00+05:30' },
-                { title: 'පුණ්‍ය කාලය / නොනගතය', time: '2026-04-14T03:08:00+05:30' },
-                { title: 'අලුත් අවුරුදු උදාව', time: '2026-04-14T09:32:00+05:30' },
-                { title: 'ආහාර පිසීම හා ලිප ගිනි දැල්වීම', time: '2026-04-14T10:51:00+05:30' },
-                { title: 'වැඩ ඇල්ලීම, ගනුදෙනු කිරීම හා ආහාර අනුභවය', time: '2026-04-14T12:06:00+05:30' },
-                { title: 'හිසතෙල් ගෑම', time: '2026-04-15T06:55:00+05:30' },
-                { title: 'රැකියා සඳහා පිටත්ව යෑම', time: '2026-04-20T06:27:00+05:30' },
-                { title: 'පැළ සිටුවීම', time: '2026-04-23T09:01:00+05:30' }
-            ];
-            const now = new Date();
-            const closest = nakathData.sort((a, b) => Date.parse(a.time) - Date.parse(b.time)).find(n => Date.parse(n.time) > now);
 
-            const nameEl = document.getElementById('homeNextNakathName');
-            const timerEl = document.getElementById('homeNextNakathTimer');
-            if (nameEl) {
-                if (closest) {
-                    nameEl.textContent = closest.title;
-                    const total = Date.parse(closest.time) - Date.parse(now);
-                    if (total > 0) {
-                        document.getElementById('hn-days').textContent = ('0' + Math.floor(total / (1000 * 60 * 60 * 24))).slice(-2);
-                        document.getElementById('hn-hours').textContent = ('0' + Math.floor((total / (1000 * 60 * 60)) % 24)).slice(-2);
-                        document.getElementById('hn-mins').textContent = ('0' + Math.floor((total / 1000 / 60) % 60)).slice(-2);
-                        document.getElementById('hn-secs').textContent = ('0' + Math.floor((total / 1000) % 60)).slice(-2);
-                    } else {
-                        setTimeout(updateHomeNakath, 1000);
-                    }
-                } else {
-                    nameEl.textContent = "සියලුම නැකැත් අවසන්";
-                    if (timerEl) timerEl.style.display = 'none';
-                }
-            }
-        }
-        setInterval(updateHomeNakath, 1000);
 
         // Init
         initSlideshow();
@@ -1160,7 +1043,7 @@
         loadFooterData();
         checkBadge();
         checkAutoLogin();
-        updateHomeNakath();
+
     </script>
 </body>
 

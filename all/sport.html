@@ -69,8 +69,8 @@
         .body-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(10, 21, 15, 0.6);
-            backdrop-filter: blur(10px);
+            background: rgba(10, 21, 15, 0.45);
+            backdrop-filter: blur(4px);
             z-index: -1;
         }
 
@@ -155,11 +155,12 @@
 
                 <div class="flex items-center gap-4">
                     <nav class="hidden lg:flex items-center gap-6 mr-6">
-                        <a href="../index.html" class="text-xs font-black uppercase tracking-widest text-white/50 hover:text-primary transition-colors">Home</a>
-                        <a href="about.html" class="text-xs font-black uppercase tracking-widest text-white/50 hover:text-primary transition-colors">About</a>
-                        <a href="sport.html" class="text-xs font-black uppercase tracking-widest text-primary transition-colors">Sports</a>
-                        <a href="gallery.html" class="text-xs font-black uppercase tracking-widest text-white/50 hover:text-primary transition-colors">Photos</a>
-                        <a href="event.html" class="text-xs font-black uppercase tracking-widest text-white/50 hover:text-primary transition-colors">Event</a>
+                        <a href="../index.html" class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary desktop-nav-link">Home</a>
+                        <a href="about.html" class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary desktop-nav-link">About</a>
+                        <a href="sport.html" class="text-sm font-bold uppercase tracking-wider text-primary desktop-nav-link active">Sports</a>
+                        <a href="gallery.html" class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary desktop-nav-link">Photos</a>
+                        <a href="event.html" class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary desktop-nav-link">Event</a>
+                        <a href="calendar.html" class="text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary desktop-nav-link">Calendar</a>
                     </nav>
 
                     <button class="relative text-white/80 hover:text-white transition-all transform hover:scale-110 active:scale-95">
@@ -187,6 +188,7 @@
                     <a href="sport.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-primary bg-primary/10"><span class="material-symbols-rounded text-lg">sports_cricket</span>Sports</a>
                     <a href="gallery.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span class="material-symbols-rounded text-lg">photo_library</span>Photos</a>
                     <a href="event.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span class="material-symbols-rounded text-lg">event</span>Event</a>
+                    <a href="calendar.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white/70 hover:text-primary hover:bg-white/5 transition-colors"><span class="material-symbols-rounded text-lg">calendar_month</span>Calendar</a>
                 </nav>
             </div>
 
@@ -309,19 +311,29 @@
                     <h4 class="text-[#E3E3E3] font-display font-bold uppercase tracking-wider mb-6 text-sm">Partners
                     </h4>
                     <div class="flex flex-wrap gap-4 items-center justify-center md:justify-start">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/1200px-Flag_of_Sri_Lanka.svg.png"
-                            class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300"
-                            alt="SL Flag">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Emblem_of_Sri_Lanka.svg"
+                        <img src="../assets/images/icon.svg"
                             class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300"
                             alt="SL Emblem">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Western_Province_Flag_%28SRI_LANKA%29.png/330px-Western_Province_Flag_%28SRI_LANKA%29.png"
+                        <img src="../assets/images/sl flag.webp"
+                            class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300"
+                            alt="SL Flag">
+                        <img src="../assets/images/western flag.png"
                             class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300"
                             alt="WP Flag">
                         <img src="../assets/images/119.png"
                             class="h-6 w-auto object-contain opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition duration-300"
                             alt="119">
                     </div>
+                </div>
+
+                <div class="text-center md:text-left">
+                    <h4 class="text-[#E3E3E3] font-display font-bold uppercase tracking-wider mb-6 text-sm">Location</h4>
+                    <div class="rounded-2xl overflow-hidden border border-white/10 shadow-lg">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3962.4795325852504!2d80.0809212!3d6.7163669!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae24bcd7c40b405%3A0xf3dc83861d8a4e14!2sDream%20Makers%20Youth%20%26%20Sports%20Club!5e0!3m2!1sen!2slk!4v1718220000000!5m2!1sen!2slk" width="100%" height="110" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                    <a href="https://maps.app.goo.gl/J2LKtQtdpBU2f6dF9" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-primary hover:underline mt-3 font-semibold">
+                        <span class="material-symbols-rounded text-sm">open_in_new</span> Open in Google Maps
+                    </a>
                 </div>
 
             </div>

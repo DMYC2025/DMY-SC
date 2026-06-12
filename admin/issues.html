@@ -17,12 +17,12 @@
             theme: {
                 extend: {
                     colors: {
-                        background: '#121212',
+                        background: '#0a150f',
                         surface: '#1E1E1E',
                         'surface-container': '#252529',
                         'surface-bright': '#3b3b3f',
-                        primary: '#a8c7fa',
-                        'on-primary': '#062e6f',
+                        primary: '#1ED760',
+                        'on-primary': '#003915',
                         secondary: '#c2c9bd',
                         tertiary: '#a0cfd0',
                         error: '#ffb4ab',
@@ -38,9 +38,10 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+   </head>
 
-<body class="bg-[#121212] text-slate-100 min-h-screen font-sans overflow-hidden">
+<body class="bg-[#0a150f] text-slate-100 min-h-screen font-sans overflow-hidden">
 
     <div id="overlay" onclick="toggleSidebar()"
         class="fixed inset-0 bg-black/60 z-40 hidden md:hidden backdrop-blur-sm"></div>
@@ -117,7 +118,7 @@
             </div>
         </aside>
 
-        <main class="flex-1 overflow-y-auto relative bg-[#121212] scroll-smooth">
+        <main class="flex-1 overflow-y-auto relative bg-[#0a150f] scroll-smooth">
             <button onclick="toggleSidebar()"
                 class="md:hidden absolute top-6 right-6 z-40 bg-[#1E1E1E] p-2 rounded-full text-[#E3E3E3] border border-white/10 shadow-lg"><span
                     class="material-symbols-rounded text-2xl">menu</span></button>
