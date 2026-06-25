@@ -211,6 +211,25 @@
             background: #003915;
         }
 
+        /* Anniversary - Fuchsia */
+        .cal-day.anniversary {
+            color: #d946ef;
+            font-weight: 700;
+        }
+
+        .cal-day.anniversary::after {
+            background: #d946ef;
+            box-shadow: 0 0 8px rgba(217, 70, 239, 0.6);
+        }
+
+        .cal-day.today.anniversary {
+            color: #003915;
+        }
+
+        .cal-day.today.anniversary::after {
+            background: #003915;
+        }
+
         /* National/Other - Red */
         .cal-day.national {
             color: #ffb4ab;
@@ -421,6 +440,8 @@
                             Muslim</div>
                         <div class="flex items-center gap-1"><span
                                 class="w-1.5 h-1.5 rounded-full bg-purple-500"></span> Christian</div>
+                        <div class="flex items-center gap-1"><span
+                                class="w-1.5 h-1.5 rounded-full bg-fuchsia-500"></span> DMYSC Anniversary</div>
                         <div class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-error"></span>
                             National</div>
                         <div class="flex items-center gap-1"><span
@@ -615,6 +636,7 @@
                 else if (type === 'islamic') { colorClass = 'text-teal-400'; bgClass = 'bg-teal-400/10'; }
                 else if (type === 'christian') { colorClass = 'text-purple-500'; bgClass = 'bg-purple-500/10'; }
                 else if (type === 'national') { colorClass = 'text-error'; bgClass = 'bg-error/10'; }
+                else if (type === 'anniversary') { colorClass = 'text-fuchsia-400 font-bold'; bgClass = 'bg-fuchsia-500/10'; }
 
                 html += `
                     <div class="flex items-center gap-3 p-2 rounded-xl hover:bg-[#252529] transition group cursor-default">
@@ -793,14 +815,37 @@
             let content = '';
 
             if (holiday) {
-                const isPoya = holiday.includes('පෝය') || holiday.includes('Poya');
+                const type = window.DMY_HOLIDAYS.getType(holiday);
+                const isPoya = type === 'poya';
+                const isAnniversary = type === 'anniversary';
+                
+                let modalBg = 'bg-[#3c2525] border-error/20';
+                let modalIcon = 'celebration';
+                let iconColor = 'text-error';
+                let labelText = 'Public Holiday';
+                let labelColor = 'text-error/70';
+
+                if (isPoya) {
+                    modalBg = 'bg-[#3c2f10] border-yellow-500/20';
+                    modalIcon = 'brightness_7';
+                    iconColor = 'text-yellow-500';
+                    labelText = 'Poya Day';
+                    labelColor = 'text-yellow-500/70';
+                } else if (isAnniversary) {
+                    modalBg = 'bg-[#331b3f] border-purple-500/20';
+                    modalIcon = 'celebration';
+                    iconColor = 'text-fuchsia-400';
+                    labelText = 'Club Anniversary';
+                    labelColor = 'text-fuchsia-400/70';
+                }
+
                 content += `
-                    <div class="p-4 rounded-2xl ${isPoya ? 'bg-[#3c2f10] border-yellow-500/20' : 'bg-[#3c2525] border-error/20'} border mb-4">
+                    <div class="p-4 rounded-2xl ${modalBg} border mb-4">
                         <div class="flex items-center gap-3">
-                            <span class="material-symbols-rounded ${isPoya ? 'text-yellow-500' : 'text-error'}">${isPoya ? 'brightness_7' : 'celebration'}</span>
+                            <span class="material-symbols-rounded ${iconColor}">${modalIcon}</span>
                             <div>
                                 <h4 class="text-sm font-bold text-white">${holiday}</h4>
-                                <p class="text-[10px] ${isPoya ? 'text-yellow-500/70' : 'text-error/70'} uppercase tracking-widest font-bold">${isPoya ? 'Poya Day' : 'Public Holiday'}</p>
+                                <p class="text-[10px] ${labelColor} uppercase tracking-widest font-bold">${labelText}</p>
                             </div>
                         </div>
                     </div>

@@ -353,6 +353,25 @@
             </button>
         </div>
 
+        <!-- Anniversary Card -->
+        <div id="anniversaryCard"
+            class="hidden bg-gradient-to-r from-purple-950/80 to-indigo-950/80 backdrop-blur-md border border-purple-500/30 rounded-[24px] p-4 flex items-center justify-between animate-fade-in shadow-lg relative overflow-hidden">
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 pointer-events-none"></div>
+            <div class="flex items-center gap-3 relative z-10">
+                <div class="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center shadow-[0_0_10px_rgba(168,85,247,0.5)] shrink-0">
+                    <span class="material-symbols-rounded text-[18px] animate-bounce">celebration</span>
+                </div>
+                <div>
+                    <h3 class="text-purple-200 font-display font-bold text-xs flex items-center gap-2">Happy Club Anniversary! 🎉</h3>
+                    <p class="text-[10px] text-purple-300/80 font-light mt-0.5" id="anniversaryCardMessage">Celebrating our foundation since June 23, 2025.</p>
+                </div>
+            </div>
+            <button onclick="document.getElementById('anniversaryCard').classList.add('hidden')"
+                class="w-6 h-6 flex items-center justify-center rounded-full hover:bg-white/10 text-purple-300">
+                <span class="material-symbols-rounded text-[18px]">close</span>
+            </button>
+        </div>
+
         <!-- MODERN GRID MENU (Glassmorphism + Neumorphism) -->
         <div class="grid grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
             
@@ -1079,6 +1098,20 @@
                                 const age = calculateAge(profile.dob);
                                 const todayStr = today.toISOString().split('T')[0];
 
+                                // Unhide and update birthday card
+                                const bdayCard = document.getElementById('birthdayCard');
+                                if (bdayCard) {
+                                    bdayCard.classList.remove('hidden');
+                                    const bdayText = bdayCard.querySelector('p');
+                                    if (bdayText) {
+                                        let suffix = 'th';
+                                        if (age % 10 === 1 && age !== 11) suffix = 'st';
+                                        else if (age % 10 === 2 && age !== 12) suffix = 'nd';
+                                        else if (age % 10 === 3 && age !== 13) suffix = 'rd';
+                                        bdayText.textContent = `Best wishes from DMYSC on your ${age}${suffix} Birthday!`;
+                                    }
+                                }
+
                                 _supabase.from('notifications')
                                     .select('id')
                                     .eq('user_id', session.user.id)
@@ -1104,6 +1137,55 @@
                                     });
                             }
                         }
+                    }
+
+                    // --- Club Anniversary Check ---
+                    const today = new Date();
+                    if (today.getMonth() === 5 && today.getDate() === 23) {
+                        const anniCard = document.getElementById('anniversaryCard');
+                        if (anniCard) {
+                            anniCard.classList.remove('hidden');
+                            const anniversaryYears = today.getFullYear() - 2025;
+                            let ordSuffix = 'th';
+                            if (anniversaryYears === 1) ordSuffix = 'st';
+                            else if (anniversaryYears === 2) ordSuffix = 'nd';
+                            else if (anniversaryYears === 3) ordSuffix = 'rd';
+                            
+                            const anniMsg = document.getElementById('anniversaryCardMessage');
+                            if (anniMsg) {
+                                if (anniversaryYears === 0) {
+                                    anniMsg.textContent = `Today is the starting day of Dream Makers Youth & Sports Club! Established on June 23, 2025.`;
+                                } else {
+                                    anniMsg.textContent = `Today marks the ${anniversaryYears}${ordSuffix} Anniversary of Dream Makers Youth & Sports Club (Founded on June 23, 2025). Thank you for being a part of our journey!`;
+                                }
+                            }
+                        }
+
+                        // Send anniversary notification if not already sent for this year
+                        const todayStr = today.toISOString().split('T')[0];
+                        _supabase.from('notifications')
+                            .select('id')
+                            .eq('user_id', session.user.id)
+                            .ilike('title', '%Anniversary%')
+                            .gte('created_at', todayStr + 'T00:00:00Z')
+                            .then(({ data }) => {
+                                if (!data || data.length === 0) {
+                                    const anniversaryYears = today.getFullYear() - 2025;
+                                    let ordSuffix = 'th';
+                                    if (anniversaryYears === 1) ordSuffix = 'st';
+                                    else if (anniversaryYears === 2) ordSuffix = 'nd';
+                                    else if (anniversaryYears === 3) ordSuffix = 'rd';
+
+                                    _supabase.from('notifications').insert({
+                                        user_id: session.user.id,
+                                        title: `Happy Club Anniversary! 🎂✨`,
+                                        message: `Today we celebrate the ${anniversaryYears}${ordSuffix} Anniversary of DMYSC! Established on June 23, 2025. Thank you for your continued support and dedication!`,
+                                        priority: 'normal'
+                                    }).then(() => {
+                                        checkNotifications();
+                                    });
+                                }
+                            });
                     }
 
                     loadProfilePopupData();

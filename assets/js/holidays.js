@@ -10,6 +10,7 @@ window.DMY_HOLIDAYS = {
     specific: {
         "2025-01-13": "Duruthu Poya", "2025-02-12": "Navam Poya", "2025-03-13": "Medin Poya",
         "2025-04-12": "Bak Poya", "2025-05-12": "Vesak Poya", "2025-06-10": "Poson Poya",
+        "2025-06-23": "DMYSC ආරම්භක දිනය (DMYSC Foundation Day)",
         "2025-07-10": "Esala Poya", "2025-08-08": "Nikini Poya", "2025-09-07": "Binara Poya",
         "2025-10-06": "Vap Poya", "2025-11-05": "Il Poya", "2025-12-04": "Unduvap Poya",
 
@@ -29,6 +30,7 @@ window.DMY_HOLIDAYS = {
         "2026-05-02": "වෙසක් පසු දිනය (Day After Vesak)",
         "2026-05-28": "හජ් උත්සවය (Id-Ul-Alha)",
         "2026-05-30": "අධි පොසොන් පෝය (Adhi Poson Poya)",
+        "2026-06-23": "DMYSC 1 වන සංවත්සරය (DMYSC 1st Anniversary)",
         "2026-06-29": "පොසොන් පෝය (Poson Poya)",
         "2026-07-29": "ඇසළ පෝය (Esala Poya)",
         "2026-08-26": "මිලාද්-උන්-නබි (Milad-Un-Nabi)",
@@ -38,12 +40,19 @@ window.DMY_HOLIDAYS = {
         "2026-11-08": "දීපවාලි (Deepavali)",
         "2026-11-24": "ඉල් පෝය (Il Poya)",
         "2026-12-23": "උඳුවප් පෝය (Unduvap Poya)",
-        "2026-12-25": "නත්තල් දිනය (Christmas Day)"
+        "2026-12-25": "නත්තල් දිනය (Christmas Day)",
+
+        // Future Anniversaries
+        "2027-06-23": "DMYSC 2 වන සංවත්සරය (DMYSC 2nd Anniversary)",
+        "2028-06-23": "DMYSC 3 වන සංවත්සරය (DMYSC 3rd Anniversary)",
+        "2029-06-23": "DMYSC 4 වන සංවත්සරය (DMYSC 4th Anniversary)",
+        "2030-06-23": "DMYSC 5 වන සංවත්සරය (DMYSC 5th Anniversary)"
     },
 
     // Categorization logic
     getType(name) {
         if (!name) return null;
+        if (name.includes('DMYSC')) return 'anniversary';
         if (name.includes('පෝය') || name.includes('Poya')) return 'poya';
         if (/පොන්ගල්|Pongal|ශිවරාත්රි|Sivarathri|දීපවාලි|Deepavali/.test(name)) return 'tamil';
         if (/රාමසාන්|Ramazan|හජ්|Hadji|නබි|Nabi|Fitr|Alha/.test(name)) return 'islamic';

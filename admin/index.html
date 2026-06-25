@@ -197,6 +197,23 @@
                 </div>
             </div>
 
+            <!-- Anniversary Card (Admin Dashboard) -->
+            <div id="adminAnniversaryCard" class="hidden mx-6 md:mx-12 mb-6 bg-gradient-to-r from-purple-950/80 to-indigo-950/80 backdrop-blur-md border border-purple-500/30 rounded-2xl p-4 flex items-center justify-between gap-4 animate-fade-in shadow-lg relative overflow-hidden">
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 pointer-events-none"></div>
+                <div class="flex items-center gap-3 relative z-10">
+                    <div class="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center shadow-[0_0_10px_rgba(168,85,247,0.5)] shrink-0">
+                        <span class="material-symbols-rounded text-[18px] animate-bounce">celebration</span>
+                    </div>
+                    <div>
+                        <h3 class="text-[#E3E3E3] font-display font-bold text-xs md:text-sm">DMYSC Anniversary! 🎉</h3>
+                        <p class="text-[10px] md:text-xs text-purple-200/80 font-light mt-0.5" id="adminAnniversaryMessage">Celebrating our foundation today!</p>
+                    </div>
+                </div>
+                <button onclick="document.getElementById('adminAnniversaryCard').classList.add('hidden')" class="text-white/60 hover:text-white relative z-10 shrink-0">
+                    <span class="material-symbols-rounded text-lg">close</span>
+                </button>
+            </div>
+
             <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10 pb-12">
 
                 <!-- Stats Grid (M3 Cards) -->
@@ -640,6 +657,28 @@
 
         // Date Display
         document.getElementById('dateDisplay').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+        // Club Anniversary Check
+        const today = new Date();
+        if (today.getMonth() === 5 && today.getDate() === 23) {
+            const anniCard = document.getElementById('adminAnniversaryCard');
+            if (anniCard) {
+                anniCard.classList.remove('hidden');
+                const years = today.getFullYear() - 2025;
+                let suffix = 'th';
+                if (years === 1) suffix = 'st';
+                else if (years === 2) suffix = 'nd';
+                else if (years === 3) suffix = 'rd';
+                const msgEl = document.getElementById('adminAnniversaryMessage');
+                if (msgEl) {
+                    if (years === 0) {
+                        msgEl.innerText = `Today is the starting day of Dream Makers Youth & Sports Club! Established on June 23, 2025.`;
+                    } else {
+                        msgEl.innerText = `Today marks the ${years}${suffix} Anniversary of Dream Makers Youth & Sports Club (Founded on June 23, 2025). Wishing all members a happy anniversary!`;
+                    }
+                }
+            }
+        }
 
         // Sidebar Toggle
         function toggleSidebar() {

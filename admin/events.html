@@ -110,6 +110,16 @@
             background: #a855f7;
         }
 
+        .cal-day.anniversary {
+            color: #d946ef;
+            font-weight: 700;
+        }
+
+        .cal-day.anniversary::after {
+            background: #d946ef;
+            box-shadow: 0 0 8px rgba(217, 70, 239, 0.6);
+        }
+
         .cal-day.national {
             color: #ffb4ab;
             font-weight: 700;
@@ -333,6 +343,8 @@
                                 <div class="flex items-center gap-1"><span
                                         class="w-1.5 h-1.5 rounded-full bg-purple-500"></span> Christian</div>
                                 <div class="flex items-center gap-1"><span
+                                        class="w-1.5 h-1.5 rounded-full bg-fuchsia-500"></span> DMYSC Anniversary</div>
+                                <div class="flex items-center gap-1"><span
                                         class="w-1.5 h-1.5 rounded-full bg-error"></span> National</div>
                                 <div class="flex items-center gap-1"><span
                                         class="w-1.5 h-1.5 rounded-full border border-white"></span> Event</div>
@@ -504,6 +516,7 @@
                     else if (type === 'tamil') { color = 'text-orange-500'; bg = 'bg-orange-500/10'; }
                     else if (type === 'islamic') { color = 'text-teal-400'; bg = 'bg-teal-400/10'; }
                     else if (type === 'christian') { color = 'text-purple-500'; bg = 'bg-purple-500/10'; }
+                    else if (type === 'anniversary') { color = 'text-fuchsia-400 font-bold'; bg = 'bg-fuchsia-500/10'; }
                     else if (type === 'national') { color = 'text-error'; bg = 'bg-error/10'; }
 
                     html += `
@@ -524,11 +537,30 @@
             if (holiday) {
                 const type = window.DMY_HOLIDAYS.getType(holiday);
                 const isPoya = type === 'poya';
+                const isAnniversary = type === 'anniversary';
+                
+                let modalBg = 'bg-[#3c2525] border-error/20';
+                let modalIcon = 'celebration';
+                let iconColor = 'text-error';
+                let labelText = type ? `${type} Day` : 'Public Holiday';
+
+                if (isPoya) {
+                    modalBg = 'bg-[#3c2f10] border-yellow-500/20';
+                    modalIcon = 'brightness_7';
+                    iconColor = 'text-yellow-500';
+                    labelText = 'Poya Day';
+                } else if (isAnniversary) {
+                    modalBg = 'bg-[#331b3f] border-purple-500/20';
+                    modalIcon = 'celebration';
+                    iconColor = 'text-fuchsia-400';
+                    labelText = 'Club Anniversary';
+                }
+
                 content += `
-                    <div class="p-4 rounded-xl ${isPoya ? 'bg-[#3c2f10] border-yellow-500/20' : 'bg-[#3c2525] border-error/20'} border mb-4">
+                    <div class="p-4 rounded-xl ${modalBg} border mb-4">
                         <div class="flex items-center gap-3">
-                            <span class="material-symbols-rounded ${isPoya ? 'text-yellow-500' : 'text-error'}">${isPoya ? 'brightness_7' : 'celebration'}</span>
-                            <div><h4 class="text-sm font-bold text-white">${holiday}</h4><p class="text-[10px] uppercase font-bold opacity-70">${type} Day</p></div>
+                            <span class="material-symbols-rounded ${iconColor}">${modalIcon}</span>
+                            <div><h4 class="text-sm font-bold text-white">${holiday}</h4><p class="text-[10px] uppercase font-bold opacity-70">${labelText}</p></div>
                         </div>
                     </div>`;
             }
