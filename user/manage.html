@@ -230,32 +230,32 @@
 
 <body class="min-h-screen pb-28 md:pb-8 font-sans">
 
-    <!-- Top Navigation (Liquid Glass Floating Bar) -->
-    <nav class="sticky top-3 md:top-4 z-40 w-full px-3 md:px-6 no-print">
-        <div class="max-w-7xl mx-auto liquid-glass-header px-4 md:px-6 py-2.5 md:py-3 flex justify-between items-center transition-all">
-            <a href="index.html" class="flex items-center gap-3 pl-1 group">
+    <!-- Navbar -->
+    <nav class="sticky top-4 z-40 w-full px-4">
+        <div class="max-w-7xl mx-auto m3-navbar px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 pl-2 group">
                 <button
-                    class="w-9 h-9 md:w-10 md:h-10 rounded-full liquid-action-btn flex items-center justify-center text-white/90 group-hover:text-white group-hover:border-primary/40 transition">
+                    class="w-10 h-10 rounded-full bg-[#353539] flex items-center justify-center group-hover:bg-primary group-hover:text-[#003915] transition">
                     <span class="material-symbols-rounded text-[20px]">arrow_back</span>
                 </button>
                 <div class="flex flex-col">
-                    <span class="text-sm font-display font-bold text-white group-hover:text-primary transition-colors">Executive Hub</span>
-                    <span class="text-[9px] md:text-[10px] text-primary tracking-widest font-extrabold uppercase opacity-90">Manage Club</span>
+                    <span class="text-sm font-display font-medium text-[#E3E3E3]">Manage</span>
+                    <span class="text-[10px] text-secondary tracking-wider font-bold">DMYSC</span>
                 </div>
             </a>
 
-            <div class="flex items-center gap-2.5 md:gap-3">
+            <div class="flex items-center gap-3">
                 <!-- Role Badge -->
                 <div id="roleBadgeContainer" class="hidden">
                     <span id="roleBadge"
-                        class="pill-badge bg-[#ffb783]/15 text-warning border border-warning/20 px-3 py-1 text-xs font-bold rounded-full"></span>
+                        class="pill-badge bg-[#ffb783]/15 text-warning border border-warning/20"></span>
                 </div>
 
                 <!-- Edit Toggle (only for authorized roles) -->
                 <button id="editToggleBtn"
-                    class="hidden items-center gap-2 px-4 py-2 rounded-full liquid-action-btn text-xs font-bold text-[#E3E3E3] hover:text-white transition"
+                    class="hidden items-center gap-2 px-4 py-2 rounded-full bg-[#27272A] border border-white/10 text-sm font-bold text-[#C4C7C5] transition"
                     onclick="toggleEditMode()">
-                    <span class="material-symbols-rounded text-[18px] text-primary" id="editToggleIcon">edit</span>
+                    <span class="material-symbols-rounded text-[18px]" id="editToggleIcon">edit</span>
                     <span id="editToggleLabel">Edit Mode</span>
                 </button>
             </div>
@@ -437,43 +437,22 @@
 
     </main>
 
-    <!-- MOBILE NAV BAR (Floating Liquid Glass Pill Bar) -->
-    <div class="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-md z-50 liquid-glass-bottom-bar px-2 py-1.5 no-print">
-        <div class="flex justify-around items-center h-14">
-            <!-- Home -->
-            <a href="index.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
-                <div class="liquid-tab-pill">
-                    <span class="material-symbols-rounded text-[22px]">home</span>
-                </div>
-                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Home</span>
+    <!-- Mobile Bottom Nav -->
+    <div
+        class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#18181B]/95 backdrop-blur-md border-t border-white/5 pb-safe">
+        <div class="flex justify-around items-center h-16">
+            <a href="index.html" class="flex flex-col items-center gap-1 w-full text-gray-500">
+                <span class="material-symbols-rounded">home</span>
+                <span class="text-[10px]">Home</span>
             </a>
-            <!-- Events -->
-            <a href="event.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
-                <div class="liquid-tab-pill">
-                    <span class="material-symbols-rounded text-[22px]">event</span>
-                </div>
-                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Events</span>
-            </a>
-            <!-- Manage / Edit Toggle (Center Capsule) -->
-            <button onclick="toggleEditMode()" id="mobileEditBtn" class="liquid-tab-item active flex flex-col items-center justify-center gap-0.5 flex-1">
-                <div class="liquid-tab-pill">
-                    <span class="material-symbols-rounded text-[22px]" id="mobileEditIcon">manage_accounts</span>
-                </div>
-                <span class="liquid-tab-label text-[10px] font-bold tracking-tight" id="mobileEditLabel">Manage</span>
+            <button onclick="toggleEditMode()" id="mobileEditBtn"
+                class="hidden flex-col items-center gap-1 w-full text-gray-500 relative">
+                <span class="material-symbols-rounded" id="mobileEditIcon">edit</span>
+                <span class="text-[10px]" id="mobileEditLabel">Edit</span>
             </button>
-            <!-- Pay -->
-            <a href="pay.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
-                <div class="liquid-tab-pill">
-                    <span class="material-symbols-rounded text-[22px]">account_balance_wallet</span>
-                </div>
-                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Pay</span>
-            </a>
-            <!-- Profile -->
-            <a href="profile.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
-                <div class="liquid-tab-pill">
-                    <span class="material-symbols-rounded text-[22px]">person</span>
-                </div>
-                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Profile</span>
+            <a href="profile.html" class="flex flex-col items-center gap-1 w-full text-gray-500">
+                <span class="material-symbols-rounded">person</span>
+                <span class="text-[10px]">Profile</span>
             </a>
         </div>
     </div>

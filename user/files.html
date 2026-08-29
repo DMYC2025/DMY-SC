@@ -44,23 +44,21 @@
 
 <body class="min-h-screen pb-24 md:pb-0 font-sans bg-background text-[#E3E3E3]">
 
-    <!-- Top Navigation (Liquid Glass Floating Bar) -->
-    <nav class="sticky top-3 md:top-4 z-40 w-full px-3 md:px-6 no-print">
-        <div class="max-w-7xl mx-auto liquid-glass-header px-4 md:px-6 py-2.5 md:py-3 flex justify-between items-center transition-all">
-            <div class="flex items-center gap-3 pl-1 cursor-pointer group" onclick="window.location.href='index.html'">
-                <button
-                    class="w-9 h-9 md:w-10 md:h-10 rounded-full liquid-action-btn flex items-center justify-center text-white/90 group-hover:text-white group-hover:border-primary/40 transition">
-                    <span class="material-symbols-rounded text-[20px]">arrow_back</span>
-                </button>
+    <!-- Top Navigation -->
+    <nav class="sticky top-4 z-40 w-full px-4 no-print">
+        <div
+            class="max-w-7xl mx-auto m3-navbar px-4 py-3 flex justify-between items-center bg-[#1E1E1E]/80 backdrop-blur-xl border border-white/5 rounded-full shadow-lg">
+            <div class="flex items-center gap-3 pl-2 cursor-pointer" onclick="window.location.href='index.html'">
+                <img src="../assets/images/logo_2.png" class="h-8 w-auto">
                 <div class="flex flex-col">
-                    <span class="text-sm font-display font-bold text-white group-hover:text-primary transition-colors">My Documents</span>
-                    <span class="text-[9px] md:text-[10px] text-primary tracking-widest font-extrabold uppercase opacity-90">Personal Vault</span>
+                    <span class="text-sm font-display font-medium text-[#E3E3E3]">My Files</span>
+                    <span class="text-[10px] text-primary tracking-wider font-bold">Personal Vault</span>
                 </div>
             </div>
 
             <a href="index.html"
-                class="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center rounded-full liquid-action-btn text-white/90 hover:text-white transition" aria-label="Close">
-                <span class="material-symbols-rounded text-[20px]">close</span>
+                class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition text-primary">
+                <span class="material-symbols-rounded">close</span>
             </a>
         </div>
     </nav>
@@ -159,44 +157,35 @@
 
     </main>
 
-    <!-- MOBILE NAV BAR (Floating Liquid Glass Pill Bar) -->
-    <div class="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-md z-50 liquid-glass-bottom-bar px-2 py-1.5 no-print">
-        <div class="flex justify-around items-center h-14">
-            <!-- Home -->
-            <a href="index.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
-                <div class="liquid-tab-pill">
-                    <span class="material-symbols-rounded text-[22px]">home</span>
+    <!-- Mobile Nav -->
+    <div class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#1E1E1E] border-t border-[#252529] pb-safe">
+        <div class="flex justify-around items-center h-16">
+            <button onclick="window.location.href='index.html'"
+                class="flex flex-col items-center gap-1 w-full text-[#C4C7C5]">
+                <span class="material-symbols-rounded">home</span>
+                <span class="text-[10px] font-medium">Home</span>
+            </button>
+            <button class="flex flex-col items-center gap-1 w-full text-primary">
+                <div class="w-16 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                    <span class="material-symbols-rounded">folder</span>
                 </div>
-                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Home</span>
-            </a>
-            <!-- Events -->
-            <a href="event.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
-                <div class="liquid-tab-pill">
-                    <span class="material-symbols-rounded text-[22px]">event</span>
-                </div>
-                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Events</span>
-            </a>
-            <!-- Sports -->
-            <a href="sport.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
-                <div class="liquid-tab-pill">
-                    <span class="material-symbols-rounded text-[22px]">emoji_events</span>
-                </div>
-                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Sports</span>
-            </a>
-            <!-- Pay -->
-            <a href="pay.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
-                <div class="liquid-tab-pill">
-                    <span class="material-symbols-rounded text-[22px]">account_balance_wallet</span>
-                </div>
-                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Pay</span>
-            </a>
-            <!-- Profile -->
-            <a href="profile.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
-                <div class="liquid-tab-pill">
-                    <span class="material-symbols-rounded text-[22px]">person</span>
-                </div>
-                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Profile</span>
-            </a>
+                <span class="text-[10px] font-medium">Files</span>
+            </button>
+            <button onclick="window.location.href='index.html#card'"
+                class="flex flex-col items-center gap-1 w-full text-[#C4C7C5]">
+                <span class="material-symbols-rounded">badge</span>
+                <span class="text-[10px] font-medium">ID</span>
+            </button>
+            <button onclick="window.location.href='pay.html'"
+                class="flex flex-col items-center gap-1 w-full text-[#C4C7C5]">
+                <span class="material-symbols-rounded">account_balance_wallet</span>
+                <span class="text-[10px] font-medium">Pay</span>
+            </button>
+            <button onclick="window.location.href='profile.html'"
+                class="flex flex-col items-center gap-1 w-full text-[#C4C7C5]">
+                <span class="material-symbols-rounded">person</span>
+                <span class="text-[10px] font-medium">Profile</span>
+            </button>
         </div>
     </div>
 

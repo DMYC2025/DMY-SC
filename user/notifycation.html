@@ -119,22 +119,22 @@
 
 <body class="min-h-screen pb-24 md:pb-0 font-sans">
 
-    <!-- Top Navigation (Liquid Glass Floating Bar) -->
-    <nav class="sticky top-3 md:top-4 z-40 w-full px-3 md:px-6 no-print">
-        <div class="max-w-7xl mx-auto liquid-glass-header px-4 md:px-6 py-2.5 md:py-3 flex justify-between items-center transition-all">
-            <a href="index.html" class="flex items-center gap-3 pl-1 group">
+    <!-- Top Navigation (Desktop) -->
+    <nav class="sticky top-4 z-40 w-full px-4 no-print">
+        <div class="max-w-7xl mx-auto m3-navbar px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 pl-2 group">
                 <button
-                    class="w-9 h-9 md:w-10 md:h-10 rounded-full liquid-action-btn flex items-center justify-center text-white/90 group-hover:text-white group-hover:border-primary/40 transition">
-                    <span class="material-symbols-rounded text-[20px]">arrow_back</span>
+                    class="w-10 h-10 rounded-full bg-[#353539] flex items-center justify-center group-hover:bg-primary group-hover:text-[#003915] transition">
+                    <span class="material-symbols-rounded text-[22px]">arrow_back</span>
                 </button>
                 <div class="flex flex-col">
-                    <span class="text-sm font-display font-bold text-white group-hover:text-primary transition-colors">Notifications</span>
-                    <span class="text-[9px] md:text-[10px] text-primary tracking-widest font-extrabold uppercase opacity-90">Inbox & Announcements</span>
+                    <span class="text-sm font-display font-medium text-[#E3E3E3]">Notifications</span>
+                    <span class="text-[10px] text-secondary tracking-wider font-bold">Inbox</span>
                 </div>
             </a>
 
-            <div class="flex items-center gap-2.5 md:gap-3">
-                <a href="profile.html" class="w-10 h-10 rounded-full p-0.5 border border-primary/40 hover:border-primary transition-all hidden md:block shadow-[0_0_12px_rgba(30,215,96,0.2)]">
+            <div class="flex items-center gap-3">
+                <a href="profile.html" class="w-10 h-10 rounded-full p-1 hover:bg-[#3b3b3f] transition hidden md:block">
                     <img id="navAvatar"
                         src="https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg"
                         class="w-full h-full rounded-full object-cover">
@@ -190,45 +190,23 @@
     </main>
 
     <!-- Footer -->
-    <div id="global-footer-placeholder" class="pb-28 md:pb-0"></div>
+    <div id="global-footer-placeholder" class="pb-24 md:pb-0"></div>
 
-    <!-- MOBILE NAV BAR (Floating Liquid Glass Pill Bar) -->
-    <div class="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-md z-50 liquid-glass-bottom-bar px-2 py-1.5 no-print">
-        <div class="flex justify-around items-center h-14">
-            <!-- Home -->
-            <a href="index.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
-                <div class="liquid-tab-pill">
-                    <span class="material-symbols-rounded text-[22px]">home</span>
-                </div>
-                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Home</span>
+    <!-- Mobile Bottom Nav (Google Style) -->
+    <!-- Mobile Bottom Nav -->
+    <div class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#1E1E1E] border-t border-[#252529] pb-safe">
+        <div class="flex justify-around items-center h-16">
+            <a href="index.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5] group">
+                <span class="material-symbols-rounded group-hover:text-[#E3E3E3] transition">home</span>
+                <span class="text-[10px] font-medium">Home</span>
             </a>
-            <!-- Events -->
-            <a href="event.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
-                <div class="liquid-tab-pill">
-                    <span class="material-symbols-rounded text-[22px]">event</span>
-                </div>
-                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Events</span>
+            <a href="event.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5] group">
+                <span class="material-symbols-rounded group-hover:text-[#E3E3E3] transition">event</span>
+                <span class="text-[10px] font-medium">Events</span>
             </a>
-            <!-- Sports -->
-            <a href="sport.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
-                <div class="liquid-tab-pill">
-                    <span class="material-symbols-rounded text-[22px]">emoji_events</span>
-                </div>
-                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Sports</span>
-            </a>
-            <!-- Pay -->
-            <a href="pay.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
-                <div class="liquid-tab-pill">
-                    <span class="material-symbols-rounded text-[22px]">account_balance_wallet</span>
-                </div>
-                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Pay</span>
-            </a>
-            <!-- Profile -->
-            <a href="profile.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
-                <div class="liquid-tab-pill">
-                    <span class="material-symbols-rounded text-[22px]">person</span>
-                </div>
-                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Profile</span>
+            <a href="profile.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5] group">
+                <span class="material-symbols-rounded group-hover:text-[#E3E3E3] transition">person</span>
+                <span class="text-[10px] font-medium">Profile</span>
             </a>
         </div>
     </div>
