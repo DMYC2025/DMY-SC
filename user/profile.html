@@ -69,47 +69,46 @@
 
 <body class="min-h-screen pb-24 md:pb-0 font-sans">
 
-    <nav class="sticky top-4 z-40 w-full px-4 no-print">
-        <div class="max-w-7xl mx-auto m3-navbar px-4 py-3 flex justify-between items-center">
-            <a href="index.html" class="flex items-center gap-3 pl-2 group">
+    <!-- Top Navigation (Liquid Glass Floating Bar) -->
+    <nav class="sticky top-3 md:top-4 z-40 w-full px-3 md:px-6 no-print">
+        <div class="max-w-7xl mx-auto liquid-glass-header px-4 md:px-6 py-2.5 md:py-3 flex justify-between items-center transition-all">
+            <a href="index.html" class="flex items-center gap-3 pl-1 group">
                 <button
-                    class="w-8 h-8 rounded-full bg-[#353539] flex items-center justify-center group-hover:bg-primary group-hover:text-[#003915] transition">
+                    class="w-9 h-9 md:w-10 md:h-10 rounded-full liquid-action-btn flex items-center justify-center text-white/90 group-hover:text-white group-hover:border-primary/40 transition">
                     <span class="material-symbols-rounded text-[20px]">arrow_back</span>
                 </button>
                 <div class="flex flex-col">
-                    <span class="text-sm font-display font-medium text-[#E3E3E3]">My Profile</span>
-                    <span class="text-[10px] text-secondary tracking-wider font-bold">Manage Account</span>
+                    <span class="text-sm font-display font-bold text-white group-hover:text-primary transition-colors">My Profile</span>
+                    <span class="text-[9px] md:text-[10px] text-primary tracking-widest font-extrabold uppercase opacity-90">Account & Preferences</span>
                 </div>
             </a>
 
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2.5 md:gap-3">
                 <!-- Notifications -->
                 <div class="relative">
                     <button onclick="toggleNotifPopup()"
-                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#3b3b3f] transition text-[#C4C7C5] relative">
-                        <span class="material-symbols-rounded">notifications</span>
+                        class="w-10 h-10 flex items-center justify-center rounded-full liquid-action-btn text-[#C4C7C5] hover:text-white relative transition-all" aria-label="Notifications">
+                        <span class="material-symbols-rounded text-[20px]">notifications</span>
                         <span id="notifBadgeDot"
-                            class="hidden absolute top-2 right-2.5 w-2 h-2 bg-error rounded-full border-2 border-[#252529]"></span>
+                            class="hidden absolute top-2 right-2.5 w-2.5 h-2.5 bg-error rounded-full border-2 border-[#121216] shadow-[0_0_8px_#ffb4ab]"></span>
                     </button>
                     <!-- Notification Popup -->
                     <div id="notifPopup"
-                        class="hidden absolute right-0 mt-2 w-[300px] md:w-[380px] bg-[#252529] rounded-[28px] shadow-2xl origin-top-right z-50 animate-scale-up border border-[#353539] overflow-hidden">
-                        <div class="px-6 py-4 border-b border-[#353539] flex justify-between items-center bg-[#1E1E1E]">
-                            <h3 class="text-sm font-display font-bold text-[#E3E3E3] uppercase tracking-wider">Club
-                                Alerts</h3>
-                            <span class="text-[10px] text-primary font-bold">Recent</span>
+                        class="hidden absolute right-0 mt-3 w-[320px] md:w-[380px] bg-[#14151B]/95 backdrop-blur-2xl rounded-[28px] shadow-[0_20px_50px_rgba(0,0,0,0.8)] origin-top-right z-50 animate-scale-up border border-white/15 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-white/10 flex justify-between items-center bg-white/5">
+                            <h3 class="text-sm font-display font-bold text-[#E3E3E3] uppercase tracking-wider">Club Alerts</h3>
+                            <span class="text-[10px] text-primary font-bold px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20">Recent</span>
                         </div>
                         <div id="notifPopupList" class="max-h-[350px] overflow-y-auto custom-scrollbar p-2 space-y-2">
                             <div class="text-center py-8">
                                 <span class="material-symbols-rounded animate-spin text-primary">sync</span>
                             </div>
                         </div>
-                        <div class="p-3 border-t border-[#353539] bg-[#1E1E1E]">
+                        <div class="p-3 border-t border-white/10 bg-white/5">
                             <a href="notifycation.html"
-                                class="flex items-center justify-center gap-2 w-full py-2 rounded-full bg-[#353539] hover:bg-primary hover:text-[#003915] text-[#E3E3E3] text-xs font-bold transition-all duration-300 group">
+                                class="flex items-center justify-center gap-2 w-full py-2.5 rounded-full bg-white/10 hover:bg-primary hover:text-[#003915] text-[#E3E3E3] text-xs font-bold transition-all duration-300 group">
                                 View All Notifications
-                                <span
-                                    class="material-symbols-rounded text-xs group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                                <span class="material-symbols-rounded text-xs group-hover:translate-x-1 transition-transform">arrow_forward</span>
                             </a>
                         </div>
                     </div>
@@ -117,39 +116,39 @@
                 <!-- Profile Pop -->
                 <div class="relative">
                     <button onclick="toggleProfilePopup()"
-                        class="w-10 h-10 rounded-full p-1 bg-[#353539] hidden md:block border border-primary hover:scale-105 transition duration-300">
+                        class="w-10 h-10 rounded-full p-0.5 border border-primary/40 hover:border-primary transition-all hidden md:block shadow-[0_0_12px_rgba(30,215,96,0.2)]">
                         <img id="navAvatar"
                             src="https://img.freepik.com/premium-vector/green-user-account-profile-flat-icon-apps-websites_1254296-1186.jpg"
                             class="w-full h-full rounded-full object-cover">
                     </button>
                     <div id="profilePopup"
-                        class="hidden absolute right-0 mt-2 w-72 bg-[#252529] rounded-[28px] shadow-xl p-4 origin-top-right z-[60] animate-scale-up border border-[#353539]">
-                        <div class="flex flex-col items-center pb-4 border-b border-[#353539] mb-2">
-                            <img id="popupAvatar" src="" class="w-16 h-16 rounded-full mb-2 object-cover">
-                            <h3 id="popupName" class="text-base font-display font-medium text-[#E3E3E3]">Loading...</h3>
+                        class="hidden absolute right-0 mt-3 w-72 bg-[#14151B]/95 backdrop-blur-2xl rounded-[28px] shadow-[0_20px_50px_rgba(0,0,0,0.8)] p-4 origin-top-right z-[60] animate-scale-up border border-white/15">
+                        <div class="flex flex-col items-center pb-4 border-b border-white/10 mb-2">
+                            <img id="popupAvatar" src="" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-primary/40 shadow-[0_0_15px_rgba(30,215,96,0.2)]">
+                            <h3 id="popupName" class="text-base font-display font-bold text-[#E3E3E3]">Loading...</h3>
                             <p id="popupEmail" class="text-xs text-[#C4C7C5]">...</p>
                         </div>
                         <div class="space-y-1">
                             <div
-                                class="flex justify-between px-4 py-3 rounded-full hover:bg-[#353539] transition cursor-default">
+                                class="flex justify-between px-4 py-2.5 rounded-full hover:bg-white/5 transition cursor-default">
                                 <span class="text-xs text-[#C4C7C5]">Club ID</span><span id="popupClubId"
-                                    class="text-xs font-medium text-primary">...</span>
+                                    class="text-xs font-bold text-primary">...</span>
                             </div>
                             <div
-                                class="flex justify-between px-4 py-3 rounded-full hover:bg-[#353539] transition cursor-default">
+                                class="flex justify-between px-4 py-2.5 rounded-full hover:bg-white/5 transition cursor-default">
                                 <span class="text-xs text-[#C4C7C5]">NIC</span><span id="popupNic"
                                     class="text-xs font-medium text-[#E3E3E3]">...</span>
                             </div>
                         </div>
                         <div id="popupExecRole"
-                            class="hidden mt-2 p-2 rounded-lg bg-[#3b2d1d] text-[#ffdcbe] text-center text-xs font-bold">
+                            class="hidden mt-2 p-2 rounded-lg bg-[#3b2d1d]/80 text-[#ffdcbe] border border-[#ffb783]/20 text-center text-xs font-bold">
                         </div>
                         <div id="popupCaptainRole"
-                            class="hidden mt-2 p-2 rounded-lg bg-[#1d2a3b] text-[#a0cfd0] text-center text-xs font-bold">
+                            class="hidden mt-2 p-2 rounded-lg bg-tertiary/20 text-tertiary border border-tertiary/20 text-center text-xs font-bold">
                         </div>
 
                         <button onclick="logout()"
-                            class="w-full mt-4 flex items-center gap-3 px-4 py-3 rounded-full hover:bg-[#3c2525] text-error transition text-sm text-left">
+                            class="w-full mt-2 flex items-center gap-3 px-4 py-3 rounded-full hover:bg-error/15 text-error transition text-sm text-left">
                             <span class="material-symbols-rounded text-[20px]">logout</span> Logout
                         </button>
                     </div>
@@ -515,24 +514,45 @@
         </div>
     </main>
 
-    <div id="global-footer-placeholder" class="pb-20 md:pb-0"></div>
+    <div id="global-footer-placeholder" class="pb-28 md:pb-0"></div>
 
-    <!-- Mobile Bottom Nav -->
-    <div class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#1E1E1E] border-t border-[#252529] pb-safe">
-        <div class="flex justify-around items-center h-16">
-            <a href="index.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5] group">
-                <span class="material-symbols-rounded group-hover:text-[#E3E3E3] transition">home</span>
-                <span class="text-[10px] font-medium">Home</span>
-            </a>
-            <a href="event.html" class="flex flex-col items-center gap-1 w-full text-[#C4C7C5] group">
-                <span class="material-symbols-rounded group-hover:text-[#E3E3E3] transition">event</span>
-                <span class="text-[10px] font-medium">Events</span>
-            </a>
-            <button class="flex flex-col items-center gap-1 w-full text-primary">
-                <div class="w-12 h-7 rounded-full bg-[#003915] flex items-center justify-center">
-                    <span class="material-symbols-rounded text-[20px]">person</span>
+    <!-- MOBILE NAV BAR (Floating Liquid Glass Pill Bar) -->
+    <div class="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-md z-50 liquid-glass-bottom-bar px-2 py-1.5 no-print">
+        <div class="flex justify-around items-center h-14">
+            <!-- Home -->
+            <a href="index.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
+                <div class="liquid-tab-pill">
+                    <span class="material-symbols-rounded text-[22px]">home</span>
                 </div>
-                <span class="text-[10px] font-medium">Profile</span>
+                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Home</span>
+            </a>
+            <!-- Events -->
+            <a href="event.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
+                <div class="liquid-tab-pill">
+                    <span class="material-symbols-rounded text-[22px]">event</span>
+                </div>
+                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Events</span>
+            </a>
+            <!-- Sports -->
+            <a href="sport.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
+                <div class="liquid-tab-pill">
+                    <span class="material-symbols-rounded text-[22px]">emoji_events</span>
+                </div>
+                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Sports</span>
+            </a>
+            <!-- Pay -->
+            <a href="pay.html" class="liquid-tab-item flex flex-col items-center justify-center gap-0.5 flex-1">
+                <div class="liquid-tab-pill">
+                    <span class="material-symbols-rounded text-[22px]">account_balance_wallet</span>
+                </div>
+                <span class="liquid-tab-label text-[10px] font-medium tracking-tight">Pay</span>
+            </a>
+            <!-- Profile (Active) -->
+            <button class="liquid-tab-item active flex flex-col items-center justify-center gap-0.5 flex-1">
+                <div class="liquid-tab-pill">
+                    <span class="material-symbols-rounded text-[22px]">person</span>
+                </div>
+                <span class="liquid-tab-label text-[10px] font-bold tracking-tight">Profile</span>
             </button>
         </div>
     </div>
